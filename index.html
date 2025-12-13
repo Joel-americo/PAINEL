@@ -962,11 +962,6 @@
         }
     };
 
-    // ... (por causa de limite de mensagem não vou reescrever aqui TUDO de performance/dashboard,
-    // mas a única parte que mexe em WhatsApp já está acima.)
-    // Abaixo continua igual ao seu arquivo anterior, exceto os pontos citados
-    // e a parte de autenticação/snapshots que precisa do cadastro de motoristas.
-
     // --- Filtros / Combos ---
 
     const updateStatusFilterOptions = (tab) => {
@@ -1882,37 +1877,652 @@
             notifiedVehicles.add(fiscalOccurrence.id);
         }
     }
-// ===================================================================
-// STUBS / PLACEHOLDERS PARA NÃO QUEBRAR O CÓDIGO
-// ===================================================================
 
-// Por enquanto deixamos a tela de Performance simples, só para não dar erro.
-// Depois a gente preenche com gráficos e KPIs de verdade.
-function renderPerformanceDashboard() {
-  const horaHoraTable = document.getElementById('hora-hora-table');
-  const fluxoCarregamento = document.getElementById('fluxo-carregamento-kpis');
-  const fluxoEntrar = document.getElementById('fluxo-entrar-kpis');
-  const perfNoData = document.getElementById('performance-chart-no-data');
-  const perfCanvas = document.getElementById('performance-chart');
+    // ===================================================================
+    // DASHBOARDS (PERFORMANCE + GERENCIAL) - SEM MEXER NO FIREBASE
+    // ===================================================================
 
-  if (horaHoraTable) {
-    horaHoraTable.innerHTML =
-      '<p class="text-gray-400 text-sm">Módulo de performance em construção.</p>';
-  }
-  if (fluxoCarregamento) fluxoCarregamento.innerHTML = '';
-  if (fluxoEntrar) fluxoEntrar.innerHTML = '';
+    const toMs = (t) => {
+      if (t === null || t === undefined) return null;
+      if (typeof t === 'number') return t;
+      if (typeof t === 'string') {
+        const parsed = Date.parse(t);
+        return Number.isFinite(parsed) ? parsed : null;
+      }
+      // Firestore Timestamp (caso algum campo venha assim)
+      if (t && typeof t === 'object' && typeof t.seconds === 'number') return t.seconds * 1000;
+      return null;
+    };
 
-  if (perfNoData && perfCanvas) {
-    perfNoData.classList.remove('hidden');
-    perfCanvas.style.display = 'none';
-  }
-}
+    const startOfDay = (d) => {
+      const x = new Date(d);
+      x.setHours(0, 0, 0, 0);
+      return x;
+    };
 
-// Mesma ideia para o Dashboard gerencial: só um stub para não quebrar.
-// Depois a gente coloca os gráficos bonitinhos.
-function renderManagerDashboard() {
-  // no momento não precisa fazer nada aqui
-}
+    const dayKey = (d) => {
+      const x = new Date(d);
+      const y = x.getFullYear();
+      const m = String(x.getMonth() + 1).padStart(2, '0');
+      const dd = String(x.getDate()).padStart(2, '0');
+      return `${y}-${m}-${dd}`;
+    };
+
+    const dayLabelPt = (d) => {
+      return new Date(d).toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' });
+    };
+
+    const safeDestroyChart = (chart) => {
+      try { if (chart) chart.destroy(); } catch (_) {}
+      return null;
+    };
+
+    const getShiftInfo = (now = new Date()) => {
+      const d = new Date(now);
+      const h = d.getHours();
+
+      const make = (baseDate, sh, eh, shiftNo, label) => {
+        const start = new Date(baseDate);
+        start.setHours(sh, 0, 0, 0);
+        const end = new Date(baseDate);
+        end.setHours(eh, 0, 0, 0);
+        return { shiftNo, label, start, end };
+      };
+
+      if (h >= 6 && h < 14) {
+        return make(d, 6, 14, 1, '1º Turno (06-14h)');
+      }
+      if (h >= 14 && h < 22) {
+        return make(d, 14, 22, 2, '2º Turno (14-22h)');
+      }
+
+      // 3º turno (22-06) cruza meia-noite
+      if (h >= 22) {
+        const start = new Date(d);
+        start.setHours(22, 0, 0, 0);
+        const end = new Date(d);
+        end.setDate(end.getDate() + 1);
+        end.setHours(6, 0, 0, 0);
+        return { shiftNo: 3, label: '3º Turno (22-06h)', start, end };
+      } else {
+        // h < 6 => começou ontem 22h
+        const start = new Date(d);
+        start.setDate(start.getDate() - 1);
+        start.setHours(22, 0, 0, 0);
+        const end = new Date(d);
+        end.setHours(6, 0, 0, 0);
+        return { shiftNo: 3, label: '3º Turno (22-06h)', start, end };
+      }
+    };
+
+    const getShiftByHour = (hour) => {
+      if (hour >= 6 && hour < 14) return 1;
+      if (hour >= 14 && hour < 22) return 2;
+      return 3;
+    };
+
+    const inRange = (ms, start, end) => {
+      if (!ms) return false;
+      return ms >= start.getTime() && ms < end.getTime();
+    };
+
+    const buildHourSlots = (start, end) => {
+      const slots = [];
+      const cur = new Date(start);
+      cur.setMinutes(0, 0, 0);
+
+      while (cur.getTime() < end.getTime()) {
+        const next = new Date(cur);
+        next.setHours(next.getHours() + 1);
+        slots.push({ start: new Date(cur), end: new Date(next) });
+        cur.setHours(cur.getHours() + 1);
+      }
+      return slots;
+    };
+
+    const kpiCardSm = (title, value, sub = '') => {
+      return `
+        <div class="kpi-card-sm rounded-lg p-4">
+          <p class="text-xs text-gray-400">${title}</p>
+          <p class="text-2xl font-bold mt-1">${value}</p>
+          ${sub ? `<p class="text-xs text-gray-500 mt-1">${sub}</p>` : ``}
+        </div>
+      `;
+    };
+
+    function renderPerformanceDashboard() {
+      const horaHoraTitle = document.getElementById('hora-hora-title');
+      const horaHoraTable = document.getElementById('hora-hora-table');
+      const fluxoCarregamento = document.getElementById('fluxo-carregamento-kpis');
+      const fluxoEntrar = document.getElementById('fluxo-entrar-kpis');
+
+      const perfTitle = document.getElementById('performance-chart-title');
+      const perfNoData = document.getElementById('performance-chart-no-data');
+      const perfCanvas = document.getElementById('performance-chart');
+      if (!perfCanvas) return;
+
+      const { shiftNo, label, start, end } = getShiftInfo(new Date());
+      currentShiftPerformanceData = { shiftNo, label, start, end };
+
+      const startTxt = start.toLocaleString('pt-BR');
+      const endTxt = end.toLocaleString('pt-BR');
+
+      if (horaHoraTitle) horaHoraTitle.textContent = `Chegadas no Pátio (Hora a Hora) — ${label}`;
+      if (perfTitle) perfTitle.textContent = `Chegadas no Pátio (Hora a Hora) — ${label} (${startTxt} → ${endTxt})`;
+
+      // --- Base de dados do turno (chegadas)
+      const allOps = [...(patioData || []), ...(historicoData || [])];
+
+      const arrivalsInShift = allOps.filter(op => inRange(toMs(op.registrationTime), start, end));
+
+      const slots = buildHourSlots(start, end);
+      const labels = slots.map(s => {
+        const a = s.start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        const b = s.end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        return `${a}–${b}`;
+      });
+
+      const counts = slots.map(s => arrivalsInShift.filter(op => {
+        const rt = toMs(op.registrationTime);
+        return rt && rt >= s.start.getTime() && rt < s.end.getTime();
+      }).length);
+
+      const totalArrivals = counts.reduce((a, b) => a + b, 0);
+
+      // --- Hora a hora (tabela)
+      if (horaHoraTable) {
+        horaHoraTable.innerHTML = `
+          <div class="mb-3 text-sm text-gray-300">
+            <span class="font-semibold">${totalArrivals}</span> chegadas no turno
+          </div>
+          <div class="overflow-hidden rounded-lg border border-gray-700">
+            <table class="w-full text-left">
+              <thead>
+                <tr class="bg-gray-900/50 border-b border-gray-700">
+                  <th class="p-3 text-xs font-semibold text-gray-400">Faixa</th>
+                  <th class="p-3 text-xs font-semibold text-gray-400">Chegadas</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${labels.map((l, i) => `
+                  <tr class="border-b border-gray-700/50 hover:bg-gray-700/30">
+                    <td class="p-3 text-sm text-gray-200 font-mono">${l}</td>
+                    <td class="p-3 text-sm text-gray-200 font-bold">${counts[i]}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      // --- KPIs: fluxo carregamento (finalizados no turno)
+      const finishedInShift = (historicoData || []).filter(op => inRange(toMs(op.finishedTime), start, end));
+      const finalizados = finishedInShift.filter(op => (op.status || '').toLowerCase() === 'finalizado');
+      const cancelados = finishedInShift.filter(op => (op.status || '').toLowerCase() === 'cancelado');
+
+      const stayTimes = finalizados
+        .map(op => {
+          const rt = toMs(op.registrationTime);
+          const ft = toMs(op.finishedTime);
+          return (rt && ft) ? (ft - rt) : null;
+        })
+        .filter(v => v !== null && v >= 0);
+
+      const avgStayMs = stayTimes.length ? (stayTimes.reduce((a,b)=>a+b,0) / stayTimes.length) : 0;
+      const avgStayH = avgStayMs ? (avgStayMs / 3600000) : 0;
+
+      if (fluxoCarregamento) {
+        fluxoCarregamento.innerHTML = `
+          ${kpiCardSm('Finalizadas', finalizados.length, 'no turno')}
+          ${kpiCardSm('Canceladas', cancelados.length, 'no turno')}
+          ${kpiCardSm('TMP médio', avgStayMs ? `${avgStayH.toFixed(2)} h` : '—', 'média das finalizadas')}
+          ${kpiCardSm('Chegadas', totalArrivals, 'no turno')}
+        `;
+      }
+
+      // --- KPIs: fluxo para entrar (patio agora)
+      const patio = patioData || [];
+      const criticos = patio.filter(op => {
+        const s = getPriorityStatusLogic(op).statusText;
+        return s === 'Grade queimada' || s === 'Prioridade (TOP 18)' || s === 'Atrasado';
+      }).length;
+
+      const atencao = patio.filter(op => getPriorityStatusLogic(op).statusText === 'Atenção').length;
+      const atrasados = patio.filter(op => getPriorityStatusLogic(op).statusText === 'Atrasado').length;
+
+      if (fluxoEntrar) {
+        fluxoEntrar.innerHTML = `
+          ${kpiCardSm('No pátio agora', patio.length)}
+          ${kpiCardSm('Críticos', criticos, 'grade/top/atrasado')}
+          ${kpiCardSm('Atenção', atencao)}
+          ${kpiCardSm('Atrasados', atrasados)}
+        `;
+      }
+
+      // --- Gráfico hora a hora
+      const hasData = totalArrivals > 0;
+      if (perfNoData) perfNoData.classList.toggle('hidden', hasData);
+      perfCanvas.style.display = hasData ? 'block' : 'none';
+      if (!hasData) {
+        performanceChart = safeDestroyChart(performanceChart);
+        return;
+      }
+
+      performanceChart = safeDestroyChart(performanceChart);
+      const ctx = perfCanvas.getContext('2d');
+      performanceChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Chegadas',
+            data: counts,
+            backgroundColor: 'rgba(59, 130, 246, 0.55)',
+            borderColor: 'rgba(59, 130, 246, 0.9)',
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { color: '#d1d5db', precision: 0 },
+              grid: { color: 'rgba(255,255,255,0.08)' }
+            },
+            x: {
+              ticks: { color: '#d1d5db', maxRotation: 0, autoSkip: true },
+              grid: { display: false }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (c) => ` ${c.raw} chegada(s)`
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function renderManagerDashboard() {
+      // garante que o combo do dashboard fica sempre atualizado (sem mexer no Firebase)
+      try { updateTransportadoraFilter(); } catch (_) {}
+
+      const transpSelect = document.getElementById('dashboard-transportadora-filter');
+      const selectedT = transpSelect ? transpSelect.value : 'todas';
+
+      const now = new Date();
+      const end = new Date(startOfDay(now));
+      end.setDate(end.getDate() + 1); // amanhã 00:00
+      const start = new Date(end);
+      start.setDate(start.getDate() - 7); // últimos 7 dias
+
+      const base = (historicoData || [])
+        .map(op => ({ ...op, _ft: toMs(op.finishedTime), _rt: toMs(op.registrationTime) }))
+        .filter(op => op._ft && op._ft >= start.getTime() && op._ft < end.getTime());
+
+      const data = (selectedT === 'todas')
+        ? base
+        : base.filter(op => op.transportadora === selectedT);
+
+      // Monta lista de dias (labels fixos)
+      const days = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(startOfDay(now));
+        d.setDate(d.getDate() - i);
+        days.push(d);
+      }
+      const labelsDays = days.map(d => dayLabelPt(d));
+      const keysDays = days.map(d => dayKey(d));
+
+      // ------------------------------------------------------------
+      // 1) Produtividade diária (Finalizado + Cancelado)
+      // ------------------------------------------------------------
+      const dailyFinal = {};
+      const dailyCanc = {};
+      keysDays.forEach(k => { dailyFinal[k] = 0; dailyCanc[k] = 0; });
+
+      data.forEach(op => {
+        const k = dayKey(op._ft);
+        const st = (op.status || '').toLowerCase();
+        if (!(k in dailyFinal)) return;
+        if (st === 'finalizado') dailyFinal[k]++;
+        else if (st === 'cancelado') dailyCanc[k]++;
+      });
+
+      const finalSeries = keysDays.map(k => dailyFinal[k] || 0);
+      const cancSeries = keysDays.map(k => dailyCanc[k] || 0);
+
+      const dailyCanvas = document.getElementById('daily-productivity-chart');
+      if (dailyCanvas) {
+        dailyProductivityChart = safeDestroyChart(dailyProductivityChart);
+        dailyProductivityChart = new Chart(dailyCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: labelsDays,
+            datasets: [
+              {
+                label: 'Finalizado',
+                data: finalSeries,
+                backgroundColor: 'rgba(16, 185, 129, 0.55)',
+                borderColor: 'rgba(16, 185, 129, 0.95)',
+                borderWidth: 1,
+                borderRadius: 6
+              },
+              {
+                label: 'Cancelado',
+                data: cancSeries,
+                backgroundColor: 'rgba(239, 68, 68, 0.45)',
+                borderColor: 'rgba(239, 68, 68, 0.9)',
+                borderWidth: 1,
+                borderRadius: 6
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#d1d5db', precision: 0 },
+                grid: { color: 'rgba(255,255,255,0.08)' }
+              },
+              x: {
+                ticks: { color: '#d1d5db' },
+                grid: { display: false }
+              }
+            },
+            plugins: {
+              legend: { labels: { color: '#d1d5db' } }
+            }
+          }
+        });
+      }
+
+      // ------------------------------------------------------------
+      // 2) Evolução do TMP (média por dia em horas)
+      // ------------------------------------------------------------
+      const dailyTmpSum = {};
+      const dailyTmpCnt = {};
+      keysDays.forEach(k => { dailyTmpSum[k] = 0; dailyTmpCnt[k] = 0; });
+
+      data.forEach(op => {
+        const st = (op.status || '').toLowerCase();
+        if (st !== 'finalizado') return;
+        if (!op._rt || !op._ft) return;
+        const dur = op._ft - op._rt;
+        if (!Number.isFinite(dur) || dur < 0) return;
+
+        const k = dayKey(op._ft);
+        if (!(k in dailyTmpSum)) return;
+        dailyTmpSum[k] += dur;
+        dailyTmpCnt[k] += 1;
+      });
+
+      const tmpHours = keysDays.map(k => {
+        if (!dailyTmpCnt[k]) return null;
+        const avg = dailyTmpSum[k] / dailyTmpCnt[k];
+        return +(avg / 3600000).toFixed(2);
+      });
+
+      const tmpCanvas = document.getElementById('tmp-evolution-chart');
+      if (tmpCanvas) {
+        tmpEvolutionChart = safeDestroyChart(tmpEvolutionChart);
+        tmpEvolutionChart = new Chart(tmpCanvas.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: labelsDays,
+            datasets: [{
+              label: 'TMP (h)',
+              data: tmpHours,
+              borderColor: 'rgba(168, 85, 247, 0.95)',
+              backgroundColor: 'rgba(168, 85, 247, 0.20)',
+              fill: true,
+              tension: 0.35,
+              spanGaps: true,
+              pointRadius: 3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#d1d5db' },
+                grid: { color: 'rgba(255,255,255,0.08)' }
+              },
+              x: {
+                ticks: { color: '#d1d5db' },
+                grid: { display: false }
+              }
+            },
+            plugins: {
+              legend: { labels: { color: '#d1d5db' } },
+              tooltip: {
+                callbacks: { label: (c) => ` ${c.raw ?? '—'} h` }
+              }
+            }
+          }
+        });
+      }
+
+      // ------------------------------------------------------------
+      // 3) Ranking de Volume (top transportadoras)
+      // ------------------------------------------------------------
+      const byTransportadora = {};
+      data.forEach(op => {
+        const st = (op.status || '').toLowerCase();
+        if (st !== 'finalizado') return;
+        const t = op.transportadora || 'Sem transportadora';
+        byTransportadora[t] = (byTransportadora[t] || 0) + 1;
+      });
+
+      const ranking = Object.entries(byTransportadora)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+
+      const rankLabels = ranking.map(r => r[0]);
+      const rankValues = ranking.map(r => r[1]);
+
+      const volCanvas = document.getElementById('volume-ranking-chart');
+      if (volCanvas) {
+        volumeRankingChart = safeDestroyChart(volumeRankingChart);
+        volumeRankingChart = new Chart(volCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: rankLabels,
+            datasets: [{
+              label: 'Finalizados (7d)',
+              data: rankValues,
+              backgroundColor: 'rgba(245, 158, 11, 0.55)',
+              borderColor: 'rgba(245, 158, 11, 0.95)',
+              borderWidth: 1,
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            scales: {
+              x: {
+                beginAtZero: true,
+                ticks: { color: '#d1d5db', precision: 0 },
+                grid: { color: 'rgba(255,255,255,0.08)' }
+              },
+              y: {
+                ticks: { color: '#d1d5db' },
+                grid: { display: false }
+              }
+            },
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      }
+
+      // ------------------------------------------------------------
+      // 4) Produtividade por Turno (últimos 7 dias)
+      // ------------------------------------------------------------
+      const shift1 = {}, shift2 = {}, shift3 = {};
+      keysDays.forEach(k => { shift1[k] = 0; shift2[k] = 0; shift3[k] = 0; });
+
+      data.forEach(op => {
+        const st = (op.status || '').toLowerCase();
+        if (st !== 'finalizado') return;
+
+        const k = dayKey(op._ft);
+        if (!(k in shift1)) return;
+
+        const hour = new Date(op._ft).getHours();
+        const sh = getShiftByHour(hour);
+        if (sh === 1) shift1[k]++; else if (sh === 2) shift2[k]++; else shift3[k]++;
+      });
+
+      const sh1Series = keysDays.map(k => shift1[k] || 0);
+      const sh2Series = keysDays.map(k => shift2[k] || 0);
+      const sh3Series = keysDays.map(k => shift3[k] || 0);
+
+      const shiftCanvas = document.getElementById('shift-comparison-chart');
+      if (shiftCanvas) {
+        shiftComparisonChart = safeDestroyChart(shiftComparisonChart);
+        shiftComparisonChart = new Chart(shiftCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: labelsDays,
+            datasets: [
+              { label: '1º Turno', data: sh1Series, backgroundColor: 'rgba(59, 130, 246, 0.50)' },
+              { label: '2º Turno', data: sh2Series, backgroundColor: 'rgba(16, 185, 129, 0.50)' },
+              { label: '3º Turno', data: sh3Series, backgroundColor: 'rgba(168, 85, 247, 0.45)' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#d1d5db', precision: 0 },
+                grid: { color: 'rgba(255,255,255,0.08)' }
+              },
+              x: {
+                ticks: { color: '#d1d5db' },
+                grid: { display: false }
+              }
+            },
+            plugins: {
+              legend: { labels: { color: '#d1d5db' } }
+            }
+          }
+        });
+      }
+
+      // ------------------------------------------------------------
+      // 5) Heatmap (Finalizados na semana por hora)
+      // ------------------------------------------------------------
+      const heatCanvas = document.getElementById('heatmap-chart');
+      if (heatCanvas) {
+        heatmapChart = safeDestroyChart(heatmapChart);
+
+        // matriz 7 (dias) x 24 (horas)
+        const matrix = Array.from({ length: 7 }, () => Array.from({ length: 24 }, () => 0));
+
+        data.forEach(op => {
+          const st = (op.status || '').toLowerCase();
+          if (st !== 'finalizado') return;
+
+          const ft = op._ft;
+          const k = dayKey(ft);
+          const dayIdx = keysDays.indexOf(k);
+          if (dayIdx === -1) return;
+
+          const hour = new Date(ft).getHours();
+          matrix[dayIdx][hour] += 1;
+        });
+
+        const points = [];
+        for (let y = 0; y < 7; y++) {
+          for (let x = 0; x < 24; x++) {
+            points.push({ x, y, v: matrix[y][x] });
+          }
+        }
+
+        const maxV = points.reduce((m, p) => Math.max(m, p.v), 0);
+
+        heatmapChart = new Chart(heatCanvas.getContext('2d'), {
+          type: 'matrix',
+          data: {
+            datasets: [{
+              label: 'Finalizados',
+              data: points,
+              backgroundColor: (ctx) => {
+                const v = ctx.raw?.v ?? 0;
+                if (!v) return 'rgba(255,255,255,0.03)';
+                const a = Math.min(0.85, 0.12 + (maxV ? (v / maxV) * 0.75 : 0.2));
+                return `rgba(16, 185, 129, ${a})`;
+              },
+              borderColor: 'rgba(17,24,39,0.35)',
+              borderWidth: 1,
+              width: ({ chart }) => (chart.chartArea || {}).width / 24 - 2,
+              height: ({ chart }) => (chart.chartArea || {}).height / 7 - 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  title: (items) => {
+                    const r = items?.[0]?.raw;
+                    if (!r) return '';
+                    const day = labelsDays[r.y];
+                    const h = String(r.x).padStart(2, '0');
+                    return `${day} — ${h}:00`;
+                  },
+                  label: (item) => ` ${item.raw?.v ?? 0} finalizado(s)`
+                }
+              }
+            },
+            scales: {
+              x: {
+                type: 'linear',
+                position: 'bottom',
+                min: 0,
+                max: 23,
+                ticks: {
+                  stepSize: 1,
+                  color: '#d1d5db',
+                  callback: (v) => (v % 2 === 0 ? String(v).padStart(2, '0') : '')
+                },
+                grid: { color: 'rgba(255,255,255,0.06)' }
+              },
+              y: {
+                type: 'linear',
+                min: 0,
+                max: 6,
+                ticks: {
+                  stepSize: 1,
+                  color: '#d1d5db',
+                  callback: (v) => labelsDays[v] || ''
+                },
+                grid: { color: 'rgba(255,255,255,0.06)' }
+              }
+            }
+          }
+        });
+      }
+    }
 </script>
 </body>
 </html>
