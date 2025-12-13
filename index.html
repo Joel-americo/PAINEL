@@ -409,6 +409,47 @@
 
         const isTop18 = (xtAdicional || '').toUpperCase().includes('TOP');
 
+        // OTIF normalmente vem do "HEILOG assistente" / folha de marcação. Como nem sempre existe um campo "otif"
+        // no Firestore, aqui tentamos identificar OTIF por código de canal (Y001/Y002/Y004/Y006/Y055) e/ou texto.
+        const OTIF_CODES = ['Y001','Y002','Y004','Y006','Y055'];
+        const isOtif = (() => {
+            const keys = [
+                'canal','CANAL','channel','codigoCanal','codCanal','tipoCanal',
+                'indicador','indicadorOtif','flagOtif','otif','prioridade','xtAdicional','flags','tag','tipo','categoria'
+            ];
+            for (const k of keys) {
+                const v = op?.[k];
+                if (v === undefined || v === null) continue;
+
+                // campos boolean/num com nome contendo "otif"
+                if (/otif/i.test(k)) {
+                    if (typeof v === 'boolean' && v) return true;
+                    if (typeof v === 'number' && v === 1) return true;
+                }
+
+                const testString = (s) => {
+                    const up = String(s).toUpperCase();
+                    if (up.includes('OTIF')) return true;
+                    for (const code of OTIF_CODES) {
+                        if (up.includes(code)) return true;
+                    }
+                    return false;
+                };
+
+                if (typeof v === 'string' || typeof v === 'number') {
+                    if (testString(v)) return true;
+                }
+                if (Array.isArray(v)) {
+                    for (const item of v) {
+                        if (typeof item === 'string' || typeof item === 'number') {
+                            if (testString(item)) return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        })();
+
         if (scheduledDateTime) {
             const diffHours = (now.getTime() - scheduledDateTime.getTime()) / 3600000;
             const today = new Date(now);
@@ -436,6 +477,10 @@
             className = "bg-amber-500/30 text-amber-400 border-amber-500/50";
         } else if (isTop18) {
             statusText = "Prioridade (TOP 18)";
+            className = "bg-red-500/30 text-red-300 border-red-500/50";
+            isAlert = true;
+        } else if (isOtif) {
+            statusText = "Prioridade (OTIF)";
             className = "bg-red-500/30 text-red-300 border-red-500/50";
             isAlert = true;
         }
@@ -766,12 +811,87 @@
         const tempoMedioPermanencia =
             finalizadasHoje.length > 0 ? totalPermanencia / finalizadasHoje.length : 0;
 
+        // Críticos: TOP 18 + OTIF (detecção robusta)
+        const deepHas = (obj, testFn, seen = new WeakSet()) => {
+            if (!obj || typeof obj !== 'object') return false;
+            if (seen.has(obj)) return false;
+            seen.add(obj);
+
+            const values = Array.isArray(obj) ? obj : Object.values(obj);
+            for (const v of values) {
+                if (testFn(v)) return true;
+                if (v && typeof v === 'object') {
+                    if (deepHas(v, testFn, seen)) return true;
+                }
+            }
+            return false;
+        };
+
+        const isTOP18 = (op) => {
+            const re = /TOP\W*18/i;
+            const quickKeys = [
+                'xtAdicional','prioridade','tipo','categoria','observacao','observacoes','remarks','tag','flags','indicador'
+            ];
+            for (const k of quickKeys) {
+                const v = op?.[k];
+                if (typeof v === 'string' && re.test(v)) return true;
+            }
+            return deepHas(op, v => (typeof v === 'string' && re.test(v)));
+        };
+
+        const isOTIF = (op) => {
+            const reOTIF = /OTIF/i;
+            const reCodes = /\b(Y001|Y002|Y004|Y006|Y055)\b/i;
+
+            // 0) Canal/código (muito comum vir como "canal: Y001" etc.)
+            const canalKeys = ['canal','CANAL','channel','codigoCanal','codCanal','tipoCanal','canalPedido','canal_otif','canalOtif'];
+            for (const k of canalKeys) {
+                const v = op?.[k];
+                if (typeof v === 'string') {
+                    const s = v.trim();
+                    if (reCodes.test(s)) return true;
+                } else if (Array.isArray(v)) {
+                    if (v.some(x => typeof x === 'string' && reCodes.test(x.trim()))) return true;
+                }
+            }
+
+            // 1) Se existir algum campo cujo NOME contenha "otif" com valor verdadeiro
+            if (op && typeof op === 'object') {
+                for (const [k, v] of Object.entries(op)) {
+                    if (!/otif/i.test(k)) continue;
+
+                    if (typeof v === 'boolean' && v) return true;
+                    if (typeof v === 'number' && v === 1) return true;
+
+                    if (typeof v === 'string') {
+                        const up = v.trim().toUpperCase();
+                        if (up.includes('OTIF')) return true;
+                        if (['S','SIM','Y','YES','TRUE','1','X'].includes(up)) return true;
+                    }
+                }
+            }
+
+            // 2) Procura OTIF ou códigos de canal em campos comuns
+            const quickKeys = [
+                'indicador','indicadorOtif','flagOtif','tipo','categoria','prioridade','xtAdicional',
+                'destino','observacao','observacoes','remarks','tag','flags','canal','channel'
+            ];
+            for (const k of quickKeys) {
+                const v = op?.[k];
+                if (typeof v === 'string') {
+                    if (reOTIF.test(v) || reCodes.test(v)) return true;
+                } else if (Array.isArray(v)) {
+                    if (v.some(x => typeof x === 'string' && (reOTIF.test(x) || reCodes.test(x)))) return true;
+                }
+            }
+
+            // 3) Fallback: varre tudo (strings aninhadas)
+            return deepHas(op, v => (typeof v === 'string' && (reOTIF.test(v) || reCodes.test(v))));
+        };
+
         const kpis = {
             veiculosPatio: patioData.length,
-            criticos: patioData.filter(op => {
-                const s = getPriorityStatusLogic(op).statusText;
-                return s === 'Grade queimada' || s === 'Perda de Agenda';
-            }).length,
+            criticos: patioData.filter(op => isTOP18(op) || isOTIF(op)).length,
             finalizadasHoje: finalizadasHoje.length,
             tmp: formatMilliseconds(tempoMedioPermanencia),
         };
@@ -803,7 +923,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-400">Críticos (Grade/Perda Agenda)</p>
+                    <p class="text-sm text-gray-400">Críticos (TOP18/OTIF)</p>
                     <p class="text-2xl font-bold">${kpis.criticos}</p>
                 </div>
             </div>
@@ -977,6 +1097,8 @@
             optionsHTML = `
                 <option value="todos">Todos Status</option>
                 <option value="Prioridade">Prioridade</option>
+                <option value="OTIF">Prioridade (OTIF)</option>
+                <option value="TOP 18">Prioridade (TOP 18)</option>
                 <option value="Atrasado">Atrasado</option>
                 <option value="Atenção">Atenção</option>
                 <option value="Grade queimada">Grade queimada</option>
