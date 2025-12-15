@@ -273,7 +273,10 @@
         setLogLevel,
         updateDoc,
         writeBatch,
-        getDocs
+        getDocs,
+        query,
+        orderBy,
+        limit
     } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // --- Configuração ---
@@ -288,7 +291,7 @@
             appId: "1:790492229739:web:de49887de535a839e8412e"
         };
 
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'heilog-logistica';
+    const appId = 'heilog-logistica'; // FORÇADO: garante salvar/ler sempre no mesmo appId
 
     // --- Estado global ---
     let db;
@@ -322,6 +325,40 @@
 
     // --- Utilitários ---
 
+
+    const showToast = (message, type = 'info') => {
+        const id = 'heilog-toast';
+        let container = document.getElementById(id);
+        if (!container) {
+            container = document.createElement('div');
+            container.id = id;
+            container.className = 'fixed bottom-4 right-4 z-[9999] space-y-2';
+            document.body.appendChild(container);
+        }
+
+        const el = document.createElement('div');
+        const base = 'px-4 py-3 rounded-lg shadow-lg border text-sm max-w-sm';
+        const styles = {
+            info: 'bg-gray-800 border-gray-600 text-gray-100',
+            success: 'bg-green-900/70 border-green-600 text-green-100',
+            error: 'bg-red-900/70 border-red-600 text-red-100'
+        };
+        el.className = `${base} ${styles[type] || styles.info}`;
+        el.textContent = message;
+
+        container.appendChild(el);
+
+        setTimeout(() => {
+            el.style.opacity = '0';
+            el.style.transition = 'opacity 0.3s';
+        }, 2600);
+
+        setTimeout(() => {
+            el.remove();
+            if (!container.children.length) container.remove();
+        }, 3100);
+    };
+
     const debounce = (fn, delay = 150) => {
         let t;
         return (...args) => {
@@ -329,6 +366,21 @@
             t = setTimeout(() => fn(...args), delay);
         };
     };
+
+    const escapeHtml = (input = '') => {
+        const str = String(input ?? '');
+        return str.replace(/[&<>"'`=\/]/g, (s) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+            '`': '&#x60;',
+            '=': '&#x3D;',
+            '/': '&#x2F;'
+        }[s]));
+    };
+
 
     const formatMilliseconds = (ms) => {
         if (isNaN(ms) || ms < 0) return '00:00:00';
@@ -409,47 +461,6 @@
 
         const isTop18 = (xtAdicional || '').toUpperCase().includes('TOP');
 
-        // OTIF normalmente vem do "HEILOG assistente" / folha de marcação. Como nem sempre existe um campo "otif"
-        // no Firestore, aqui tentamos identificar OTIF por código de canal (Y001/Y002/Y004/Y006/Y055) e/ou texto.
-        const OTIF_CODES = ['Y001','Y002','Y004','Y006','Y055'];
-        const isOtif = (() => {
-            const keys = [
-                'canal','CANAL','channel','codigoCanal','codCanal','tipoCanal',
-                'indicador','indicadorOtif','flagOtif','otif','prioridade','xtAdicional','flags','tag','tipo','categoria'
-            ];
-            for (const k of keys) {
-                const v = op?.[k];
-                if (v === undefined || v === null) continue;
-
-                // campos boolean/num com nome contendo "otif"
-                if (/otif/i.test(k)) {
-                    if (typeof v === 'boolean' && v) return true;
-                    if (typeof v === 'number' && v === 1) return true;
-                }
-
-                const testString = (s) => {
-                    const up = String(s).toUpperCase();
-                    if (up.includes('OTIF')) return true;
-                    for (const code of OTIF_CODES) {
-                        if (up.includes(code)) return true;
-                    }
-                    return false;
-                };
-
-                if (typeof v === 'string' || typeof v === 'number') {
-                    if (testString(v)) return true;
-                }
-                if (Array.isArray(v)) {
-                    for (const item of v) {
-                        if (typeof item === 'string' || typeof item === 'number') {
-                            if (testString(item)) return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        })();
-
         if (scheduledDateTime) {
             const diffHours = (now.getTime() - scheduledDateTime.getTime()) / 3600000;
             const today = new Date(now);
@@ -477,10 +488,6 @@
             className = "bg-amber-500/30 text-amber-400 border-amber-500/50";
         } else if (isTop18) {
             statusText = "Prioridade (TOP 18)";
-            className = "bg-red-500/30 text-red-300 border-red-500/50";
-            isAlert = true;
-        } else if (isOtif) {
-            statusText = "Prioridade (OTIF)";
             className = "bg-red-500/30 text-red-300 border-red-500/50";
             isAlert = true;
         }
@@ -704,7 +711,7 @@
             let specificActions = '';
             if (activeTab === 'patio') {
                 specificActions = `
-                    <button data-action="details" data-id="${op.id}" title="Ver Detalhes">
+                    <button type="button" data-action="details" data-id="${op.id}" title="Ver Detalhes">
                         <svg class="w-5 h-5 text-sky-400 hover:text-sky-300 pointer-events-none" 
                              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -712,7 +719,7 @@
                             <circle cx="12" cy="12" r="3"/>
                         </svg>
                     </button>
-                    <button data-action="occurrence" data-id="${op.id}" title="Adicionar Ocorrência">
+                    <button type="button" data-action="occurrence" data-id="${op.id}" title="Adicionar Ocorrência">
                         <svg class="w-5 h-5 text-amber-400 hover:text-amber-300 pointer-events-none" 
                              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -722,7 +729,7 @@
                             <path d="M9 9h6"/>
                         </svg>
                     </button>
-                    <button data-action="finish" data-id="${op.id}" title="Finalizar Operação">
+                    <button type="button" data-action="finish" data-id="${op.id}" title="Finalizar Operação">
                         <svg class="w-5 h-5 text-green-400 hover:text-green-300 pointer-events-none" 
                              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -730,7 +737,7 @@
                             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
                         </svg>
                     </button>
-                    <button data-action="cancel" data-id="${op.id}" title="Cancelar DT" class="text-red-500 hover:text-red-400">
+                    <button type="button" data-action="cancel" data-id="${op.id}" title="Cancelar DT" class="text-red-500 hover:text-red-400">
                         <svg class="w-5 h-5 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="3 6 5 6 21 6"></polyline>
@@ -740,7 +747,7 @@
                 `;
             } else if (activeTab === 'ocorrencias') {
                 specificActions =
-                    `<button data-action="edit-occurrence" data-id="${op.id}" title="Ver/Editar Resolução" 
+                    `<button type="button" data-action="edit-occurrence" data-id="${op.id}" title="Ver/Editar Resolução" 
                               class="text-blue-400 hover:text-blue-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" 
                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -811,87 +818,12 @@
         const tempoMedioPermanencia =
             finalizadasHoje.length > 0 ? totalPermanencia / finalizadasHoje.length : 0;
 
-        // Críticos: TOP 18 + OTIF (detecção robusta)
-        const deepHas = (obj, testFn, seen = new WeakSet()) => {
-            if (!obj || typeof obj !== 'object') return false;
-            if (seen.has(obj)) return false;
-            seen.add(obj);
-
-            const values = Array.isArray(obj) ? obj : Object.values(obj);
-            for (const v of values) {
-                if (testFn(v)) return true;
-                if (v && typeof v === 'object') {
-                    if (deepHas(v, testFn, seen)) return true;
-                }
-            }
-            return false;
-        };
-
-        const isTOP18 = (op) => {
-            const re = /TOP\W*18/i;
-            const quickKeys = [
-                'xtAdicional','prioridade','tipo','categoria','observacao','observacoes','remarks','tag','flags','indicador'
-            ];
-            for (const k of quickKeys) {
-                const v = op?.[k];
-                if (typeof v === 'string' && re.test(v)) return true;
-            }
-            return deepHas(op, v => (typeof v === 'string' && re.test(v)));
-        };
-
-        const isOTIF = (op) => {
-            const reOTIF = /OTIF/i;
-            const reCodes = /\b(Y001|Y002|Y004|Y006|Y055)\b/i;
-
-            // 0) Canal/código (muito comum vir como "canal: Y001" etc.)
-            const canalKeys = ['canal','CANAL','channel','codigoCanal','codCanal','tipoCanal','canalPedido','canal_otif','canalOtif'];
-            for (const k of canalKeys) {
-                const v = op?.[k];
-                if (typeof v === 'string') {
-                    const s = v.trim();
-                    if (reCodes.test(s)) return true;
-                } else if (Array.isArray(v)) {
-                    if (v.some(x => typeof x === 'string' && reCodes.test(x.trim()))) return true;
-                }
-            }
-
-            // 1) Se existir algum campo cujo NOME contenha "otif" com valor verdadeiro
-            if (op && typeof op === 'object') {
-                for (const [k, v] of Object.entries(op)) {
-                    if (!/otif/i.test(k)) continue;
-
-                    if (typeof v === 'boolean' && v) return true;
-                    if (typeof v === 'number' && v === 1) return true;
-
-                    if (typeof v === 'string') {
-                        const up = v.trim().toUpperCase();
-                        if (up.includes('OTIF')) return true;
-                        if (['S','SIM','Y','YES','TRUE','1','X'].includes(up)) return true;
-                    }
-                }
-            }
-
-            // 2) Procura OTIF ou códigos de canal em campos comuns
-            const quickKeys = [
-                'indicador','indicadorOtif','flagOtif','tipo','categoria','prioridade','xtAdicional',
-                'destino','observacao','observacoes','remarks','tag','flags','canal','channel'
-            ];
-            for (const k of quickKeys) {
-                const v = op?.[k];
-                if (typeof v === 'string') {
-                    if (reOTIF.test(v) || reCodes.test(v)) return true;
-                } else if (Array.isArray(v)) {
-                    if (v.some(x => typeof x === 'string' && (reOTIF.test(x) || reCodes.test(x)))) return true;
-                }
-            }
-
-            // 3) Fallback: varre tudo (strings aninhadas)
-            return deepHas(op, v => (typeof v === 'string' && (reOTIF.test(v) || reCodes.test(v))));
-        };
-
         const kpis = {
             veiculosPatio: patioData.length,
-            criticos: patioData.filter(op => isTOP18(op) || isOTIF(op)).length,
+            criticos: patioData.filter(op => {
+                const s = getPriorityStatusLogic(op).statusText;
+                return s === 'Grade queimada' || s === 'Perda de Agenda';
+            }).length,
             finalizadasHoje: finalizadasHoje.length,
             tmp: formatMilliseconds(tempoMedioPermanencia),
         };
@@ -923,7 +855,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-400">Críticos (TOP18/OTIF)</p>
+                    <p class="text-sm text-gray-400">Críticos (Grade/Perda Agenda)</p>
                     <p class="text-2xl font-bold">${kpis.criticos}</p>
                 </div>
             </div>
@@ -1097,8 +1029,6 @@
             optionsHTML = `
                 <option value="todos">Todos Status</option>
                 <option value="Prioridade">Prioridade</option>
-                <option value="OTIF">Prioridade (OTIF)</option>
-                <option value="TOP 18">Prioridade (TOP 18)</option>
                 <option value="Atrasado">Atrasado</option>
                 <option value="Atenção">Atenção</option>
                 <option value="Grade queimada">Grade queimada</option>
@@ -1137,12 +1067,13 @@
     // --- Eventos de tabela ---
 
     function handleTableClick(e) {
-        const button = e.target.closest('button');
-        if (!button) return;
-        const action = button.dataset.action;
+        const actionEl = e.target.closest('[data-action]');
+        if (!actionEl) return;
+        e.preventDefault();
+        const action = actionEl.dataset.action;
         if (!action) return;
 
-        const id = button.dataset.id;
+        const id = actionEl.dataset.id;
         if (!id) return;
 
         selectedOperacao =
@@ -1163,10 +1094,10 @@
 
         switch (action) {
             case 'details':
-                showDetailsModal();
+                window.showDetailsModal();
                 break;
             case 'occurrence':
-                showOccurrenceModal();
+                window.showOccurrenceModal();
                 break;
             case 'finish':
                 showConfirmModal('Tem certeza que deseja finalizar esta operação?', finalizarOperacao);
@@ -1175,7 +1106,7 @@
                 showConfirmModal(`Tem certeza que deseja cancelar a DT ${selectedOperacao.dt}? Esta ação não pode ser desfeita.`, cancelarOperacao);
                 break;
             case 'edit-occurrence':
-                showResolutionModal();
+                window.showResolutionModal();
                 break;
         }
     }
@@ -1282,47 +1213,172 @@
 
     // --- Firestore: log de atividades ---
 
+    
     async function addLogEntry(operacaoId, text, isComment = false) {
-        if (!db || !operacaoId) return;
-        const logCollectionRef =
-            collection(db, `artifacts/${appId}/public/data/logs/${operacaoId}/entries`);
-        await addDoc(logCollectionRef, {
-            text,
-            timestamp: serverTimestamp(),
-            isComment
-        });
+        if (!db || !operacaoId) return false;
+
+        try {
+            const logCollectionRef =
+                collection(db, `artifacts/${appId}/public/data/logs/${operacaoId}/entries`);
+
+            await addDoc(logCollectionRef, {
+                text,
+                timestamp: serverTimestamp(),
+                isComment
+            });
+
+            return true;
+        } catch (error) {
+            console.warn("Falha ao gravar log:", error);
+            showToast("Não foi possível gravar o log (verifique regras/permissões do Firestore).", "error");
+            return false;
+        }
+    }
+    async function deleteLogEntry(operacaoId, entryId) {
+        if (!db || !operacaoId || !entryId) return false;
+
+        try {
+            const entryRef = doc(
+                db,
+                `artifacts/${appId}/public/data/logs/${operacaoId}/entries`,
+                entryId
+            );
+
+            await deleteDoc(entryRef);
+            showToast("Comentário removido.", "success");
+            return true;
+        } catch (error) {
+            console.warn("Falha ao remover comentário:", error);
+            showToast("Não foi possível remover (verifique regras/permissões do Firestore).", "error");
+            return false;
+        }
     }
 
+    function bindDeleteLogHandler(logEntriesContainer) {
+        if (!logEntriesContainer || logEntriesContainer.dataset.deleteBound === "1") return;
+
+        logEntriesContainer.addEventListener("click", (ev) => {
+            const btn = ev.target.closest("button[data-action='delete-log']");
+            if (!btn) return;
+
+            const operacaoId = btn.dataset.operacaoId;
+            const entryId = btn.dataset.entryId;
+
+            showConfirmModal(
+                "Remover este comentário?",
+                () => deleteLogEntry(operacaoId, entryId)
+            );
+        });
+
+        logEntriesContainer.dataset.deleteBound = "1";
+    }
+
+
+
+    
     function renderLog(operacaoId) {
-        const logEntriesContainer = document.getElementById('log-entries');
+        const logEntriesContainer = document.getElementById("log-entries");
         if (!logEntriesContainer) return;
 
-        const logCollectionRef =
-            collection(db, `artifacts/${appId}/public/data/logs/${operacaoId}/entries`);
+        // garante o handler do botão "remover"
+        bindDeleteLogHandler(logEntriesContainer);
 
-        onSnapshot(logCollectionRef, (querySnapshot) => {
-            const entries = [];
-            querySnapshot.forEach((doc) => entries.push(doc.data()));
+        if (!db) {
+            logEntriesContainer.innerHTML = `
+                <div class="p-3 rounded-lg border border-white/10 bg-black/20 text-sm text-gray-200">
+                    Firestore não inicializado. Verifique as chaves do Firebase.
+                </div>
+            `;
+            return;
+        }
 
-            entries.sort((a, b) =>
-                (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+        // evita acumular listeners ao abrir várias DTs
+        if (window.__logUnsub) {
+            try { window.__logUnsub(); } catch (_) {}
+            window.__logUnsub = null;
+        }
 
-            logEntriesContainer.innerHTML = entries.map(entry => {
-                const time =
-                    entry.timestamp
-                        ? new Date(entry.timestamp.seconds * 1000).toLocaleString('pt-BR')
-                        : 'agora';
-                const commentClass =
-                    entry.isComment ? 'bg-blue-900/50 p-3 rounded-lg' : 'text-gray-400';
+        const logCollectionRef = collection(
+            db,
+            `artifacts/${appId}/public/data/logs/${operacaoId}/entries`
+        );
 
-                return `
-                    <div class="text-sm ${commentClass}">
-                        <p>${entry.text}</p>
-                        <p class="text-xs text-gray-500 mt-1">${time}</p>
-                    </div>`;
-            }).join('');
-        });
+        const qLogs = query(logCollectionRef, orderBy("timestamp", "desc"), limit(50));
+
+        window.__logUnsub = onSnapshot(
+            qLogs,
+            (querySnapshot) => {
+                if (!querySnapshot || querySnapshot.empty) {
+                    logEntriesContainer.innerHTML = `
+                        <div class="p-3 rounded-lg border border-white/10 bg-black/20 text-sm text-gray-200">
+                            Nenhuma atividade registrada ainda.
+                        </div>
+                    `;
+                    return;
+                }
+
+                const entries = [];
+                querySnapshot.forEach((snap) => {
+                    entries.push({ id: snap.id, ...snap.data() });
+                });
+
+                logEntriesContainer.innerHTML = entries
+                    .map((entry) => {
+                        const time = entry.timestamp?.toMillis
+                            ? new Date(entry.timestamp.toMillis()).toLocaleString("pt-BR")
+                            : "—";
+
+                        const commentClass = entry.isComment
+                            ? "border-blue-500/30 bg-blue-500/10"
+                            : "border-white/10 bg-black/10";
+
+                        const typeBadge = entry.isComment
+                            ? `<span class="ml-2 inline-flex items-center rounded-md bg-blue-500/20 px-2 py-0.5 text-[11px] font-semibold text-blue-200 border border-blue-500/30">Comentário</span>`
+                            : "";
+
+                        const deleteBtn = entry.isComment
+                            ? `
+                                <button type="button"
+                                    data-action="delete-log"
+                                    data-operacao-id="${operacaoId}"
+                                    data-entry-id="${entry.id}"
+                                    class="ml-2 inline-flex items-center justify-center rounded-md border border-white/10 bg-white/5 px-2 py-1 text-[11px] text-gray-200 hover:bg-red-500/20 hover:border-red-500/30 hover:text-red-100 transition"
+                                    title="Remover comentário"
+                                >
+                                    🗑️
+                                </button>
+                              `
+                            : "";
+
+                        return `
+                            <div class="p-3 rounded-lg border ${commentClass}">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="min-w-0">
+                                        <p class="text-xs text-gray-400">
+                                            ${time} ${typeBadge}
+                                        </p>
+                                    </div>
+                                    <div class="shrink-0">
+                                        ${deleteBtn}
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-sm text-gray-100 break-words">${escapeHtml(entry.text || "")}</p>
+                            </div>
+                        `;
+                    })
+                    .join("");
+            },
+            (error) => {
+                console.error("Erro ao carregar logs:", error);
+                logEntriesContainer.innerHTML = `
+                    <div class="p-3 rounded-lg border border-red-500/30 bg-red-500/10 text-sm text-red-200">
+                        Erro ao carregar o log (verifique regras/permissões do Firestore). Veja o console.
+                    </div>
+                `;
+            }
+        );
     }
+
 
     async function handleAddComment(e) {
         e.preventDefault();
@@ -1330,8 +1386,8 @@
         const input = document.getElementById('comment-input');
         const commentText = input.value.trim();
         if (commentText) {
-            await addLogEntry(selectedOperacao.id, commentText, true);
-            input.value = '';
+            const ok = await addLogEntry(selectedOperacao.id, commentText, true);
+            if (ok) input.value = '';
         }
     }
 
