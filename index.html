@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -14,43 +14,449 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix"></script>
 
   <style>
-    body { background-color: #111827; }
-    .modal-backdrop { transition: opacity 0.3s ease; }
-    .kpi-card-sm {
-      background-color: rgba(31, 41, 55, 0.7);
-      border: 1px solid rgba(75, 85, 99, 0.5);
-    }
-    @keyframes pulse-red { 50% { background-color: rgba(239, 68, 68, 0.15); } }
-    .animate-pulse-red { animation: pulse-red 2s cubic-bezier(0.4,0,0.6,1) infinite; }
-    @keyframes pulse-yellow { 50% { background-color: rgba(245, 158, 11, 0.15); } }
-    .animate-pulse-yellow { animation: pulse-yellow 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+  .site-header {
+    position: relative;
+    padding: 22px 24px;
+    border-radius: 24px;
+    background:
+      linear-gradient(135deg, rgba(6, 28, 17, 0.96), rgba(4, 18, 11, 0.94)),
+      radial-gradient(circle at top right, rgba(0, 169, 79, 0.18), transparent 30%);
+    border: 1px solid rgba(0, 169, 79, 0.18);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+  }
 
-    #performance-chart { cursor: pointer; }
+.site-header {
+  position: relative;
+  padding: 22px 24px;
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(6, 28, 17, 0.96), rgba(4, 18, 11, 0.94)),
+    radial-gradient(circle at top right, rgba(0, 169, 79, 0.18), transparent 30%);
+  border: 1px solid rgba(0, 169, 79, 0.18);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+}
 
-    .alert-banner { animation: fadeIn-slideDown 0.5s ease-out forwards; }
-    @keyframes fadeIn-slideDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
+  pointer-events: none;
+}
+
+.site-header-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.brand-mark {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,0.08), transparent 35%),
+    linear-gradient(135deg, rgba(0,169,79,0.22), rgba(4,21,13,0.95));
+  border: 1px solid rgba(0,169,79,0.28);
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    inset 0 -12px 24px rgba(0,0,0,0.18);
+}
+
+.heilog-logo-svg {
+  width: 48px;
+  height: 48px;
+  display: block;
+}
+
+.brand-text-clean {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.brand-title-main {
+  margin: 0;
+  font-size: clamp(1.7rem, 2.3vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 0.2px;
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .brand-mark {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+  }
+
+  .heilog-logo-svg {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+  .brand-mark {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+  }
+
+  .brand-logo-img {
+    max-width: 36px;
+    max-height: 36px;
+  }
+
+  .top-actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-left: 0;
+  }
+}
+  :root {
+    --heineken-green: #008C45;
+    --heineken-green-strong: #00A94F;
+    --heineken-green-dark: #005B2E;
+    --heineken-red: #E30613;
+    --heineken-gold: #C8A96B;
+    --bg-main: #04150d;
+    --bg-panel: rgba(7, 30, 18, 0.92);
+    --bg-panel-soft: rgba(10, 40, 24, 0.82);
+    --border-main: rgba(0, 169, 79, 0.22);
+    --text-soft: #b7cdbf;
+    --text-muted: #87a292;
+    --shadow-green: 0 10px 30px rgba(0, 140, 69, 0.18);
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    color: #fff;
+    background:
+      radial-gradient(circle at top left, rgba(0, 169, 79, 0.18), transparent 28%),
+      radial-gradient(circle at top right, rgba(200, 169, 107, 0.08), transparent 22%),
+      linear-gradient(135deg, #031008 0%, #071a10 45%, #04150d 100%);
+  }
+
+  body {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .modal-backdrop { transition: opacity 0.3s ease; }
+
+  .kpi-card-sm {
+    background: linear-gradient(180deg, rgba(8, 33, 20, 0.95), rgba(5, 24, 14, 0.96));
+    border: 1px solid rgba(0, 169, 79, 0.16);
+    box-shadow: var(--shadow-green);
+  }
+
+  @keyframes pulse-red { 50% { background-color: rgba(227, 6, 19, 0.16); } }
+  .animate-pulse-red { animation: pulse-red 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+
+  @keyframes pulse-yellow { 50% { background-color: rgba(200, 169, 107, 0.16); } }
+  .animate-pulse-yellow { animation: pulse-yellow 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+
+  .alert-banner { animation: fadeIn-slideDown 0.5s ease-out forwards; }
+  @keyframes fadeIn-slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  #performance-chart { cursor: pointer; }
+
+  /* Superfícies */
+  .bg-gray-800 {
+    background: linear-gradient(180deg, rgba(8, 33, 20, 0.95), rgba(5, 24, 14, 0.96)) !important;
+    border: 1px solid var(--border-main) !important;
+    box-shadow: var(--shadow-green) !important;
+  }
+
+  .bg-gray-700 {
+    background: rgba(11, 41, 25, 0.95) !important;
+  }
+
+  .bg-gray-600 {
+    background: rgba(16, 57, 35, 0.95) !important;
+  }
+
+  .bg-gray-900\/60,
+  .bg-gray-900\/50 {
+    background: rgba(3, 16, 8, 0.82) !important;
+  }
+
+  .border-gray-700,
+  .border-gray-600 {
+    border-color: rgba(0, 169, 79, 0.18) !important;
+  }
+
+  .text-gray-400 {
+    color: var(--text-muted) !important;
+  }
+
+  .text-gray-300 {
+    color: var(--text-soft) !important;
+  }
+
+  .hover\:bg-gray-700:hover,
+  .hover\:bg-gray-600:hover,
+  .hover\:bg-gray-500:hover {
+    background: rgba(18, 66, 40, 0.95) !important;
+  }
+
+  /* Botões principais */
+  .bg-blue-600,
+  .bg-green-600 {
+    background: linear-gradient(135deg, var(--heineken-green), var(--heineken-green-strong)) !important;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 10px 20px rgba(0, 169, 79, 0.22);
+  }
+
+  .hover\:bg-blue-700:hover,
+  .hover\:bg-green-700:hover {
+    background: linear-gradient(135deg, var(--heineken-green-dark), var(--heineken-green)) !important;
+  }
+
+  .bg-red-600 {
+    background: linear-gradient(135deg, #9b0f19, var(--heineken-red)) !important;
+  }
+
+  .hover\:bg-red-700:hover {
+    background: linear-gradient(135deg, #7d0912, #c10d18) !important;
+  }
+
+  /* Cabeçalho */
+  header h1 {
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+
+  header p {
+    color: #a9c0b1 !important;
+  }
+
+  /* Tabs */
+  nav[aria-label="Tabs"] {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 14px 14px 0 0;
+    border-bottom-width: 2px;
+    transition: all 0.25s ease;
+    background: transparent;
+  }
+
+  .tab-btn .tab-icon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.95;
+  }
+
+  .tab-btn.inactive-tab {
+    color: #93ad9c;
+    border-color: transparent;
+  }
+
+  .tab-btn.inactive-tab:hover {
+    color: #ffffff;
+    border-color: rgba(0, 169, 79, 0.28);
+    background: rgba(0, 140, 69, 0.08);
+  }
+
+  .tab-btn.active-tab {
+    color: #ffffff;
+    border-color: var(--heineken-green-strong);
+    background: linear-gradient(180deg, rgba(0, 169, 79, 0.16), rgba(0, 169, 79, 0.04));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  /* Tabela */
+  thead tr {
+    background: rgba(0, 169, 79, 0.05);
+  }
+
+  tbody tr:hover {
+    background: rgba(0, 169, 79, 0.08) !important;
+  }
+
+  /* Inputs */
+  input, select, textarea {
+    color: #fff !important;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: #89a594 !important;
+  }
+
+  /* Destaques */
+  .heineken-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(0, 169, 79, 0.12);
+    border: 1px solid rgba(0, 169, 79, 0.2);
+    color: #dff7e7;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+  }
+
+.brand-logo-wide {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 170px;
+  flex-shrink: 0;
+}
+
+.heilog-logo-wide-svg {
+  width: 180px;
+  height: auto;
+  display: block;
+}
+
+.brand-text-clean {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.brand-title-clean {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: #8ec7a2;
+}
+
+.brand-subtitle-clean {
+  margin: 6px 0 0;
+  color: #dbe9df;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .heilog-logo-wide-svg {
+    width: 145px;
+  }
+
+  .brand-wrap {
+    align-items: flex-start;
+  }
+
+  .brand-subtitle-clean {
+    font-size: 0.92rem;
+  }
+}
+</style>
 </head>
 
 <body class="text-white font-sans">
-<div class="max-w-screen-2xl mx-auto p-4 sm:p-6 lg:p-8">
+<div class="w-full min-h-screen p-4 sm:p-6 lg:p-8">
 
   <!-- Cabeçalho -->
-  <header class="mb-6 flex flex-wrap justify-between items-center gap-4">
-    <div>
-      <h1 class="text-3xl font-bold">Painel do Analista</h1>
-      <p class="text-gray-400 mt-1">Visão em tempo real do pátio - HEILOG</p>
+<header class="site-header mb-6">
+  <div class="site-header-main">
+    <div class="brand-wrap">
+      <div class="brand-mark">
+  <svg class="heilog-logo-svg" viewBox="0 0 84 84" xmlns="http://www.w3.org/2000/svg" aria-label="HEILOG">
+    <defs>
+      <linearGradient id="hlgBg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#0E3B24"/>
+        <stop offset="100%" stop-color="#051A10"/>
+      </linearGradient>
+
+      <linearGradient id="hlgGreen" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#00B65A"/>
+        <stop offset="100%" stop-color="#007A3D"/>
+      </linearGradient>
+
+      <linearGradient id="hlgGlow" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#6DFFAF"/>
+        <stop offset="100%" stop-color="#00A94F"/>
+      </linearGradient>
+
+      <filter id="hlgShadow" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.35"/>
+      </filter>
+    </defs>
+
+    <!-- Fundo -->
+    <rect x="6" y="6" width="72" height="72" rx="22" fill="url(#hlgBg)"/>
+
+    <!-- Brilho superior -->
+    <ellipse cx="42" cy="20" rx="20" ry="8" fill="rgba(255,255,255,0.05)"/>
+
+    <!-- Estrela -->
+    <path
+      d="M42 12.5l2.6 5.8 6.3.5-4.8 4.2 1.6 6.1-5.7-3.3-5.7 3.3 1.6-6.1-4.8-4.2 6.3-.5L42 12.5z"
+      fill="#E30613"
+      stroke="#FFD9A6"
+      stroke-width="1"
+      filter="url(#hlgShadow)"
+    />
+
+    <!-- H moderno -->
+    <g filter="url(#hlgShadow)">
+      <rect x="23" y="28" width="10" height="28" rx="4" fill="url(#hlgGreen)"/>
+      <rect x="51" y="28" width="10" height="28" rx="4" fill="url(#hlgGreen)"/>
+      <rect x="31" y="38" width="22" height="8" rx="4" fill="url(#hlgGlow)"/>
+    </g>
+
+    <!-- Detalhe inferior -->
+    <rect x="25" y="62" width="28" height="3" rx="1.5" fill="#C8A96B" opacity="0.95"/>
+    <circle cx="57.5" cy="63.5" r="3" fill="#E8C97A"/>
+  </svg>
+</div>
+
+      <div class="brand-text-clean">
+        <h1 class="brand-title-main">Painel do Analista</h1>
+      </div>
     </div>
 
-    <div id="predictive-alert" class="w-full md:w-auto text-center md:text-right"></div>
-
-    <div>
-      <button id="toggle-sound-btn" class="p-2 rounded-full hover:bg-gray-700" title="Ativar/Desativar Som"></button>
+    <div class="top-actions">
+      <button id="toggle-sound-btn"
+              class="header-action-btn"
+              title="Ativar/Desativar Som"></button>
     </div>
-  </header>
+  </div>
+
+  <div class="header-divider"></div>
+
+  <div id="predictive-alert" class="header-alert-slot"></div>
+</header>
 
   <!-- Alertas -->
   <div id="system-alerts-container" class="mb-6 space-y-2"></div>
@@ -58,15 +464,63 @@
   <!-- Abas -->
   <div class="mb-4">
     <div class="border-b border-gray-700">
-      <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-        <button id="tab-patio" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-blue-500 text-white">Pátio</button>
-        <button id="tab-historico" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-300">Histórico</button>
-        <button id="tab-ocorrencias" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-300">Ocorrências</button>
-        <button id="tab-performance" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-300">Perf. do Turno</button>
-        <!-- ✅ NOVA ABA -->
-        <button id="tab-motoristas" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-300">Motoristas</button>
-        <button id="tab-dashboard" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-300">Dashboard</button>
-      </nav>
+      <nav class="-mb-px flex" aria-label="Tabs">
+  <button id="tab-patio" class="tab-btn active-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
+    <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5h18M6 16.5V9.75A1.75 1.75 0 0 1 7.75 8h8.5A1.75 1.75 0 0 1 18 9.75v6.75M7.5 16.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm12 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+    </svg>
+    <span>Pátio</span>
+  </button>
+
+  <button id="tab-historico" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
+    <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l2.5 2.5M21 12a9 9 0 1 1-3.34-6.95M21 4v5h-5"/>
+    </svg>
+    <span>Histórico</span>
+  </button>
+
+  <button id="tab-ocorrencias" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
+    <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>
+    </svg>
+    <span>Ocorrências</span>
+  </button>
+
+  <button id="tab-performance" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
+    <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 19V5m5 14V9m5 10V12m5 7V7"/>
+    </svg>
+    <span>Perf. do Turno</span>
+  </button>
+
+  <button id="tab-motoristas" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
+    <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2m18 0v-2a4 4 0 0 0-3-3.87m-2-7.13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm6 13v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+    <span>Motoristas</span>
+  </button>
+
+  <button id="tab-baldeios" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
+    <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M17 3h4v4M7 21H3v-4m0 0 6-6m12-4-6 6M21 7l-4-4M3 17l4 4"/>
+    </svg>
+    <span>Baldeios Ritmo</span>
+  </button>
+
+  <button id="tab-ritmo" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
+    <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h4l2-5 4 10 2-5h6"/>
+    </svg>
+    <span>Controle Ritmo</span>
+  </button>
+
+  <button id="tab-dashboard" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
+    <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 5h7v6H4V5Zm9 0h7v10h-7V5ZM4 13h7v6H4v-6Zm9 4h7v2h-7v-2Z"/>
+    </svg>
+    <span>Dashboard</span>
+  </button>
+</nav>
     </div>
   </div>
 
@@ -214,7 +668,7 @@
                   class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="todas">Todas Transportadoras</option>
           </select>
-        </div>
+</div>
       </div>
 
       <div class="overflow-x-auto bg-gray-800 p-6 rounded-lg shadow-lg">
@@ -247,6 +701,138 @@
       </div>
     </div>
 
+    
+    <!-- ✅ Baldeios Ritmo -->
+    <div id="baldeios-content" class="hidden">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <h3 class="text-2xl font-semibold">Baldeios — Ritmo</h3>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <input id="baldeios-date" type="date"
+            class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+
+          <input id="baldeios-search" type="text" placeholder="Buscar placa..."
+            class="w-full sm:w-72 bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+
+          <select id="baldeios-plate-mode"
+            class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="carreta">Placa Carreta (prioridade)</option>
+            <option value="cavalo">Placa Cavalo (prioridade)</option>
+          </select>
+
+          <button id="baldeios-export-csv-btn"
+            class="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow whitespace-nowrap">
+            Exportar CSV
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto bg-gray-800 p-6 rounded-lg shadow-lg">
+        <table class="w-full text-left">
+          <thead class="border-b border-gray-700">
+            <tr>
+              <th class="p-4 text-sm font-semibold text-gray-400">Placa</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Marcações no dia</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Horários</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Tempo entre marcações</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">1ª → Última</th>
+            </tr>
+          </thead>
+          <tbody id="baldeios-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- ✅ Controle Ritmo (Placa a Placa) -->
+    <div id="ritmo-placa-content" class="hidden">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <div>
+          <h3 class="text-2xl font-semibold">Controle Ritmo — Placa a Placa</h3>
+          <p class="text-sm text-gray-400 mt-1">Agrupa baldeios por placa e separa por dia (inclui histórico antigo + novos em tempo real).</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400">De</span>
+            <input id="ritmo-start" type="date"
+              class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400">Até</span>
+            <input id="ritmo-end" type="date"
+              class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          </div>
+
+          <select id="ritmo-plate-mode"
+            class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="carreta">Placa Carreta (prioridade)</option>
+            <option value="cavalo">Placa Cavalo (prioridade)</option>
+          </select>
+
+          <input id="ritmo-search" type="text" placeholder="Buscar placa/DT..."
+            class="w-full sm:w-72 bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+
+          <label class="flex items-center gap-2 text-sm text-gray-300 bg-gray-700/40 border border-gray-600 rounded-lg py-2 px-3">
+            <input id="ritmo-only-baldeio" type="checkbox" class="accent-blue-500">
+            <span>Somente Baldeio</span>
+          </label>
+
+          <button id="ritmo-refresh-btn"
+            class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
+            Atualizar
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-gray-800 p-6 rounded-lg shadow-lg overflow-x-auto">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-lg font-semibold">Resumo por Placa</h4>
+            <p id="ritmo-summary-info" class="text-sm text-gray-400"></p>
+          </div>
+
+          <table class="w-full text-left">
+            <thead class="border-b border-gray-700">
+              <tr>
+                <th class="p-4 text-sm font-semibold text-gray-400">Placa</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Dias</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Marcações</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Última</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Média entre marcações</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="ritmo-table-body"></tbody>
+          </table>
+
+          <div class="flex items-center justify-between mt-4">
+            <p id="ritmo-pagination-info" class="text-sm text-gray-400"></p>
+            <button id="ritmo-load-more"
+              class="hidden bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
+              Carregar mais
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-lg font-semibold">Detalhe por Dia</h4>
+            <button id="ritmo-clear-selected"
+              class="hidden bg-gray-700 hover:bg-gray-600 text-white font-bold py-1.5 px-3 rounded-lg text-sm">
+              Limpar seleção
+            </button>
+          </div>
+
+          <div id="ritmo-detail" class="text-gray-300 text-sm">
+            <div class="p-4 rounded-lg border border-white/10 bg-black/10">
+              Selecione uma placa no resumo para ver os dias e os intervalos.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Dashboard gerencial -->
     <div id="dashboard-content" class="hidden">
       <div class="flex justify-end mb-4">
@@ -255,6 +841,80 @@
           <option value="todas">Todas Transportadoras</option>
         </select>
       </div>
+
+      <!-- ✅ Dashboard Ritmo -->
+      <div id="ritmo-dashboard-section" class="mb-8">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-4">
+          <div>
+            <h3 class="text-2xl font-bold">Dashboard Ritmo</h3>
+            <p class="text-sm text-gray-400 mt-1">Visão dedicada da Ritmo (totais + baldeio), usando histórico + novos em tempo real.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-gray-400">De</span>
+              <input id="ritmo-dash-start" type="date"
+                class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-gray-400">Até</span>
+              <input id="ritmo-dash-end" type="date"
+                class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+            </div>
+
+            <select id="ritmo-dash-plate-mode"
+              class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="carreta">Placa Carreta</option>
+              <option value="cavalo">Placa Cavalo</option>
+            </select>
+
+            <label class="flex items-center gap-2 text-sm text-gray-300 bg-gray-700/40 border border-gray-600 rounded-lg py-2 px-3">
+              <input id="ritmo-dash-only-baldeio" type="checkbox" class="accent-blue-500">
+              <span>Somente Baldeio</span>
+            </label>
+
+            <button id="ritmo-dash-refresh"
+              class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
+              Atualizar
+            </button>
+
+            <button id="ritmo-dash-export"
+              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
+              Exportar CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div id="ritmo-dash-kpis" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6"></div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h4 class="text-xl font-bold mb-4">Marcações por Dia (Ritmo)</h4>
+            <div class="relative h-80">
+              <canvas id="ritmo-dash-daily-chart"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h4 class="text-xl font-bold mb-4">Top Placas (mais marcações no período)</h4>
+            <div class="relative h-80">
+              <canvas id="ritmo-dash-top-plates-chart"></canvas>
+            </div>
+          </div>
+
+          <div class="lg:col-span-2 bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h4 class="text-xl font-bold mb-4">Heatmap (últimos 7 dias do período — por hora)</h4>
+            <div class="relative h-96">
+              <canvas id="ritmo-dash-heatmap-chart"></canvas>
+            </div>
+            <p class="text-xs text-gray-400 mt-3">Azul: Ritmo total • Verde: Baldeio (KPIs) • Heatmap usa o conjunto filtrado (total ou somente baldeio).</p>
+          </div>
+        </div>
+      </div>
+
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
@@ -403,6 +1063,7 @@
     };
 
   const appId = "heilog-logistica";
+const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a62-4877-915b-84434ed9e1d4/a/e44689a4-a84d-46db-ad44-96e757ba7920?tenantId=66e853de-ece3-44dd-9d66-ee6bdf4159d4&source=curatedApps&hint=191f9b9d-3803-4b2b-a391-2a0782d6e3c4&sourcetime=1772715327162";
 
   // ==============================
   // ESTADO GLOBAL
@@ -418,11 +1079,28 @@
   let performanceChart = null;
   let dailyProductivityChart, tmpEvolutionChart, shiftComparisonChart, volumeRankingChart, heatmapChart;
 
+  // ✅ charts do Dashboard Ritmo
+  let ritmoDashDailyChart = null;
+  let ritmoDashTopPlatesChart = null;
+  let ritmoDashHeatmapChart = null;
+  let ritmoDashLastExport = null;
+
+
   let notifiedVehicles = new Set();
   let newlyAdded = new Set();
 
   let audioContext;
   let timerIntervalId = null;
+  
+  // ✅ Controle Ritmo (placa a placa)
+  let ritmoDataVersion = 0;
+  let ritmoCacheKey = '';
+  let ritmoCacheRows = [];
+  let ritmoCacheDetails = new Map();
+  let ritmoPage = 1;
+  const RITMO_PAGE_SIZE = 60;
+  let ritmoSelectedPlate = null;
+
   let confirmCallback = null;
   let soundEnabled = true;
 
@@ -440,6 +1118,9 @@
   // ✅ estado do modal de edição
   let selectedDriverEdit = null;
   let selectedDriverEditSource = null;
+
+  // ✅ Cache local para evitar regravar o tipoSnapshot a cada snapshot
+  let tipoSnapshotMem = new Set();
 
   const DRIVER_STATS_LOOKBACK_DAYS = 90; // analisa só últimos 90 dias para ficar leve
 
@@ -576,13 +1257,23 @@
   };
 
   const getTruckPlate = (op = {}) => {
-    if (op.truckPlate) return String(op.truckPlate);
-    return getDriverInfoFromOperacao(op)?.truckPlate || '';
+    const direct = op.truckPlate || op.placaCavalo || op.placa_cavalo || op.cavaloPlate || op.placaTruck || op.placa_truck || op.placaCaminhao || op.placa_caminhao;
+    if (direct) return String(direct);
+
+    const info = getDriverInfoFromOperacao(op);
+    if (info?.truckPlate) return String(info.truckPlate);
+
+    return '';
   };
 
   const getTrailerPlate = (op = {}) => {
-    if (op.trailerPlate) return String(op.trailerPlate);
-    return getDriverInfoFromOperacao(op)?.trailerPlate || '';
+    const direct = op.trailerPlate || op.placaCarreta || op.placa_carreta || op.carretaPlate || op.placaTrailer || op.placa_trailer || op.placaCarroceria || op.placa_carroceria;
+    if (direct) return String(direct);
+
+    const info = getDriverInfoFromOperacao(op);
+    if (info?.trailerPlate) return String(info.trailerPlate);
+
+    return '';
   };
 
   const getTelefoneFromOperacao = (op = {}) => {
@@ -599,6 +1290,46 @@
     const digits = String(first).replace(/\D/g, '');
     if (digits.length < 10) return null;
     return digits;
+  };
+
+  // ==============================
+  // SEGMENTAÇÃO / TIPO (Baldeio, Latas Vazias, OTIF, Aderente, Hidroman, etc.)
+  // ==============================
+  const getTipoHeilogDirect = (op = {}) => {
+    const direct =
+      op.tipoSnapshot || op.tipo_heilog || op.tipoHeilog || op.statusHeilog || op.status_tipo || op.statusTipo ||
+      op.segmentacao || op.segmentação ||
+      op.tipoOperacao || op.tipo_operacao || op.tipo ||
+      op.fluxo || op.categoria || op.classificacao ||
+      op.canalOperacao || op.canal || op.segment ||
+      op.perfil || op.cliente;
+
+    if (direct !== undefined && direct !== null && String(direct).trim() !== '') return String(direct).trim();
+    return '';
+  };
+
+  const getSegmentacaoLabel = (op = {}) => {
+    // 1) Se já veio "gravado" do HEILOG, nunca muda
+    if (op.tipoSnapshot && String(op.tipoSnapshot).trim() !== '') return String(op.tipoSnapshot).trim();
+
+    // 2) Se existir campo direto no documento (vindo do HEILOG), usa esse
+    const direct = getTipoHeilogDirect(op);
+    if (direct) return direct;
+
+    // 3) Fallback: tenta extrair de texto (apenas visual; não "grava" isso como oficial)
+    const blob = `${op.xtAdicional || ''} ${op.observacao || ''} ${op.obs || ''} ${op.notas || ''}`.toUpperCase();
+    const rules = [
+      { k: 'BALDEIO', label: 'Baldeio' },
+      { k: 'LATAS VAZIAS', label: 'Latas vazias' },
+      { k: 'LATA VAZIA', label: 'Latas vazias' },
+      { k: 'OTIF', label: 'OTIF' },
+      { k: 'ADERENTE', label: 'Aderente' },
+      { k: 'HIDROMAN', label: 'Hidroman' }
+    ];
+    const hit = rules.find(r => blob.includes(r.k));
+    if (hit) return hit.label;
+
+    return '';
   };
 
   // ✅ Motoristas: merge para consulta pós-encerramento
@@ -793,8 +1524,10 @@
   // ==============================
   const render = () => {
     if (activeTab === 'performance') { renderPerformanceDashboard(); return; }
-    if (activeTab === 'dashboard') { renderManagerDashboard(); return; }
+    if (activeTab === 'dashboard') { renderManagerDashboard(); renderRitmoDashboard(); return; }
     if (activeTab === 'motoristas') { renderDriversTab(); return; }
+    if (activeTab === 'baldeios') { renderBaldeiosRitmo(); return; }
+    if (activeTab === 'ritmo') { renderRitmoPlacaControl(); return; }
 
     const searchTerm = norm(document.getElementById('search-input').value);
     const searchCompact = compact(searchTerm);
@@ -882,8 +1615,8 @@
     const tableHead = document.getElementById('table-head');
 
     const headers = {
-      patio: 'DT,Status,Agenda,Tempo no Pátio,Motorista,Transportadora,Placa Cavalo,Placa Carreta,Ações',
-      historico: 'DT,Status Final,Agenda,Motorista,Transportadora,Placa Cavalo,Placa Carreta,Finalizado Em,Ações',
+      patio: 'DT,Status,Agenda,Tipo,Tempo no Pátio,Motorista,Transportadora,Placa Cavalo,Placa Carreta,Ações',
+      historico: 'DT,Status Final,Agenda,Tipo,Motorista,Transportadora,Placa Cavalo,Placa Carreta,Finalizado Em,Ações',
       ocorrencias: 'Data,DT,Canal,Prioridade,Problema Identificado,Descrição,Status,Ações'
     };
 
@@ -966,7 +1699,7 @@
               <circle cx="12" cy="12" r="3"/>
             </svg>
           </button>
-          <button type="button" data-action="occurrence" data-id="${op.id}" title="Adicionar Ocorrência">
+          <button type="button" data-action="occurrence" data-id="${op.id}" title="Ocorrência / Power Apps">
             <svg class="w-5 h-5 text-amber-400 hover:text-amber-300 pointer-events-none"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1022,6 +1755,7 @@
           <td class="p-4 font-mono text-sm">${op.dt || ''}</td>
           <td class="p-4">${statusBadge}</td>
           <td class="p-4">${op.agenda || 'N/A'}</td>
+          <td class="p-4">${escapeHtml(getSegmentacaoLabel(op) || '—')}</td>
           ${activeTab === 'patio'
             ? `<td class="p-4 font-mono text-sm timer-cell" data-registration-time="${op.registrationTime}">
                  ${getElapsedTime(op.registrationTime)}
@@ -1359,6 +2093,7 @@
       <p><strong>Transportadora:</strong> ${selectedOperacao.transportadora || 'N/A'}</p>
       <p><strong>Destino:</strong> ${selectedOperacao.destino || 'N/A'}</p>
       <p><strong>Agenda:</strong> ${selectedOperacao.agenda || 'N/A'}</p>
+      <p><strong>Tipo:</strong> ${escapeHtml(getSegmentacaoLabel(selectedOperacao) || '—')}</p>
       <p><strong>Chegada no Pátio:</strong> ${
         selectedOperacao.registrationTime ? new Date(selectedOperacao.registrationTime).toLocaleString('pt-BR') : 'N/A'
       }</p>
@@ -1619,7 +2354,7 @@
         return byText && byTransp;
       });
 
-      headers = ['DT','Status Final','Agenda','Motorista','Transportadora','Placa Cavalo','Placa Carreta','Finalizado Em','Tempo Total'];
+      headers = ['DT','Status Final','Agenda','Tipo','Motorista','Transportadora','Placa Cavalo','Placa Carreta','Finalizado Em','Tempo Total'];
     } else {
       dataToExport = patioData.filter(op => {
         const { statusText } = getPriorityStatusLogic(op);
@@ -1633,7 +2368,7 @@
         return textMatch && transpMatch && statusMatch && tempoMatch;
       });
 
-      headers = ['DT','Status','Agenda','Tempo no Pátio','Motorista','Transportadora','Placa Cavalo','Placa Carreta'];
+      headers = ['DT','Status','Agenda','Tipo','Tempo no Pátio','Motorista','Transportadora','Placa Cavalo','Placa Carreta'];
     }
 
     const rows = dataToExport.map(op => {
@@ -1788,7 +2523,46 @@
     }
   }
 
-  async function handleAddOccurrence(e) {
+  async function openPowerAppsOccurrence() {
+  if (!db || !selectedOperacao) return;
+
+  try {
+    const prioridade = getPriorityStatusLogic(selectedOperacao).statusText;
+
+    // 1) grava na aba Ocorrências
+    await addDoc(collection(db, `artifacts/${appId}/public/data/ocorrencias`), {
+      type: "Abertura Power Apps",
+      description: `Usuário abriu o Power Apps para tratar a DT ${selectedOperacao.dt}.`,
+      dt: selectedOperacao.dt || '',
+      operacaoId: selectedOperacao.id || '',
+      timestamp: serverTimestamp(),
+      canal: "Power Apps",
+      prioridade,
+      statusOcorrencia: "Aberto no Power Apps",
+      resolucao: ""
+    });
+
+    // 2) grava também no log da operação
+    await addLogEntry(
+      selectedOperacao.id,
+      `Usuário abriu ocorrência no Power Apps para a DT ${selectedOperacao.dt}.`,
+      false
+    );
+
+    // 3) abre o app
+    window.open(POWERAPPS_OCCURRENCE_URL, '_blank', 'noopener,noreferrer');
+    window.closeOccurrenceModal();
+
+    showToast("Power Apps aberto e ocorrência registrada.", "success");
+  } catch (error) {
+    console.error("Erro ao abrir Power Apps e registrar ocorrência:", error);
+    window.open(POWERAPPS_OCCURRENCE_URL, '_blank', 'noopener,noreferrer');
+    window.closeOccurrenceModal();
+    showToast("Power Apps aberto, mas não foi possível registrar no painel.", "error");
+  }
+}
+
+async function handleAddOccurrence(e) {
     e.preventDefault();
     if (!db || !selectedOperacao) return;
 
@@ -1909,11 +2683,43 @@
   const toMs = (t) => {
     if (t === null || t === undefined) return null;
     if (typeof t === 'number') return t;
+
     if (typeof t === 'string') {
-      const parsed = Date.parse(t);
+      const str = t.trim();
+
+      // dd/mm/yyyy [hh:mm[:ss]]
+      const m1 = str.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+      if (m1) {
+        const dd = parseInt(m1[1], 10);
+        const mm = parseInt(m1[2], 10) - 1;
+        const yyyy = parseInt(m1[3], 10);
+        const hh = m1[4] ? parseInt(m1[4], 10) : 0;
+        const mi = m1[5] ? parseInt(m1[5], 10) : 0;
+        const ss = m1[6] ? parseInt(m1[6], 10) : 0;
+        const d = new Date(yyyy, mm, dd, hh, mi, ss, 0);
+        const ms = d.getTime();
+        return Number.isFinite(ms) ? ms : null;
+      }
+
+      // hh:mm[:ss] (assume hoje)
+      const m2 = str.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+      if (m2) {
+        const now = new Date();
+        const d = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
+          parseInt(m2[1], 10), parseInt(m2[2], 10), m2[3] ? parseInt(m2[3], 10) : 0, 0);
+        const ms = d.getTime();
+        return Number.isFinite(ms) ? ms : null;
+      }
+
+      const parsed = Date.parse(str);
       return Number.isFinite(parsed) ? parsed : null;
     }
+
     if (t && typeof t === 'object' && typeof t.seconds === 'number') return t.seconds * 1000;
+    if (t && typeof t === 'object' && typeof t.toMillis === 'function') {
+      const ms = t.toMillis();
+      return Number.isFinite(ms) ? ms : null;
+    }
     return null;
   };
 
@@ -2716,6 +3522,850 @@
     fields.appendChild(row);
   }
 
+
+  // ============================================================
+  // ✅ BALDEIOS RITMO (controle por placa / intervalos)
+  // ✅ Normalização "RITMO" (aceita: RITMO, ritmo, RITIMO, RITM0, r1tm0, etc.)
+  const normTransportadora = (v) => String(v || '')
+    .toUpperCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
+    .replace(/0/g, 'O')
+    .replace(/1/g, 'I')
+    .replace(/[^A-Z0-9]/g, '');
+
+  const isRitmoName = (v) => {
+    const x = normTransportadora(v);
+    if (!x) return false;
+    // aceita RITMO e RITIMO (erro comum), e variações com 0/1
+    if (x.includes('RITMO') || x.includes('RITIMO')) return true;
+    return /RITI?MO/.test(x);
+  };
+
+  const getTransportadoraFromOperacao = (op = {}) => {
+    const direct = op.transportadora || op.transp || op.transportadoraNome || op.carrier || op.transport || op.transportadora_name;
+    if (direct) return String(direct);
+
+    const info = getDriverInfoFromOperacao(op);
+    if (info?.transportadora) return String(info.transportadora);
+
+    return '';
+  };
+
+  const isBaldeioOp = (op = {}) => {
+    const tipo = String(getSegmentacaoLabel(op) || op.tipoSnapshot || op.tipo || op.segmentacao || op.segmentação || '').toUpperCase();
+    if (tipo.includes('BALDEI')) return true;
+
+    // fallback: procura no objeto inteiro
+    try {
+      const all = JSON.stringify(op).toUpperCase().replace(/0/g,'O').replace(/1/g,'I');
+      return all.includes('BALDEI');
+    } catch (_) {
+      return false;
+    }
+  };
+
+  const isRitmoOp = (op = {}) => {
+    const t = getTransportadoraFromOperacao(op);
+    if (t && isRitmoName(t)) return true;
+
+    // fallback forte: procura em qualquer campo do objeto
+    try {
+      const all = JSON.stringify(op).toUpperCase().replace(/0/g,'O').replace(/1/g,'I');
+      return all.includes('RITMO') || all.includes('RITIMO');
+    } catch (_) {
+      return false;
+    }
+  };
+
+
+
+  // ============================================================
+  const plateKey = (op, mode = 'carreta') => {
+    const trl = (getTrailerPlate(op) || '').trim();
+    const trk = (getTruckPlate(op) || '').trim();
+    const p = (mode === 'carreta') ? (trl || trk) : (trk || trl);
+    if (p) return p;
+
+    const c = cpf11(op.cpf || op.cpfMotorista || op.driverCpf || op.document);
+    if (c) return `SEM_PLACA_CPF_${c}`;
+    const ph = phoneDigits(getTelefoneFromOperacao(op) || op.phone || op.telefone || op.celular);
+    if (ph) return `SEM_PLACA_FONE_${ph}`;
+    if (op.dt) return `SEM_PLACA_DT_${String(op.dt)}`;
+    return '';
+  };
+
+  const fmtHHMM = (ms) => new Date(ms).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+  const fmtDelta = (ms) => {
+    if (!Number.isFinite(ms) || ms < 0) return '—';
+    const totalMin = Math.round(ms / 60000);
+    const h = Math.floor(totalMin / 60);
+    const m = totalMin % 60;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  };
+
+  
+  function renderBaldeiosRitmo() {
+    const tbody = document.getElementById('baldeios-table-body');
+    if (!tbody) return;
+
+    const dateEl = document.getElementById('baldeios-date');
+    const searchRaw = (document.getElementById('baldeios-search')?.value || '').trim().toUpperCase();
+    const searchCompact = searchRaw.replace(/[^A-Z0-9]/g, '');
+
+    const mode = document.getElementById('baldeios-plate-mode')?.value || 'carreta';
+
+    const baseDate = (dateEl && dateEl.value) ? new Date(dateEl.value) : new Date();
+    const dayStart = startOfDay(baseDate).getTime();
+    const dayEnd = dayStart + 24 * 3600 * 1000;
+
+    // ✅ Sempre usa o DIA da marcação (registrationTime/timestamp)
+// Se vier só "HH:MM", tenta combinar com um campo de data do próprio registro.
+// (Se não existir data no registro, usa o dia do filtro como último fallback.)
+    const toMsSmart = (ts, op) => {
+      // 1) Timestamp/number/string completa
+      const msDirect = toMs(ts);
+      if (msDirect) return msDirect;
+
+      // 2) Se for só hora, tenta achar uma data no próprio registro
+      if (typeof ts === 'string') {
+        const str = ts.trim();
+        const m = str.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+        if (m) {
+          const hh = parseInt(m[1], 10);
+          const mi = parseInt(m[2], 10);
+          const ss = m[3] ? parseInt(m[3], 10) : 0;
+
+          const dateCandidates = [
+            op?.dataMarcacao, op?.data_marcacao,
+            op?.dataRegistro, op?.data_registro,
+            op?.data, op?.dia, op?.date
+          ].filter(Boolean);
+
+          for (const dc of dateCandidates) {
+            const dms = toMs(dc);
+            if (dms) {
+              const d = new Date(dms);
+              const dt = new Date(d.getFullYear(), d.getMonth(), d.getDate(), hh, mi, ss, 0);
+              const ms = dt.getTime();
+              return Number.isFinite(ms) ? ms : null;
+            }
+          }
+
+          // 3) Último fallback: usa o dia do filtro (melhor que sumir)
+          const dt = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), hh, mi, ss, 0);
+          const ms = dt.getTime();
+          return Number.isFinite(ms) ? ms : null;
+        }
+      }
+
+      return null;
+    };
+
+    // junta pátio + histórico (marcações do dia) preservando origem
+    const patioOps = (patioData || []).map(op => {
+      const ts = op.registrationTime || op.timestamp || op.createdAt || op.created_at;
+      return { ...op, _src: 'patio', _rt: toMsSmart(ts, op) };
+    });
+
+    const histOps = (historicoData || []).map(op => {
+      const ts = op.registrationTime || op.timestamp || op.createdAt || op.created_at;
+      return { ...op, _src: 'historico', _rt: toMsSmart(ts, op) };
+    });
+
+    const allOps = [...patioOps, ...histOps]
+      .filter(op => op._rt && op._rt >= dayStart && op._rt < dayEnd);
+
+    // filtra: Transportadora Ritmo (se preenchida) + Tipo Baldeio
+    const filtered = allOps.filter(op => {
+      const tRaw = getTransportadoraFromOperacao(op);
+      if (tRaw && !isRitmoName(tRaw)) return false;
+      if (!isBaldeioOp(op)) return false;
+      return true;
+    });
+
+    // agrupa por placa (guarda id+origem para excluir uma marcação específica)
+    const map = new Map();
+    filtered.forEach(op => {
+      const placa = plateKey(op, mode);
+      if (!placa) return;
+
+      const k = String(placa).toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+      // ✅ busca mais “perdoável”
+      if (searchCompact) {
+        const matchRaw = String(placa).toUpperCase().includes(searchRaw);
+        const matchCompact = k.includes(searchCompact);
+        const matchDt = String(op.dt || '').toUpperCase().replace(/[^A-Z0-9]/g,'').includes(searchCompact);
+        if (!(matchRaw || matchCompact || matchDt)) return;
+      }
+
+      const entry = { ms: op._rt, id: op.id || '', src: op._src };
+
+      if (!map.has(k)) map.set(k, { placa: String(placa), entries: [] });
+      map.get(k).entries.push(entry);
+    });
+
+    const rows = Array.from(map.values())
+      .map(({ placa, entries }) => {
+        entries.sort((a, b) => a.ms - b.ms);
+
+        const horarios = entries.map(e => ({
+          hhmm: fmtHHMM(e.ms),
+          id: e.id,
+          src: e.src,
+          ms: e.ms
+        }));
+
+        const deltas = [];
+        for (let i = 1; i < entries.length; i++) deltas.push(entries[i].ms - entries[i - 1].ms);
+
+        const deltasTxt = deltas.length ? deltas.map(fmtDelta).join(' | ') : '—';
+        const firstLast = (entries.length >= 2) ? fmtDelta(entries[entries.length - 1].ms - entries[0].ms) : '—';
+
+        return { placa, count: entries.length, horarios, deltasTxt, firstLast, last: entries[entries.length - 1]?.ms || 0 };
+      })
+      .sort((a, b) => (b.count - a.count) || (b.last - a.last));
+
+    // guarda para export
+    window.__baldeiosReport = { date: new Date(dayStart).toISOString().slice(0, 10), mode, rows };
+
+    if (!rows.length) {
+      const msg = searchCompact
+        ? `Nenhum baldeio encontrado com o filtro “${escapeHtml(searchRaw)}”.`
+        : 'Nenhum baldeio encontrado no dia (verifique se o tipo contém “BALDEIO” e se a transportadora está como Ritmo).';
+      tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-400">${msg}</td></tr>`;
+      return;
+    }
+
+    const chip = (h) => {
+      const canDelete = h.id && h.src;
+      return `
+        <span class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-gray-700/60 border border-gray-600/60 text-sm font-mono">
+          <span>${escapeHtml(h.hhmm)}</span>
+          ${canDelete ? `
+            <button type="button"
+              data-action="delete-baldeio"
+              data-id="${escapeHtml(h.id)}"
+              data-src="${escapeHtml(h.src)}"
+              data-ms="${String(h.ms)}"
+              class="text-red-300 hover:text-red-200 hover:bg-red-500/10 rounded px-1"
+              title="Excluir esta marcação">🗑️</button>
+          ` : ``}
+        </span>
+      `;
+    };
+
+    tbody.innerHTML = rows.map(r => `
+      <tr class="border-b border-gray-700 hover:bg-gray-700/40 align-top">
+        <td class="p-4 font-mono text-sm">${escapeHtml(r.placa)}</td>
+        <td class="p-4 text-sm font-bold">${r.count}</td>
+        <td class="p-4 text-sm">
+          <div class="flex flex-wrap gap-2">
+            ${r.horarios.map(chip).join('')}
+          </div>
+        </td>
+        <td class="p-4 font-mono text-sm">${escapeHtml(r.deltasTxt)}</td>
+        <td class="p-4 font-mono text-sm">${escapeHtml(r.firstLast)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // ============================================================
+  // ✅ Export Baldeios CSV (relatório)
+  // ============================================================
+  function exportBaldeiosCsv() {
+    try {
+      const rep = window.__baldeiosReport;
+      if (!rep || !Array.isArray(rep.rows) || !rep.rows.length) {
+        showToast("Sem dados para exportar (Baldeios).", "info");
+        return;
+      }
+
+      const headers = ['Data','ModoPlaca','Placa','MarcacoesNoDia','Horarios','TempoEntreMarcacoes','Primeira_Ultima'];
+      const lines = rep.rows.map(r => {
+        const horarios = (r.horarios || []).map(h => h.hhmm).join(' | ');
+        const cols = [
+          rep.date || '',
+          rep.mode || '',
+          r.placa || '',
+          String(r.count || 0),
+          horarios,
+          r.deltasTxt || '',
+          r.firstLast || ''
+        ];
+        return cols.map(v => `"${String(v ?? '').replace(/"/g,'""')}"`).join(',');
+      });
+
+      const csv = headers.join(',') + '\n' + lines.join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `baldeios_ritmo_${rep.date || 'data'}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      showToast("CSV exportado.", "success");
+    } catch (err) {
+      console.error("Erro export CSV:", err);
+      showToast("Erro ao exportar CSV. Veja console.", "error");
+    }
+  }
+
+  // ============================================================
+  // ✅ Excluir marcação específica (horário)
+  // ============================================================
+  async function deleteBaldeioMark(docId, src) {
+    if (!db || !docId || !src) return;
+    const col = (src === 'historico') ? 'historico' : 'patio';
+
+    try {
+      await deleteDoc(doc(db, `artifacts/${appId}/public/data/${col}`, docId));
+      showToast("Marcação excluída.", "success");
+      if (activeTab === 'baldeios') setTimeout(renderBaldeiosRitmo, 200);
+    } catch (err) {
+      console.error("Erro ao excluir marcação:", err);
+      showToast("Erro ao excluir (permissão/regras).", "error");
+    }
+  }
+
+
+
+
+  // ============================================================
+  // ✅ CONTROLE RITMO — placa a placa (histórico + novos)
+  // ============================================================
+  const dayKeyLocal = (ms) => {
+    const d = new Date(ms);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${dd}`;
+  };
+
+  const dayLabelPtLocal = (ms) => {
+    const d = new Date(ms);
+    return d.toLocaleDateString('pt-BR', { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' });
+  };
+
+  const avgDelta = (times) => {
+    if (!Array.isArray(times) || times.length < 2) return null;
+    let sum = 0, cnt = 0;
+    for (let i = 1; i < times.length; i++) {
+      const d = times[i] - times[i-1];
+      if (Number.isFinite(d) && d >= 0) { sum += d; cnt++; }
+    }
+    return cnt ? (sum / cnt) : null;
+  };
+
+  function buildRitmoIndex(startMs, endMs, mode, searchCompact, onlyBaldeio) {
+    const map = new Map(); // plateCompact -> { plateRaw, days: Map<dayKey, entries[]> }
+
+    const toEntries = (ops, src) => ops.map(op => {
+      const ts = op.registrationTime || op.timestamp || op.createdAt || op.created_at;
+      return { ...op, _src: src, _rt: toMs(ts) };
+    });
+
+    const allOps = [...toEntries(patioData || [], 'patio'), ...toEntries(historicoData || [], 'historico')]
+      .filter(op => op._rt && op._rt >= startMs && op._rt < endMs);
+
+    allOps.forEach(op => {
+      if (!isRitmoOp(op)) return;
+      if (onlyBaldeio && !isBaldeioOp(op)) return;
+
+      const plateRaw = plateKey(op, mode);
+      if (!plateRaw) return;
+
+      const plateCompact = String(plateRaw).toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+      if (searchCompact) {
+        const dtCompact = String(op.dt || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+        if (!plateCompact.includes(searchCompact) && !dtCompact.includes(searchCompact)) return;
+      }
+
+      const dkey = dayKeyLocal(op._rt);
+      const entry = { ms: op._rt, id: op.id || '', src: op._src, dt: op.dt || '' };
+
+      if (!map.has(plateCompact)) map.set(plateCompact, { plateRaw: String(plateRaw), days: new Map() });
+      const item = map.get(plateCompact);
+
+      if (!item.days.has(dkey)) item.days.set(dkey, []);
+      item.days.get(dkey).push(entry);
+    });
+
+    // sort day entries
+    map.forEach(item => {
+      item.days.forEach((arr, k) => arr.sort((a,b)=>a.ms-b.ms));
+    });
+
+    return map;
+  }
+
+  function renderRitmoDetailForPlate(plateCompact) {
+    const detail = document.getElementById('ritmo-detail');
+    const clearBtn = document.getElementById('ritmo-clear-selected');
+    if (!detail) return;
+
+    const item = ritmoCacheDetails.get(plateCompact);
+    if (!item) {
+      detail.innerHTML = `<div class="p-4 rounded-lg border border-white/10 bg-black/10">Selecione uma placa válida.</div>`;
+      if (clearBtn) clearBtn.classList.add('hidden');
+      return;
+    }
+
+    if (clearBtn) clearBtn.classList.remove('hidden');
+
+    const days = Array.from(item.days.entries())
+      .map(([k, entries]) => ({ k, entries, first: entries[0]?.ms || 0 }))
+      .sort((a,b)=>b.first-a.first); // dia mais recente primeiro
+
+    const dayCards = days.map(d => {
+      const times = d.entries.map(e => e.ms);
+      const avg = avgDelta(times);
+      const total = d.entries.length;
+
+      // chips com delete
+      const chips = d.entries.map(e => `
+        <span class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-gray-700/60 border border-gray-600/60 text-sm font-mono">
+          <span>${escapeHtml(fmtHHMM(e.ms))}</span>
+          ${(e.id && e.src) ? `
+            <button type="button"
+              data-action="delete-baldeio"
+              data-id="${escapeHtml(e.id)}"
+              data-src="${escapeHtml(e.src)}"
+              data-ms="${String(e.ms)}"
+              class="text-red-300 hover:text-red-200 hover:bg-red-500/10 rounded px-1"
+              title="Excluir esta marcação">🗑️</button>
+          ` : ``}
+        </span>
+      `).join('');
+
+      // deltas
+      const deltas = [];
+      for (let i=1;i<times.length;i++) deltas.push(fmtDelta(times[i]-times[i-1]));
+      const deltaTxt = deltas.length ? deltas.join(' | ') : '—';
+
+      return `
+        <div class="p-4 rounded-lg border border-white/10 bg-black/10 mb-3">
+          <div class="flex items-center justify-between gap-3">
+            <div class="font-semibold">${escapeHtml(dayLabelPtLocal(d.first))}</div>
+            <div class="text-xs text-gray-400">
+              <span class="font-bold text-gray-200">${total}</span> marcações
+              ${avg ? ` • média: <span class="font-mono">${escapeHtml(fmtDelta(avg))}</span>` : ``}
+            </div>
+          </div>
+
+          <div class="mt-3 flex flex-wrap gap-2">
+            ${chips || `<span class="text-gray-500">—</span>`}
+          </div>
+
+          <div class="mt-3 text-xs text-gray-400">
+            <span class="font-semibold">Intervalos:</span> <span class="font-mono">${escapeHtml(deltaTxt)}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    detail.innerHTML = `
+      <div class="mb-4 p-3 rounded-lg border border-white/10 bg-black/10">
+        <div class="text-sm text-gray-200"><span class="text-gray-400">Placa:</span> <span class="font-mono font-bold">${escapeHtml(item.plateRaw)}</span></div>
+        <div class="text-xs text-gray-400 mt-1">Dias: ${item.days.size} • Marcações: ${item.totalMarks}</div>
+      </div>
+      ${dayCards || `<div class="p-4 rounded-lg border border-white/10 bg-black/10">Sem dados.</div>`}
+    `;
+  }
+
+  function renderRitmoPlacaControl(forceRebuild = false) {
+    const tbody = document.getElementById('ritmo-table-body');
+    if (!tbody) return;
+
+    const startEl = document.getElementById('ritmo-start');
+    const endEl = document.getElementById('ritmo-end');
+    const mode = document.getElementById('ritmo-plate-mode')?.value || 'carreta';
+    const onlyBaldeio = !!document.getElementById('ritmo-only-baldeio')?.checked;
+    const searchRaw = (document.getElementById('ritmo-search')?.value || '').trim().toUpperCase();
+    const searchCompact = searchRaw.replace(/[^A-Z0-9]/g,'');
+
+    const startDate = (startEl && startEl.value) ? new Date(startEl.value) : null;
+    const endDate = (endEl && endEl.value) ? new Date(endEl.value) : null;
+
+    const startMs = startDate ? startOfDay(startDate).getTime() : startOfDay(new Date(Date.now() - 30*24*3600*1000)).getTime();
+    const endMs = endDate ? (startOfDay(endDate).getTime() + 24*3600*1000) : (startOfDay(new Date()).getTime() + 24*3600*1000);
+
+    const cacheKey = `${ritmoDataVersion}|${startMs}|${endMs}|${mode}|${searchCompact}|${onlyBaldeio ? 1 : 0}`;
+
+    if (forceRebuild || cacheKey !== ritmoCacheKey) {
+      ritmoCacheKey = cacheKey;
+      ritmoPage = 1;
+      ritmoCacheRows = [];
+      ritmoCacheDetails = new Map();
+
+      const idx = buildRitmoIndex(startMs, endMs, mode, searchCompact, onlyBaldeio);
+
+      // build rows
+      const rows = [];
+      idx.forEach((item, plateCompact) => {
+        let totalMarks = 0;
+        let lastMs = 0;
+
+        item.days.forEach(arr => {
+          totalMarks += arr.length;
+          const last = arr[arr.length-1]?.ms || 0;
+          if (last > lastMs) lastMs = last;
+        });
+
+        // avg delta across all times (flatten)
+        const allTimes = [];
+        item.days.forEach(arr => arr.forEach(e => allTimes.push(e.ms)));
+        allTimes.sort((a,b)=>a-b);
+        const avg = avgDelta(allTimes);
+
+        const row = {
+          plateCompact,
+          plateRaw: item.plateRaw,
+          days: item.days,
+          totalMarks,
+          lastMs,
+          avgMs: avg
+        };
+        rows.push(row);
+
+        // store for detail panel
+        ritmoCacheDetails.set(plateCompact, { plateRaw: item.plateRaw, days: item.days, totalMarks });
+      });
+
+      rows.sort((a,b)=> (b.totalMarks - a.totalMarks) || (b.lastMs - a.lastMs));
+      ritmoCacheRows = rows;
+
+      // reset selected plate if it doesn't exist anymore
+      if (ritmoSelectedPlate && !ritmoCacheDetails.has(ritmoSelectedPlate)) ritmoSelectedPlate = null;
+    }
+
+    const info = document.getElementById('ritmo-summary-info');
+    if (info) info.textContent = `Placas encontradas: ${ritmoCacheRows.length}`;
+
+    const total = ritmoCacheRows.length;
+    if (!total) {
+      tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-400">Nenhum registro da Ritmo encontrado no período (se marcou “Somente Baldeio”, verifique se o Tipo contém BALDEIO).</td></tr>`;
+      const pi = document.getElementById('ritmo-pagination-info');
+      const btn = document.getElementById('ritmo-load-more');
+      if (pi) pi.textContent = '';
+      if (btn) btn.classList.add('hidden');
+      const clearBtn = document.getElementById('ritmo-clear-selected');
+      if (clearBtn) clearBtn.classList.add('hidden');
+      document.getElementById('ritmo-detail').innerHTML = `<div class="p-4 rounded-lg border border-white/10 bg-black/10">Sem dados para detalhar.</div>`;
+      return;
+    }
+
+    const max = Math.min(total, ritmoPage * RITMO_PAGE_SIZE);
+    const visible = ritmoCacheRows.slice(0, max);
+
+    const pi = document.getElementById('ritmo-pagination-info');
+    const btn = document.getElementById('ritmo-load-more');
+    if (pi) pi.textContent = `Mostrando ${max} de ${total}`;
+    if (btn) btn.classList.toggle('hidden', max >= total);
+
+    tbody.innerHTML = visible.map(r => {
+      const lastTxt = r.lastMs ? new Date(r.lastMs).toLocaleString('pt-BR') : '—';
+      const avgTxt = r.avgMs ? fmtDelta(r.avgMs) : '—';
+      const isSel = (ritmoSelectedPlate === r.plateCompact);
+
+      return `
+        <tr class="border-b border-gray-700 hover:bg-gray-700/40 ${isSel ? 'bg-blue-500/10' : ''}">
+          <td class="p-4 font-mono text-sm">${escapeHtml(r.plateRaw)}</td>
+          <td class="p-4 text-sm font-bold">${r.days.size}</td>
+          <td class="p-4 text-sm font-bold">${r.totalMarks}</td>
+          <td class="p-4 text-sm">${escapeHtml(lastTxt)}</td>
+          <td class="p-4 font-mono text-sm">${escapeHtml(avgTxt)}</td>
+          <td class="p-4">
+            <button type="button" data-action="ritmo-view" data-plate="${escapeHtml(r.plateCompact)}"
+              class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-3 rounded-lg text-sm">
+              Ver
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    // render detail if selected
+    if (ritmoSelectedPlate) renderRitmoDetailForPlate(ritmoSelectedPlate);
+  }
+
+
+
+  // ============================================================
+  // ✅ DASHBOARD RITMO (totais + baldeio)
+  // ============================================================
+  const isoDate = (d) => {
+    const x = new Date(d);
+    const y = x.getFullYear();
+    const m = String(x.getMonth() + 1).padStart(2,'0');
+    const dd = String(x.getDate()).padStart(2,'0');
+    return `${y}-${m}-${dd}`;
+  };
+
+  const fmtDatePt = (ms) => new Date(ms).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+
+  const makeCsv = (headers, rows) => {
+    const esc = (v) => `"${String(v ?? '').replace(/"/g,'""')}"`;
+    return headers.join(',') + '\n' + rows.map(r => r.map(esc).join(',')).join('\n');
+  };
+
+  function exportRitmoDashboardCsv() {
+    const rep = ritmoDashLastExport;
+    if (!rep || !Array.isArray(rep.rows) || !rep.rows.length) {
+      showToast("Sem dados para exportar (Dashboard Ritmo).", "info");
+      return;
+    }
+
+    const csv = makeCsv(rep.headers, rep.rows);
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dashboard_ritmo_${rep.range || 'periodo'}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast("CSV exportado.", "success");
+  }
+
+  function renderRitmoDashboard() {
+    const kpiWrap = document.getElementById('ritmo-dash-kpis');
+    const dailyCanvas = document.getElementById('ritmo-dash-daily-chart');
+    const topCanvas = document.getElementById('ritmo-dash-top-plates-chart');
+    const heatCanvas = document.getElementById('ritmo-dash-heatmap-chart');
+    if (!kpiWrap || !dailyCanvas || !topCanvas || !heatCanvas) return;
+
+    const startEl = document.getElementById('ritmo-dash-start');
+    const endEl = document.getElementById('ritmo-dash-end');
+    const mode = document.getElementById('ritmo-dash-plate-mode')?.value || 'carreta';
+    const onlyBaldeio = !!document.getElementById('ritmo-dash-only-baldeio')?.checked;
+
+    const startDate = (startEl && startEl.value) ? new Date(startEl.value) : new Date(Date.now() - 30*24*3600*1000);
+    const endDate = (endEl && endEl.value) ? new Date(endEl.value) : new Date();
+
+    const startMs = startOfDay(startDate).getTime();
+    const endMs = startOfDay(endDate).getTime() + 24*3600*1000;
+
+    const toEntries = (ops, src) => (ops || []).map(op => {
+      const ts = op.registrationTime || op.timestamp || op.createdAt || op.created_at;
+      return { ...op, _src: src, _rt: toMs(ts) };
+    });
+
+    const allOps = [...toEntries(patioData, 'patio'), ...toEntries(historicoData, 'historico')]
+      .filter(op => op._rt && op._rt >= startMs && op._rt < endMs);
+
+    const ritmoOps = allOps.filter(op => isRitmoOp(op));
+    const ritmoBaldeioOps = ritmoOps.filter(op => isBaldeioOp(op));
+    const used = onlyBaldeio ? ritmoBaldeioOps : ritmoOps;
+
+    const plateCount = {};
+    used.forEach(op => {
+      const p = String(plateKey(op, mode) || '').toUpperCase().replace(/[^A-Z0-9]/g,'');
+      if (!p) return;
+      plateCount[p] = (plateCount[p] || 0) + 1;
+    });
+
+    const uniquePlates = Object.keys(plateCount).length;
+    const repeatPlates = Object.values(plateCount).filter(x => x >= 2).length;
+
+    let sumInterval = 0, cntInterval = 0;
+    Object.keys(plateCount).forEach(p => {
+      const times = used
+        .filter(op => String(plateKey(op, mode) || '').toUpperCase().replace(/[^A-Z0-9]/g,'') === p)
+        .map(op => op._rt)
+        .filter(Boolean)
+        .sort((a,b)=>a-b);
+
+      for (let i=1;i<times.length;i++) {
+        const d = times[i]-times[i-1];
+        if (Number.isFinite(d) && d >= 0) { sumInterval += d; cntInterval += 1; }
+      }
+    });
+    const avgIntervalMs = cntInterval ? (sumInterval / cntInterval) : null;
+
+    const totalRitmo = ritmoOps.length;
+    const totalBaldeio = ritmoBaldeioOps.length;
+    const baldeioShare = totalRitmo ? Math.round((totalBaldeio/totalRitmo)*100) : 0;
+
+    const kpi = (title, value, sub='') => `
+      <div class="kpi-card-sm rounded-lg p-4">
+        <p class="text-xs text-gray-400">${title}</p>
+        <p class="text-2xl font-bold mt-1">${value}</p>
+        ${sub ? `<p class="text-xs text-gray-500 mt-1">${sub}</p>` : ``}
+      </div>
+    `;
+
+    kpiWrap.innerHTML = `
+      ${kpi(onlyBaldeio ? 'Baldeios (Ritmo)' : 'Marcações (Ritmo)', used.length, `${fmtDatePt(startMs)} → ${fmtDatePt(endMs-1)}`)}
+      ${kpi('Placas únicas', uniquePlates, repeatPlates ? `${repeatPlates} com repetição` : '—')}
+      ${kpi('Ritmo total', totalRitmo, `Baldeio: ${totalBaldeio} (${baldeioShare}%)`)}
+      ${kpi('Média entre marcações', avgIntervalMs ? fmtDelta(avgIntervalMs) : '—', cntInterval ? `${cntInterval} intervalos` : '—')}
+    `;
+
+    // Daily series
+    const days = [];
+    for (let cur = new Date(startMs); cur.getTime() < endMs; cur.setDate(cur.getDate()+1)) {
+      days.push(new Date(cur));
+    }
+    const keys = days.map(d => isoDate(d));
+    const labels = days.map(d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit'}));
+
+    const dailyTotal = {}, dailyBaldeio = {};
+    keys.forEach(k => { dailyTotal[k]=0; dailyBaldeio[k]=0; });
+
+    ritmoOps.forEach(op => {
+      const k = isoDate(op._rt);
+      if (k in dailyTotal) dailyTotal[k] += 1;
+    });
+    ritmoBaldeioOps.forEach(op => {
+      const k = isoDate(op._rt);
+      if (k in dailyBaldeio) dailyBaldeio[k] += 1;
+    });
+
+    const seriesTotal = keys.map(k => dailyTotal[k] || 0);
+    const seriesBald = keys.map(k => dailyBaldeio[k] || 0);
+
+    // Daily chart
+    ritmoDashDailyChart = safeDestroyChart(ritmoDashDailyChart);
+    ritmoDashDailyChart = new Chart(dailyCanvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Ritmo (total)', data: seriesTotal, backgroundColor: 'rgba(59,130,246,0.50)', borderColor: 'rgba(59,130,246,0.95)', borderWidth: 1, borderRadius: 6 },
+          { label: 'Baldeio', data: seriesBald, backgroundColor: 'rgba(16,185,129,0.45)', borderColor: 'rgba(16,185,129,0.90)', borderWidth: 1, borderRadius: 6 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#d1d5db' } } },
+        scales: {
+          y: { beginAtZero: true, ticks: { color: '#d1d5db', precision: 0 }, grid: { color: 'rgba(255,255,255,0.08)' } },
+          x: { ticks: { color: '#d1d5db' }, grid: { display: false } }
+        }
+      }
+    });
+
+    // Top plates
+    const top = Object.entries(plateCount).sort((a,b)=>b[1]-a[1]).slice(0, 12);
+    const topLabels = top.map(x => x[0]);
+    const topValues = top.map(x => x[1]);
+
+    ritmoDashTopPlatesChart = safeDestroyChart(ritmoDashTopPlatesChart);
+    ritmoDashTopPlatesChart = new Chart(topCanvas.getContext('2d'), {
+      type: 'bar',
+      data: { labels: topLabels, datasets: [{ label: 'Marcações', data: topValues, backgroundColor: 'rgba(245,158,11,0.55)', borderColor: 'rgba(245,158,11,0.95)', borderWidth: 1, borderRadius: 6 }] },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, ticks: { color: '#d1d5db', precision: 0 }, grid: { color: 'rgba(255,255,255,0.08)' } },
+          y: { ticks: { color: '#d1d5db' }, grid: { display: false } }
+        }
+      }
+    });
+
+    // Heatmap (last 7 days in range)
+    const startHeatMs = Math.max(startMs, endMs - 7*24*3600*1000);
+    const heatOps = used.filter(op => op._rt && op._rt >= startHeatMs && op._rt < endMs);
+
+    const heatDays = [];
+    for (let cur = new Date(startHeatMs); cur.getTime() < endMs; cur.setDate(cur.getDate()+1)) {
+      heatDays.push(new Date(cur));
+      if (heatDays.length >= 7) break;
+    }
+    const heatKeys = heatDays.map(d => isoDate(d));
+    const heatLabels = heatDays.map(d => d.toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'2-digit' }));
+
+    const matrix = Array.from({ length: heatDays.length }, () => Array.from({ length: 24 }, () => 0));
+    heatOps.forEach(op => {
+      const k = isoDate(op._rt);
+      const dayIdx = heatKeys.indexOf(k);
+      if (dayIdx === -1) return;
+      const hour = new Date(op._rt).getHours();
+      matrix[dayIdx][hour] += 1;
+    });
+
+    const points = [];
+    for (let y=0; y<heatDays.length; y++) for (let x=0; x<24; x++) points.push({ x, y, v: matrix[y][x] });
+    const maxV = points.reduce((m,p)=>Math.max(m,p.v),0);
+
+    ritmoDashHeatmapChart = safeDestroyChart(ritmoDashHeatmapChart);
+    ritmoDashHeatmapChart = new Chart(heatCanvas.getContext('2d'), {
+      type: 'matrix',
+      data: {
+        datasets: [{
+          label: 'Marcações',
+          data: points,
+          backgroundColor: (ctx) => {
+            const v = ctx.raw?.v ?? 0;
+            if (!v) return 'rgba(255,255,255,0.03)';
+            const a = Math.min(0.85, 0.12 + (maxV ? (v / maxV) * 0.75 : 0.2));
+            return `rgba(59, 130, 246, ${a})`;
+          },
+          borderColor: 'rgba(17,24,39,0.35)',
+          borderWidth: 1,
+          width: ({ chart }) => (chart.chartArea || {}).width / 24 - 2,
+          height: ({ chart }) => (chart.chartArea || {}).height / Math.max(1, heatDays.length) - 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: (items) => {
+                const r = items?.[0]?.raw;
+                if (!r) return '';
+                const day = heatLabels[r.y] || '';
+                const h = String(r.x).padStart(2,'0');
+                return `${day} — ${h}:00`;
+              },
+              label: (item) => ` ${item.raw?.v ?? 0} marcação(ões)`
+            }
+          }
+        },
+        scales: {
+          x: {
+            type: 'linear',
+            position: 'bottom',
+            min: 0,
+            max: 23,
+            ticks: { stepSize: 1, color: '#d1d5db', callback: (v) => (v % 2 === 0 ? String(v).padStart(2,'0') : '') },
+            grid: { color: 'rgba(255,255,255,0.06)' }
+          },
+          y: {
+            type: 'linear',
+            min: 0,
+            max: Math.max(0, heatDays.length - 1),
+            ticks: { stepSize: 1, color: '#d1d5db', callback: (v) => heatLabels[v] || '' },
+            grid: { color: 'rgba(255,255,255,0.06)' }
+          }
+        }
+      }
+    });
+
+    // Export rows (daily)
+    const exportRows = keys.map((k, idx) => [k, labels[idx], dailyTotal[k] || 0, dailyBaldeio[k] || 0]);
+    ritmoDashLastExport = {
+      headers: ['DataISO','Data','RitmoTotal','RitmoBaldeio'],
+      rows: exportRows,
+      range: `${isoDate(startMs)}_${isoDate(endMs-1)}`
+    };
+  }
+
   // ==============================
   // INIT
   // ==============================
@@ -2759,43 +4409,58 @@
       </div>`;
 
     document.getElementById('occurrence-modal').innerHTML = `
-      <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg relative">
-        <h3 id="occurrence-modal-title" class="text-xl font-bold text-white mb-4"></h3>
-        <button onclick="window.closeOccurrenceModal()"
-                class="absolute top-4 right-4 text-gray-500 hover:text-white">
-          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
-               viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" x2="6" y1="6" y2="18"/>
-            <line x1="6" x2="18" y1="6" y2="18"/>
-          </svg>
+  <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg relative">
+    <h3 id="occurrence-modal-title" class="text-xl font-bold text-white mb-2"></h3>
+    <p class="text-sm text-gray-400 mb-4">
+      Você pode registrar a ocorrência no painel ou abrir diretamente no Power Apps.
+    </p>
+
+    <button onclick="window.closeOccurrenceModal()"
+            class="absolute top-4 right-4 text-gray-500 hover:text-white">
+      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" x2="6" y1="6" y2="18"/>
+        <line x1="6" x2="18" y1="6" y2="18"/>
+      </svg>
+    </button>
+
+    <form id="occurrence-form" class="space-y-4">
+      <div>
+        <label for="occurrenceType" class="block text-sm font-medium text-gray-300">Problema Identificado</label>
+        <select id="occurrenceType" name="type"
+                class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm
+                       py-2 px-3 focus:outline-none focus:ring-blue-500 sm:text-sm">
+          <option>Mecânico</option>
+          <option>Operacional</option>
+          <option>Trânsito</option>
+          <option>Climático</option>
+          <option>Fiscal</option>
+          <option>Outro</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="occurrenceDescription" class="block text-sm font-medium text-gray-300">Descrição</label>
+        <textarea id="occurrenceDescription" name="description" rows="3" required
+                  class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm
+                         py-2 px-3 focus:outline-none focus:ring-blue-500 sm:text-sm"></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+          Salvar Ocorrência
         </button>
-        <form id="occurrence-form" class="space-y-4">
-          <div>
-            <label for="occurrenceType" class="block text-sm font-medium text-gray-300">Problema Identificado</label>
-            <select id="occurrenceType" name="type"
-                    class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm
-                           py-2 px-3 focus:outline-none focus:ring-blue-500 sm:text-sm">
-              <option>Mecânico</option>
-              <option>Operacional</option>
-              <option>Trânsito</option>
-              <option>Climático</option>
-              <option>Fiscal</option>
-              <option>Outro</option>
-            </select>
-          </div>
-          <div>
-            <label for="occurrenceDescription" class="block text-sm font-medium text-gray-300">Descrição</label>
-            <textarea id="occurrenceDescription" name="description" rows="3" required
-                      class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm
-                             py-2 px-3 focus:outline-none focus:ring-blue-500 sm:text-sm"></textarea>
-          </div>
-          <button type="submit"
-                  class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-            Salvar Ocorrência
-          </button>
-        </form>
-      </div>`;
+
+        <button type="button"
+        id="open-powerapps-btn"
+        class="w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg">
+  Ir para Power Apps
+</button>
+      </div>
+    </form>
+  </div>`;
 
     document.getElementById('resolution-modal').innerHTML = `
       <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg relative">
@@ -2882,7 +4547,98 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
     });
 
     document.getElementById('dashboard-transportadora-filter').addEventListener('change', renderManagerDashboard);
+
+    // ✅ Dashboard Ritmo (filtros)
+    const rdS = document.getElementById('ritmo-dash-start');
+    const rdE = document.getElementById('ritmo-dash-end');
+    if (rdS && !rdS.value) {
+      const d = new Date(); d.setDate(d.getDate() - 30);
+      rdS.valueAsDate = d;
+    }
+    if (rdE && !rdE.value) rdE.valueAsDate = new Date();
+
+    const runRitmoDash = () => renderRitmoDashboard();
+
+    document.getElementById('ritmo-dash-refresh')?.addEventListener('click', runRitmoDash);
+    document.getElementById('ritmo-dash-start')?.addEventListener('change', runRitmoDash);
+    document.getElementById('ritmo-dash-end')?.addEventListener('change', runRitmoDash);
+    document.getElementById('ritmo-dash-plate-mode')?.addEventListener('change', runRitmoDash);
+    document.getElementById('ritmo-dash-only-baldeio')?.addEventListener('change', runRitmoDash);
+    document.getElementById('ritmo-dash-export')?.addEventListener('click', exportRitmoDashboardCsv);
+
     document.getElementById('export-csv-btn').addEventListener('click', exportToCsv);
+
+    // ✅ Baldeios Ritmo (filtros)
+    const bd = document.getElementById('baldeios-date');
+    if (bd) bd.valueAsDate = new Date();
+    document.getElementById('baldeios-date')?.addEventListener('change', renderBaldeiosRitmo);
+    document.getElementById('baldeios-search')?.addEventListener('input', debounce(renderBaldeiosRitmo, 120));
+    document.getElementById('baldeios-plate-mode')?.addEventListener('change', renderBaldeiosRitmo);
+    document.getElementById('baldeios-export-csv-btn')?.addEventListener('click', exportBaldeiosCsv);
+
+    // ✅ Controle Ritmo (placa a placa)
+    const rStart = document.getElementById('ritmo-start');
+    const rEnd = document.getElementById('ritmo-end');
+    if (rStart && !rStart.value) {
+      const d = new Date(); d.setDate(d.getDate() - 180);
+      rStart.valueAsDate = d;
+    }
+    if (rEnd && !rEnd.value) rEnd.valueAsDate = new Date();
+
+    const runRitmo = () => renderRitmoPlacaControl(true);
+
+    document.getElementById('ritmo-refresh-btn')?.addEventListener('click', runRitmo);
+    document.getElementById('ritmo-start')?.addEventListener('change', runRitmo);
+    document.getElementById('ritmo-end')?.addEventListener('change', runRitmo);
+    document.getElementById('ritmo-plate-mode')?.addEventListener('change', runRitmo);
+    document.getElementById('ritmo-only-baldeio')?.addEventListener('change', runRitmo);
+    document.getElementById('ritmo-search')?.addEventListener('input', debounce(runRitmo, 150));
+
+    document.getElementById('ritmo-load-more')?.addEventListener('click', () => {
+      ritmoPage += 1;
+      renderRitmoPlacaControl(false);
+    });
+
+    // Clique no botão "Ver" da tabela
+    document.getElementById('ritmo-table-body')?.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('button[data-action="ritmo-view"]');
+      if (!btn) return;
+      const plate = btn.dataset.plate || '';
+      if (!plate) return;
+      ritmoSelectedPlate = plate;
+      renderRitmoPlacaControl(false);
+    });
+
+    document.getElementById('ritmo-clear-selected')?.addEventListener('click', () => {
+      ritmoSelectedPlate = null;
+      const clearBtn = document.getElementById('ritmo-clear-selected');
+      if (clearBtn) clearBtn.classList.add('hidden');
+      document.getElementById('ritmo-detail').innerHTML = `<div class="p-4 rounded-lg border border-white/10 bg-black/10">Selecione uma placa no resumo para ver os dias e os intervalos.</div>`;
+    });
+
+    document.getElementById('baldeios-export-csv-btn')?.addEventListener('click', exportBaldeiosCsv);
+    // ✅ Excluir horário (marcação) no relatório de Baldeios
+    
+    // ✅ Excluir horário (marcação) também no detalhe do Controle Ritmo
+    document.getElementById('ritmo-detail')?.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('button[data-action="delete-baldeio"]');
+      if (!btn) return;
+      const id = btn.dataset.id || '';
+      const src = btn.dataset.src || '';
+      const when = btn.dataset.ms ? new Date(Number(btn.dataset.ms)).toLocaleString('pt-BR') : '';
+      showConfirmModal(`Excluir esta marcação? ${when}`, () => deleteBaldeioMark(id, src));
+    });
+
+    document.getElementById('baldeios-table-body')?.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('button[data-action="delete-baldeio"]');
+      if (!btn) return;
+      const id = btn.dataset.id || '';
+      const src = btn.dataset.src || '';
+      const when = btn.dataset.ms ? new Date(Number(btn.dataset.ms)).toLocaleString('pt-BR') : '';
+      showConfirmModal(`Excluir esta marcação? ${when}`, () => deleteBaldeioMark(id, src));
+    });
+
+
 
     document.getElementById('mass-finish-btn').addEventListener('click', () => {
       const n = (window.__filteredPatioIds || []).length;
@@ -2898,6 +4654,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
     });
 
     document.getElementById('occurrence-form').addEventListener('submit', handleAddOccurrence);
+    document.getElementById('open-powerapps-btn')?.addEventListener('click', openPowerAppsOccurrence);
     document.getElementById('resolution-form').addEventListener('submit', handleUpdateResolution);
     document.getElementById('table-body').addEventListener('click', handleTableClick);
 
@@ -2918,30 +4675,36 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
       document.getElementById('tab-historico'),
       document.getElementById('tab-ocorrencias'),
       document.getElementById('tab-performance'),
+      document.getElementById('tab-baldeios'),
+      document.getElementById('tab-ritmo'),
       document.getElementById('tab-motoristas'),
       document.getElementById('tab-dashboard')
     ];
 
     allTabs.forEach(tab => tab.addEventListener('click', () => {
-      allTabs.forEach(t => {
-        t.classList.remove('text-white', 'border-blue-500');
-        t.classList.add('text-gray-400', 'border-transparent');
-      });
-      tab.classList.add('text-white', 'border-blue-500');
-      tab.classList.remove('text-gray-400', 'border-transparent');
+  allTabs.forEach(t => {
+    t.classList.remove('active-tab');
+    t.classList.add('inactive-tab');
+  });
+  tab.classList.add('active-tab');
+  tab.classList.remove('inactive-tab');
 
       activeTab = tab.id.replace('tab-', '');
 
       const showPerformance = activeTab === 'performance';
       const showDashboard = activeTab === 'dashboard';
       const showMotoristas = activeTab === 'motoristas';
-      const showMainTable = !showPerformance && !showDashboard && !showMotoristas;
+      const showBaldeios = activeTab === 'baldeios';
+      const showRitmo = activeTab === 'ritmo';
+      const showMainTable = !showPerformance && !showDashboard && !showMotoristas && !showBaldeios && !showRitmo;
 
       document.getElementById('kpi-section').style.display = showMainTable ? 'grid' : 'none';
       document.getElementById('table-main-content').style.display = showMainTable ? 'block' : 'none';
       document.getElementById('performance-content').style.display = showPerformance ? 'block' : 'none';
       document.getElementById('dashboard-content').style.display = showDashboard ? 'block' : 'none';
       document.getElementById('motoristas-content').style.display = showMotoristas ? 'block' : 'none';
+      document.getElementById('baldeios-content').style.display = showBaldeios ? 'block' : 'none';
+      document.getElementById('ritmo-placa-content').style.display = showRitmo ? 'block' : 'none';
 
       const showHistorico = activeTab === 'historico';
       const showOcorrencias = activeTab === 'ocorrencias';
@@ -3034,6 +4797,35 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
         const newPatioData = snap.docs.map(d => ({ ...d.data(), id: d.id }));
         newlyAdded.clear();
 
+        // ✅ Congela e grava o TIPO/SEGMENTAÇÃO que vier do HEILOG (não muda com o tempo)
+        // Regra: se o documento já veio com um campo direto (segmentacao/tipo/etc), gravamos em tipoSnapshot só uma vez.
+        newPatioData.forEach((op) => {
+          try {
+            if (!op || !op.id) return;
+
+            // Se já tem tipoSnapshot, só marca e segue
+            if (op.tipoSnapshot && String(op.tipoSnapshot).trim() !== '') {
+              tipoSnapshotMem.add(op.id);
+              return;
+            }
+
+            // Evita repetir update
+            if (tipoSnapshotMem.has(op.id)) return;
+
+            // Só grava o tipo que já veio em campo direto do documento (HEILOG)
+            const directTipo = getTipoHeilogDirect(op);
+            if (!directTipo) return;
+
+            tipoSnapshotMem.add(op.id);
+            const ref = doc(db, `artifacts/${appId}/public/data/patio`, op.id);
+            updateDoc(ref, { tipoSnapshot: directTipo }).catch((err) => {
+              console.warn("Falha ao gravar tipoSnapshot:", err);
+            });
+          } catch (err) {
+            console.warn("Falha ao processar tipoSnapshot:", err);
+          }
+        });
+
         newPatioData.forEach(op => {
           const { statusText, isAlert } = getPriorityStatusLogic(op);
           const isExisting = patioData.some(oldOp => oldOp.id === op.id);
@@ -3054,6 +4846,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
         });
 
         patioData = newPatioData;
+        ritmoDataVersion += 1;
         checkSystemAlerts();
         runPredictiveAnalysis();
         debouncedRender();
@@ -3061,6 +4854,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
 
       onSnapshot(collection(db, `artifacts/${appId}/public/data/historico`), snap => {
         historicoData = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+        ritmoDataVersion += 1;
         rebuildDriverStatsCache();
         debouncedRender();
       });
@@ -3085,7 +4879,9 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
     setInterval(() => {
       if (activeTab === 'performance') renderPerformanceDashboard();
       if (activeTab === 'patio') { checkSystemAlerts(); runPredictiveAnalysis(); }
-      if (activeTab === 'dashboard') renderManagerDashboard();
+      if (activeTab === 'dashboard') { renderManagerDashboard(); renderRitmoDashboard(); }
+      if (activeTab === 'baldeios') renderBaldeiosRitmo();
+      if (activeTab === 'ritmo') renderRitmoPlacaControl(false);
     }, 60000);
 
     // estado inicial
