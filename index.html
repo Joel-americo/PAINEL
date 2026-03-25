@@ -1109,6 +1109,7 @@
     serverTimestamp,
     setLogLevel,
     updateDoc,
+    setDoc,
     writeBatch,
     getDocs,
     query,
@@ -2904,6 +2905,10 @@ async function handleAddOccurrence(e) {
 
   const PERF_SUMMARY_STORAGE_PREFIX = 'heilog-perf-summary-manual-v6';
   const PERF_HOURLY_STORAGE_PREFIX = 'heilog-perf-hourly-manual-v7';
+  let perfSharedState = { summary: {}, hourly: {} };
+  let perfSharedDocId = '';
+  let perfSharedUnsub = null;
+  let perfSharedHasSnapshot = false;
 
   const perfNorm = (v = '') =>
     String(v ?? '')
@@ -2983,8 +2988,19 @@ async function handleAddOccurrence(e) {
     return `${prefix}::${label}::${start.toISOString()}::${end.toISOString()}`;
   };
 
-  const getPerfSummaryState = (start, end, label) => {
-    const raw = perfReadLocal(getPerfShiftStorageKey(PERF_SUMMARY_STORAGE_PREFIX, start, end, label), {});
+  const getPerfSharedDocId = (start, end, label) => {
+    const clean = `${label || 'turno'}__${start.toISOString()}__${end.toISOString()}`
+      .replace(/[\/.#$\[\]\s:]+/g, '_')
+      .replace(/_+/g, '_');
+    return `perf_turno_${clean}`;
+  };
+
+  const getPerfSharedDocRef = (start, end, label) => {
+    if (!db) return null;
+    return doc(db, `artifacts/${appId}/public/data/performance_turno_manual`, getPerfSharedDocId(start, end, label));
+  };
+
+  const buildPerfSummaryStateFromRaw = (raw = {}) => {
     const out = {};
     PERF_MANUAL_ROWS.forEach(row => {
       out[row.key] = {
@@ -2995,22 +3011,7 @@ async function handleAddOccurrence(e) {
     return out;
   };
 
-  const setPerfSummaryValue = (start, end, label, rowKey, col, value) => {
-    const key = getPerfShiftStorageKey(PERF_SUMMARY_STORAGE_PREFIX, start, end, label);
-    const raw = perfReadLocal(key, {});
-    raw[rowKey] = raw[rowKey] || {};
-    raw[rowKey][col] = String(value ?? '');
-    perfWriteLocal(key, raw);
-  };
-
-  const clearPerfSummaryState = (start, end, label) => {
-    try {
-      localStorage.removeItem(getPerfShiftStorageKey(PERF_SUMMARY_STORAGE_PREFIX, start, end, label));
-    } catch (_) {}
-  };
-
-  const getPerfHourlyState = (start, end, label, labels = []) => {
-    const raw = perfReadLocal(getPerfShiftStorageKey(PERF_HOURLY_STORAGE_PREFIX, start, end, label), {});
+  const buildPerfHourlyStateFromRaw = (raw = {}, labels = []) => {
     const manual = {};
     labels.forEach((slot, index) => {
       manual[slot] = {
@@ -3022,19 +3023,206 @@ async function handleAddOccurrence(e) {
     return normalizePerfHourlyState(manual, labels);
   };
 
-  const setPerfHourlyValue = (start, end, label, slot, field, value) => {
+  const perfHasAnyNonZeroValue = (obj = {}) => {
+    try {
+      return JSON.stringify(obj).match(/[1-9]/) !== null;
+    } catch (_) {
+      return false;
+    }
+  };
+
+  async function attachPerfSharedShiftSync(start, end, label) {
+    if (!db) return;
+
+    const nextDocId = getPerfSharedDocId(start, end, label);
+    if (perfSharedDocId === nextDocId && perfSharedUnsub) return;
+
+    if (typeof perfSharedUnsub === 'function') {
+      try { perfSharedUnsub(); } catch (_) {}
+    }
+
+    perfSharedDocId = nextDocId;
+    perfSharedState = { summary: {}, hourly: {} };
+    perfSharedHasSnapshot = false;
+
+    const ref = getPerfSharedDocRef(start, end, label);
+    if (!ref) return;
+
+    const localSummaryKey = getPerfShiftStorageKey(PERF_SUMMARY_STORAGE_PREFIX, start, end, label);
+    const localHourlyKey = getPerfShiftStorageKey(PERF_HOURLY_STORAGE_PREFIX, start, end, label);
+
+    perfSharedUnsub = onSnapshot(ref, async (snap) => {
+      perfSharedHasSnapshot = true;
+
+      if (!snap.exists()) {
+        const localSummary = perfReadLocal(localSummaryKey, {});
+        const localHourly = perfReadLocal(localHourlyKey, {});
+        const shouldSeed = Object.keys(localSummary || {}).length || Object.keys(localHourly || {}).length;
+
+        if (shouldSeed) {
+          try {
+            await setDoc(ref, {
+              label,
+              shiftStart: start.toISOString(),
+              shiftEnd: end.toISOString(),
+              summary: buildPerfSummaryStateFromRaw(localSummary),
+              hourly: buildPerfHourlyStateFromRaw(localHourly, buildHourSlots(start, end).map(s => s.start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + '–' + s.end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }))),
+              updatedAt: serverTimestamp()
+            }, { merge: true });
+            return;
+          } catch (err) {
+            console.error('Erro ao migrar dados manuais do turno para o Firestore:', err);
+          }
+        }
+      }
+
+      const data = snap.data() || {};
+      perfSharedState = {
+        summary: data.summary || {},
+        hourly: data.hourly || {}
+      };
+
+      if (activeTab === 'performance') renderPerformanceDashboard();
+    }, (err) => {
+      console.error('Erro ao sincronizar dados manuais do Perf. do Turno:', err);
+      perfSharedHasSnapshot = false;
+    });
+  }
+
+  const getPerfSummaryState = (start, end, label) => {
+    const localRaw = perfReadLocal(getPerfShiftStorageKey(PERF_SUMMARY_STORAGE_PREFIX, start, end, label), {});
+    const sharedRaw = perfSharedState?.summary || {};
+    const raw = perfSharedHasSnapshot ? sharedRaw : (Object.keys(sharedRaw).length ? sharedRaw : localRaw);
+    return buildPerfSummaryStateFromRaw(raw);
+  };
+
+  const setPerfSummaryValue = async (start, end, label, rowKey, col, value) => {
+    const key = getPerfShiftStorageKey(PERF_SUMMARY_STORAGE_PREFIX, start, end, label);
+    const raw = perfReadLocal(key, {});
+    raw[rowKey] = raw[rowKey] || {};
+    raw[rowKey][col] = String(value ?? '');
+    perfWriteLocal(key, raw);
+
+    perfSharedState.summary = perfSharedState.summary || {};
+    perfSharedState.summary[rowKey] = perfSharedState.summary[rowKey] || {};
+    perfSharedState.summary[rowKey][col] = String(value ?? '');
+
+    const ref = getPerfSharedDocRef(start, end, label);
+    if (!ref) return;
+
+    try {
+      await setDoc(ref, {
+        label,
+        shiftStart: start.toISOString(),
+        shiftEnd: end.toISOString(),
+        summary: {
+          [rowKey]: {
+            [col]: String(value ?? '')
+          }
+        },
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.error('Erro ao salvar resumo manual compartilhado:', err);
+    }
+  };
+
+  const clearPerfSummaryState = async (start, end, label) => {
+    const cleared = {};
+    PERF_MANUAL_ROWS.forEach(row => {
+      cleared[row.key] = { vendas: '0', baldeio: '0' };
+    });
+
+    perfSharedState.summary = cleared;
+
+    try {
+      localStorage.removeItem(getPerfShiftStorageKey(PERF_SUMMARY_STORAGE_PREFIX, start, end, label));
+    } catch (_) {}
+
+    const ref = getPerfSharedDocRef(start, end, label);
+    if (!ref) return;
+
+    try {
+      await setDoc(ref, {
+        label,
+        shiftStart: start.toISOString(),
+        shiftEnd: end.toISOString(),
+        summary: cleared,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.error('Erro ao limpar resumo manual compartilhado:', err);
+    }
+  };
+
+  const getPerfHourlyState = (start, end, label, labels = []) => {
+    const localRaw = perfReadLocal(getPerfShiftStorageKey(PERF_HOURLY_STORAGE_PREFIX, start, end, label), {});
+    const sharedRaw = perfSharedState?.hourly || {};
+    const raw = perfSharedHasSnapshot ? sharedRaw : (Object.keys(sharedRaw).length ? sharedRaw : localRaw);
+    return buildPerfHourlyStateFromRaw(raw, labels);
+  };
+
+  const setPerfHourlyValue = async (start, end, label, slot, field, value) => {
     if (!['ae', 'total', 'realizado'].includes(field)) return;
+
     const key = getPerfShiftStorageKey(PERF_HOURLY_STORAGE_PREFIX, start, end, label);
     const raw = perfReadLocal(key, {});
     raw[slot] = raw[slot] || {};
     raw[slot][field] = String(value ?? '');
     perfWriteLocal(key, raw);
+
+    perfSharedState.hourly = perfSharedState.hourly || {};
+    perfSharedState.hourly[slot] = perfSharedState.hourly[slot] || {};
+    perfSharedState.hourly[slot][field] = String(value ?? '');
+
+    const ref = getPerfSharedDocRef(start, end, label);
+    if (!ref) return;
+
+    try {
+      await setDoc(ref, {
+        label,
+        shiftStart: start.toISOString(),
+        shiftEnd: end.toISOString(),
+        hourly: {
+          [slot]: {
+            [field]: String(value ?? '')
+          }
+        },
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.error('Erro ao salvar volume por hora compartilhado:', err);
+    }
   };
 
-  const clearPerfHourlyState = (start, end, label) => {
+  const clearPerfHourlyState = async (start, end, label) => {
+    const slotLabels = buildHourSlots(start, end).map(s => {
+      const a = s.start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      const b = s.end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      return `${a}–${b}`;
+    });
+    const cleared = buildPerfHourlyStateFromRaw({}, slotLabels);
+
+    perfSharedState.hourly = cleared;
+
     try {
       localStorage.removeItem(getPerfShiftStorageKey(PERF_HOURLY_STORAGE_PREFIX, start, end, label));
     } catch (_) {}
+
+    const ref = getPerfSharedDocRef(start, end, label);
+    if (!ref) return;
+
+    try {
+      await setDoc(ref, {
+        label,
+        shiftStart: start.toISOString(),
+        shiftEnd: end.toISOString(),
+        hourly: cleared,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.error('Erro ao limpar volume por hora compartilhado:', err);
+    }
   };
 
   const getPerfFlowClassificacaoRaw = (op = {}) => {
@@ -3585,6 +3773,7 @@ async function handleAddOccurrence(e) {
     if (!perfCanvas) return;
 
     const { label, start, end } = getShiftInfo(new Date());
+    attachPerfSharedShiftSync(start, end, label);
     const startTxt = start.toLocaleString('pt-BR');
     const endTxt = end.toLocaleString('pt-BR');
 
