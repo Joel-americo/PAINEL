@@ -2585,8 +2585,16 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       batch.delete(patioRef);
 
       await batch.commit();
+
+      patioData = (patioData || []).filter(op => op?.id !== selectedOperacao.id);
+      historicoData = [
+        ...(historicoData || []).filter(op => op?.id !== selectedOperacao.id),
+        cancelada
+      ];
+      render();
+
       await addLogEntry(selectedOperacao.id, 'Operação cancelada via Painel.');
-      showToast("Operação cancelada.", "success");
+      showToast("Operação cancelada e removida do Perf. do Turno.", "success");
     } catch (error) {
       console.error("Falha ao cancelar operação:", error);
       showToast("Erro ao cancelar operação. Veja console.", "error");
@@ -3256,6 +3264,36 @@ async function handleAddOccurrence(e) {
 
   const getPerfFlowClassificacao = (op = {}) => perfNorm(getPerfFlowClassificacaoRaw(op));
 
+  const getPerfDeepBlob = (op = {}) => {
+    const values = [];
+    const seen = new WeakSet();
+
+    const walk = (value) => {
+      if (value === undefined || value === null) return;
+
+      const t = typeof value;
+      if (t === 'string' || t === 'number' || t === 'boolean') {
+        const normalized = perfNorm(value);
+        if (normalized) values.push(normalized);
+        return;
+      }
+
+      if (Array.isArray(value)) {
+        value.forEach(walk);
+        return;
+      }
+
+      if (t === 'object') {
+        if (seen.has(value)) return;
+        seen.add(value);
+        Object.values(value).forEach(walk);
+      }
+    };
+
+    walk(op);
+    return values.join(' | ');
+  };
+
   const isPerfFlowBaldeio = (op = {}) => {
     const cls = getPerfFlowClassificacao(op);
     return !!cls && (cls === 'BALDEIO' || cls.includes('BALDEIO'));
@@ -3288,6 +3326,13 @@ async function handleAddOccurrence(e) {
     op.tipoOperacao,
     op.tipo_operacao,
     op.tipo,
+    op.segmentacao,
+    op['segmentação'],
+    op.classificacao,
+    op['classificação'],
+    op.categoria,
+    op.fluxo,
+    op.perfil,
     getSegmentacaoLabel(op),
     op.status,
     op.canal,
@@ -3369,6 +3414,48 @@ async function handleAddOccurrence(e) {
     }
   };
 
+  const isPerfCancelledOp = (op = {}) => {
+    const status = perfNorm(op?.status || op?.situacao || op?.situação || '');
+    return !!status && (
+      status === 'CANCELADO' ||
+      status === 'CANCELADA' ||
+      status === 'CANCEL' ||
+      status.startsWith('CANCEL')
+    );
+  };
+
+  const isLatasVaziasOp = (op = {}) => {
+    const joined = [perfBlob(op), getPerfDeepBlob(op)]
+      .filter(Boolean)
+      .join(' | ')
+      .replace(/[^A-Z0-9| ]+/g, ' ');
+
+    if (!joined) return false;
+
+    return (
+      joined.includes('LATAS VAZIAS') ||
+      joined.includes('LATA VAZIA') ||
+      joined.includes('LATAS VAZIA') ||
+      joined.includes('LATA VAZIAS') ||
+      joined.includes('LATAS VAZIO') ||
+      joined.includes('LATA VAZIO') ||
+      joined.includes('LATAS VAZIOS') ||
+      joined.includes('LATA VAZIOS') ||
+      joined.includes('LATAS_VAZIAS') ||
+      joined.includes('LATA_VAZIA') ||
+      joined.includes('LATAS-VAZIAS') ||
+      joined.includes('LATA-VAZIA') ||
+      joined.includes('LATA VAZ') ||
+      joined.includes('LATAS VAZ') ||
+      joined.includes('LATASVAZ') ||
+      joined.includes('LATAVAZ') ||
+      (/LATAS?\s*(?:-|_)?\s*VAZI[AO]S?/).test(joined) ||
+      (/LATAS?\s*(?:-|_)?\s*VAZ/).test(joined) ||
+      (joined.includes('LATA') && (joined.includes('VAZIA') || joined.includes('VAZIO') || joined.includes('VAZIAS') || joined.includes('VAZIOS') || joined.includes('VAZ'))) ||
+      (joined.includes('LATAS') && (joined.includes('VAZIA') || joined.includes('VAZIO') || joined.includes('VAZIAS') || joined.includes('VAZIOS') || joined.includes('VAZ')))
+    );
+  };
+
   const isJslBaldeioPerfOp = (op = {}) => isJslOp(op) && isPerfExplicitBaldeioOp(op);
 
   const perfColumn = (op = {}) => {
@@ -3414,12 +3501,13 @@ async function handleAddOccurrence(e) {
   };
 
   const detectPerfAutoCategory = (op = {}) => {
-    const blob = perfBlob(op);
-    if (!blob || isPerfManualBlob(blob)) return null;
+    const blobBase = perfBlob(op);
+    const blob = [blobBase, getPerfDeepBlob(op)].filter(Boolean).join(' | ');
+    if (!blob || isPerfManualBlob(blob) || isPerfCancelledOp(op)) return null;
 
     if (isRitmoOp(op) || blob.includes('RITMO') || blob.includes('RITIMO')) return 'Ritmo';
     if (isJslBaldeioPerfOp(op) || (isJslOp(op) && isPerfExplicitBaldeioOp(op))) return 'JSL';
-    if (blob.includes('LATAS VAZIAS') || blob.includes('LATA VAZIA')) return 'Latas vazias';
+    if (isLatasVaziasOp(op)) return 'Latas vazias';
     if (blob.includes('BULK')) return 'Bulk';
     if (blob.includes('INSUMO')) return 'Insumo';
     if (blob.includes('PRODUTO ACABADO')) return 'Produto acabado';
@@ -3801,9 +3889,35 @@ async function handleAddOccurrence(e) {
       const rt = toMs(op.registrationTime);
       const key = op?.id || `${op?.dt || ''}-${op?.cpf || ''}-${rt || ''}`;
       if (!key || !inRange(rt, start, end)) return;
-      if (!opsMap.has(key)) opsMap.set(key, op);
+
+      const prev = opsMap.get(key);
+      if (!prev) {
+        opsMap.set(key, op);
+        return;
+      }
+
+      const prevCancelled = isPerfCancelledOp(prev);
+      const currCancelled = isPerfCancelledOp(op);
+
+      if (currCancelled && !prevCancelled) {
+        opsMap.set(key, op);
+        return;
+      }
+
+      if (!currCancelled && prevCancelled) {
+        return;
+      }
+
+      const prevFinished = toMs(prev.finishedTime) || 0;
+      const currFinished = toMs(op.finishedTime) || 0;
+      const prevUpdated = toMs(prev.updatedAt) || toMs(prev.lastUpdatedAt) || 0;
+      const currUpdated = toMs(op.updatedAt) || toMs(op.lastUpdatedAt) || 0;
+
+      if ((currFinished || currUpdated) >= (prevFinished || prevUpdated)) {
+        opsMap.set(key, op);
+      }
     });
-    const opsTurno = [...opsMap.values()];
+    const opsTurno = [...opsMap.values()].filter(op => !isPerfCancelledOp(op));
 
     const slots = buildHourSlots(start, end);
     const slotLabels = slots.map(s => {
@@ -3844,7 +3958,7 @@ async function handleAddOccurrence(e) {
     }
     renderPerformanceHourlyManualChart(slotLabels, hourlyState);
 
-    const finishedInShift = (historicoData || []).filter(op => inRange(toMs(op.finishedTime), start, end));
+    const finishedInShift = (historicoData || []).filter(op => inRange(toMs(op.finishedTime), start, end) && !isPerfCancelledOp(op));
     const finalizados = finishedInShift.filter(op => (op.status || '').toLowerCase() === 'finalizado');
     const cancelados = finishedInShift.filter(op => (op.status || '').toLowerCase() === 'cancelado');
 
