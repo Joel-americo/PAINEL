@@ -2945,6 +2945,15 @@ async function handleAddOccurrence(e) {
     return Number.isInteger(rounded) ? String(rounded) : String(rounded);
   };
 
+
+  const kpiCardSm = (title, value, subtitle = '') => `
+    <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+      <div class="text-xs text-gray-300">${escapeHtml(title)}</div>
+      <div class="mt-1 text-2xl font-bold text-white">${escapeHtml(String(value ?? '—'))}</div>
+      <div class="mt-1 text-[11px] text-gray-400">${escapeHtml(subtitle || '')}</div>
+    </div>
+  `;
+
   const normalizePerfHourlyState = (state = {}, labels = []) => {
     const out = {};
     let previousTotal = 0;
@@ -3096,7 +3105,7 @@ async function handleAddOccurrence(e) {
     return buildPerfSummaryStateFromRaw(raw);
   };
 
-  const setPerfSummaryValue = async (start, end, label, rowKey, col, value) => {
+  const setPerfSummaryValue = (start, end, label, rowKey, col, value) => {
     const key = getPerfShiftStorageKey(PERF_SUMMARY_STORAGE_PREFIX, start, end, label);
     const raw = perfReadLocal(key, {});
     raw[rowKey] = raw[rowKey] || {};
@@ -3106,7 +3115,9 @@ async function handleAddOccurrence(e) {
     perfSharedState.summary = perfSharedState.summary || {};
     perfSharedState.summary[rowKey] = perfSharedState.summary[rowKey] || {};
     perfSharedState.summary[rowKey][col] = String(value ?? '');
+  };
 
+  const syncPerfSummaryShared = async (start, end, label) => {
     const ref = getPerfSharedDocRef(start, end, label);
     if (!ref) return;
 
@@ -3115,11 +3126,7 @@ async function handleAddOccurrence(e) {
         label,
         shiftStart: start.toISOString(),
         shiftEnd: end.toISOString(),
-        summary: {
-          [rowKey]: {
-            [col]: String(value ?? '')
-          }
-        },
+        summary: buildPerfSummaryStateFromRaw(perfSharedState.summary || {}),
         updatedAt: serverTimestamp()
       }, { merge: true });
     } catch (err) {
@@ -3162,7 +3169,7 @@ async function handleAddOccurrence(e) {
     return buildPerfHourlyStateFromRaw(raw, labels);
   };
 
-  const setPerfHourlyValue = async (start, end, label, slot, field, value) => {
+  const setPerfHourlyValue = (start, end, label, slot, field, value) => {
     if (!['ae', 'total', 'realizado'].includes(field)) return;
 
     const key = getPerfShiftStorageKey(PERF_HOURLY_STORAGE_PREFIX, start, end, label);
@@ -3174,7 +3181,9 @@ async function handleAddOccurrence(e) {
     perfSharedState.hourly = perfSharedState.hourly || {};
     perfSharedState.hourly[slot] = perfSharedState.hourly[slot] || {};
     perfSharedState.hourly[slot][field] = String(value ?? '');
+  };
 
+  const syncPerfHourlyShared = async (start, end, label) => {
     const ref = getPerfSharedDocRef(start, end, label);
     if (!ref) return;
 
@@ -3183,11 +3192,7 @@ async function handleAddOccurrence(e) {
         label,
         shiftStart: start.toISOString(),
         shiftEnd: end.toISOString(),
-        hourly: {
-          [slot]: {
-            [field]: String(value ?? '')
-          }
-        },
+        hourly: perfSharedState.hourly || {},
         updatedAt: serverTimestamp()
       }, { merge: true });
     } catch (err) {
@@ -5638,6 +5643,23 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
         setPerfHourlyValue(start, end, label, slot, field, target.value);
         updatePerfHourlyTotalsFromDOM();
         renderPerformanceHourlyManualChart(slotLabelsFromDOM(), collectPerfHourlyStateFromDOM());
+      }
+    });
+
+
+    document.getElementById('performance-content')?.addEventListener('change', async (ev) => {
+      const target = ev.target;
+      if (!(target instanceof HTMLInputElement)) return;
+
+      const { label, start, end } = getShiftInfo(new Date());
+
+      if (target.matches('input[data-perf-manual="1"]')) {
+        await syncPerfSummaryShared(start, end, label);
+        return;
+      }
+
+      if (target.matches('input[data-hourly-field]')) {
+        await syncPerfHourlyShared(start, end, label);
       }
     });
 
