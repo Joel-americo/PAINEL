@@ -2891,10 +2891,15 @@ async function handleAddOccurrence(e) {
     { key: 'ultima_chamada', label: 'Última chamada' },
     { key: 'fluxo_carregamento', label: 'Fluxo de Carregamento' },
     { key: 'problemas', label: 'Problemas' },
-    { key: 'marcacoes_fazer', label: 'Marcações a Fazer' },
+    { key: 'marcacoes_fazer', label: 'Marcações a Fazer' }
+  ];
+
+  const PERF_BALDEIO_TOTAL_ROWS = [
     { key: 'baldeios_totais_ritmo', label: 'Baldeios totais - Ritmo' },
     { key: 'baldeios_totais_jsl', label: 'Baldeios totais - JSL' }
   ];
+
+  const PERF_ALL_SUMMARY_ROWS = [...PERF_MANUAL_ROWS, ...PERF_BALDEIO_TOTAL_ROWS];
 
   const PERF_AUTO_CATEGORY_ORDER = [
     'Vendas',
@@ -3019,7 +3024,7 @@ async function handleAddOccurrence(e) {
 
   const buildPerfSummaryStateFromRaw = (raw = {}) => {
     const out = {};
-    PERF_MANUAL_ROWS.forEach(row => {
+    PERF_ALL_SUMMARY_ROWS.forEach(row => {
       out[row.key] = {
         vendas: String(raw?.[row.key]?.vendas ?? '0'),
         baldeio: String(raw?.[row.key]?.baldeio ?? '0')
@@ -3144,7 +3149,7 @@ async function handleAddOccurrence(e) {
 
   const clearPerfSummaryState = async (start, end, label) => {
     const cleared = {};
-    PERF_MANUAL_ROWS.forEach(row => {
+    PERF_ALL_SUMMARY_ROWS.forEach(row => {
       cleared[row.key] = { vendas: '0', baldeio: '0' };
     });
 
@@ -3587,45 +3592,69 @@ async function handleAddOccurrence(e) {
   };
 
   const renderPerfManualSummaryHtml = (state = {}) => {
+    const renderManualRow = (row, col1Label = 'Vendas', col2Label = 'Baldeio') => {
+      const vendas = state?.[row.key]?.vendas ?? '0';
+      const baldeio = state?.[row.key]?.baldeio ?? '0';
+      const total = perfToNumber(vendas) + perfToNumber(baldeio);
+      return `
+        <tr class="border-t border-black/20 bg-white/95 text-black" data-manual-row="${row.key}">
+          <td class="p-2">${row.label}</td>
+          <td class="p-2">
+            <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(vendas)}"
+                   data-perf-manual="1" data-row-key="${row.key}" data-col="vendas"
+                   aria-label="${escapeHtml(`${row.label} - ${col1Label}`)}"
+                   class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-center font-semibold text-black focus:outline-none focus:ring-2 focus:ring-green-600" />
+          </td>
+          <td class="p-2">
+            <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(baldeio)}"
+                   data-perf-manual="1" data-row-key="${row.key}" data-col="baldeio"
+                   aria-label="${escapeHtml(`${row.label} - ${col2Label}`)}"
+                   class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-center font-semibold text-black focus:outline-none focus:ring-2 focus:ring-green-600" />
+          </td>
+          <td class="p-2 text-center font-bold" data-manual-total>${total}</td>
+        </tr>
+      `;
+    };
+
     return `
-      <div class="overflow-hidden rounded-lg border border-gray-700">
-        <table class="w-full text-left text-sm">
-          <thead>
-            <tr class="bg-green-800 text-white">
-              <th colspan="4" class="p-3 text-center font-bold">Campos Manuais</th>
-            </tr>
-            <tr class="bg-green-700 text-white border-t border-green-900/40">
-              <th class="p-2 font-semibold">Tipo</th>
-              <th class="p-2 text-center font-semibold w-28">Descargas</th>
-              <th class="p-2 text-center font-semibold w-28">Carregamento</th>
-              <th class="p-2 text-center font-semibold w-20">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${PERF_MANUAL_ROWS.map(row => {
-              const vendas = state?.[row.key]?.vendas ?? '0';
-              const baldeio = state?.[row.key]?.baldeio ?? '0';
-              const total = perfToNumber(vendas) + perfToNumber(baldeio);
-              const isBaldeioOnly = !!row.baldeioOnly;
-              return `
-                <tr class="border-t border-black/20 bg-white/95 text-black" data-manual-row="${row.key}">
-                  <td class="p-2">${row.label}</td>
-                  <td class="p-2">
-                    <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(isBaldeioOnly ? '0' : vendas)}" ${isBaldeioOnly ? 'readonly' : ''}
-                           data-perf-manual="1" data-row-key="${row.key}" data-col="vendas"
-                           class="w-full rounded border border-gray-300 ${isBaldeioOnly ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'} px-2 py-1 text-center font-semibold text-black focus:outline-none focus:ring-2 focus:ring-green-600" />
-                  </td>
-                  <td class="p-2">
-                    <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(baldeio)}"
-                           data-perf-manual="1" data-row-key="${row.key}" data-col="baldeio"
-                           class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-center font-semibold text-black focus:outline-none focus:ring-2 focus:ring-green-600" />
-                  </td>
-                  <td class="p-2 text-center font-bold" data-manual-total>${total}</td>
-                </tr>
-              `;
-            }).join('')}
-          </tbody>
-        </table>
+      <div class="space-y-5">
+        <div class="overflow-hidden rounded-lg border border-gray-700">
+          <table class="w-full text-left text-sm">
+            <thead>
+              <tr class="bg-green-800 text-white">
+                <th colspan="4" class="p-3 text-center font-bold">Campos Manuais</th>
+              </tr>
+              <tr class="bg-green-700 text-white border-t border-green-900/40">
+                <th class="p-2 font-semibold">Tipo</th>
+                <th class="p-2 text-center font-semibold w-28">Vendas</th>
+                <th class="p-2 text-center font-semibold w-28">Baldeio</th>
+                <th class="p-2 text-center font-semibold w-20">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${PERF_MANUAL_ROWS.map(row => renderManualRow(row, 'Vendas', 'Baldeio')).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="overflow-hidden rounded-lg border border-gray-700">
+          <table class="w-full text-left text-sm">
+            <thead>
+              <tr class="bg-green-800 text-white">
+                <th colspan="4" class="p-3 text-center font-bold">Totais de Baldeios</th>
+              </tr>
+              <tr class="bg-green-700 text-white border-t border-green-900/40">
+                <th class="p-2 font-semibold">Tipo</th>
+                <th class="p-2 text-center font-semibold w-28">Carregamento</th>
+                <th class="p-2 text-center font-semibold w-28">Descarga</th>
+                <th class="p-2 text-center font-semibold w-20">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${PERF_BALDEIO_TOTAL_ROWS.map(row => renderManualRow(row, 'Carregamento', 'Descarga')).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
     `;
   };
