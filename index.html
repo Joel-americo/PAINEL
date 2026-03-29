@@ -6059,6 +6059,72 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
 
     document.getElementById('export-csv-btn').addEventListener('click', exportToCsv);
 
+    
+    const replaceFieldsForCapture = (originalRoot, cloneRoot) => {
+      const originalFields = originalRoot.querySelectorAll('input, textarea, select');
+      const cloneFields = cloneRoot.querySelectorAll('input, textarea, select');
+
+      originalFields.forEach((field, idx) => {
+        const clonedField = cloneFields[idx];
+        if (!clonedField) return;
+
+        const styles = window.getComputedStyle(field);
+        const rect = field.getBoundingClientRect();
+        const box = document.createElement('div');
+        const rawValue = (field.type === 'checkbox' || field.type === 'radio')
+          ? (field.checked ? 'Sim' : 'Não')
+          : (field.value ?? '');
+        const value = String(rawValue).trim() || '0';
+
+        box.textContent = value;
+        box.className = 'capture-field-box';
+        box.style.width = `${Math.max(rect.width, 44)}px`;
+        box.style.height = `${Math.max(rect.height, 28)}px`;
+        box.style.minWidth = `${Math.max(rect.width, 44)}px`;
+        box.style.display = 'flex';
+        box.style.alignItems = 'center';
+        box.style.justifyContent = styles.textAlign === 'left' ? 'flex-start' : (styles.textAlign === 'right' ? 'flex-end' : 'center');
+        box.style.textAlign = styles.textAlign || 'center';
+        box.style.padding = styles.padding;
+        box.style.boxSizing = 'border-box';
+        box.style.background = styles.backgroundColor || '#f3f4f6';
+        box.style.border = styles.border || '1px solid #d1d5db';
+        box.style.borderRadius = styles.borderRadius || '10px';
+        box.style.color = '#111827';
+        box.style.fontFamily = styles.fontFamily;
+        box.style.fontSize = styles.fontSize;
+        box.style.fontWeight = styles.fontWeight;
+        box.style.lineHeight = '1.2';
+        box.style.whiteSpace = 'nowrap';
+        box.style.overflow = 'hidden';
+        box.style.textOverflow = 'ellipsis';
+
+        clonedField.replaceWith(box);
+      });
+    };
+
+    const replaceCanvasesForCapture = (originalRoot, cloneRoot) => {
+      const originalCanvases = originalRoot.querySelectorAll('canvas');
+      const cloneCanvases = cloneRoot.querySelectorAll('canvas');
+
+      originalCanvases.forEach((canvas, idx) => {
+        const clonedCanvas = cloneCanvases[idx];
+        if (!clonedCanvas) return;
+        try {
+          const img = document.createElement('img');
+          const rect = canvas.getBoundingClientRect();
+          img.src = canvas.toDataURL('image/png');
+          img.alt = 'Gráfico';
+          img.style.display = 'block';
+          img.style.width = `${Math.max(rect.width, 320)}px`;
+          img.style.height = `${Math.max(rect.height, 180)}px`;
+          img.style.maxWidth = '100%';
+          img.style.objectFit = 'contain';
+          clonedCanvas.replaceWith(img);
+        } catch (_) {}
+      });
+    };
+
     const capturePerformanceDashboardScreenshot = async () => {
       const target = document.getElementById('performance-content');
       const btn = document.getElementById('performance-print-btn');
@@ -6076,36 +6142,127 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
         btn.textContent = 'Gerando printscreen...';
       }
 
+      let wrapper = null;
       try {
+        await document.fonts?.ready;
         target.querySelectorAll('input, button').forEach(el => el.blur?.());
+
         try {
           performanceHourlyManualChart?.resize();
+          performanceHourlyManualChart?.update?.('none');
           performanceChart?.resize();
+          performanceChart?.update?.('none');
         } catch (_) {}
 
-        await new Promise(resolve => setTimeout(resolve, 180));
+        const clone = target.cloneNode(true);
+        const rect = target.getBoundingClientRect();
+        const fullWidth = Math.ceil(Math.max(target.scrollWidth, target.offsetWidth, rect.width, 1400));
 
-        const canvas = await html2canvas(target, {
+        wrapper = document.createElement('div');
+        wrapper.id = 'performance-capture-wrapper';
+        wrapper.style.position = 'fixed';
+        wrapper.style.left = '-100000px';
+        wrapper.style.top = '0';
+        wrapper.style.zIndex = '-1';
+        wrapper.style.pointerEvents = 'none';
+        wrapper.style.background = '#03160d';
+        wrapper.style.padding = '24px';
+        wrapper.style.margin = '0';
+        wrapper.style.width = `${fullWidth + 48}px`;
+        wrapper.style.maxWidth = 'none';
+        wrapper.style.overflow = 'visible';
+        wrapper.style.boxSizing = 'border-box';
+
+        clone.id = 'performance-content-capture';
+        clone.classList.remove('hidden');
+        clone.style.display = 'block';
+        clone.style.width = `${fullWidth}px`;
+        clone.style.minWidth = `${fullWidth}px`;
+        clone.style.maxWidth = 'none';
+        clone.style.margin = '0';
+        clone.style.paddingBottom = '24px';
+        clone.style.overflow = 'visible';
+        clone.style.transform = 'none';
+        clone.style.boxSizing = 'border-box';
+        clone.style.background = '#03160d';
+
+        clone.querySelectorAll('.performance-top-actions').forEach(el => {
+          el.style.display = 'none';
+        });
+        clone.querySelectorAll('.overflow-x-auto, .overflow-hidden').forEach(el => {
+          el.style.overflow = 'visible';
+        });
+        clone.querySelectorAll('.performance-hourly-chart-wrap, #performance-hourly-manual-table, #performance-manual-table').forEach(el => {
+          el.style.overflow = 'visible';
+        });
+        clone.querySelectorAll('.relative.h-80').forEach(el => {
+          el.style.height = '24rem';
+          el.style.minHeight = '24rem';
+        });
+        clone.querySelectorAll('table').forEach(el => {
+          el.style.minWidth = '100%';
+        });
+        clone.querySelectorAll('thead th:first-child, tbody td:first-child').forEach(el => {
+          el.style.position = 'static';
+          el.style.left = 'auto';
+        });
+
+        wrapper.appendChild(clone);
+        document.body.appendChild(wrapper);
+
+        replaceFieldsForCapture(target, clone);
+        replaceCanvasesForCapture(target, clone);
+
+        await new Promise(resolve => setTimeout(resolve, 250));
+
+        const captureWidth = Math.ceil(Math.max(wrapper.scrollWidth, wrapper.offsetWidth, clone.scrollWidth + 48));
+        const captureHeight = Math.ceil(Math.max(wrapper.scrollHeight, wrapper.offsetHeight, clone.scrollHeight + 48, clone.getBoundingClientRect().height + 48));
+
+        const canvas = await html2canvas(wrapper, {
           backgroundColor: '#03160d',
           useCORS: true,
           logging: false,
-          scale: Math.max(2, Math.min(3, window.devicePixelRatio || 1)),
+          scale: Math.max(2, window.devicePixelRatio || 1),
+          width: captureWidth,
+          height: captureHeight,
           scrollX: 0,
-          scrollY: -window.scrollY,
-          windowWidth: document.documentElement.scrollWidth,
-          windowHeight: document.documentElement.scrollHeight
+          scrollY: 0,
+          windowWidth: captureWidth + 80,
+          windowHeight: captureHeight + 80,
+          x: 0,
+          y: 0
         });
 
-        const link = document.createElement('a');
         const stamp = new Date().toLocaleString('sv-SE').replace(/[ :]/g, '-');
-        link.download = `Perf_do_Turno_${stamp}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+        const filename = `Perf_do_Turno_${stamp}.png`;
+        if (canvas.toBlob) {
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              const link = document.createElement('a');
+              link.download = filename;
+              link.href = canvas.toDataURL('image/png');
+              link.click();
+              return;
+            }
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = url;
+            link.click();
+            setTimeout(() => URL.revokeObjectURL(url), 2000);
+          }, 'image/png');
+        } else {
+          const link = document.createElement('a');
+          link.download = filename;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        }
         showToast?.('Printscreen gerado com sucesso.', 'success');
       } catch (err) {
         console.error('Erro ao gerar printscreen do Perf. do Turno:', err);
         showToast?.('Não foi possível gerar o printscreen.', 'error');
       } finally {
+        if (wrapper?.parentNode) wrapper.parentNode.removeChild(wrapper);
         if (btn) {
           btn.disabled = false;
           btn.classList.remove('opacity-70', 'cursor-not-allowed');
@@ -6115,6 +6272,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
     };
 
     document.getElementById('performance-print-btn')?.addEventListener('click', capturePerformanceDashboardScreenshot);
+
 
     document.getElementById('perf-manual-reset-btn')?.addEventListener('click', () => {
       const { label, start, end } = getShiftInfo(new Date());
