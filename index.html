@@ -13,6 +13,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
   <style>
   .site-header {
@@ -401,6 +402,58 @@
 }
 
 
+/* ===== Perf. do Turno: cards arrastáveis ===== */
+#performance-content .perf-sort-column {
+  min-height: 120px;
+}
+#performance-content .perf-sort-card {
+  position: relative;
+}
+#performance-content .perf-card-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: #ffffff;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+#performance-content .perf-card-handle:hover {
+  background: rgba(255,255,255,0.12);
+}
+#performance-content .perf-card-handle:active {
+  cursor: grabbing;
+}
+#performance-content .perf-card-handle-dots {
+  line-height: 0.85;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+#performance-content .perf-card-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+#performance-content .perf-sort-hint {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.75);
+}
+#performance-content .sortable-ghost {
+  opacity: 0.35;
+}
+#performance-content .sortable-chosen {
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.45), 0 18px 40px rgba(0,0,0,0.35);
+}
+#performance-content .sortable-drag {
+  transform: rotate(1deg);
+}
 /* ===== Perf. do Turno: melhoria para mobile ===== */
 #performance-content {
   font-size: 1rem;
@@ -563,42 +616,82 @@
   }
 }
 
+#performance-content .perf-emphasis-card {
+  border: 1px solid rgba(34, 197, 94, 0.18);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+#performance-content .performance-top-actions {
+  margin-bottom: 0.6rem;
+}
+#performance-content .performance-top-actions button {
+  padding: 0.5rem 0.85rem;
+  font-size: 0.9rem;
+}
+#performance-content .performance-hourly-shift-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  background: rgba(6, 78, 59, 0.45);
+  color: #d1fae5;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+#performance-content #performance-manual-table input[data-perf-manual="1"] {
+  width: 4.75rem;
+  max-width: 100%;
+  margin: 0 auto;
+  display: block;
+  padding: 0.28rem 0.45rem;
+}
+#performance-content #performance-hourly-manual-table input[data-hourly-field] {
+  max-width: 10rem;
+  margin: 0 auto;
+  display: block;
+  padding: 0.34rem 0.5rem;
+}
+#performance-content #performance-manual-table td,
+#performance-content #performance-manual-table th,
+#performance-content #performance-hourly-manual-table td,
+#performance-content #performance-hourly-manual-table th,
+#performance-content #hora-hora-table td,
+#performance-content #hora-hora-table th {
+  padding-top: 0.45rem;
+  padding-bottom: 0.45rem;
+}
+#performance-content .performance-hourly-chart-card-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
 /* ===== Perf. do Turno: desktop / print ===== */
 @media (min-width: 1280px) {
   #performance-content .performance-grid {
-    grid-template-columns: minmax(470px, 39%) minmax(560px, 61%) !important;
-    gap: 1rem !important;
+    grid-template-columns: minmax(430px, 37%) minmax(640px, 63%) !important;
+    gap: 0.85rem !important;
     align-items: start;
-  }
-
-  #performance-content .performance-bottom-panel {
-    grid-column: 1 / -1;
   }
 
   #performance-content .performance-left-panel,
   #performance-content .performance-right-panel {
-    gap: 1rem !important;
+    gap: 0.85rem !important;
   }
 
   #performance-content .performance-summary-shell,
-  #performance-content .performance-hourly-card,
-  #performance-content .performance-hourly-chart-card {
-    padding: 1rem !important;
+  #performance-content .performance-hourly-card {
+    padding: 0.9rem !important;
   }
 
   #performance-content .performance-summary-shell .space-y-6 {
-    gap: 1rem !important;
+    gap: 0.85rem !important;
   }
 
   #performance-content .performance-summary-shell .mb-4,
-  #performance-content .performance-hourly-card .mb-4,
-  #performance-content .performance-hourly-chart-card .mb-4 {
-    margin-bottom: 0.75rem !important;
-  }
-
-  #performance-content #hora-hora-table .mb-3,
-  #performance-content #performance-hourly-manual-table .mb-3 {
-    margin-bottom: 0.45rem;
+  #performance-content .performance-hourly-card .mb-4 {
+    margin-bottom: 0.6rem !important;
   }
 
   #performance-content table,
@@ -613,25 +706,25 @@
   #performance-content button,
   #performance-content input[data-perf-manual="1"],
   #performance-content input[data-hourly-field] {
-    font-size: 1.02rem !important;
+    font-size: 0.95rem !important;
   }
 
   #performance-content .performance-hourly-chart-wrap {
-    margin-top: 0.9rem !important;
+    margin-top: 0.75rem !important;
   }
 
   #performance-content .performance-hourly-chart-wrap .relative.h-80 {
-    height: 24rem;
+    height: 18rem !important;
   }
 }
 
 @media (min-width: 1536px) {
   #performance-content .performance-grid {
-    grid-template-columns: minmax(460px, 35%) minmax(0, 65%) !important;
+    grid-template-columns: minmax(430px, 36%) minmax(0, 64%) !important;
   }
 
   #performance-content .performance-hourly-chart-wrap .relative.h-80 {
-    height: 28rem;
+    height: 19.5rem !important;
   }
 }
 
@@ -720,6 +813,249 @@
   body.perf-print-mode #performance-content #performance-chart-container {
     height: 145mm !important;
     min-height: 145mm !important;
+  }
+}
+
+
+
+/* ===== Perf. do Turno: destaque visual + modo relatório ===== */
+#performance-content .perf-emphasis-card {
+  border: 2px solid rgba(34, 197, 94, 0.42) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(16, 185, 129, 0.14) inset !important;
+  background: linear-gradient(180deg, rgba(7, 48, 30, 0.96) 0%, rgba(3, 29, 19, 0.96) 100%) !important;
+}
+
+#performance-content .perf-emphasis-card h3,
+#performance-content .perf-emphasis-card h4 {
+  font-size: clamp(1.35rem, 1.05rem + 0.75vw, 1.9rem) !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em;
+}
+
+#performance-content .perf-emphasis-card thead tr:first-child th {
+  font-size: 1.08rem !important;
+  letter-spacing: -0.01em;
+  padding-top: 0.9rem !important;
+  padding-bottom: 0.9rem !important;
+}
+
+#performance-content .perf-emphasis-card .overflow-hidden.rounded-lg.border {
+  border-color: rgba(74, 222, 128, 0.42) !important;
+  border-width: 2px !important;
+}
+
+#performance-content .perf-emphasis-card thead tr:nth-child(2) th,
+#performance-content .perf-emphasis-card tbody td,
+#performance-content .perf-emphasis-card tfoot td,
+#performance-content .perf-emphasis-card input[data-perf-manual="1"],
+#performance-content .perf-emphasis-card input[data-hourly-field] {
+  font-size: 1rem !important;
+}
+
+#performance-content .perf-highlight-row,
+#performance-content tr[data-current-hour="1"] {
+  background: linear-gradient(90deg, rgba(236, 253, 245, 0.98) 0%, rgba(220, 252, 231, 0.98) 100%) !important;
+}
+
+#performance-content .perf-highlight-row td,
+#performance-content tr[data-current-hour="1"] td {
+  border-top-color: rgba(5, 150, 105, 0.35) !important;
+  border-bottom: 1px solid rgba(5, 150, 105, 0.35) !important;
+}
+
+#performance-content .perf-highlight-row td:first-child,
+#performance-content tr[data-current-hour="1"] td:first-child {
+  box-shadow: inset 5px 0 0 #059669;
+  font-weight: 800 !important;
+}
+
+#performance-content .perf-highlight-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.18);
+  color: #d1fae5;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  padding: 0.24rem 0.62rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+body.perf-report-mode .site-header,
+body.perf-report-mode #system-alerts-container,
+body.perf-report-mode nav[aria-label="Tabs"],
+body.perf-report-mode #kpi-section,
+body.perf-report-mode #main-content > :not(#performance-content) {
+  display: none !important;
+}
+
+body.perf-report-mode > div.w-full.min-h-screen {
+  padding: 0.6rem !important;
+}
+
+body.perf-report-mode #main-content {
+  margin-top: 0 !important;
+}
+
+body.perf-report-mode #performance-content,
+body.perf-report-mode #performance-content.hidden {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body.perf-report-mode #performance-content .performance-grid {
+  grid-template-columns: minmax(420px, 37%) minmax(0, 63%) !important;
+  gap: 0.9rem !important;
+}
+
+body.perf-report-mode #performance-content .performance-left-panel,
+body.perf-report-mode #performance-content .performance-right-panel {
+  gap: 0.9rem !important;
+}
+
+body.perf-report-mode #performance-content .perf-emphasis-card {
+  border-width: 2px !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(34, 197, 94, 0.16) inset !important;
+}
+
+body.perf-report-mode #performance-content .performance-top-actions {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding-bottom: 0.35rem;
+  background: linear-gradient(180deg, rgba(3, 25, 16, 0.96) 0%, rgba(3, 25, 16, 0.78) 75%, rgba(3, 25, 16, 0) 100%);
+}
+
+body.perf-report-mode #performance-content .performance-top-actions button {
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
+}
+
+body.perf-report-mode #performance-content .performance-hourly-chart-wrap .relative.h-80 {
+  height: 19rem !important;
+}
+
+@media (max-width: 1279px) {
+  body.perf-report-mode #performance-content .performance-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+
+/* Ajuste extra de legibilidade no Perf. do Turno */
+#performance-content {
+  font-size: 1.06rem;
+}
+
+#performance-content h3,
+#performance-content #hora-hora-title {
+  font-size: 2.1rem !important;
+  line-height: 1.15 !important;
+}
+
+#performance-content h4 {
+  font-size: 1.45rem !important;
+  line-height: 1.2 !important;
+}
+
+#performance-content p,
+#performance-content span,
+#performance-content label,
+#performance-content td,
+#performance-content th,
+#performance-content button,
+#performance-content input,
+#performance-content select {
+  font-size: 1.02rem;
+}
+
+#performance-content .text-xs {
+  font-size: 0.96rem !important;
+}
+
+#performance-content .text-sm {
+  font-size: 1rem !important;
+}
+
+#performance-content .text-base {
+  font-size: 1.08rem !important;
+}
+
+#performance-content .text-xl {
+  font-size: 1.5rem !important;
+}
+
+#performance-content .text-2xl {
+  font-size: 2rem !important;
+}
+
+#performance-content table th,
+#performance-content table td {
+  padding-top: 0.78rem !important;
+  padding-bottom: 0.78rem !important;
+}
+
+#performance-content input,
+#performance-content select {
+  min-height: 2.75rem !important;
+  font-size: 1.05rem !important;
+  font-weight: 600;
+}
+
+#performance-content button {
+  font-size: 1rem !important;
+  padding-top: 0.72rem !important;
+  padding-bottom: 0.72rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+body.perf-report-mode #performance-content {
+  font-size: 1.1rem;
+}
+
+body.perf-report-mode #performance-content h3,
+body.perf-report-mode #performance-content #hora-hora-title {
+  font-size: 2.25rem !important;
+}
+
+body.perf-report-mode #performance-content h4 {
+  font-size: 1.55rem !important;
+}
+
+body.perf-report-mode #performance-content td,
+body.perf-report-mode #performance-content th,
+body.perf-report-mode #performance-content input,
+body.perf-report-mode #performance-content button,
+body.perf-report-mode #performance-content p,
+body.perf-report-mode #performance-content span {
+  font-size: 1.06rem !important;
+}
+
+@media (max-width: 768px) {
+  #performance-content {
+    font-size: 1rem;
+  }
+
+  #performance-content h3,
+  #performance-content #hora-hora-title {
+    font-size: 1.75rem !important;
+  }
+
+  #performance-content h4 {
+    font-size: 1.3rem !important;
+  }
+
+  #performance-content td,
+  #performance-content th,
+  #performance-content button,
+  #performance-content p,
+  #performance-content span,
+  #performance-content input,
+  #performance-content select {
+    font-size: 0.98rem !important;
   }
 }
 
@@ -966,57 +1302,90 @@
     </main>
     <!-- Performance do turno -->
     <div id="performance-content" class="hidden">
-      <div class="performance-top-actions flex justify-end mb-3">
+      <div class="performance-top-actions flex flex-wrap justify-end gap-2 mb-3">
+        <button id="performance-report-btn"
+                class="bg-emerald-800 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg shadow-lg">
+          Ativar modo relatório
+        </button>
         <button id="performance-print-btn"
                 class="bg-green-700 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg">
           Capturar printscreen do Perf. do Turno
         </button>
       </div>
 
-      <div class="performance-grid grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6 items-start">
-        <div class="performance-left-panel space-y-4 lg:space-y-6">
-          <div class="performance-summary-shell bg-gray-800 p-4 rounded-lg shadow-lg space-y-6">
-            <div>
-              <div class="flex items-center justify-between gap-3 mb-4">
-                <h3 id="hora-hora-title" class="text-2xl font-bold">Resumo do Turno</h3>
-                <button id="perf-manual-reset-btn"
-                        class="text-xs bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-3 rounded-lg">
-                  Limpar Bandeja/Última chamada
+      <div class="performance-grid grid grid-cols-1 xl:grid-cols-2 gap-3 lg:gap-4 items-start">
+        <div id="performance-left-panel" class="performance-left-panel perf-sort-column space-y-3 lg:space-y-4">
+          <div id="perf-card-summary" data-perf-card="summary" data-default-column="left" data-default-order="1" class="perf-sort-card perf-emphasis-card bg-gray-800 p-4 rounded-xl shadow-lg">
+            <div class="flex items-center justify-between gap-3 mb-3">
+              <div class="perf-card-title-wrap">
+                <button type="button" class="perf-card-handle" title="Arrastar card">
+                  <span class="perf-card-handle-dots">⋮⋮</span>
                 </button>
+                <h3 id="hora-hora-title" class="text-[1.8rem] font-bold leading-tight">Resumo do Turno</h3>
               </div>
-              <div id="hora-hora-table" class="space-y-4"></div>
+              <button id="perf-manual-reset-btn"
+                      class="text-xs bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-3 rounded-lg">
+                Limpar Bandeja/Última chamada
+              </button>
             </div>
+            <div id="hora-hora-table" class="space-y-3"></div>
+          </div>
 
-            <div>
-              <h4 class="text-xl font-bold mb-3">Bandeja / Última chamada (manual)</h4>
-              <div id="performance-manual-table" class="overflow-x-auto"></div>
+          <div id="perf-card-manual" data-perf-card="manual" data-default-column="left" data-default-order="2" class="perf-sort-card perf-emphasis-card bg-gray-800 p-4 rounded-xl shadow-lg">
+            <div class="perf-card-title-wrap mb-3">
+              <button type="button" class="perf-card-handle" title="Arrastar card">
+                <span class="perf-card-handle-dots">⋮⋮</span>
+              </button>
+              <h4 class="text-[1.35rem] font-bold">Bandeja / Última chamada (manual)</h4>
             </div>
+            <div id="performance-manual-table" class="overflow-x-auto"></div>
+          </div>
+
+          <div id="perf-card-baldeio-totals" data-perf-card="baldeio-totals" data-default-column="left" data-default-order="3" class="perf-sort-card perf-emphasis-card bg-gray-800 p-4 rounded-xl shadow-lg">
+            <div class="perf-card-title-wrap mb-3">
+              <button type="button" class="perf-card-handle" title="Arrastar card">
+                <span class="perf-card-handle-dots">⋮⋮</span>
+              </button>
+              <h4 class="text-[1.35rem] font-bold">Totais de Baldeios</h4>
+            </div>
+            <div id="performance-baldeio-total-table" class="overflow-x-auto"></div>
           </div>
         </div>
 
-        <div class="performance-right-panel space-y-4 lg:space-y-6">
-          <div class="performance-hourly-card bg-gray-800 p-4 rounded-lg shadow-lg">
-            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-              <div>
-                <h3 class="text-2xl font-bold">Volume por Hora (manual)</h3>
-                <p id="performance-hourly-manual-title" class="text-sm text-gray-400 mt-1"></p>
+        <div id="performance-right-panel" class="performance-right-panel perf-sort-column space-y-3 lg:space-y-4">
+          <div id="perf-card-hourly" data-perf-card="hourly" data-default-column="right" data-default-order="1" class="perf-sort-card perf-emphasis-card bg-gray-800 p-4 rounded-xl shadow-lg">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+              <div class="perf-card-title-wrap">
+                <button type="button" class="perf-card-handle" title="Arrastar card">
+                  <span class="perf-card-handle-dots">⋮⋮</span>
+                </button>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-[1.8rem] font-bold leading-tight">Volume por Hora</h3>
+                  <span id="performance-hourly-manual-title" class="performance-hourly-shift-badge"></span>
+                </div>
               </div>
               <button id="perf-hourly-reset-btn"
                       class="text-xs bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-3 rounded-lg">
                 Limpar dados manuais
               </button>
             </div>
-
             <div id="performance-hourly-manual-table" class="overflow-x-auto"></div>
           </div>
 
-          <div class="performance-hourly-chart-card bg-gray-800 p-4 rounded-lg shadow-lg">
-            <h3 class="text-2xl font-bold mb-4">Gráfico de Volume por Hora</h3>
+          <div id="perf-card-hourly-chart" data-perf-card="hourly-chart" data-default-column="right" data-default-order="2" class="perf-sort-card perf-emphasis-card bg-gray-800 p-4 rounded-xl shadow-lg">
+            <div class="perf-card-title-wrap mb-3">
+              <button type="button" class="perf-card-handle" title="Arrastar card">
+                <span class="perf-card-handle-dots">⋮⋮</span>
+              </button>
+              <h4 class="performance-hourly-chart-card-title">Gráfico de Volume por Hora</h4>
+            </div>
             <div class="performance-hourly-chart-wrap">
-              <div class="relative h-80" style="height: 22rem;">
-                <canvas id="performance-hourly-manual-chart"></canvas>
-                <div id="performance-hourly-manual-no-data" class="absolute inset-0 flex items-center justify-center text-gray-400 hidden">
-                  <span>Preencha os campos manuais para gerar o gráfico por hora.</span>
+              <div class="performance-hourly-chart-card rounded-xl border border-white/10 bg-black/10 p-3">
+                <div class="relative h-80" style="height: 18rem;">
+                  <canvas id="performance-hourly-manual-chart"></canvas>
+                  <div id="performance-hourly-manual-no-data" class="absolute inset-0 flex items-center justify-center text-gray-400 hidden">
+                    <span>Sem dados manuais no turno.</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1033,6 +1402,14 @@
           </div>
         </div>
       </div>
+
+      <div class="mt-3 text-sm text-gray-300 flex flex-wrap items-center gap-2 perf-sort-hint">
+        <span>Arraste os cards pelos pontinhos para reorganizar o layout do seu jeito.</span>
+        <button id="performance-reset-layout-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-1.5 px-3 rounded-lg text-xs">
+          Resetar layout dos cards
+        </button>
+      </div>
+    </div>
     </div>
 
     <!-- ✅ MOTORISTAS -->
@@ -3205,6 +3582,24 @@ async function handleAddOccurrence(e) {
 
   const slotLabelsFromDOM = () => Array.from(document.querySelectorAll('tr[data-hour-slot]')).map(row => row.dataset.hourSlot).filter(Boolean);
 
+  const getCurrentShiftSlotLabel = (slots = [], labels = [], now = new Date()) => {
+    const nowMs = now.getTime();
+    const index = slots.findIndex(slot => nowMs >= slot.start.getTime() && nowMs < slot.end.getTime());
+    if (index < 0) return '';
+    return labels[index] || '';
+  };
+
+  const syncPerformanceReportButton = () => {
+    const btn = document.getElementById('performance-report-btn');
+    if (!btn) return;
+    const enabled = document.body.classList.contains('perf-report-mode');
+    btn.textContent = enabled ? 'Sair do modo relatório' : 'Ativar modo relatório';
+    btn.classList.toggle('bg-emerald-800', !enabled);
+    btn.classList.toggle('hover:bg-emerald-700', !enabled);
+    btn.classList.toggle('bg-slate-700', enabled);
+    btn.classList.toggle('hover:bg-slate-600', enabled);
+  };
+
 
   const PERF_MANUAL_ROWS = [
     { key: 'produto_acabado_manual', label: 'Produto acabado' },
@@ -3915,70 +4310,72 @@ async function handleAddOccurrence(e) {
     `;
   };
 
-  const renderPerfManualSummaryHtml = (state = {}) => {
-    const renderManualRow = (row, col1Label = 'Vendas', col2Label = 'Baldeio') => {
-      const vendas = state?.[row.key]?.vendas ?? '0';
-      const baldeio = state?.[row.key]?.baldeio ?? '0';
-      const total = perfToNumber(vendas) + perfToNumber(baldeio);
-      return `
-        <tr class="border-t border-black/20 bg-white/95 text-black" data-manual-row="${row.key}">
-          <td class="p-2">${row.label}</td>
-          <td class="p-2">
-            <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(vendas)}"
-                   data-perf-manual="1" data-row-key="${row.key}" data-col="vendas"
-                   aria-label="${escapeHtml(`${row.label} - ${col1Label}`)}"
-                   class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-center font-semibold text-black focus:outline-none focus:ring-2 focus:ring-green-600" />
-          </td>
-          <td class="p-2">
-            <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(baldeio)}"
-                   data-perf-manual="1" data-row-key="${row.key}" data-col="baldeio"
-                   aria-label="${escapeHtml(`${row.label} - ${col2Label}`)}"
-                   class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-center font-semibold text-black focus:outline-none focus:ring-2 focus:ring-green-600" />
-          </td>
-          <td class="p-2 text-center font-bold" data-manual-total>${total}</td>
-        </tr>
-      `;
-    };
-
+  const renderPerfInputRow = (state = {}, row, col1Label = 'Vendas', col2Label = 'Baldeio') => {
+    const vendas = state?.[row.key]?.vendas ?? '0';
+    const baldeio = state?.[row.key]?.baldeio ?? '0';
+    const total = perfToNumber(vendas) + perfToNumber(baldeio);
     return `
-      <div class="space-y-5">
-        <div class="overflow-hidden rounded-lg border border-gray-700">
-          <table class="w-full text-left text-sm">
-            <thead>
-              <tr class="bg-green-800 text-white">
-                <th colspan="4" class="p-3 text-center font-bold">Campos Manuais</th>
-              </tr>
-              <tr class="bg-green-700 text-white border-t border-green-900/40">
-                <th class="p-2 font-semibold">Tipo</th>
-                <th class="p-2 text-center font-semibold w-28">Vendas</th>
-                <th class="p-2 text-center font-semibold w-28">Baldeio</th>
-                <th class="p-2 text-center font-semibold w-20">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${PERF_MANUAL_ROWS.map(row => renderManualRow(row, 'Vendas', 'Baldeio')).join('')}
-            </tbody>
-          </table>
-        </div>
+      <tr class="border-t border-black/20 bg-white/95 text-black" data-manual-row="${row.key}">
+        <td class="p-2">${row.label}</td>
+        <td class="p-2">
+          <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(vendas)}"
+                 data-perf-manual="1" data-row-key="${row.key}" data-col="vendas"
+                 aria-label="${escapeHtml(`${row.label} - ${col1Label}`)}"
+                 class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-center font-semibold text-black focus:outline-none focus:ring-2 focus:ring-green-600" />
+        </td>
+        <td class="p-2">
+          <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(baldeio)}"
+                 data-perf-manual="1" data-row-key="${row.key}" data-col="baldeio"
+                 aria-label="${escapeHtml(`${row.label} - ${col2Label}`)}"
+                 class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-center font-semibold text-black focus:outline-none focus:ring-2 focus:ring-green-600" />
+        </td>
+        <td class="p-2 text-center font-bold" data-manual-total>${total}</td>
+      </tr>
+    `;
+  };
 
-        <div class="overflow-hidden rounded-lg border border-gray-700">
-          <table class="w-full text-left text-sm">
-            <thead>
-              <tr class="bg-green-800 text-white">
-                <th colspan="4" class="p-3 text-center font-bold">Totais de Baldeios</th>
-              </tr>
-              <tr class="bg-green-700 text-white border-t border-green-900/40">
-                <th class="p-2 font-semibold">Tipo</th>
-                <th class="p-2 text-center font-semibold w-28">Carregamento</th>
-                <th class="p-2 text-center font-semibold w-28">Descarga</th>
-                <th class="p-2 text-center font-semibold w-20">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${PERF_BALDEIO_TOTAL_ROWS.map(row => renderManualRow(row, 'Carregamento', 'Descarga')).join('')}
-            </tbody>
-          </table>
-        </div>
+  const renderPerfManualFieldsHtml = (state = {}) => {
+    return `
+      <div class="overflow-hidden rounded-lg border border-gray-700">
+        <table class="w-full text-left text-sm">
+          <thead>
+            <tr class="bg-green-800 text-white">
+              <th colspan="4" class="p-3 text-center font-bold">Campos Manuais</th>
+            </tr>
+            <tr class="bg-green-700 text-white border-t border-green-900/40">
+              <th class="p-2 font-semibold">Tipo</th>
+              <th class="p-2 text-center font-semibold w-28">Vendas</th>
+              <th class="p-2 text-center font-semibold w-28">Baldeio</th>
+              <th class="p-2 text-center font-semibold w-20">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${PERF_MANUAL_ROWS.map(row => renderPerfInputRow(state, row, 'Vendas', 'Baldeio')).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  };
+
+  const renderPerfBaldeioTotalsHtml = (state = {}) => {
+    return `
+      <div class="overflow-hidden rounded-lg border border-gray-700">
+        <table class="w-full text-left text-sm">
+          <thead>
+            <tr class="bg-green-800 text-white">
+              <th colspan="4" class="p-3 text-center font-bold">Totais de Baldeios</th>
+            </tr>
+            <tr class="bg-green-700 text-white border-t border-green-900/40">
+              <th class="p-2 font-semibold">Tipo</th>
+              <th class="p-2 text-center font-semibold w-28">Carregamento</th>
+              <th class="p-2 text-center font-semibold w-28">Descarga</th>
+              <th class="p-2 text-center font-semibold w-20">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${PERF_BALDEIO_TOTAL_ROWS.map(row => renderPerfInputRow(state, row, 'Carregamento', 'Descarga')).join('')}
+          </tbody>
+        </table>
       </div>
     `;
   };
@@ -4049,12 +4446,13 @@ async function handleAddOccurrence(e) {
     return normalizePerfHourlyState(raw, labels);
   };
 
-  const renderPerfHourlyManualTableHtml = (title, labels = [], state = {}) => {
+  const renderPerfHourlyManualTableHtml = (title, labels = [], state = {}, currentSlotLabel = "") => {
     const rowsHtml = labels.map((slot, index) => {
       const row = state?.[slot] || { fb: '0', ae: '0', total: '0', realizado: '0' };
       const isFirstRow = index === 0;
+      const isCurrentSlot = currentSlotLabel && currentSlotLabel === slot;
       return `
-        <tr class="border-t border-black/20 bg-white/95 text-black" data-hour-slot="${escapeHtml(slot)}">
+        <tr class="border-t border-black/20 bg-white/95 text-black ${isCurrentSlot ? 'perf-highlight-row' : ''}" data-hour-slot="${escapeHtml(slot)}" ${isCurrentSlot ? 'data-current-hour="1"' : ''}>
           <td class="p-2 font-semibold whitespace-nowrap">${slot.split('–')[0]}</td>
           <td class="p-2">
             <input type="number" step="0.001" inputmode="decimal" value="${escapeHtml(row.fb)}" readonly
@@ -4087,12 +4485,11 @@ async function handleAddOccurrence(e) {
     }, { realizado: 0 });
 
     return `
-      <div class="mb-3 text-sm text-gray-300">${title}</div>
-      <div class="mb-3 text-xs text-emerald-200">
-        Preencha <strong>Total FB+AE</strong> e <strong>AE</strong>. O <strong>FB</strong> é calculado por <strong>Total - AE</strong>. O <strong>Realizado</strong> da <strong>primeira linha</strong> é manual e as demais linhas são calculadas por <strong>Total atual - Total anterior</strong>. Valores negativos são convertidos para <strong>0</strong>.
+      <div class="mb-2 flex items-center justify-end gap-2 text-sm text-gray-300">
+        ${currentSlotLabel ? `<span class="perf-highlight-badge">Hora atual: ${escapeHtml(currentSlotLabel.split('–')[0])}</span>` : ''}
       </div>
       <div class="overflow-hidden rounded-lg border border-gray-700">
-        <table class="w-full text-left text-sm min-w-[720px]">
+        <table class="w-full text-left text-sm min-w-[680px]">
           <thead>
             <tr class="bg-green-800 text-white">
               <th class="p-2 font-semibold">Volume Faturado (KHL)</th>
@@ -4204,14 +4601,142 @@ async function handleAddOccurrence(e) {
     });
   };
 
+  const PERF_LAYOUT_STORAGE_KEY = 'heilog-performance-card-layout-v1';
+  let performanceCardSortables = [];
+  let performanceCardLayoutReady = false;
+
+  function getPerformanceCardColumns() {
+    return {
+      left: document.getElementById('performance-left-panel'),
+      right: document.getElementById('performance-right-panel')
+    };
+  }
+
+  function getPerformanceCardElements() {
+    return Array.from(document.querySelectorAll('[data-perf-card]'));
+  }
+
+  function savePerformanceCardLayout() {
+    try {
+      const { left, right } = getPerformanceCardColumns();
+      if (!left || !right) return;
+      const layout = {
+        left: Array.from(left.querySelectorAll(':scope > [data-perf-card]')).map(el => el.id),
+        right: Array.from(right.querySelectorAll(':scope > [data-perf-card]')).map(el => el.id)
+      };
+      localStorage.setItem(PERF_LAYOUT_STORAGE_KEY, JSON.stringify(layout));
+    } catch (err) {
+      console.warn('Falha ao salvar layout dos cards do Perf. do Turno:', err);
+    }
+  }
+
+  function getSavedPerformanceCardLayout() {
+    try {
+      return JSON.parse(localStorage.getItem(PERF_LAYOUT_STORAGE_KEY) || 'null');
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function resetPerformanceCardLayout(saveAfter = true) {
+    const { left, right } = getPerformanceCardColumns();
+    if (!left || !right) return;
+
+    const cards = getPerformanceCardElements().sort((a, b) => {
+      const colA = a.dataset.defaultColumn || 'right';
+      const colB = b.dataset.defaultColumn || 'right';
+      if (colA !== colB) return colA.localeCompare(colB);
+      return Number(a.dataset.defaultOrder || 0) - Number(b.dataset.defaultOrder || 0);
+    });
+
+    cards.forEach(card => {
+      const target = (card.dataset.defaultColumn || 'right') === 'left' ? left : right;
+      target.appendChild(card);
+    });
+
+    if (saveAfter) savePerformanceCardLayout();
+  }
+
+  function applyPerformanceCardLayout(layout = null) {
+    const { left, right } = getPerformanceCardColumns();
+    if (!left || !right) return;
+    const cardsById = Object.fromEntries(getPerformanceCardElements().map(card => [card.id, card]));
+    const placed = new Set();
+    const safeLayout = layout || getSavedPerformanceCardLayout();
+
+    if (safeLayout && Array.isArray(safeLayout.left)) {
+      safeLayout.left.forEach(id => {
+        const card = cardsById[id];
+        if (!card || placed.has(id)) return;
+        left.appendChild(card);
+        placed.add(id);
+      });
+    }
+    if (safeLayout && Array.isArray(safeLayout.right)) {
+      safeLayout.right.forEach(id => {
+        const card = cardsById[id];
+        if (!card || placed.has(id)) return;
+        right.appendChild(card);
+        placed.add(id);
+      });
+    }
+
+    getPerformanceCardElements()
+      .filter(card => !placed.has(card.id))
+      .sort((a, b) => Number(a.dataset.defaultOrder || 0) - Number(b.dataset.defaultOrder || 0))
+      .forEach(card => {
+        const target = (card.dataset.defaultColumn || 'right') === 'left' ? left : right;
+        target.appendChild(card);
+      });
+  }
+
+  function initPerformanceCardLayout() {
+    if (performanceCardLayoutReady) return;
+
+    const { left, right } = getPerformanceCardColumns();
+    if (!left || !right) return;
+
+    applyPerformanceCardLayout();
+
+    if (typeof Sortable !== 'undefined') {
+      [left, right].forEach(column => {
+        performanceCardSortables.push(new Sortable(column, {
+          group: 'heilog-performance-cards',
+          animation: 180,
+          easing: 'cubic-bezier(0.2, 0, 0, 1)',
+          handle: '.perf-card-handle',
+          draggable: '[data-perf-card]',
+          ghostClass: 'sortable-ghost',
+          chosenClass: 'sortable-chosen',
+          dragClass: 'sortable-drag',
+          fallbackOnBody: true,
+          swapThreshold: 0.6,
+          onSort: () => savePerformanceCardLayout()
+        }));
+      });
+    }
+
+    document.getElementById('performance-reset-layout-btn')?.addEventListener('click', () => {
+      localStorage.removeItem(PERF_LAYOUT_STORAGE_KEY);
+      resetPerformanceCardLayout(true);
+    });
+
+    performanceCardLayoutReady = true;
+  }
+
   function renderPerformanceDashboard() {
     const horaHoraTitle = document.getElementById('hora-hora-title');
     const horaHoraTable = document.getElementById('hora-hora-table');
     const manualTable = document.getElementById('performance-manual-table');
+    const baldeioTotalTable = document.getElementById('performance-baldeio-total-table');
     const hourlyManualTitle = document.getElementById('performance-hourly-manual-title');
     const hourlyManualTable = document.getElementById('performance-hourly-manual-table');
+    const quickSummarySubtitle = document.getElementById('performance-quick-summary-subtitle');
+    const quickSummaryGrid = document.getElementById('performance-quick-summary');
     const fluxoCarregamento = document.getElementById('fluxo-carregamento-kpis');
     const fluxoEntrar = document.getElementById('fluxo-entrar-kpis');
+
+    initPerformanceCardLayout();
 
     const perfTitle = document.getElementById('performance-chart-title');
     const perfNoData = document.getElementById('performance-chart-no-data');
@@ -4228,7 +4753,11 @@ async function handleAddOccurrence(e) {
     }
 
     if (hourlyManualTitle) {
-      hourlyManualTitle.textContent = `${label} (${startTxt} → ${endTxt})`;
+      hourlyManualTitle.textContent = label;
+    }
+
+    if (quickSummarySubtitle) {
+      quickSummarySubtitle.textContent = `${label} • ${startTxt} → ${endTxt}`;
     }
 
     if (perfTitle) {
@@ -4285,9 +4814,33 @@ async function handleAddOccurrence(e) {
     }).length);
 
     const totalArrivals = counts.reduce((a, b) => a + b, 0);
+    const currentSlotLabel = getCurrentShiftSlotLabel(slots, slotLabels, new Date());
     const autoRows = buildPerfAutoCounters(opsTurno);
     const manualState = getPerfSummaryState(start, end, label);
     const hourlyState = getPerfHourlyState(start, end, label, slotLabels);
+
+    const autoVendasTotal = autoRows.reduce((sum, row) => sum + perfToNumber(row.vendas), 0);
+    const autoBaldeioTotal = autoRows.reduce((sum, row) => sum + perfToNumber(row.baldeio), 0);
+    const manualOverallTotal = PERF_MANUAL_ROWS.reduce((sum, row) => {
+      const item = manualState?.[row.key] || {};
+      return sum + perfToNumber(item.vendas) + perfToNumber(item.baldeio);
+    }, 0);
+    const baldeiosOverallTotal = PERF_BALDEIO_TOTAL_ROWS.reduce((sum, row) => {
+      const item = manualState?.[row.key] || {};
+      return sum + perfToNumber(item.vendas) + perfToNumber(item.baldeio);
+    }, 0);
+    const realizadoOverallTotal = slotLabels.reduce((sum, slot) => sum + Math.max(perfToNumber(hourlyState?.[slot]?.realizado), 0), 0);
+
+    if (quickSummaryGrid) {
+      quickSummaryGrid.innerHTML = `
+        ${kpiCardSm('Auto - Vendas', autoVendasTotal, 'resumo automático')}
+        ${kpiCardSm('Auto - Baldeio', autoBaldeioTotal, 'resumo automático')}
+        ${kpiCardSm('Manual', manualOverallTotal, 'campos manuais')}
+        ${kpiCardSm('Totais baldeio', baldeiosOverallTotal, 'Ritmo + JSL')}
+        ${kpiCardSm('Realizado', perfFormatMetric(realizadoOverallTotal), 'volume por hora')}
+        ${kpiCardSm('Hora atual', currentSlotLabel ? currentSlotLabel.split('–')[0] : '—', 'janela em destaque')}
+      `;
+    }
 
     if (horaHoraTable) {
       horaHoraTable.innerHTML = renderPerfAutoSummaryHtml(
@@ -4297,7 +4850,12 @@ async function handleAddOccurrence(e) {
     }
 
     if (manualTable) {
-      manualTable.innerHTML = renderPerfManualSummaryHtml(manualState);
+      manualTable.innerHTML = renderPerfManualFieldsHtml(manualState);
+      updatePerfManualTotalsFromDOM();
+    }
+
+    if (baldeioTotalTable) {
+      baldeioTotalTable.innerHTML = renderPerfBaldeioTotalsHtml(manualState);
       updatePerfManualTotalsFromDOM();
     }
 
@@ -4305,11 +4863,13 @@ async function handleAddOccurrence(e) {
       hourlyManualTable.innerHTML = renderPerfHourlyManualTableHtml(
         `Preencha Total FB+AE e AE do turno ${label}`,
         slotLabels,
-        hourlyState
+        hourlyState,
+        currentSlotLabel
       );
       updatePerfHourlyTotalsFromDOM();
     }
     renderPerformanceHourlyManualChart(slotLabels, hourlyState);
+    syncPerformanceReportButton();
 
     const finishedInShift = (historicoData || []).filter(op => inRange(toMs(op.finishedTime), start, end) && !isPerfCancelledOp(op));
     const finalizados = finishedInShift.filter(op => (op.status || '').toLowerCase() === 'finalizado');
@@ -6192,7 +6752,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
         clone.querySelectorAll('.overflow-x-auto, .overflow-hidden').forEach(el => {
           el.style.overflow = 'visible';
         });
-        clone.querySelectorAll('.performance-hourly-chart-wrap, #performance-hourly-manual-table, #performance-manual-table').forEach(el => {
+        clone.querySelectorAll('.performance-hourly-chart-wrap, #performance-hourly-manual-table, #performance-manual-table, #performance-baldeio-total-table').forEach(el => {
           el.style.overflow = 'visible';
         });
         clone.querySelectorAll('.relative.h-80').forEach(el => {
@@ -6273,6 +6833,19 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
 
     document.getElementById('performance-print-btn')?.addEventListener('click', capturePerformanceDashboardScreenshot);
 
+    document.getElementById('performance-report-btn')?.addEventListener('click', () => {
+      document.body.classList.toggle('perf-report-mode');
+      syncPerformanceReportButton();
+      try {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (_) {
+        window.scrollTo(0, 0);
+      }
+      setTimeout(() => {
+        try { performanceHourlyManualChart?.resize(); } catch (_) {}
+        try { performanceChart?.resize(); } catch (_) {}
+      }, 120);
+    });
 
     document.getElementById('perf-manual-reset-btn')?.addEventListener('click', () => {
       const { label, start, end } = getShiftInfo(new Date());
@@ -6666,6 +7239,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
     // estado inicial
     document.getElementById('filter-tempo-patio').style.display = 'block';
     document.getElementById('mass-finish-btn').style.display = 'flex';
+    initPerformanceCardLayout();
     debouncedRender();
   });
 
