@@ -12,6 +12,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
   .site-header {
@@ -398,11 +399,335 @@
     font-size: 0.92rem;
   }
 }
+
+
+/* ===== Perf. do Turno: melhoria para mobile ===== */
+#performance-content {
+  font-size: 1rem;
+}
+
+#performance-content .bg-gray-800 {
+  border-radius: 1rem !important;
+}
+
+#performance-content h3 {
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+#performance-content h4 {
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+
+#performance-content p,
+#performance-content span,
+#performance-content label,
+#performance-content th,
+#performance-content td,
+#performance-content button {
+  font-size: 1rem;
+}
+
+#performance-content table {
+  min-width: 680px;
+}
+
+#performance-content thead th {
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+#performance-content tbody td {
+  font-size: 1rem;
+}
+
+#performance-content input[data-perf-manual="1"],
+#performance-content input[data-hourly-field] {
+  min-height: 42px;
+  font-size: 1rem !important;
+  font-weight: 600;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.6rem;
+}
+
+#performance-content #hora-hora-table > .space-y-5,
+#performance-content #performance-manual-table > .space-y-5 {
+  gap: 1rem;
+}
+
+#performance-content .overflow-x-auto,
+#performance-content .overflow-hidden {
+  -webkit-overflow-scrolling: touch;
+}
+
+#performance-content .relative.h-80 {
+  height: 20rem;
+}
+
+@media (max-width: 1024px) {
+  #performance-content .grid {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  #performance-content {
+    font-size: 1.03rem;
+  }
+
+  #performance-content h3 {
+    font-size: 1.45rem;
+  }
+
+  #performance-content h4 {
+    font-size: 1.2rem;
+  }
+
+  #performance-content .bg-gray-800 {
+    padding: 1rem !important;
+  }
+
+  #performance-content .flex.items-center.justify-between,
+  #performance-content .flex.flex-wrap.items-center.justify-between {
+    align-items: flex-start;
+  }
+
+  #performance-content #perf-manual-reset-btn,
+  #performance-content #perf-hourly-reset-btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.98rem;
+    padding: 0.8rem 1rem;
+    border-radius: 0.8rem;
+  }
+
+  #performance-content table {
+    min-width: 760px;
+  }
+
+  #performance-content thead th,
+  #performance-content tbody td {
+    font-size: 1.02rem;
+  }
+
+  #performance-content input[data-perf-manual="1"],
+  #performance-content input[data-hourly-field] {
+    min-height: 46px;
+    font-size: 1.05rem !important;
+    padding: 0.65rem 0.8rem;
+  }
+
+  #performance-content .relative.h-80 {
+    height: 16rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #performance-content h3 {
+    font-size: 1.35rem;
+  }
+
+  #performance-content h4 {
+    font-size: 1.12rem;
+  }
+
+  #performance-content p,
+  #performance-content span,
+  #performance-content label,
+  #performance-content th,
+  #performance-content td,
+  #performance-content button {
+    font-size: 1.02rem;
+  }
+
+  #performance-content .bg-gray-800 {
+    padding: 0.9rem !important;
+  }
+
+  #performance-content table {
+    min-width: 820px;
+  }
+
+  #performance-content thead th:first-child,
+  #performance-content tbody td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: #d1d5db;
+  }
+
+  #performance-content thead th:first-child {
+    background: #17843f;
+    z-index: 2;
+  }
+}
+
+/* ===== Perf. do Turno: desktop / print ===== */
+@media (min-width: 1280px) {
+  #performance-content .performance-grid {
+    grid-template-columns: minmax(470px, 39%) minmax(560px, 61%) !important;
+    gap: 1rem !important;
+    align-items: start;
+  }
+
+  #performance-content .performance-bottom-panel {
+    grid-column: 1 / -1;
+  }
+
+  #performance-content .performance-left-panel,
+  #performance-content .performance-right-panel {
+    gap: 1rem !important;
+  }
+
+  #performance-content .performance-summary-shell,
+  #performance-content .performance-hourly-card,
+  #performance-content .performance-hourly-chart-card {
+    padding: 1rem !important;
+  }
+
+  #performance-content .performance-summary-shell .space-y-6 {
+    gap: 1rem !important;
+  }
+
+  #performance-content .performance-summary-shell .mb-4,
+  #performance-content .performance-hourly-card .mb-4,
+  #performance-content .performance-hourly-chart-card .mb-4 {
+    margin-bottom: 0.75rem !important;
+  }
+
+  #performance-content #hora-hora-table .mb-3,
+  #performance-content #performance-hourly-manual-table .mb-3 {
+    margin-bottom: 0.45rem;
+  }
+
+  #performance-content table,
+  #performance-content #hora-hora-table table,
+  #performance-content #performance-manual-table table,
+  #performance-content #performance-hourly-manual-table table {
+    min-width: 100%;
+  }
+
+  #performance-content th,
+  #performance-content td,
+  #performance-content button,
+  #performance-content input[data-perf-manual="1"],
+  #performance-content input[data-hourly-field] {
+    font-size: 1.02rem !important;
+  }
+
+  #performance-content .performance-hourly-chart-wrap {
+    margin-top: 0.9rem !important;
+  }
+
+  #performance-content .performance-hourly-chart-wrap .relative.h-80 {
+    height: 24rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  #performance-content .performance-grid {
+    grid-template-columns: minmax(460px, 35%) minmax(0, 65%) !important;
+  }
+
+  #performance-content .performance-hourly-chart-wrap .relative.h-80 {
+    height: 28rem;
+  }
+}
+
+
+
+/* ===== Perf. do Turno: impressão ===== */
+@media print {
+  @page {
+    size: landscape;
+    margin: 10mm;
+  }
+
+  body.perf-print-mode,
+  body.perf-print-mode html {
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body.perf-print-mode .site-header,
+  body.perf-print-mode #system-alerts-container,
+  body.perf-print-mode nav[aria-label="Tabs"],
+  body.perf-print-mode #kpi-section,
+  body.perf-print-mode .performance-top-actions,
+  body.perf-print-mode #perf-manual-reset-btn,
+  body.perf-print-mode #perf-hourly-reset-btn {
+    display: none !important;
+  }
+
+  body.perf-print-mode #main-content > :not(#performance-content) {
+    display: none !important;
+  }
+
+  body.perf-print-mode #performance-content,
+  body.perf-print-mode #performance-content.hidden {
+    display: block !important;
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body.perf-print-mode #performance-content .performance-grid {
+    display: grid !important;
+    grid-template-columns: 42% 58% !important;
+    gap: 8mm !important;
+    align-items: start !important;
+  }
+
+  body.perf-print-mode #performance-content .performance-left-panel,
+  body.perf-print-mode #performance-content .performance-right-panel {
+    gap: 5mm !important;
+  }
+
+  body.perf-print-mode #performance-content .bg-gray-800,
+  body.perf-print-mode #performance-content .performance-summary-shell,
+  body.perf-print-mode #performance-content .performance-hourly-card,
+  body.perf-print-mode #performance-content .performance-hourly-chart-card {
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: 1px solid #9ca3af !important;
+  }
+
+  body.perf-print-mode #performance-content h3,
+  body.perf-print-mode #performance-content h4,
+  body.perf-print-mode #performance-content p,
+  body.perf-print-mode #performance-content span,
+  body.perf-print-mode #performance-content th,
+  body.perf-print-mode #performance-content td,
+  body.perf-print-mode #performance-content div {
+    color: #000000 !important;
+  }
+
+  body.perf-print-mode #performance-content table {
+    min-width: 100% !important;
+  }
+
+  body.perf-print-mode #performance-content input {
+    color: #000000 !important;
+    background: #ffffff !important;
+    border: 1px solid #9ca3af !important;
+  }
+
+  body.perf-print-mode #performance-content .performance-hourly-chart-wrap .relative,
+  body.perf-print-mode #performance-content #performance-chart-container {
+    height: 145mm !important;
+    min-height: 145mm !important;
+  }
+}
+
 </style>
 </head>
 
 <body class="text-white font-sans">
-<div class="w-full min-h-screen p-4 sm:p-6 lg:p-8">
+<div class="w-full min-h-screen p-3 sm:p-4 lg:p-5 xl:p-6">
 
   <!-- Cabeçalho -->
 <header class="site-header mb-6">
@@ -639,15 +964,21 @@
         </table>
       </div>
     </main>
-
     <!-- Performance do turno -->
     <div id="performance-content" class="hidden">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-1 space-y-6">
-          <div class="bg-gray-800 p-4 rounded-lg shadow-lg space-y-6">
+      <div class="performance-top-actions flex justify-end mb-3">
+        <button id="performance-print-btn"
+                class="bg-green-700 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg">
+          Capturar printscreen do Perf. do Turno
+        </button>
+      </div>
+
+      <div class="performance-grid grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6 items-start">
+        <div class="performance-left-panel space-y-4 lg:space-y-6">
+          <div class="performance-summary-shell bg-gray-800 p-4 rounded-lg shadow-lg space-y-6">
             <div>
               <div class="flex items-center justify-between gap-3 mb-4">
-                <h3 id="hora-hora-title" class="text-xl font-bold">Resumo do Turno</h3>
+                <h3 id="hora-hora-title" class="text-2xl font-bold">Resumo do Turno</h3>
                 <button id="perf-manual-reset-btn"
                         class="text-xs bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-3 rounded-lg">
                   Limpar Bandeja/Última chamada
@@ -657,27 +988,17 @@
             </div>
 
             <div>
-              <h4 class="text-lg font-bold mb-3">Bandeja / Última chamada (manual)</h4>
+              <h4 class="text-xl font-bold mb-3">Bandeja / Última chamada (manual)</h4>
               <div id="performance-manual-table" class="overflow-x-auto"></div>
             </div>
           </div>
-
-          <div class="hidden bg-gray-800 p-4 rounded-lg shadow-lg">
-            <h3 class="text-lg font-bold mb-4">Fluxo Carregamento (Turno Atual)</h3>
-            <div id="fluxo-carregamento-kpis" class="grid grid-cols-2 gap-4"></div>
-          </div>
-
-          <div class="hidden bg-gray-800 p-4 rounded-lg shadow-lg">
-            <h3 class="text-lg font-bold mb-4">Fluxo para Entrar (Veículos no Pátio)</h3>
-            <div id="fluxo-entrar-kpis" class="grid grid-cols-2 gap-4"></div>
-          </div>
         </div>
 
-        <div class="lg:col-span-2 space-y-6">
-          <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
+        <div class="performance-right-panel space-y-4 lg:space-y-6">
+          <div class="performance-hourly-card bg-gray-800 p-4 rounded-lg shadow-lg">
             <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div>
-                <h3 class="text-xl font-bold">Volume por Hora (manual)</h3>
+                <h3 class="text-2xl font-bold">Volume por Hora (manual)</h3>
                 <p id="performance-hourly-manual-title" class="text-sm text-gray-400 mt-1"></p>
               </div>
               <button id="perf-hourly-reset-btn"
@@ -687,9 +1008,12 @@
             </div>
 
             <div id="performance-hourly-manual-table" class="overflow-x-auto"></div>
+          </div>
 
-            <div class="mt-6">
-              <div class="relative h-80">
+          <div class="performance-hourly-chart-card bg-gray-800 p-4 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold mb-4">Gráfico de Volume por Hora</h3>
+            <div class="performance-hourly-chart-wrap">
+              <div class="relative h-80" style="height: 22rem;">
                 <canvas id="performance-hourly-manual-chart"></canvas>
                 <div id="performance-hourly-manual-no-data" class="absolute inset-0 flex items-center justify-center text-gray-400 hidden">
                   <span>Preencha os campos manuais para gerar o gráfico por hora.</span>
@@ -5732,7 +6056,65 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
     document.getElementById('ritmo-dash-only-baldeio')?.addEventListener('change', runRitmoDash);
     document.getElementById('ritmo-dash-export')?.addEventListener('click', exportRitmoDashboardCsv);
 
+
     document.getElementById('export-csv-btn').addEventListener('click', exportToCsv);
+
+    const capturePerformanceDashboardScreenshot = async () => {
+      const target = document.getElementById('performance-content');
+      const btn = document.getElementById('performance-print-btn');
+      if (!target) return;
+
+      if (typeof html2canvas === 'undefined') {
+        showToast?.('Não foi possível carregar o recurso de printscreen.', 'error');
+        return;
+      }
+
+      const originalLabel = btn?.innerHTML || 'Capturar printscreen do Perf. do Turno';
+      if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-70', 'cursor-not-allowed');
+        btn.textContent = 'Gerando printscreen...';
+      }
+
+      try {
+        target.querySelectorAll('input, button').forEach(el => el.blur?.());
+        try {
+          performanceHourlyManualChart?.resize();
+          performanceChart?.resize();
+        } catch (_) {}
+
+        await new Promise(resolve => setTimeout(resolve, 180));
+
+        const canvas = await html2canvas(target, {
+          backgroundColor: '#03160d',
+          useCORS: true,
+          logging: false,
+          scale: Math.max(2, Math.min(3, window.devicePixelRatio || 1)),
+          scrollX: 0,
+          scrollY: -window.scrollY,
+          windowWidth: document.documentElement.scrollWidth,
+          windowHeight: document.documentElement.scrollHeight
+        });
+
+        const link = document.createElement('a');
+        const stamp = new Date().toLocaleString('sv-SE').replace(/[ :]/g, '-');
+        link.download = `Perf_do_Turno_${stamp}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast?.('Printscreen gerado com sucesso.', 'success');
+      } catch (err) {
+        console.error('Erro ao gerar printscreen do Perf. do Turno:', err);
+        showToast?.('Não foi possível gerar o printscreen.', 'error');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.classList.remove('opacity-70', 'cursor-not-allowed');
+          btn.innerHTML = originalLabel;
+        }
+      }
+    };
+
+    document.getElementById('performance-print-btn')?.addEventListener('click', capturePerformanceDashboardScreenshot);
 
     document.getElementById('perf-manual-reset-btn')?.addEventListener('click', () => {
       const { label, start, end } = getShiftInfo(new Date());
