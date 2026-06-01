@@ -3928,6 +3928,144 @@ button[data-action="cancel"]:hover {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+/* =========================================================
+   HEILOG — Controle de DTs integrado + Sugestão para Ritmo Vazia
+   ========================================================= */
+#controle-dt-content .cdt-shell {
+  background: rgba(255,255,255,0.96) !important;
+  color: #102018 !important;
+  border: 1px solid rgba(16,32,24,0.10) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 14px 34px rgba(15,23,42,0.075) !important;
+}
+#controle-dt-content .cdt-card {
+  background: #ffffff !important;
+  color: #102018 !important;
+  border: 1px solid rgba(16,32,24,0.10) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.055) !important;
+}
+#controle-dt-content .cdt-card-soft {
+  background: #f8fbf9 !important;
+  border: 1px solid rgba(16,32,24,0.08) !important;
+  border-radius: 18px !important;
+}
+#controle-dt-content .cdt-kpi {
+  background: linear-gradient(135deg, #ffffff, #f4fbf6) !important;
+  border: 1px solid rgba(16,32,24,0.09) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.055) !important;
+  padding: 16px;
+  min-height: 118px;
+}
+#controle-dt-content .cdt-kpi-label {
+  color: #5f7067 !important;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+#controle-dt-content .cdt-kpi-value {
+  color: #07351f !important;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  margin-top: 10px;
+}
+#controle-dt-content .cdt-input,
+#controle-dt-content .cdt-select {
+  width: 100%;
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  border: 1px solid #dbe6df !important;
+  border-radius: 15px !important;
+  padding: 12px 13px;
+  font-weight: 800;
+  outline: none;
+}
+#controle-dt-content .cdt-input:focus,
+#controle-dt-content .cdt-select:focus {
+  border-color: rgba(0,140,69,0.44) !important;
+  box-shadow: 0 0 0 4px rgba(0,140,69,0.10) !important;
+}
+#controle-dt-content .cdt-label {
+  display: block;
+  color: #5f7067 !important;
+  font-size: 0.78rem;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+#controle-dt-content .cdt-btn {
+  border: 0;
+  border-radius: 15px;
+  padding: 11px 14px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: 0.18s ease;
+  white-space: nowrap;
+}
+#controle-dt-content .cdt-btn:hover { transform: translateY(-1px); filter: brightness(.98); }
+#controle-dt-content .cdt-btn-primary { background: #007a3d !important; color: #fff !important; }
+#controle-dt-content .cdt-btn-dark { background: #07351f !important; color: #fff !important; }
+#controle-dt-content .cdt-btn-blue { background: #1769ff !important; color: #fff !important; }
+#controle-dt-content .cdt-btn-red { background: #e50025 !important; color: #fff !important; }
+#controle-dt-content .cdt-btn-ghost { background: #eef7f1 !important; color: #102018 !important; border: 1px solid #dbe6df !important; }
+#controle-dt-content .cdt-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+#controle-dt-content .cdt-pill-ok { background: #e6f8ef !important; color: #006637 !important; }
+#controle-dt-content .cdt-pill-wait { background: #fff5d9 !important; color: #8a5b00 !important; }
+#controle-dt-content .cdt-pill-hold { background: #e7efff !important; color: #124bb7 !important; }
+#controle-dt-content .cdt-pill-stop { background: #ffe7eb !important; color: #b0001d !important; }
+#controle-dt-content .cdt-priority-alta { box-shadow: inset 6px 0 0 #e50025, 0 8px 20px rgba(229,0,37,0.07) !important; }
+#controle-dt-content .cdt-priority-normal { box-shadow: inset 6px 0 0 #00904A, 0 8px 20px rgba(0,144,74,0.07) !important; }
+#controle-dt-content .cdt-priority-baixa { box-shadow: inset 6px 0 0 #1769ff, 0 8px 20px rgba(23,105,255,0.07) !important; }
+#controle-dt-content .cdt-suggestion-card {
+  border-radius: 22px;
+  border: 1px solid rgba(0,140,69,0.14);
+  background: linear-gradient(135deg, #ffffff 0%, #f1fff6 100%) !important;
+  box-shadow: 0 12px 28px rgba(0, 99, 49, 0.08);
+  padding: 16px;
+}
+#controle-dt-content .cdt-dt-number {
+  font-size: clamp(1.45rem, 1.25rem + 0.8vw, 2.15rem);
+  font-weight: 950;
+  letter-spacing: -0.055em;
+  color: #07351f !important;
+}
+#controle-dt-content .cdt-muted { color: #5f7067 !important; }
+
+#controle-dt-content .cdt-manual-reserve-card {
+  border: 1px solid rgba(23, 105, 255, 0.16);
+  background: linear-gradient(135deg, #ffffff 0%, #f3f7ff 100%) !important;
+  box-shadow: 0 12px 28px rgba(23, 105, 255, 0.07);
+}
+#controle-dt-content .cdt-helper-text {
+  color: #5f7067 !important;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+#controle-dt-content table th { color: #64748b !important; }
+#controle-dt-content table td { color: #102018 !important; }
+@media (max-width: 768px) {
+  #controle-dt-content .cdt-kpi-value { font-size: 1.7rem; }
+}
+
 </style>
 </head>
 
@@ -4038,6 +4176,14 @@ button[data-action="cancel"]:hover {
       <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h4l2-5 4 10 2-5h6"/>
     </svg>
     <span>Controle Baldeios</span>
+  </button>
+
+
+  <button id="tab-controle-dt" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
+    <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h9m-9 4.5h9m-9 4.5h5.25M6 3.75h12A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75Z"/>
+    </svg>
+    <span>Controle DTs</span>
   </button>
 
   <button id="tab-dashboard" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
@@ -4464,6 +4610,230 @@ button[data-action="cancel"]:hover {
       </div>
     </div>
 
+
+    <!-- ✅ Controle de DTs integrado -->
+    <div id="controle-dt-content" class="hidden">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <div>
+          <h3 class="text-2xl font-semibold">Controle de DTs</h3>
+          <p class="text-sm text-gray-400 mt-1">Programado x DTs disponíveis, com sugestão automática quando a Ritmo marca uma carreta vazia.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <button id="cdt-demo-btn" type="button" class="cdt-btn cdt-btn-ghost">✨ Exemplo rápido</button>
+          <button id="cdt-clear-history-btn" type="button" class="cdt-btn cdt-btn-ghost">🧹 Limpar histórico</button>
+          <button id="cdt-clear-dts-btn" type="button" class="cdt-btn cdt-btn-red">🗑️ Limpar DTs</button>
+          <button id="cdt-clear-products-btn" type="button" class="cdt-btn cdt-btn-red">🧼 Limpar produtos</button>
+          <button id="cdt-refresh-btn" type="button" class="cdt-btn cdt-btn-dark">Atualizar</button>
+        </div>
+      </div>
+
+      <div class="cdt-shell p-5 sm:p-6">
+        <div id="cdt-kpis" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-6"></div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-5 gap-6 items-start">
+          <div class="xl:col-span-2 space-y-6">
+            <div class="cdt-card p-5">
+              <div class="flex items-center justify-between gap-3 mb-4">
+                <div>
+                  <h4 class="text-xl font-black">Produto programado</h4>
+                  <p class="text-sm cdt-muted mt-1">Cadastre o saldo que precisa virar DT.</p>
+                </div>
+                <span class="cdt-pill cdt-pill-ok">Base DT</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="sm:col-span-2">
+                  <label class="cdt-label" for="cdt-product-name">Produto</label>
+                  <input id="cdt-product-name" class="cdt-input" placeholder="Ex.: Heineken 350ml" />
+                </div>
+                <div>
+                  <label class="cdt-label" for="cdt-product-target">Programado em paletes</label>
+                  <input id="cdt-product-target" class="cdt-input" type="number" min="0" step="1" placeholder="Ex.: 260" />
+                </div>
+                <div>
+                  <label class="cdt-label" for="cdt-product-local">Local</label>
+                  <select id="cdt-product-local" class="cdt-select">
+                    <option value="Fábrica">Fábrica</option>
+                    <option value="Heilo">Heilo</option>
+                    <option value="Armazém externo">Armazém externo</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="cdt-label" for="cdt-product-priority">Prioridade</label>
+                  <select id="cdt-product-priority" class="cdt-select">
+                    <option value="Alta">Alta</option>
+                    <option value="Normal" selected>Normal</option>
+                    <option value="Baixa">Baixa</option>
+                  </select>
+                </div>
+                <div class="flex items-end gap-2">
+                  <button id="cdt-add-product-btn" type="button" class="cdt-btn cdt-btn-primary flex-1">Adicionar produto</button>
+                  <button id="cdt-cancel-product-edit-btn" type="button" class="cdt-btn cdt-btn-ghost hidden">Cancelar</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="cdt-card p-5 overflow-x-auto">
+              <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <div>
+                  <h4 class="text-xl font-black">Produtos cadastrados</h4>
+                  <p class="text-sm cdt-muted mt-1">Edite programado, local e prioridade sem perder as DTs já criadas.</p>
+                </div>
+                <span class="cdt-pill cdt-pill-hold">Editável</span>
+              </div>
+              <table class="w-full text-left min-w-[720px]">
+                <thead>
+                  <tr>
+                    <th class="p-3 text-xs font-black">Produto</th>
+                    <th class="p-3 text-xs font-black">Local</th>
+                    <th class="p-3 text-xs font-black">Prioridade</th>
+                    <th class="p-3 text-xs font-black">Programado</th>
+                    <th class="p-3 text-xs font-black">Criado</th>
+                    <th class="p-3 text-xs font-black">Pendente</th>
+                    <th class="p-3 text-xs font-black text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="cdt-products-table-body"></tbody>
+              </table>
+            </div>
+
+            <div class="cdt-card p-5">
+              <div class="flex items-center justify-between gap-3 mb-4">
+                <div>
+                  <h4 class="text-xl font-black">Criar DT disponível</h4>
+                  <p class="text-sm cdt-muted mt-1">Ao atingir o programado, o produto sai da seleção.</p>
+                </div>
+                <span class="cdt-pill cdt-pill-wait">Pendente</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="cdt-label" for="cdt-dt-code">Número da DT</label>
+                  <input id="cdt-dt-code" class="cdt-input" placeholder="Ex.: 800123456" />
+                </div>
+                <div>
+                  <label class="cdt-label" for="cdt-dt-pallets">Paletes</label>
+                  <input id="cdt-dt-pallets" class="cdt-input" type="number" min="0" step="1" placeholder="Ex.: 26" />
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="cdt-label" for="cdt-dt-product">Produto pendente</label>
+                  <select id="cdt-dt-product" class="cdt-select"></select>
+                </div>
+                <div>
+                  <label class="cdt-label" for="cdt-dt-local">Local</label>
+                  <select id="cdt-dt-local" class="cdt-select">
+                    <option value="Fábrica">Fábrica</option>
+                    <option value="Heilo">Heilo</option>
+                    <option value="Armazém externo">Armazém externo</option>
+                  </select>
+                </div>
+                <div class="flex items-end">
+                  <button id="cdt-add-dt-btn" type="button" class="cdt-btn cdt-btn-blue w-full">Criar DT</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="xl:col-span-3 space-y-6">
+            <div class="cdt-card p-5">
+              <div class="flex flex-wrap items-end justify-between gap-3 mb-4">
+                <div>
+                  <h4 class="text-xl font-black">Ritmo marcou vazia → DT sugerida</h4>
+                  <p class="text-sm cdt-muted mt-1">O painel procura a próxima DT pendente por prioridade, local e antiguidade. Só aparecem vazias ativas no Pátio; ao finalizar a DT no Pátio, a sugestão some automaticamente.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs cdt-muted font-black">Local</span>
+                  <select id="cdt-vazia-local-filter" class="cdt-select min-w-[150px]">
+                    <option value="auto">Automático</option>
+                    <option value="todos">Todos</option>
+                    <option value="Fábrica">Fábrica</option>
+                    <option value="Heilo">Heilo</option>
+                    <option value="Armazém externo">Armazém externo</option>
+                  </select>
+                </div>
+              </div>
+              <div id="cdt-vazias-list" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+            </div>
+
+            <div class="cdt-card cdt-manual-reserve-card p-5">
+              <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+                <div>
+                  <h4 class="text-xl font-black">Reserva manual de DT</h4>
+                  <p class="text-sm cdt-muted mt-1">Use quando a sugestão não aparecer, quando a placa vier errada ou quando quiser direcionar uma carreta específica.</p>
+                </div>
+                <span class="cdt-pill cdt-pill-hold">Manual</span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
+                <div>
+                  <label class="cdt-label" for="cdt-manual-local-filter">Filtrar local</label>
+                  <select id="cdt-manual-local-filter" class="cdt-select">
+                    <option value="todos">Todos</option>
+                    <option value="Fábrica">Fábrica</option>
+                    <option value="Heilo">Heilo</option>
+                    <option value="Armazém externo">Armazém externo</option>
+                  </select>
+                </div>
+                <div class="md:col-span-2">
+                  <label class="cdt-label" for="cdt-manual-dt-select">DT disponível</label>
+                  <select id="cdt-manual-dt-select" class="cdt-select"></select>
+                </div>
+                <div>
+                  <label class="cdt-label" for="cdt-manual-trailer">Placa carreta</label>
+                  <input id="cdt-manual-trailer" class="cdt-input" placeholder="Ex.: ABC1D23" />
+                </div>
+                <div>
+                  <label class="cdt-label" for="cdt-manual-truck">Placa cavalo <span class="cdt-muted">(opcional)</span></label>
+                  <input id="cdt-manual-truck" class="cdt-input" placeholder="Ex.: XYZ9A87" />
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-3 mt-4">
+                <div id="cdt-manual-dt-preview" class="cdt-helper-text">Selecione uma DT pendente para reservar manualmente.</div>
+                <div class="flex flex-wrap gap-2">
+                  <button id="cdt-manual-clear-btn" type="button" class="cdt-btn cdt-btn-ghost">Limpar campos</button>
+                  <button id="cdt-manual-reserve-btn" type="button" class="cdt-btn cdt-btn-blue">Reservar manualmente</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="cdt-card p-5 overflow-x-auto">
+              <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <div>
+                  <h4 class="text-xl font-black">DTs cadastradas</h4>
+                  <p class="text-sm cdt-muted mt-1">Reservar trava a DT para a placa; desfazer devolve para pendente.</p>
+                </div>
+                <select id="cdt-status-filter" class="cdt-select max-w-[180px]">
+                  <option value="todos">Todos status</option>
+                  <option value="Pendente">Pendentes</option>
+                  <option value="Reservada">Reservadas</option>
+                  <option value="Baixada">Baixadas</option>
+                  <option value="Cancelada">Canceladas</option>
+                </select>
+              </div>
+              <table class="w-full text-left min-w-[860px]">
+                <thead>
+                  <tr>
+                    <th class="p-3 text-xs font-black">DT</th>
+                    <th class="p-3 text-xs font-black">Produto</th>
+                    <th class="p-3 text-xs font-black">Local</th>
+                    <th class="p-3 text-xs font-black">Paletes</th>
+                    <th class="p-3 text-xs font-black">Status</th>
+                    <th class="p-3 text-xs font-black">Vínculo</th>
+                    <th class="p-3 text-xs font-black text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="cdt-dts-table-body"></tbody>
+              </table>
+            </div>
+
+            <div class="cdt-card p-5">
+              <h4 class="text-xl font-black mb-3">Histórico rápido</h4>
+              <div id="cdt-movements-list" class="space-y-2 max-h-72 overflow-auto"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Dashboard gerencial -->
     <div id="dashboard-content" class="hidden">
       <div class="flex justify-end mb-4">
@@ -4751,6 +5121,15 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   // ✅ estado do modal de edição
   let selectedDriverEdit = null;
   let selectedDriverEditSource = null;
+
+  // ✅ Controle DTs integrado ao painel
+  let controleDtProducts = [];
+  let controleDtDts = [];
+  let controleDtMovements = [];
+  let controleDtEditingProductId = '';
+  let controleDtUsingFirestore = false;
+  let controleDtSnapshotsAttached = false;
+  const CONTROLE_DT_LOCAL_KEY = 'heilog_controle_dts_integrado_v1';
 
   // ✅ Cache local para evitar regravar o tipoSnapshot a cada snapshot
   let tipoSnapshotMem = new Set();
@@ -5161,6 +5540,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     if (activeTab === 'motoristas') { renderDriversTab(); return; }
     if (activeTab === 'baldeios') { renderBaldeiosRitmo(); return; }
     if (activeTab === 'ritmo') { renderRitmoPlacaControl(); return; }
+    if (activeTab === 'controle-dt') { renderControleDt(); return; }
 
     const searchTerm = norm(document.getElementById('search-input').value);
     const searchCompact = compact(searchTerm);
@@ -8404,6 +8784,969 @@ async function handleAddOccurrence(e) {
   }
 
 
+
+  // ============================================================
+  // ✅ CONTROLE DE DTs + SUGESTÃO AUTOMÁTICA PARA RITMO VAZIA
+  // ============================================================
+  const cdtCollectionPath = (name) => `artifacts/${appId}/public/data/${name}`;
+  const cdtNow = () => Date.now();
+  const cdtId = () => `cdt_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const cdtNum = (v) => Number(String(v ?? '').replace(',', '.')) || 0;
+  const cdtClean = (v) => String(v ?? '').trim();
+  const cdtCompact = (v) => String(v ?? '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]/g, '');
+  const cdtMoneyNum = (v) => (Number(v || 0)).toLocaleString('pt-BR');
+
+  function cdtPriorityClass(priority) {
+    const p = String(priority || '').toLowerCase();
+    if (p.includes('alta')) return 'cdt-priority-alta';
+    if (p.includes('baixa')) return 'cdt-priority-baixa';
+    return 'cdt-priority-normal';
+  }
+
+  function cdtPriorityWeight(priority) {
+    const p = String(priority || '').toLowerCase();
+    if (p.includes('alta')) return 0;
+    if (p.includes('normal')) return 1;
+    if (p.includes('baixa')) return 2;
+    return 3;
+  }
+
+  function cdtStatusPill(status) {
+    if (status === 'Baixada') return `<span class="cdt-pill cdt-pill-ok">✅ Baixada</span>`;
+    if (status === 'Reservada') return `<span class="cdt-pill cdt-pill-hold">🔒 Reservada</span>`;
+    if (status === 'Cancelada') return `<span class="cdt-pill cdt-pill-stop">🚫 Cancelada</span>`;
+    return `<span class="cdt-pill cdt-pill-wait">⏳ Pendente</span>`;
+  }
+
+  function cdtProductById(productId) {
+    return controleDtProducts.find(x => x.id === productId || x._id === productId);
+  }
+
+  function cdtProductName(productId) {
+    const p = cdtProductById(productId);
+    return p?.name || p?.nome || p?.produto || 'Produto não localizado';
+  }
+
+  function cdtProductPriority(productId) {
+    const p = cdtProductById(productId);
+    return p?.priority || p?.prioridade || 'Normal';
+  }
+
+  function cdtProductLocal(productId) {
+    const p = cdtProductById(productId);
+    return p?.local || 'Fábrica';
+  }
+
+  function cdtProductCalc(productId) {
+    const p = cdtProductById(productId) || {};
+    const target = cdtNum(p.targetPallets ?? p.programado ?? p.target ?? p.paletesProgramados);
+    const valid = controleDtDts.filter(dt => dt.productId === productId && dt.status !== 'Cancelada');
+    const scheduled = valid.reduce((sum, dt) => sum + cdtNum(dt.pallets), 0);
+    const reserved = valid.filter(dt => dt.status === 'Reservada').reduce((sum, dt) => sum + cdtNum(dt.pallets), 0);
+    const done = valid.filter(dt => dt.status === 'Baixada').reduce((sum, dt) => sum + cdtNum(dt.pallets), 0);
+    const pending = Math.max(target - scheduled, 0);
+    const pct = target ? Math.round((scheduled / target) * 100) : 0;
+    return { target, scheduled, reserved, done, pending, pct };
+  }
+
+  function cdtPersistLocal() {
+    if (controleDtUsingFirestore) return;
+    try {
+      localStorage.setItem(CONTROLE_DT_LOCAL_KEY, JSON.stringify({
+        products: controleDtProducts,
+        dts: controleDtDts,
+        movements: controleDtMovements
+      }));
+    } catch (err) {
+      console.warn('Falha ao salvar Controle DT local:', err);
+    }
+  }
+
+  function cdtLoadLocal() {
+    try {
+      const raw = localStorage.getItem(CONTROLE_DT_LOCAL_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) || {};
+      controleDtProducts = Array.isArray(parsed.products) ? parsed.products : [];
+      controleDtDts = Array.isArray(parsed.dts) ? parsed.dts : [];
+      controleDtMovements = Array.isArray(parsed.movements) ? parsed.movements : [];
+    } catch (err) {
+      console.warn('Falha ao ler Controle DT local:', err);
+    }
+  }
+
+  async function cdtAddMovement(type, text, extra = {}) {
+    const mov = { type, text, ...extra, createdAt: cdtNow() };
+    if (controleDtUsingFirestore && db) {
+      try {
+        await addDoc(collection(db, cdtCollectionPath('controle_dt_movimentos')), mov);
+        return;
+      } catch (err) {
+        console.warn('Falha ao gravar movimento DT no Firestore. Salvando local.', err);
+        controleDtUsingFirestore = false;
+      }
+    }
+    controleDtMovements.unshift({ ...mov, id: cdtId(), _id: cdtId() });
+    controleDtMovements = controleDtMovements.slice(0, 120);
+    cdtPersistLocal();
+  }
+
+  function cdtResetProductForm() {
+    controleDtEditingProductId = '';
+    const nameEl = document.getElementById('cdt-product-name');
+    const targetEl = document.getElementById('cdt-product-target');
+    const localEl = document.getElementById('cdt-product-local');
+    const priorityEl = document.getElementById('cdt-product-priority');
+    const addBtn = document.getElementById('cdt-add-product-btn');
+    const cancelBtn = document.getElementById('cdt-cancel-product-edit-btn');
+    if (nameEl) nameEl.value = '';
+    if (targetEl) targetEl.value = '';
+    if (localEl) localEl.value = 'Fábrica';
+    if (priorityEl) priorityEl.value = 'Normal';
+    if (addBtn) addBtn.textContent = 'Adicionar produto';
+    if (cancelBtn) cancelBtn.classList.add('hidden');
+  }
+
+  function cdtStartEditProduct(productId) {
+    const p = cdtProductById(productId);
+    if (!p) return showToast('Produto não encontrado.', 'error');
+    controleDtEditingProductId = p._id || p.id || productId;
+    const nameEl = document.getElementById('cdt-product-name');
+    const targetEl = document.getElementById('cdt-product-target');
+    const localEl = document.getElementById('cdt-product-local');
+    const priorityEl = document.getElementById('cdt-product-priority');
+    const addBtn = document.getElementById('cdt-add-product-btn');
+    const cancelBtn = document.getElementById('cdt-cancel-product-edit-btn');
+    if (nameEl) nameEl.value = p.name || p.nome || p.produto || '';
+    if (targetEl) targetEl.value = cdtNum(p.targetPallets ?? p.programado ?? p.target ?? p.paletesProgramados) || '';
+    if (localEl) localEl.value = p.local || 'Fábrica';
+    if (priorityEl) priorityEl.value = p.priority || p.prioridade || 'Normal';
+    if (addBtn) addBtn.textContent = 'Salvar produto';
+    if (cancelBtn) cancelBtn.classList.remove('hidden');
+    nameEl?.focus();
+    showToast('Produto em edição. Ajuste os campos e clique em Salvar produto.', 'info');
+  }
+
+  async function cdtAddProduct() {
+    const name = cdtClean(document.getElementById('cdt-product-name')?.value);
+    const target = cdtNum(document.getElementById('cdt-product-target')?.value);
+    const local = cdtClean(document.getElementById('cdt-product-local')?.value) || 'Fábrica';
+    const priority = cdtClean(document.getElementById('cdt-product-priority')?.value) || 'Normal';
+
+    if (!name) return showToast('Informe o produto.', 'error');
+    if (!target || target <= 0) return showToast('Informe o programado em paletes.', 'error');
+
+    if (controleDtEditingProductId) {
+      return cdtUpdateProduct(controleDtEditingProductId, { name, targetPallets: target, local, priority });
+    }
+
+    const item = { name, targetPallets: target, local, priority, createdAt: cdtNow(), updatedAt: cdtNow() };
+    try {
+      if (controleDtUsingFirestore && db) {
+        await addDoc(collection(db, cdtCollectionPath('controle_dt_produtos')), item);
+      } else {
+        const id = cdtId();
+        controleDtProducts.unshift({ ...item, id, _id: id });
+        cdtPersistLocal();
+      }
+      await cdtAddMovement('Produto', `Produto ${name} programado com ${cdtMoneyNum(target)} paletes • ${local} • ${priority}`);
+      cdtResetProductForm();
+      showToast('Produto programado adicionado.', 'success');
+      renderControleDt();
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao adicionar produto.', 'error');
+    }
+  }
+
+  async function cdtUpdateProduct(productId, patch) {
+    const p = cdtProductById(productId);
+    if (!p) return showToast('Produto não encontrado.', 'error');
+    const realId = p._id || p.id || productId;
+    const oldName = p.name || p.nome || p.produto || 'Produto';
+    const updates = { ...patch, updatedAt: cdtNow() };
+    const linkedDts = (controleDtDts || []).filter(dt => String(dt.productId || '') === String(realId) || String(dt.productId || '') === String(productId));
+
+    try {
+      if (controleDtUsingFirestore && db && p._id) {
+        await updateDoc(doc(db, cdtCollectionPath('controle_dt_produtos'), realId), updates);
+
+        if (linkedDts.length) {
+          let batch = writeBatch(db);
+          let count = 0;
+          for (const dt of linkedDts) {
+            const dtRealId = dt._id || dt.id;
+            if (!dtRealId) continue;
+            batch.update(doc(db, cdtCollectionPath('controle_dt_dts'), dtRealId), {
+              productNameSnapshot: patch.name,
+              prioritySnapshot: patch.priority,
+              updatedAt: cdtNow()
+            });
+            count += 1;
+            if (count % 450 === 0) {
+              await batch.commit();
+              batch = writeBatch(db);
+            }
+          }
+          if (count % 450 !== 0) await batch.commit();
+        }
+      } else {
+        Object.assign(p, updates);
+        linkedDts.forEach(dt => {
+          dt.productNameSnapshot = patch.name;
+          dt.prioritySnapshot = patch.priority;
+          dt.updatedAt = cdtNow();
+        });
+        cdtPersistLocal();
+      }
+      await cdtAddMovement('Produto', `Produto ${oldName} editado para ${patch.name} • ${cdtMoneyNum(patch.targetPallets)} pal • ${patch.local} • ${patch.priority}`);
+      cdtResetProductForm();
+      showToast('Produto atualizado.', 'success');
+      renderControleDt();
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao editar produto.', 'error');
+    }
+  }
+
+  function cdtConfirmDeleteProduct(productId) {
+    const p = cdtProductById(productId);
+    if (!p) return;
+    const name = p.name || p.nome || p.produto || 'produto';
+    showConfirmModal(`Excluir o produto ${name}? As DTs já criadas serão mantidas com o nome congelado.`, () => cdtDeleteProduct(productId));
+  }
+
+  async function cdtDeleteProduct(productId) {
+    const p = cdtProductById(productId);
+    if (!p) return;
+    const realId = p._id || p.id || productId;
+    const name = p.name || p.nome || p.produto || 'Produto';
+    try {
+      if (controleDtUsingFirestore && db && p._id) {
+        await deleteDoc(doc(db, cdtCollectionPath('controle_dt_produtos'), realId));
+      } else {
+        controleDtProducts = controleDtProducts.filter(x => String(x.id || x._id || '') !== String(realId));
+        cdtPersistLocal();
+      }
+      if (String(controleDtEditingProductId || '') === String(realId)) cdtResetProductForm();
+      await cdtAddMovement('Produto', `Produto ${name} excluído. DTs já criadas foram mantidas.`);
+      renderControleDt();
+      showToast('Produto excluído.', 'success');
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao excluir produto.', 'error');
+    }
+  }
+
+  async function cdtAddDt() {
+    const code = cdtClean(document.getElementById('cdt-dt-code')?.value);
+    const productId = cdtClean(document.getElementById('cdt-dt-product')?.value);
+    const pallets = cdtNum(document.getElementById('cdt-dt-pallets')?.value);
+    const local = cdtClean(document.getElementById('cdt-dt-local')?.value) || cdtProductLocal(productId) || 'Fábrica';
+
+    if (!code) return showToast('Informe o número da DT.', 'error');
+    if (!productId) return showToast('Selecione um produto pendente.', 'error');
+    if (!pallets || pallets <= 0) return showToast('Informe os paletes da DT.', 'error');
+
+    const duplicate = controleDtDts.some(dt => cdtCompact(dt.code) === cdtCompact(code) && dt.status !== 'Cancelada');
+    if (duplicate) return showToast('Já existe uma DT com esse número.', 'error');
+
+    const calc = cdtProductCalc(productId);
+    if (calc.pending <= 0) return showToast('Esse produto já atingiu o programado.', 'error');
+
+    const item = {
+      code,
+      productId,
+      productNameSnapshot: cdtProductName(productId),
+      pallets,
+      local,
+      prioritySnapshot: cdtProductPriority(productId),
+      status: 'Pendente',
+      createdAt: cdtNow(),
+      updatedAt: cdtNow()
+    };
+
+    try {
+      if (controleDtUsingFirestore && db) {
+        await addDoc(collection(db, cdtCollectionPath('controle_dt_dts')), item);
+      } else {
+        const id = cdtId();
+        controleDtDts.unshift({ ...item, id, _id: id });
+        cdtPersistLocal();
+      }
+      await cdtAddMovement('DT', `DT ${code} criada • ${cdtProductName(productId)} • ${cdtMoneyNum(pallets)} pal • ${local}`);
+      document.getElementById('cdt-dt-code').value = '';
+      document.getElementById('cdt-dt-pallets').value = '';
+      showToast('DT criada.', 'success');
+      renderControleDt();
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao criar DT.', 'error');
+    }
+  }
+
+  async function cdtUpdateDt(dtId, patch, movementText = '') {
+    const dt = controleDtDts.find(x => x.id === dtId || x._id === dtId);
+    if (!dt) return;
+    const realId = dt._id || dt.id || dtId;
+    try {
+      if (controleDtUsingFirestore && db && dt._id) {
+        await updateDoc(doc(db, cdtCollectionPath('controle_dt_dts'), realId), { ...patch, updatedAt: cdtNow() });
+      } else {
+        Object.assign(dt, patch, { updatedAt: cdtNow() });
+        cdtPersistLocal();
+      }
+      if (movementText) await cdtAddMovement('Movimentação', movementText, { dt: dt.code || '' });
+      renderControleDt();
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao atualizar DT.', 'error');
+    }
+  }
+
+  async function cdtReserveDt(dtId, plate, sourceOp = {}) {
+    const dt = controleDtDts.find(x => x.id === dtId || x._id === dtId);
+    if (!dt) return showToast('DT não encontrada.', 'error');
+    if ((dt.status || 'Pendente') !== 'Pendente') return showToast('Essa DT não está pendente.', 'error');
+
+    const patch = {
+      status: 'Reservada',
+      reservedAt: cdtNow(),
+      reservedForPlate: plate || '',
+      reservedSourceId: sourceOp?.id || '',
+      reservedSource: sourceOp?._src || ''
+    };
+    await cdtUpdateDt(dtId, patch, `DT ${dt.code} reservada para placa ${plate || 'sem placa'}`);
+    showToast(`DT ${dt.code} reservada para ${plate || 'placa sem identificação'}.`, 'success');
+  }
+
+  function cdtConfirmReserve(dtId, plate, sourceId, sourceSrc) {
+    const sourceOp = [...(patioData || []).map(x => ({...x, _src:'patio'})), ...(historicoData || []).map(x => ({...x, _src:'historico'}))]
+      .find(x => String(x.id || '') === String(sourceId || '') && String(x._src || '') === String(sourceSrc || '')) || { id: sourceId, _src: sourceSrc };
+    showConfirmModal(`Reservar essa DT para a placa ${plate || 'sem placa'}?`, () => cdtReserveDt(dtId, plate, sourceOp));
+  }
+
+  function cdtConfirmStatus(dtId, status) {
+    const dt = controleDtDts.find(x => x.id === dtId || x._id === dtId);
+    if (!dt) return;
+    const label = status === 'Pendente' ? 'devolver para pendente' : status.toLowerCase();
+    showConfirmModal(`Deseja ${label} a DT ${dt.code}?`, () => {
+      const patch = { status };
+      if (status === 'Pendente') {
+        Object.assign(patch, {
+          reservedAt: null,
+          reservedForPlate: '',
+          reservedTrailerPlate: '',
+          reservedTruckPlate: '',
+          reservedSourceId: '',
+          reservedSource: '',
+          reservedMode: ''
+        });
+      }
+      if (status === 'Baixada') patch.completedAt = cdtNow();
+      if (status === 'Cancelada') patch.cancelledAt = cdtNow();
+      cdtUpdateDt(dtId, patch, `DT ${dt.code} alterada para ${status}`);
+    });
+  }
+
+  function cdtIsZeroOnlyValue(value) {
+    if (value === null || value === undefined) return false;
+    if (typeof value === 'number') return value === 0;
+    if (Array.isArray(value)) {
+      const usable = value.filter(v => String(v ?? '').trim() !== '');
+      return usable.length > 0 && usable.every(cdtIsZeroOnlyValue);
+    }
+    if (typeof value === 'object') return false;
+    const raw = String(value ?? '').trim();
+    return /^0+$/.test(raw);
+  }
+
+  function cdtIsTimestampOnlyDtMarker(value) {
+    if (value === null || value === undefined || typeof value === 'object') return false;
+    const raw = String(value ?? '').trim().replace(/\D/g, '');
+    // Exemplo real informado: 20260531182658 = YYYYMMDDHHMMSS.
+    // Esse padrão entra como DT vazia apenas quando estiver em campo de DT da Ritmo.
+    if (!/^(20)\d{10}(\d{2})?$/.test(raw)) return false;
+    const year = Number(raw.slice(0, 4));
+    const month = Number(raw.slice(4, 6));
+    const day = Number(raw.slice(6, 8));
+    const hour = Number(raw.slice(8, 10));
+    const minute = Number(raw.slice(10, 12));
+    const second = raw.length >= 14 ? Number(raw.slice(12, 14)) : 0;
+    if (year < 2020 || year > 2099 || month < 1 || month > 12 || day < 1 || day > 31) return false;
+    if (hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59) return false;
+    const dt = new Date(year, month - 1, day, hour, minute, second);
+    return dt.getFullYear() === year && dt.getMonth() === month - 1 && dt.getDate() === day;
+  }
+
+  function cdtIsVaziaDtMarkerValue(value) {
+    if (Array.isArray(value)) {
+      const usable = value.filter(v => String(v ?? '').trim() !== '');
+      return usable.length > 0 && usable.every(cdtIsVaziaDtMarkerValue);
+    }
+    return cdtIsZeroOnlyValue(value) || cdtIsTimestampOnlyDtMarker(value);
+  }
+
+  function cdtIsDtFieldKey(key) {
+    const k = cdtCompact(key);
+    return (
+      k === 'DT' ||
+      k === 'DTS' ||
+      k === 'NUMERODT' ||
+      k === 'NRODT' ||
+      k === 'CODDT' ||
+      k === 'CODIGODT' ||
+      k === 'DTCODE' ||
+      k === 'DTCARGA' ||
+      k === 'DTDESCARGA' ||
+      k === 'DTDESCARGA' ||
+      k === 'DOCUMENTOTRANSPORTE' ||
+      k === 'TRANSPORTDOCUMENT' ||
+      k.includes('NUMERODT') ||
+      k.includes('CODIGODT') ||
+      k.includes('DOCUMENTOTRANSPORTE')
+    );
+  }
+
+  function cdtHasZeroOnlyDtMarker(op = {}) {
+    const directKeys = [
+      'dt', 'DT', 'dts', 'DTS', 'numeroDt', 'numeroDT', 'nroDt', 'codDt', 'codigoDt',
+      'dtCode', 'dt_code', 'dtCarga', 'dtDescarga', 'documentoTransporte',
+      'documento_transporte', 'transportDocument'
+    ];
+
+    for (const key of directKeys) {
+      if (Object.prototype.hasOwnProperty.call(op, key) && cdtIsVaziaDtMarkerValue(op[key])) return true;
+    }
+
+    const walk = (obj, insideDtContext = false, depth = 0) => {
+      if (!obj || typeof obj !== 'object' || depth > 4) return false;
+      for (const [key, value] of Object.entries(obj)) {
+        const dtContext = insideDtContext || cdtIsDtFieldKey(key);
+        if (dtContext && cdtIsVaziaDtMarkerValue(value)) return true;
+        if (value && typeof value === 'object' && !Array.isArray(value) && walk(value, dtContext, depth + 1)) return true;
+      }
+      return false;
+    };
+
+    return walk(op);
+  }
+
+  function cdtGetOpTime(op = {}) {
+    return toMs(op.registrationTime || op.timestamp || op.createdAt || op.created_at || op.finishedTime) || cdtNow();
+  }
+
+  function cdtIsRitmoVaziaOp(op = {}) {
+    if (!isRitmoOp(op)) return false;
+    if (isLatasVaziasOp(op)) return true;
+    if (cdtHasZeroOnlyDtMarker(op)) return true;
+    try {
+      const blob = JSON.stringify(op).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/0/g, 'O').replace(/1/g, 'I');
+      return (
+        blob.includes('VAZIA') ||
+        blob.includes('VAZIO') ||
+        blob.includes('VAZIAS') ||
+        blob.includes('VAZIOS') ||
+        blob.includes('CARRETA VAZ') ||
+        blob.includes('STATUS":"VAZ') ||
+        blob.includes('SITUACAO":"VAZ')
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function cdtLocalFromOp(op = {}) {
+    const raw = op.origem || op.local || op.deposito || op.depósito || op.base || op.unidade || op.destino || op.localOrigem || op.origin || '';
+    const s = String(raw || '').toLowerCase();
+    if (s.includes('heilo')) return 'Heilo';
+    if (s.includes('fabr') || s.includes('jac')) return 'Fábrica';
+    if (s.includes('armaz')) return 'Armazém externo';
+    return '';
+  }
+
+  function cdtIsClosedPatioSuggestionOp(op = {}) {
+    const statusBlob = cdtCompact([
+      op.status,
+      op.situacao,
+      op.situação,
+      op.estado,
+      op.statusOperacao,
+      op.status_global,
+      op.statusGlobal
+    ].filter(Boolean).join(' '));
+
+    return [
+      'FINALIZADO', 'FINALIZADA',
+      'CANCELADO', 'CANCELADA',
+      'BAIXADO', 'BAIXADA',
+      'CONCLUIDO', 'CONCLUIDA',
+      'ENCERRADO', 'ENCERRADA'
+    ].some(term => statusBlob.includes(term));
+  }
+
+  function cdtGetLatestRitmoVazias() {
+    const since = cdtNow() - (36 * 3600 * 1000);
+    const ops = (patioData || [])
+      .map(op => ({ ...op, _src: 'patio', _rt: cdtGetOpTime(op) }))
+      .filter(op => op._rt >= since && !cdtIsClosedPatioSuggestionOp(op) && cdtIsRitmoVaziaOp(op))
+      .sort((a, b) => b._rt - a._rt);
+
+    const seen = new Set();
+    const rows = [];
+    ops.forEach(op => {
+      const plate = plateKey(op, 'carreta') || plateKey(op, 'cavalo') || 'SEM PLACA';
+      const key = cdtCompact(plate);
+      if (seen.has(key)) return;
+      seen.add(key);
+      rows.push({ op, plate, local: cdtLocalFromOp(op), ms: op._rt });
+    });
+    return rows.slice(0, 8);
+  }
+
+  function cdtAvailableDts(localPref = '') {
+    const filterLocal = localPref && localPref !== 'todos' ? localPref : '';
+    return (controleDtDts || [])
+      .filter(dt => (dt.status || 'Pendente') === 'Pendente')
+      .filter(dt => !filterLocal || String(dt.local || '').toLowerCase() === String(filterLocal).toLowerCase())
+      .sort((a, b) => {
+        const pa = cdtPriorityWeight(a.prioritySnapshot || cdtProductPriority(a.productId));
+        const pb = cdtPriorityWeight(b.prioritySnapshot || cdtProductPriority(b.productId));
+        return pa - pb || cdtNum(a.createdAt) - cdtNum(b.createdAt) || String(a.code || '').localeCompare(String(b.code || ''), 'pt-BR');
+      });
+  }
+
+  function cdtRenderSelects() {
+    const productSelect = document.getElementById('cdt-dt-product');
+
+    if (productSelect) {
+      const options = (controleDtProducts || [])
+        .filter(p => {
+          const id = p.id || p._id;
+          if (!id) return false;
+          return cdtProductCalc(id).pending > 0;
+        })
+        .sort((a,b) => cdtPriorityWeight(a.priority || a.prioridade) - cdtPriorityWeight(b.priority || b.prioridade) || String(a.name || '').localeCompare(String(b.name || ''), 'pt-BR'));
+
+      productSelect.innerHTML = options.length
+        ? options.map(p => {
+            const id = p.id || p._id;
+            const calc = cdtProductCalc(id);
+            return `<option value="${escapeHtml(id)}">${escapeHtml(p.name || p.nome || 'Produto')} • falta criar ${cdtMoneyNum(calc.pending)} pal</option>`;
+          }).join('')
+        : `<option value="">Todos os produtos atingiram o programado</option>`;
+    }
+
+    cdtRenderManualReserveSelect();
+  }
+
+  function cdtPlateInputValue(id) {
+    return cdtClean(document.getElementById(id)?.value).toUpperCase().replace(/\s+/g, '');
+  }
+
+  function cdtDtLinkLabel(dt = {}) {
+    const trailer = cdtClean(dt.reservedTrailerPlate || dt.trailerPlate || '');
+    const truck = cdtClean(dt.reservedTruckPlate || dt.truckPlate || '');
+    if (trailer && truck) return `Carreta ${trailer} • Cavalo ${truck}`;
+    if (trailer) return `Carreta ${trailer}`;
+    if (truck) return `Cavalo ${truck}`;
+    if (dt.reservedForPlate) return `Placa ${dt.reservedForPlate}`;
+    return '—';
+  }
+
+  function cdtRenderManualReserveSelect() {
+    const select = document.getElementById('cdt-manual-dt-select');
+    const preview = document.getElementById('cdt-manual-dt-preview');
+    if (!select) return;
+
+    const previous = select.value || '';
+    const localFilter = document.getElementById('cdt-manual-local-filter')?.value || 'todos';
+    const rows = cdtAvailableDts(localFilter);
+
+    select.innerHTML = rows.length
+      ? rows.map(dt => {
+          const id = dt._id || dt.id || '';
+          const label = `${dt.code || 'DT sem número'} • ${dt.productNameSnapshot || cdtProductName(dt.productId)} • ${cdtMoneyNum(dt.pallets)} pal • ${dt.local || ''}`;
+          return `<option value="${escapeHtml(id)}">${escapeHtml(label)}</option>`;
+        }).join('')
+      : `<option value="">Nenhuma DT pendente disponível</option>`;
+
+    if (previous && rows.some(dt => String(dt._id || dt.id || '') === String(previous))) {
+      select.value = previous;
+    }
+
+    cdtUpdateManualReservePreview();
+  }
+
+  function cdtUpdateManualReservePreview() {
+    const select = document.getElementById('cdt-manual-dt-select');
+    const preview = document.getElementById('cdt-manual-dt-preview');
+    if (!select || !preview) return;
+    const dtId = select.value || '';
+    const dt = controleDtDts.find(x => String(x.id || x._id || '') === String(dtId));
+    if (!dt) {
+      preview.textContent = 'Cadastre ou libere uma DT pendente para reservar manualmente.';
+      return;
+    }
+    preview.textContent = `${dt.code || 'DT'} • ${dt.productNameSnapshot || cdtProductName(dt.productId)} • ${cdtMoneyNum(dt.pallets)} pal • ${dt.local || ''} • ${dt.prioritySnapshot || cdtProductPriority(dt.productId)}`;
+  }
+
+  function cdtResetManualReserveForm() {
+    const trailer = document.getElementById('cdt-manual-trailer');
+    const truck = document.getElementById('cdt-manual-truck');
+    if (trailer) trailer.value = '';
+    if (truck) truck.value = '';
+    cdtRenderManualReserveSelect();
+  }
+
+  function cdtConfirmManualReserve() {
+    const dtId = document.getElementById('cdt-manual-dt-select')?.value || '';
+    const trailer = cdtPlateInputValue('cdt-manual-trailer');
+    const truck = cdtPlateInputValue('cdt-manual-truck');
+    const dt = controleDtDts.find(x => String(x.id || x._id || '') === String(dtId));
+
+    if (!dtId || !dt) return showToast('Selecione uma DT pendente para reservar.', 'error');
+    if ((dt.status || 'Pendente') !== 'Pendente') return showToast('Essa DT não está mais pendente.', 'error');
+    if (!trailer && !truck) return showToast('Informe pelo menos a placa da carreta ou do cavalo.', 'error');
+
+    const plateLabel = [trailer ? `carreta ${trailer}` : '', truck ? `cavalo ${truck}` : ''].filter(Boolean).join(' / ');
+    showConfirmModal(`Reservar a DT ${dt.code} manualmente para ${plateLabel}?`, () => cdtReserveManualDt(dtId, trailer, truck));
+  }
+
+  async function cdtReserveManualDt(dtId, trailerPlate = '', truckPlate = '') {
+    const dt = controleDtDts.find(x => x.id === dtId || x._id === dtId);
+    if (!dt) return showToast('DT não encontrada.', 'error');
+    if ((dt.status || 'Pendente') !== 'Pendente') return showToast('Essa DT não está pendente.', 'error');
+
+    const trailer = cdtClean(trailerPlate).toUpperCase();
+    const truck = cdtClean(truckPlate).toUpperCase();
+    const linkLabel = [trailer ? `Carreta ${trailer}` : '', truck ? `Cavalo ${truck}` : ''].filter(Boolean).join(' • ');
+
+    const patch = {
+      status: 'Reservada',
+      reservedAt: cdtNow(),
+      reservedForPlate: trailer || truck || '',
+      reservedTrailerPlate: trailer,
+      reservedTruckPlate: truck,
+      reservedSourceId: '',
+      reservedSource: 'manual',
+      reservedMode: 'manual'
+    };
+
+    await cdtUpdateDt(dtId, patch, `DT ${dt.code} reservada manualmente para ${linkLabel || 'placa sem identificação'}`);
+    cdtResetManualReserveForm();
+    showToast(`DT ${dt.code} reservada manualmente.`, 'success');
+  }
+
+  function renderControleDt() {
+    const root = document.getElementById('controle-dt-content');
+    if (!root) return;
+    cdtRenderSelects();
+
+    const validDts = (controleDtDts || []).filter(dt => dt.status !== 'Cancelada');
+    const pendingDts = validDts.filter(dt => (dt.status || 'Pendente') === 'Pendente');
+    const reservedDts = validDts.filter(dt => dt.status === 'Reservada');
+    const doneDts = validDts.filter(dt => dt.status === 'Baixada');
+    const target = (controleDtProducts || []).reduce((sum, p) => sum + cdtProductCalc(p.id || p._id).target, 0);
+    const scheduled = (controleDtProducts || []).reduce((sum, p) => sum + cdtProductCalc(p.id || p._id).scheduled, 0);
+
+    const kpis = document.getElementById('cdt-kpis');
+    if (kpis) {
+      kpis.innerHTML = [
+        ['Produtos', String(controleDtProducts.length), 'Programados'],
+        ['DTs pendentes', String(pendingDts.length), 'Disponíveis para reserva'],
+        ['DTs reservadas', String(reservedDts.length), 'Travadas para placa'],
+        ['DTs baixadas', String(doneDts.length), 'Concluídas'],
+        ['Paletes criados', `${cdtMoneyNum(scheduled)} / ${cdtMoneyNum(target)}`, 'Criado x programado']
+      ].map(([label, value, sub]) => `
+        <div class="cdt-kpi">
+          <div class="cdt-kpi-label">${escapeHtml(label)}</div>
+          <div class="cdt-kpi-value">${escapeHtml(value)}</div>
+          <div class="text-sm cdt-muted font-bold mt-2">${escapeHtml(sub)}</div>
+        </div>
+      `).join('');
+    }
+
+    const vaziasBox = document.getElementById('cdt-vazias-list');
+    if (vaziasBox) {
+      const localFilter = document.getElementById('cdt-vazia-local-filter')?.value || 'auto';
+      const vazias = cdtGetLatestRitmoVazias();
+      if (!vazias.length) {
+        const fallback = cdtAvailableDts(localFilter === 'auto' ? '' : localFilter)[0];
+        vaziasBox.innerHTML = fallback ? `
+          <div class="cdt-suggestion-card lg:col-span-2">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div class="cdt-muted text-sm font-black uppercase tracking-wide">Sem vazia recente da Ritmo detectada</div>
+                <div class="mt-2 text-lg font-black">Mas já existe DT disponível para teste:</div>
+                <div class="cdt-dt-number mt-1">${escapeHtml(fallback.code)}</div>
+                <div class="text-sm cdt-muted font-bold mt-1">${escapeHtml(fallback.productNameSnapshot || cdtProductName(fallback.productId))} • ${cdtMoneyNum(fallback.pallets)} pal • ${escapeHtml(fallback.local || '')}</div>
+              </div>
+              <span class="cdt-pill cdt-pill-wait">Aguardando Ritmo vazia</span>
+            </div>
+          </div>
+        ` : `<div class="cdt-card-soft p-5 lg:col-span-2 text-center cdt-muted font-black">Cadastre DTs pendentes. Quando a Ritmo marcar uma carreta vazia, a sugestão aparece aqui automaticamente.</div>`;
+      } else {
+        vaziasBox.innerHTML = vazias.map(({ op, plate, local, ms }) => {
+          const preferredLocal = localFilter === 'auto' ? (local || '') : (localFilter === 'todos' ? '' : localFilter);
+          const suggestion = cdtAvailableDts(preferredLocal)[0] || cdtAvailableDts('')[0];
+          const dtId = suggestion?._id || suggestion?.id || '';
+          const opId = op?.id || '';
+          const opSrc = op?._src || '';
+          return `
+            <div class="cdt-suggestion-card">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <div class="text-xs cdt-muted font-black uppercase tracking-wide">Carreta vazia Ritmo</div>
+                  <div class="font-mono text-lg font-black mt-1">${escapeHtml(plate)}</div>
+                  <div class="text-xs cdt-muted font-bold mt-1">${escapeHtml(new Date(ms).toLocaleString('pt-BR'))}${local ? ` • ${escapeHtml(local)}` : ''}</div>
+                </div>
+                <span class="cdt-pill cdt-pill-ok">Vazia</span>
+              </div>
+              ${suggestion ? `
+                <div class="mt-4 cdt-card-soft p-4 ${cdtPriorityClass(suggestion.prioritySnapshot || cdtProductPriority(suggestion.productId))}">
+                  <div class="text-xs cdt-muted font-black uppercase tracking-wide">DT disponível sugerida</div>
+                  <div class="cdt-dt-number">${escapeHtml(suggestion.code)}</div>
+                  <div class="text-sm font-black mt-1">${escapeHtml(suggestion.productNameSnapshot || cdtProductName(suggestion.productId))}</div>
+                  <div class="text-sm cdt-muted font-bold mt-1">${cdtMoneyNum(suggestion.pallets)} pal • ${escapeHtml(suggestion.local || '')} • ${escapeHtml(suggestion.prioritySnapshot || cdtProductPriority(suggestion.productId))}</div>
+                  <button type="button" class="cdt-btn cdt-btn-primary w-full mt-4" data-cdt-action="reserve" data-dt-id="${escapeHtml(dtId)}" data-plate="${escapeHtml(plate)}" data-op-id="${escapeHtml(opId)}" data-op-src="${escapeHtml(opSrc)}">Reservar DT para essa placa</button>
+                </div>
+              ` : `
+                <div class="mt-4 cdt-card-soft p-4 text-center">
+                  <div class="font-black text-red-700">Nenhuma DT pendente disponível</div>
+                  <div class="text-sm cdt-muted font-bold mt-1">Cadastre uma DT ou altere o filtro de local.</div>
+                </div>
+              `}
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    const productsTbody = document.getElementById('cdt-products-table-body');
+    if (productsTbody) {
+      const productRows = (controleDtProducts || [])
+        .slice()
+        .sort((a, b) => cdtPriorityWeight(a.priority || a.prioridade) - cdtPriorityWeight(b.priority || b.prioridade) || String(a.name || a.nome || '').localeCompare(String(b.name || b.nome || ''), 'pt-BR'));
+
+      productsTbody.innerHTML = productRows.length ? productRows.map(p => {
+        const id = p._id || p.id || '';
+        const calc = cdtProductCalc(id);
+        const priority = p.priority || p.prioridade || 'Normal';
+        return `
+          <tr class="${cdtPriorityClass(priority)}">
+            <td class="p-3 font-black">${escapeHtml(p.name || p.nome || p.produto || '')}</td>
+            <td class="p-3 font-bold">${escapeHtml(p.local || 'Fábrica')}</td>
+            <td class="p-3 font-bold">${escapeHtml(priority)}</td>
+            <td class="p-3 font-mono font-black">${cdtMoneyNum(calc.target)}</td>
+            <td class="p-3 font-mono font-black">${cdtMoneyNum(calc.scheduled)}</td>
+            <td class="p-3 font-mono font-black">${cdtMoneyNum(calc.pending)}</td>
+            <td class="p-3">
+              <div class="flex flex-wrap justify-end gap-2">
+                <button type="button" class="cdt-btn cdt-btn-ghost !py-2 !px-3 text-xs" data-cdt-action="edit-product" data-product-id="${escapeHtml(id)}">Editar</button>
+                <button type="button" class="cdt-btn cdt-btn-red !py-2 !px-3 text-xs" data-cdt-action="delete-product" data-product-id="${escapeHtml(id)}">Excluir</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('') : `<tr><td colspan="7" class="p-6 text-center cdt-muted font-black">Nenhum produto cadastrado.</td></tr>`;
+    }
+
+    const statusFilter = document.getElementById('cdt-status-filter')?.value || 'todos';
+    const tbody = document.getElementById('cdt-dts-table-body');
+    if (tbody) {
+      const rows = (controleDtDts || [])
+        .filter(dt => statusFilter === 'todos' || (dt.status || 'Pendente') === statusFilter)
+        .sort((a, b) => cdtPriorityWeight(a.prioritySnapshot || cdtProductPriority(a.productId)) - cdtPriorityWeight(b.prioritySnapshot || cdtProductPriority(b.productId)) || cdtNum(b.createdAt) - cdtNum(a.createdAt));
+      tbody.innerHTML = rows.length ? rows.map(dt => {
+        const id = dt._id || dt.id || '';
+        const status = dt.status || 'Pendente';
+        return `
+          <tr class="${cdtPriorityClass(dt.prioritySnapshot || cdtProductPriority(dt.productId))}">
+            <td class="p-3 font-mono font-black">${escapeHtml(dt.code || '')}</td>
+            <td class="p-3 font-bold">${escapeHtml(dt.productNameSnapshot || cdtProductName(dt.productId))}</td>
+            <td class="p-3 font-bold">${escapeHtml(dt.local || '')}</td>
+            <td class="p-3 font-mono font-black">${cdtMoneyNum(dt.pallets)}</td>
+            <td class="p-3">${cdtStatusPill(status)}</td>
+            <td class="p-3 text-sm font-bold cdt-muted">${escapeHtml(cdtDtLinkLabel(dt))}</td>
+            <td class="p-3">
+              <div class="flex flex-wrap justify-end gap-2">
+                ${status === 'Reservada' ? `<button type="button" class="cdt-btn cdt-btn-ghost !py-2 !px-3 text-xs" data-cdt-action="status" data-status="Pendente" data-dt-id="${escapeHtml(id)}">Desfazer</button>` : ''}
+                ${status !== 'Baixada' && status !== 'Cancelada' ? `<button type="button" class="cdt-btn cdt-btn-primary !py-2 !px-3 text-xs" data-cdt-action="status" data-status="Baixada" data-dt-id="${escapeHtml(id)}">Baixar</button>` : ''}
+                ${status !== 'Cancelada' ? `<button type="button" class="cdt-btn cdt-btn-red !py-2 !px-3 text-xs" data-cdt-action="status" data-status="Cancelada" data-dt-id="${escapeHtml(id)}">Cancelar</button>` : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('') : `<tr><td colspan="7" class="p-8 text-center cdt-muted font-black">Nenhuma DT encontrada.</td></tr>`;
+    }
+
+    const movements = document.getElementById('cdt-movements-list');
+    if (movements) {
+      const rows = (controleDtMovements || [])
+        .slice()
+        .sort((a,b) => cdtNum(b.createdAt) - cdtNum(a.createdAt))
+        .slice(0, 30);
+      movements.innerHTML = rows.length ? rows.map(m => `
+        <div class="cdt-card-soft p-3 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="font-black">${escapeHtml(m.text || '')}</div>
+            <div class="text-xs cdt-muted font-bold mt-1">${escapeHtml(m.type || 'Movimento')} • ${m.createdAt ? escapeHtml(new Date(cdtNum(m.createdAt)).toLocaleString('pt-BR')) : '—'}</div>
+          </div>
+        </div>
+      `).join('') : `<div class="cdt-card-soft p-4 text-center cdt-muted font-black">Sem movimentos ainda.</div>`;
+    }
+  }
+
+  async function cdtDeleteCollectionDocs(collectionName) {
+    if (!(controleDtUsingFirestore && db)) return false;
+    const snap = await getDocs(collection(db, cdtCollectionPath(collectionName)));
+    if (snap.empty) return true;
+    let batch = writeBatch(db);
+    let count = 0;
+    for (const item of snap.docs) {
+      batch.delete(item.ref);
+      count += 1;
+      if (count % 450 === 0) {
+        await batch.commit();
+        batch = writeBatch(db);
+      }
+    }
+    await batch.commit();
+    return true;
+  }
+
+  function cdtConfirmClearHistory() {
+    showConfirmModal('Limpar todo o histórico rápido do Controle de DTs? Produtos e DTs cadastradas serão mantidos.', () => cdtClearHistory());
+  }
+
+  async function cdtClearHistory() {
+    try {
+      if (controleDtUsingFirestore && db) {
+        await cdtDeleteCollectionDocs('controle_dt_movimentos');
+      }
+      controleDtMovements = [];
+      cdtPersistLocal();
+      renderControleDt();
+      showToast('Histórico do Controle de DTs limpo.', 'success');
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao limpar histórico.', 'error');
+    }
+  }
+
+  function cdtConfirmClearDts() {
+    showConfirmModal('Limpar todas as DTs cadastradas no Controle de DTs? Os produtos programados serão mantidos.', () => cdtClearDts());
+  }
+
+  async function cdtClearDts() {
+    try {
+      const total = controleDtDts.length;
+      if (controleDtUsingFirestore && db) {
+        await cdtDeleteCollectionDocs('controle_dt_dts');
+      }
+      controleDtDts = [];
+      cdtPersistLocal();
+      await cdtAddMovement('Limpeza', `DTs cadastradas limpas (${total} registro${total === 1 ? '' : 's'} removido${total === 1 ? '' : 's'}).`);
+      renderControleDt();
+      showToast('DTs do Controle de DTs limpas.', 'success');
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao limpar DTs.', 'error');
+    }
+  }
+
+  function cdtConfirmClearProducts() {
+    showConfirmModal('Limpar todos os produtos programados? As DTs já criadas serão mantidas com o nome congelado.', () => cdtClearProducts());
+  }
+
+  async function cdtClearProducts() {
+    try {
+      const total = controleDtProducts.length;
+      if (controleDtUsingFirestore && db) {
+        await cdtDeleteCollectionDocs('controle_dt_produtos');
+      }
+      controleDtProducts = [];
+      cdtResetProductForm();
+      cdtPersistLocal();
+      await cdtAddMovement('Limpeza', `Produtos programados limpos (${total} registro${total === 1 ? '' : 's'} removido${total === 1 ? '' : 's'}). DTs já criadas foram mantidas.`);
+      renderControleDt();
+      showToast('Produtos do Controle de DTs limpos.', 'success');
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao limpar produtos.', 'error');
+    }
+  }
+
+  async function cdtDemo() {
+    const hasData = controleDtProducts.length || controleDtDts.length;
+    if (hasData) {
+      showConfirmModal('Adicionar alguns dados de exemplo no Controle de DTs?', () => cdtSeedDemo());
+    } else {
+      await cdtSeedDemo();
+    }
+  }
+
+  async function cdtSeedDemo() {
+    const p1 = { name: 'Heineken 350ml', targetPallets: 260, local: 'Fábrica', priority: 'Alta', createdAt: cdtNow(), updatedAt: cdtNow() };
+    const p2 = { name: 'Amstel 269ml', targetPallets: 180, local: 'Heilo', priority: 'Normal', createdAt: cdtNow(), updatedAt: cdtNow() };
+    try {
+      if (controleDtUsingFirestore && db) {
+        const r1 = await addDoc(collection(db, cdtCollectionPath('controle_dt_produtos')), p1);
+        const r2 = await addDoc(collection(db, cdtCollectionPath('controle_dt_produtos')), p2);
+        await addDoc(collection(db, cdtCollectionPath('controle_dt_dts')), { code: `DT-${String(Math.floor(100000 + Math.random()*899999))}`, productId: r1.id, productNameSnapshot: p1.name, pallets: 26, local: 'Fábrica', prioritySnapshot: 'Alta', status: 'Pendente', createdAt: cdtNow(), updatedAt: cdtNow() });
+        await addDoc(collection(db, cdtCollectionPath('controle_dt_dts')), { code: `DT-${String(Math.floor(100000 + Math.random()*899999))}`, productId: r2.id, productNameSnapshot: p2.name, pallets: 26, local: 'Heilo', prioritySnapshot: 'Normal', status: 'Pendente', createdAt: cdtNow(), updatedAt: cdtNow() });
+      } else {
+        const id1 = cdtId();
+        const id2 = cdtId();
+        const dt1 = cdtId();
+        const dt2 = cdtId();
+        controleDtProducts.unshift({ ...p1, id: id1, _id: id1 }, { ...p2, id: id2, _id: id2 });
+        controleDtDts.unshift(
+          { id: dt1, _id: dt1, code: `DT-${String(Math.floor(100000 + Math.random()*899999))}`, productId: id1, productNameSnapshot: p1.name, pallets: 26, local: 'Fábrica', prioritySnapshot: 'Alta', status: 'Pendente', createdAt: cdtNow(), updatedAt: cdtNow() },
+          { id: dt2, _id: dt2, code: `DT-${String(Math.floor(100000 + Math.random()*899999))}`, productId: id2, productNameSnapshot: p2.name, pallets: 26, local: 'Heilo', prioritySnapshot: 'Normal', status: 'Pendente', createdAt: cdtNow(), updatedAt: cdtNow() }
+        );
+        cdtPersistLocal();
+      }
+      await cdtAddMovement('Exemplo', 'Dados de exemplo criados para visualizar a sugestão automática.');
+      showToast('Exemplo criado.', 'success');
+      renderControleDt();
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao criar exemplo.', 'error');
+    }
+  }
+
+  function attachControleDtSnapshots() {
+    if (controleDtSnapshotsAttached) return;
+    controleDtSnapshotsAttached = true;
+    cdtLoadLocal();
+    renderControleDt();
+
+    if (!db) return;
+
+    const attach = (name, setter) => {
+      try {
+        onSnapshot(collection(db, cdtCollectionPath(name)), (snap) => {
+          controleDtUsingFirestore = true;
+          setter(snap.docs.map(d => ({ ...d.data(), id: d.id, _id: d.id })));
+          renderControleDt();
+        }, (err) => {
+          console.warn(`Controle DT: Firestore indisponível para ${name}. Usando localStorage.`, err);
+          controleDtUsingFirestore = false;
+          cdtLoadLocal();
+          renderControleDt();
+        });
+      } catch (err) {
+        console.warn(`Controle DT: erro ao anexar ${name}.`, err);
+      }
+    };
+
+    attach('controle_dt_produtos', (rows) => { controleDtProducts = rows; });
+    attach('controle_dt_dts', (rows) => { controleDtDts = rows; });
+    attach('controle_dt_movimentos', (rows) => { controleDtMovements = rows; });
+  }
+
   // ============================================================
   // ✅ BALDEIOS RITMO (controle por placa / intervalos)
   // ✅ Normalização "RITMO" (aceita: RITMO, ritmo, RITIMO, RITM0, r1tm0, etc.)
@@ -10287,6 +11630,44 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
       }
     });
 
+    // ✅ Controle DTs integrado
+    document.getElementById('cdt-add-product-btn')?.addEventListener('click', cdtAddProduct);
+    document.getElementById('cdt-add-dt-btn')?.addEventListener('click', cdtAddDt);
+    document.getElementById('cdt-refresh-btn')?.addEventListener('click', renderControleDt);
+    document.getElementById('cdt-demo-btn')?.addEventListener('click', cdtDemo);
+    document.getElementById('cdt-clear-history-btn')?.addEventListener('click', cdtConfirmClearHistory);
+    document.getElementById('cdt-clear-dts-btn')?.addEventListener('click', cdtConfirmClearDts);
+    document.getElementById('cdt-clear-products-btn')?.addEventListener('click', cdtConfirmClearProducts);
+    document.getElementById('cdt-cancel-product-edit-btn')?.addEventListener('click', cdtResetProductForm);
+    document.getElementById('cdt-manual-reserve-btn')?.addEventListener('click', cdtConfirmManualReserve);
+    document.getElementById('cdt-manual-clear-btn')?.addEventListener('click', cdtResetManualReserveForm);
+    document.getElementById('cdt-manual-local-filter')?.addEventListener('change', cdtRenderManualReserveSelect);
+    document.getElementById('cdt-manual-dt-select')?.addEventListener('change', cdtUpdateManualReservePreview);
+    document.getElementById('cdt-vazia-local-filter')?.addEventListener('change', renderControleDt);
+    document.getElementById('cdt-status-filter')?.addEventListener('change', renderControleDt);
+    document.getElementById('cdt-dt-product')?.addEventListener('change', () => {
+      const id = document.getElementById('cdt-dt-product')?.value || '';
+      const local = cdtProductLocal(id);
+      if (local && document.getElementById('cdt-dt-local')) document.getElementById('cdt-dt-local').value = local;
+    });
+    document.getElementById('controle-dt-content')?.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('button[data-cdt-action]');
+      if (!btn) return;
+      const action = btn.dataset.cdtAction || '';
+      if (action === 'reserve') {
+        cdtConfirmReserve(btn.dataset.dtId || '', btn.dataset.plate || '', btn.dataset.opId || '', btn.dataset.opSrc || '');
+      }
+      if (action === 'status') {
+        cdtConfirmStatus(btn.dataset.dtId || '', btn.dataset.status || 'Pendente');
+      }
+      if (action === 'edit-product') {
+        cdtStartEditProduct(btn.dataset.productId || '');
+      }
+      if (action === 'delete-product') {
+        cdtConfirmDeleteProduct(btn.dataset.productId || '');
+      }
+    });
+
     // ✅ Baldeios (filtros)
     const bd = document.getElementById('baldeios-date');
     if (bd) bd.valueAsDate = new Date();
@@ -10397,11 +11778,12 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
       document.getElementById('tab-performance'),
       document.getElementById('tab-baldeios'),
       document.getElementById('tab-ritmo'),
+      document.getElementById('tab-controle-dt'),
       document.getElementById('tab-motoristas'),
       document.getElementById('tab-dashboard')
     ];
 
-    allTabs.forEach(tab => tab.addEventListener('click', () => {
+    allTabs.filter(Boolean).forEach(tab => tab.addEventListener('click', () => {
   allTabs.forEach(t => {
     t.classList.remove('active-tab');
     t.classList.add('inactive-tab');
@@ -10416,7 +11798,8 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
       const showMotoristas = activeTab === 'motoristas';
       const showBaldeios = activeTab === 'baldeios';
       const showRitmo = activeTab === 'ritmo';
-      const showMainTable = !showPerformance && !showDashboard && !showMotoristas && !showBaldeios && !showRitmo;
+      const showControleDt = activeTab === 'controle-dt';
+      const showMainTable = !showPerformance && !showDashboard && !showMotoristas && !showBaldeios && !showRitmo && !showControleDt;
 
       document.getElementById('kpi-section').style.display = showMainTable ? 'grid' : 'none';
       document.getElementById('table-main-content').style.display = showMainTable ? 'block' : 'none';
@@ -10425,6 +11808,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
       document.getElementById('motoristas-content').style.display = showMotoristas ? 'block' : 'none';
       document.getElementById('baldeios-content').style.display = showBaldeios ? 'block' : 'none';
       document.getElementById('ritmo-placa-content').style.display = showRitmo ? 'block' : 'none';
+      document.getElementById('controle-dt-content').style.display = showControleDt ? 'block' : 'none';
 
       const showHistorico = activeTab === 'historico';
       const showOcorrencias = activeTab === 'ocorrencias';
@@ -10442,6 +11826,10 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
 
       debouncedRender();
     }));
+
+    // Controle DT local já fica visível mesmo antes do Firestore responder
+    cdtLoadLocal();
+    renderControleDt();
 
     // auth
     (async () => {
@@ -10512,6 +11900,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
 
       attachDriverSnapshot('drivers');
       attachDriverSnapshot('motoristas');
+      attachControleDtSnapshots();
 
       onSnapshot(collection(db, `artifacts/${appId}/public/data/patio`), snap => {
         const newPatioData = snap.docs.map(d => ({ ...d.data(), id: d.id }));
@@ -10602,6 +11991,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
       if (activeTab === 'dashboard') { renderManagerDashboard(); renderRitmoDashboard(); }
       if (activeTab === 'baldeios') renderBaldeiosRitmo();
       if (activeTab === 'ritmo') renderRitmoPlacaControl(false);
+      if (activeTab === 'controle-dt') renderControleDt();
     }, 60000);
 
     // estado inicial
