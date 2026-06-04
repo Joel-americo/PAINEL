@@ -4541,6 +4541,248 @@ button[data-action="cancel"]:hover {
   -webkit-text-fill-color: #ffffff !important;
 }
 
+
+
+/* ===== HEILOG: filtros com múltipla seleção ===== */
+.hl-native-multi-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+.hl-ms-wrapper {
+  position: relative;
+  min-width: 210px;
+  max-width: 100%;
+  z-index: 40;
+}
+.hl-ms-button {
+  width: 100%;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0.62rem 0.85rem;
+  border-radius: 14px;
+  border: 1px solid rgba(16, 32, 24, 0.16);
+  background: #ffffff;
+  color: #102018;
+  font-weight: 800;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.85) inset, 0 4px 12px rgba(15,23,42,0.05);
+  text-align: left;
+}
+.hl-ms-button:hover { transform: translateY(-1px); }
+.hl-ms-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hl-ms-chevron {
+  flex: 0 0 auto;
+  opacity: 0.72;
+}
+.hl-ms-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 100%;
+  width: max-content;
+  max-width: min(360px, 88vw);
+  background: #ffffff;
+  color: #102018;
+  border: 1px solid rgba(16, 32, 24, 0.12);
+  border-radius: 18px;
+  box-shadow: 0 22px 54px rgba(15, 23, 42, 0.18);
+  padding: 10px;
+  z-index: 80;
+}
+.hl-ms-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 0 8px 0;
+  border-bottom: 1px solid rgba(16, 32, 24, 0.08);
+  margin-bottom: 8px;
+}
+.hl-ms-action {
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: #eef7f1;
+  color: #06351f !important;
+  -webkit-text-fill-color: #06351f !important;
+  font-size: 0.78rem !important;
+  font-weight: 900;
+  box-shadow: none !important;
+}
+.hl-ms-options {
+  max-height: 260px;
+  overflow: auto;
+  display: grid;
+  gap: 6px;
+}
+.hl-ms-option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 9px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 750;
+}
+.hl-ms-option:hover { background: #eef7f1; }
+.hl-ms-option input {
+  width: 17px;
+  height: 17px;
+  accent-color: #007a3d;
+  flex: 0 0 auto;
+}
+.hl-ms-option span {
+  color: #102018 !important;
+  line-height: 1.15;
+}
+.hl-ms-wrapper.hl-ms-open { z-index: 90; }
+.hl-ms-wrapper.hl-ms-open .hl-ms-button {
+  border-color: rgba(0, 122, 61, 0.48);
+  box-shadow: 0 0 0 4px rgba(0, 122, 61, 0.10), 0 12px 24px rgba(15,23,42,0.08);
+}
+@media (max-width: 768px) {
+  .hl-ms-wrapper { width: 100%; min-width: 100%; }
+  .hl-ms-panel { width: 100%; max-width: 100%; }
+}
+
+
+/* =========================================================
+   HEILOG — PATCH v9 | Cores dos botões e filtros (aplicação real no painel)
+   ========================================================= */
+:root {
+  --btn-hl-dark: #06351f;
+  --btn-hl-green: #007a3d;
+  --btn-hl-green-2: #00a94f;
+  --btn-hl-red-2: #e30613;
+  --btn-hl-gray: #64748b;
+}
+
+.hl-ms-button,
+#main-content .hl-ms-button {
+  background: linear-gradient(135deg, var(--btn-hl-dark), var(--btn-hl-green)) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(0, 169, 79, 0.34) !important;
+  box-shadow: 0 12px 24px rgba(0, 69, 34, 0.16) !important;
+}
+
+.hl-ms-button .hl-ms-label,
+.hl-ms-button .hl-ms-chevron,
+#main-content .hl-ms-button .hl-ms-label,
+#main-content .hl-ms-button .hl-ms-chevron {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.hl-ms-button:hover,
+#main-content .hl-ms-button:hover {
+  background: linear-gradient(135deg, #052817, var(--btn-hl-green-2)) !important;
+  border-color: rgba(0, 169, 79, 0.55) !important;
+  box-shadow: 0 14px 28px rgba(0, 69, 34, 0.22) !important;
+}
+
+.hl-ms-wrapper.hl-ms-open .hl-ms-button,
+#main-content .hl-ms-wrapper.hl-ms-open .hl-ms-button {
+  background: linear-gradient(135deg, #041f12, #009b4d) !important;
+  border-color: rgba(200, 169, 107, 0.72) !important;
+  box-shadow: 0 0 0 4px rgba(0, 122, 61, 0.12), 0 16px 34px rgba(0, 69, 34, 0.22) !important;
+}
+
+.hl-ms-action,
+#main-content .hl-ms-action {
+  background: linear-gradient(135deg, #e7f6ed, #d7f0e0) !important;
+  color: #06351f !important;
+  -webkit-text-fill-color: #06351f !important;
+  border: 1px solid rgba(0, 122, 61, 0.18) !important;
+}
+
+.hl-ms-action:hover,
+#main-content .hl-ms-action:hover {
+  background: linear-gradient(135deg, var(--btn-hl-dark), var(--btn-hl-green)) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* garante os selects nativos realmente escondidos quando viram multiseleção */
+select.hl-native-multi-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+#main-content button.bg-green-600,
+#main-content button.bg-green-700,
+#main-content button.bg-blue-600,
+#main-content a.bg-green-600,
+#main-content a.bg-blue-600,
+#export-csv-btn,
+#baldeios-export-csv-btn,
+#mass-finish-btn,
+#performance-content button.bg-green-600,
+#performance-content button.bg-blue-600,
+#ritmo-placa-refresh-btn {
+  background: linear-gradient(135deg, var(--btn-hl-dark), var(--btn-hl-green)) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(0, 169, 79, 0.30) !important;
+  box-shadow: 0 12px 24px rgba(0, 69, 34, 0.16) !important;
+}
+
+#main-content button.bg-green-600:hover,
+#main-content button.bg-green-700:hover,
+#main-content button.bg-blue-600:hover,
+#main-content a.bg-green-600:hover,
+#main-content a.bg-blue-600:hover,
+#export-csv-btn:hover,
+#baldeios-export-csv-btn:hover,
+#mass-finish-btn:hover,
+#performance-content button.bg-green-600:hover,
+#performance-content button.bg-blue-600:hover,
+#ritmo-placa-refresh-btn:hover {
+  background: linear-gradient(135deg, #052817, var(--btn-hl-green-2)) !important;
+  box-shadow: 0 14px 30px rgba(0, 69, 34, 0.22) !important;
+}
+
+#main-content button.bg-red-600,
+#main-content button.bg-red-700,
+#clear-history-btn,
+#clear-occurrences-btn,
+#clear-date-filter-btn,
+#performance-content button.bg-red-600,
+#performance-content button.bg-red-700 {
+  background: linear-gradient(135deg, #9f1020, var(--btn-hl-red-2)) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(227, 6, 19, 0.30) !important;
+  box-shadow: 0 12px 24px rgba(193, 18, 31, 0.18) !important;
+}
+
+#main-content button.bg-gray-500,
+#main-content button.bg-gray-600,
+#main-content button.bg-gray-700,
+#main-content button.bg-emerald-800,
+#main-content .cdt-btn,
+#performance-content button.bg-gray-600,
+#performance-content button.bg-gray-700 {
+  background: linear-gradient(135deg, #475569, var(--btn-hl-gray)) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(100, 116, 139, 0.26) !important;
+  box-shadow: 0 10px 20px rgba(71, 85, 105, 0.14) !important;
+}
+
 </style>
 </head>
 
@@ -6235,6 +6477,81 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     return uploads;
   };
 
+
+  const isOccurrenceCancelStatus = (status = '') => {
+    const text = String(status || '').toLowerCase();
+    return text.includes('cancelado') || text.includes('cancelada');
+  };
+
+  const getStorageDeleteClientsForImage = (img = {}) => {
+    const clients = [];
+    const addClient = (item) => {
+      const client = item?.client || item;
+      if (!client) return;
+      const bucket = item?.bucket || '';
+      const key = `${bucket}|${img.path || ''}`;
+      if (clients.some(c => c.key === key || c.client === client)) return;
+      clients.push({ client, bucket, key });
+    };
+
+    if (img.bucket && Array.isArray(storageCandidates) && storageCandidates.length) {
+      storageCandidates
+        .filter(candidate => String(candidate?.bucket || '').toLowerCase() === String(img.bucket || '').toLowerCase())
+        .forEach(addClient);
+    }
+
+    if (Array.isArray(storageCandidates) && storageCandidates.length) storageCandidates.forEach(addClient);
+    if (storage) addClient({ bucket: firebaseConfig?.storageBucket || '', client: storage });
+    return clients;
+  };
+
+  const deleteOccurrenceStoredImages = async (images = []) => {
+    const items = (Array.isArray(images) ? images : []).filter(Boolean);
+    if (!items.length) return { removedFromFirestore: 0, deletedFromStorage: 0, failedStorageDeletes: 0, fallbackOnly: 0 };
+
+    let deletedFromStorage = 0;
+    let failedStorageDeletes = 0;
+    let fallbackOnly = 0;
+
+    for (const img of items) {
+      const path = String(img.path || '').trim();
+
+      // Imagem compactada salva no próprio Firestore: não existe arquivo no Storage.
+      // Ao limpar o campo imagens do documento, ela já deixa de existir no painel/exportação.
+      if (!path || img.fallbackFirestore || String(img.url || '').startsWith('data:image')) {
+        fallbackOnly += 1;
+        continue;
+      }
+
+      let deleted = false;
+      let lastError = null;
+      const clients = getStorageDeleteClientsForImage(img);
+
+      for (const candidate of clients) {
+        try {
+          await withTimeout(deleteObject(storageRef(candidate.client, path)), 8000, 'Exclusão da imagem');
+          deleted = true;
+          deletedFromStorage += 1;
+          break;
+        } catch (err) {
+          lastError = err;
+        }
+      }
+
+      if (!deleted) {
+        failedStorageDeletes += 1;
+        console.warn('Não foi possível excluir a imagem do Storage. O link será removido da ocorrência.', { path, img, lastError });
+      }
+    }
+
+    return {
+      removedFromFirestore: items.length,
+      deletedFromStorage,
+      failedStorageDeletes,
+      fallbackOnly
+    };
+  };
+
   const renderOccurrenceEvidence = (op) => {
     const images = getOccurrenceImages(op);
     if (!images.length) return `<span class="occ-no-evidence">Sem imagem</span>`;
@@ -6524,7 +6841,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     // popula o filtro de transportadora da aba Motoristas
     const sel = document.getElementById('drivers-transportadora-filter');
     if (sel) {
-      const cur = sel.value || 'todas';
+      const cur = getMultiSelectValues(sel);
       while (sel.options.length > 1) sel.remove(1);
 
       const ts = [...new Set(driversMerged.map(d => d.transportadora).filter(Boolean))].sort();
@@ -6535,7 +6852,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         sel.appendChild(opt);
       });
 
-      sel.value = ts.includes(cur) ? cur : 'todas';
+      setMultiSelectValues(sel, cur);
     }
   };
 
@@ -6660,11 +6977,11 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const searchTerm = norm(document.getElementById('search-input').value);
     const searchCompact = compact(searchTerm);
 
-    const statusFilter = document.getElementById('filter-status').value;
-    const transportadoraFilter = document.getElementById('filter-transportadora').value;
+    const statusFilterValues = getMultiSelectValues('filter-status');
+    const transportadoraFilterValues = getMultiSelectValues('filter-transportadora');
     const dateFilterValue = document.getElementById('filter-date').value;
-    const shiftFilterValue = document.getElementById('filter-shift').value;
-    const tempoFilterValue = document.getElementById('filter-tempo-patio').value;
+    const shiftFilterValues = getMultiSelectValues('filter-shift');
+    const tempoFilterValues = getMultiSelectValues('filter-tempo-patio');
 
     let dataSet = [];
 
@@ -6685,15 +7002,18 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         });
       }
 
-      if (shiftFilterValue !== 'todos' && dateFilterValue) {
-        const shift = parseInt(shiftFilterValue, 10);
+      if (!areAllFilterValues(shiftFilterValues) && dateFilterValue) {
+        const selectedShifts = shiftFilterValues.map(v => parseInt(v, 10)).filter(v => Number.isFinite(v));
         const shiftTimes = { 1:{start:6,end:14}, 2:{start:14,end:22}, 3:{start:22,end:6} };
-        const { start, end } = shiftTimes[shift];
 
         filteredHistorico = filteredHistorico.filter(op => {
           if (!op.finishedTime) return false;
           const opHour = new Date(op.finishedTime).getHours();
-          return start < end ? (opHour >= start && opHour < end) : (opHour >= start || opHour < end);
+          return selectedShifts.some(shift => {
+            const { start, end } = shiftTimes[shift] || {};
+            if (start === undefined) return false;
+            return start < end ? (opHour >= start && opHour < end) : (opHour >= start || opHour < end);
+          });
         });
       }
 
@@ -6717,25 +7037,24 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           getOccurrenceTruckPlate(op),
           getOccurrenceTrailerPlate(op)
         ].filter(Boolean).some(v => norm(v).includes(searchTerm) || compact(v).includes(searchCompact));
-        const byStatus = statusFilter === 'todos' || String(op.statusOcorrencia || '').toLowerCase().includes(statusFilter.toLowerCase());
-        const byTransp = transportadoraFilter === 'todas' || relatedOp.transportadora === transportadoraFilter;
+        const byStatus = filterValuesMatchText(statusFilterValues, op.statusOcorrencia || '');
+        const byTransp = filterValuesMatchExact(transportadoraFilterValues, relatedOp.transportadora || '');
         return byText && byStatus && byTransp;
       }
 
       const textMatch = matchesSearchOp(op, searchTerm, searchCompact);
 
-      const transportadoraMatch =
-        transportadoraFilter === 'todas' || op.transportadora === transportadoraFilter;
+      const transportadoraMatch = filterValuesMatchExact(transportadoraFilterValues, op.transportadora || '');
 
-      let statusMatch = statusFilter === 'todos';
-      if (!statusMatch) {
+      let statusMatch = true;
+      if (!areAllFilterValues(statusFilterValues)) {
         const { statusText } = getPriorityStatusLogic(op);
-        statusMatch = statusText.toLowerCase().includes(statusFilter.toLowerCase());
+        statusMatch = filterValuesMatchText(statusFilterValues, statusText);
       }
 
       let tempoMatch = true;
-      if (activeTab === 'patio' && tempoFilterValue !== 'todos') {
-        tempoMatch = getTempoBucket(op.registrationTime) === tempoFilterValue;
+      if (activeTab === 'patio' && !areAllFilterValues(tempoFilterValues)) {
+        tempoMatch = tempoFilterValues.includes(getTempoBucket(op.registrationTime));
       }
 
       return textMatch && statusMatch && transportadoraMatch && tempoMatch;
@@ -7153,8 +7472,242 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   // ==============================
   // FILTROS
   // ==============================
+
+  // ===== HEILOG: filtros com seleção múltipla =====
+  const HL_MULTI_FILTER_IDS = [
+    'filter-status',
+    'filter-transportadora',
+    'filter-shift',
+    'filter-tempo-patio',
+    'drivers-transportadora-filter',
+    'baldeios-origin-filter',
+    'dashboard-transportadora-filter',
+    'cdt-vazia-local-filter',
+    'cdt-manual-local-filter',
+    'cdt-status-filter'
+  ];
+  const HL_MULTI_ALL_VALUES = new Set(['todos', 'todas', 'auto']);
+  const isHlAllValue = (value) => HL_MULTI_ALL_VALUES.has(String(value || '').toLowerCase());
+
+  const getMultiSelectValues = (idOrSelect) => {
+    const select = typeof idOrSelect === 'string' ? document.getElementById(idOrSelect) : idOrSelect;
+    if (!select) return [];
+    const selected = Array.from(select.selectedOptions || [])
+      .map(opt => String(opt.value || ''))
+      .filter(value => value !== '');
+    if (selected.length) return selected;
+    const value = String(select.value || '');
+    return value ? [value] : [];
+  };
+
+  const areAllFilterValues = (values) => {
+    const arr = Array.isArray(values) ? values : [values].filter(Boolean);
+    return !arr.length || arr.some(isHlAllValue);
+  };
+
+  const filterValuesMatchExact = (values, candidate) => {
+    if (areAllFilterValues(values)) return true;
+    const normalizedCandidate = String(candidate || '').trim();
+    return (Array.isArray(values) ? values : [values]).some(v => String(v || '').trim() === normalizedCandidate);
+  };
+
+  const filterValuesMatchText = (values, text) => {
+    if (areAllFilterValues(values)) return true;
+    const hay = String(text || '').toLowerCase();
+    return (Array.isArray(values) ? values : [values]).some(v => hay.includes(String(v || '').toLowerCase()));
+  };
+
+  const setMultiSelectValues = (idOrSelect, values) => {
+    const select = typeof idOrSelect === 'string' ? document.getElementById(idOrSelect) : idOrSelect;
+    if (!select) return;
+    const wanted = new Set((Array.isArray(values) ? values : [values]).map(v => String(v || '')).filter(Boolean));
+    const options = Array.from(select.options || []);
+    let selectedCount = 0;
+    options.forEach(opt => {
+      opt.selected = wanted.has(String(opt.value || ''));
+      if (opt.selected) selectedCount += 1;
+    });
+    if (!selectedCount) {
+      const allOpt = options.find(opt => isHlAllValue(opt.value)) || options[0];
+      if (allOpt) allOpt.selected = true;
+    }
+    refreshMultiSelectWidget(select);
+  };
+
+  const setMultiFilterVisible = (id, visible, display = 'block') => {
+    const select = document.getElementById(id);
+    const wrapper = document.querySelector(`[data-hl-ms-for="${id}"]`);
+    if (wrapper) wrapper.style.display = visible ? display : 'none';
+    if (select) select.style.display = 'none';
+  };
+
+  function ensureMultiDefault(select) {
+    if (!select) return;
+    const selected = Array.from(select.selectedOptions || []);
+    if (selected.length) return;
+    const allOpt = Array.from(select.options || []).find(opt => isHlAllValue(opt.value)) || select.options?.[0];
+    if (allOpt) allOpt.selected = true;
+  }
+
+  function syncNativeSelectFromCheckboxes(select, clickedValue = null, checked = false) {
+    const wrapper = document.querySelector(`[data-hl-ms-for="${select.id}"]`);
+    if (!wrapper) return;
+    const checkboxes = Array.from(wrapper.querySelectorAll('input[type="checkbox"][data-hl-ms-value]'));
+    const options = Array.from(select.options || []);
+
+    if (clickedValue !== null && isHlAllValue(clickedValue) && checked) {
+      options.forEach(opt => { opt.selected = String(opt.value || '') === String(clickedValue || ''); });
+    } else {
+      const checkedValues = new Set(
+        checkboxes
+          .filter(input => input.checked && !isHlAllValue(input.dataset.hlMsValue))
+          .map(input => String(input.dataset.hlMsValue || ''))
+      );
+      options.forEach(opt => {
+        const value = String(opt.value || '');
+        opt.selected = !isHlAllValue(value) && checkedValues.has(value);
+      });
+      if (!Array.from(select.selectedOptions || []).length) {
+        const allOpt = options.find(opt => isHlAllValue(opt.value)) || options[0];
+        if (allOpt) allOpt.selected = true;
+      }
+    }
+
+    refreshMultiSelectWidget(select);
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  function refreshMultiSelectWidget(idOrSelect) {
+    const select = typeof idOrSelect === 'string' ? document.getElementById(idOrSelect) : idOrSelect;
+    if (!select || !select.id) return;
+    const wrapper = document.querySelector(`[data-hl-ms-for="${select.id}"]`);
+    if (!wrapper) return;
+    ensureMultiDefault(select);
+
+    const label = wrapper.querySelector('.hl-ms-label');
+    const optionsBox = wrapper.querySelector('.hl-ms-options');
+    if (!label || !optionsBox) return;
+
+    const selectedValues = getMultiSelectValues(select);
+    const selectedOptions = Array.from(select.options || []).filter(opt => selectedValues.includes(String(opt.value || '')));
+    const nonAllSelected = selectedOptions.filter(opt => !isHlAllValue(opt.value));
+    if (areAllFilterValues(selectedValues)) {
+      const allOpt = selectedOptions.find(opt => isHlAllValue(opt.value)) || Array.from(select.options || []).find(opt => isHlAllValue(opt.value)) || select.options?.[0];
+      label.textContent = allOpt?.textContent || 'Todos';
+    } else if (nonAllSelected.length === 1) {
+      label.textContent = nonAllSelected[0].textContent || '1 selecionado';
+    } else {
+      label.textContent = `${nonAllSelected.length} selecionados`;
+    }
+
+    optionsBox.innerHTML = '';
+    Array.from(select.options || []).forEach(opt => {
+      const row = document.createElement('label');
+      row.className = 'hl-ms-option';
+
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.dataset.hlMsValue = String(opt.value || '');
+      input.checked = selectedValues.includes(String(opt.value || ''));
+      input.addEventListener('change', () => syncNativeSelectFromCheckboxes(select, String(opt.value || ''), input.checked));
+
+      const span = document.createElement('span');
+      span.textContent = opt.textContent || opt.value || '—';
+
+      row.appendChild(input);
+      row.appendChild(span);
+      optionsBox.appendChild(row);
+    });
+  }
+
+  function initMultiFilterSelect(id) {
+    const select = document.getElementById(id);
+    if (!select || select.dataset.hlMultiReady === '1') {
+      if (select) refreshMultiSelectWidget(select);
+      return;
+    }
+
+    select.dataset.hlMultiReady = '1';
+    select.multiple = true;
+    select.setAttribute('aria-hidden', 'true');
+    select.tabIndex = -1;
+    select.classList.add('hl-native-multi-hidden');
+    ensureMultiDefault(select);
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'hl-ms-wrapper';
+    wrapper.dataset.hlMsFor = id;
+    wrapper.innerHTML = `
+      <button type="button" class="hl-ms-button" aria-haspopup="listbox" aria-expanded="false">
+        <span class="hl-ms-label">Todos</span>
+        <span class="hl-ms-chevron">▾</span>
+      </button>
+      <div class="hl-ms-panel hidden">
+        <div class="hl-ms-actions">
+          <button type="button" class="hl-ms-action" data-hl-ms-action="all">Todos</button>
+          <button type="button" class="hl-ms-action" data-hl-ms-action="mark-all">Marcar opções</button>
+        </div>
+        <div class="hl-ms-options"></div>
+      </div>`;
+    select.insertAdjacentElement('afterend', wrapper);
+
+    const button = wrapper.querySelector('.hl-ms-button');
+    const panel = wrapper.querySelector('.hl-ms-panel');
+    button.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      document.querySelectorAll('.hl-ms-wrapper.hl-ms-open').forEach(other => {
+        if (other !== wrapper) {
+          other.classList.remove('hl-ms-open');
+          other.querySelector('.hl-ms-panel')?.classList.add('hidden');
+          other.querySelector('.hl-ms-button')?.setAttribute('aria-expanded', 'false');
+        }
+      });
+      const open = panel.classList.toggle('hidden') === false;
+      wrapper.classList.toggle('hl-ms-open', open);
+      button.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    wrapper.querySelector('[data-hl-ms-action="all"]')?.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const allOpt = Array.from(select.options || []).find(opt => isHlAllValue(opt.value)) || select.options?.[0];
+      if (allOpt) setMultiSelectValues(select, [allOpt.value]);
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    wrapper.querySelector('[data-hl-ms-action="mark-all"]')?.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const nonAllValues = Array.from(select.options || []).filter(opt => !isHlAllValue(opt.value)).map(opt => opt.value);
+      setMultiSelectValues(select, nonAllValues.length ? nonAllValues : [select.options?.[0]?.value || '']);
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    select.addEventListener('change', () => refreshMultiSelectWidget(select));
+
+    const observer = new MutationObserver(() => {
+      ensureMultiDefault(select);
+      refreshMultiSelectWidget(select);
+    });
+    observer.observe(select, { childList: true });
+
+    refreshMultiSelectWidget(select);
+  }
+
+  function initAllMultiFilters() {
+    HL_MULTI_FILTER_IDS.forEach(initMultiFilterSelect);
+  }
+
+  document.addEventListener('click', (ev) => {
+    if (ev.target.closest('.hl-ms-wrapper')) return;
+    document.querySelectorAll('.hl-ms-wrapper.hl-ms-open').forEach(wrapper => {
+      wrapper.classList.remove('hl-ms-open');
+      wrapper.querySelector('.hl-ms-panel')?.classList.add('hidden');
+      wrapper.querySelector('.hl-ms-button')?.setAttribute('aria-expanded', 'false');
+    });
+  });
+
   const updateStatusFilterOptions = (tab) => {
     const filterStatusSelect = document.getElementById('filter-status');
+    const previousValues = getMultiSelectValues(filterStatusSelect);
 
     if (tab === 'historico') {
       filterStatusSelect.innerHTML = `
@@ -7180,17 +7733,19 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         <option value="Normal">Normal</option>
       `;
     }
+    setMultiSelectValues(filterStatusSelect, previousValues);
   };
 
   const updateTransportadoraFilter = () => {
     const select = document.getElementById('filter-transportadora');
     const dashboardSelect = document.getElementById('dashboard-transportadora-filter');
+    if (!select || !dashboardSelect) return;
 
     const allOps = [...patioData, ...historicoData];
     const transportadoras = [...new Set(allOps.map(op => op.transportadora).filter(Boolean))];
 
-    const cur = select.value;
-    const curDash = dashboardSelect.value;
+    const cur = getMultiSelectValues(select);
+    const curDash = getMultiSelectValues(dashboardSelect);
 
     [select, dashboardSelect].forEach(s => { while (s.options.length > 1) s.remove(1); });
 
@@ -7202,8 +7757,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       dashboardSelect.appendChild(option);
     });
 
-    select.value = cur;
-    dashboardSelect.value = curDash;
+    setMultiSelectValues(select, cur);
+    setMultiSelectValues(dashboardSelect, curDash);
   };
 
   // ==============================
@@ -7532,8 +8087,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       batch.delete(docu.ref);
     });
 
-    if (storage && storagePaths.length) {
-      await Promise.allSettled(storagePaths.map(path => deleteObject(storageRef(storage, path))));
+    if (storagePaths.length) {
+      await deleteOccurrenceStoredImages(storagePaths.map(path => ({ path })));
     }
 
     await batch.commit();
@@ -7611,6 +8166,172 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   .evidence-export-card a { display: inline-flex; justify-content: center; border-radius: 999px; padding: 7px 9px; background: #07351f; color: #fff; text-decoration: none; font-weight: 800; font-size: 12px; }
   .evidence-export-card small { color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; }
   @media print { body { background: #fff; margin: 10mm; } .evidence-export-card a { color: #07351f; background: #eef7f1; border: 1px solid #dbe6df; } }
+
+
+/* =========================================================
+   HEILOG — PATCH v8 | Cores dos botões e filtros
+   Ajuste visual: botões mais visíveis, sem alterar lógica.
+   ========================================================= */
+:root {
+  --btn-hl-dark: #06351f;
+  --btn-hl-green: #007a3d;
+  --btn-hl-green-2: #00a94f;
+  --btn-hl-red: #c1121f;
+  --btn-hl-red-2: #e30613;
+  --btn-hl-gray: #64748b;
+}
+
+/* Botões dos filtros multiseleção */
+.hl-ms-button,
+#main-content .hl-ms-button {
+  background: linear-gradient(135deg, var(--btn-hl-dark), var(--btn-hl-green)) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(0, 169, 79, 0.34) !important;
+  box-shadow: 0 12px 24px rgba(0, 69, 34, 0.16) !important;
+}
+
+.hl-ms-button .hl-ms-label,
+.hl-ms-button .hl-ms-chevron,
+#main-content .hl-ms-button .hl-ms-label,
+#main-content .hl-ms-button .hl-ms-chevron {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.hl-ms-button:hover,
+#main-content .hl-ms-button:hover {
+  background: linear-gradient(135deg, #052817, var(--btn-hl-green-2)) !important;
+  border-color: rgba(0, 169, 79, 0.55) !important;
+  box-shadow: 0 14px 28px rgba(0, 69, 34, 0.22) !important;
+}
+
+.hl-ms-wrapper.hl-ms-open .hl-ms-button,
+#main-content .hl-ms-wrapper.hl-ms-open .hl-ms-button {
+  background: linear-gradient(135deg, #041f12, #009b4d) !important;
+  border-color: rgba(200, 169, 107, 0.72) !important;
+  box-shadow: 0 0 0 4px rgba(0, 122, 61, 0.12), 0 16px 34px rgba(0, 69, 34, 0.22) !important;
+}
+
+/* Botões pequenos dentro do dropdown */
+.hl-ms-action,
+#main-content .hl-ms-action {
+  background: linear-gradient(135deg, #e7f6ed, #d7f0e0) !important;
+  color: #06351f !important;
+  -webkit-text-fill-color: #06351f !important;
+  border: 1px solid rgba(0, 122, 61, 0.18) !important;
+}
+
+.hl-ms-action:hover,
+#main-content .hl-ms-action:hover {
+  background: linear-gradient(135deg, var(--btn-hl-dark), var(--btn-hl-green)) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Botões principais verdes */
+#main-content button.bg-green-600,
+#main-content button.bg-green-700,
+#main-content button.bg-blue-600,
+#main-content a.bg-green-600,
+#main-content a.bg-blue-600,
+#export-csv-btn,
+#baldeios-export-csv-btn,
+#mass-finish-btn,
+#performance-content button.bg-green-600,
+#performance-content button.bg-blue-600 {
+  background: linear-gradient(135deg, var(--btn-hl-dark), var(--btn-hl-green)) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(0, 169, 79, 0.30) !important;
+  box-shadow: 0 12px 24px rgba(0, 69, 34, 0.16) !important;
+}
+
+#main-content button.bg-green-600:hover,
+#main-content button.bg-green-700:hover,
+#main-content button.bg-blue-600:hover,
+#main-content a.bg-green-600:hover,
+#main-content a.bg-blue-600:hover,
+#export-csv-btn:hover,
+#baldeios-export-csv-btn:hover,
+#mass-finish-btn:hover,
+#performance-content button.bg-green-600:hover,
+#performance-content button.bg-blue-600:hover {
+  background: linear-gradient(135deg, #052817, var(--btn-hl-green-2)) !important;
+  box-shadow: 0 14px 30px rgba(0, 69, 34, 0.22) !important;
+}
+
+/* Botões vermelhos de limpeza/exclusão */
+#main-content button.bg-red-600,
+#main-content button.bg-red-700,
+#clear-history-btn,
+#clear-occurrences-btn,
+#clear-date-filter-btn,
+#performance-content button.bg-red-600,
+#performance-content button.bg-red-700 {
+  background: linear-gradient(135deg, #9f1020, var(--btn-hl-red-2)) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(227, 6, 19, 0.30) !important;
+  box-shadow: 0 12px 24px rgba(193, 18, 31, 0.18) !important;
+}
+
+#main-content button.bg-red-600:hover,
+#main-content button.bg-red-700:hover,
+#clear-history-btn:hover,
+#clear-occurrences-btn:hover,
+#clear-date-filter-btn:hover,
+#performance-content button.bg-red-600:hover,
+#performance-content button.bg-red-700:hover {
+  background: linear-gradient(135deg, #7f0d19, #d90429) !important;
+  box-shadow: 0 14px 30px rgba(193, 18, 31, 0.24) !important;
+}
+
+/* Botões neutros/cinza */
+#main-content button.bg-gray-500,
+#main-content button.bg-gray-600,
+#main-content button.bg-gray-700,
+#main-content button.bg-emerald-800,
+#main-content .cdt-btn,
+#performance-content button.bg-gray-600,
+#performance-content button.bg-gray-700 {
+  background: linear-gradient(135deg, #475569, var(--btn-hl-gray)) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(100, 116, 139, 0.26) !important;
+  box-shadow: 0 10px 20px rgba(71, 85, 105, 0.14) !important;
+}
+
+#main-content button.bg-gray-500:hover,
+#main-content button.bg-gray-600:hover,
+#main-content button.bg-gray-700:hover,
+#main-content button.bg-emerald-800:hover,
+#main-content .cdt-btn:hover,
+#performance-content button.bg-gray-600:hover,
+#performance-content button.bg-gray-700:hover {
+  background: linear-gradient(135deg, #334155, #56657a) !important;
+}
+
+/* Botões desativados continuam visíveis, mas sem parecer clicáveis */
+#main-content button:disabled,
+#performance-content button:disabled,
+.hl-ms-button:disabled {
+  background: #94a3b8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 0.72 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Mobile: mantém filtros ocupando a largura, mas com cor de botão */
+@media (max-width: 768px) {
+  .hl-ms-button,
+  #main-content .hl-ms-button {
+    min-height: 46px !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -7646,11 +8367,11 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const searchTerm = norm(document.getElementById('search-input').value);
     const searchCompact = compact(searchTerm);
 
-    const statusFilter = document.getElementById('filter-status').value;
-    const transportadoraFilter = document.getElementById('filter-transportadora').value;
+    const statusFilterValues = getMultiSelectValues('filter-status');
+    const transportadoraFilterValues = getMultiSelectValues('filter-transportadora');
     const dateFilterValue = document.getElementById('filter-date').value;
-    const shiftFilterValue = document.getElementById('filter-shift').value;
-    const tempoFilterValue = document.getElementById('filter-tempo-patio').value;
+    const shiftFilterValues = getMultiSelectValues('filter-shift');
+    const tempoFilterValues = getMultiSelectValues('filter-tempo-patio');
 
     let dataToExport, headers;
 
@@ -7671,8 +8392,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           getOccurrenceTruckPlate(op),
           getOccurrenceTrailerPlate(op)
         ].filter(Boolean).some(v => norm(v).includes(searchTerm) || compact(v).includes(searchCompact));
-        const byStatus = statusFilter === 'todos' || String(op.statusOcorrencia || '').toLowerCase().includes(statusFilter.toLowerCase());
-        const byTransp = transportadoraFilter === 'todas' || relatedOp.transportadora === transportadoraFilter;
+        const byStatus = filterValuesMatchText(statusFilterValues, op.statusOcorrencia || '');
+        const byTransp = filterValuesMatchExact(transportadoraFilterValues, relatedOp.transportadora || '');
         return byText && byStatus && byTransp;
       });
       headers = ['Data','DT','Canal','Prioridade','Problema','Descrição','Cavalo','Carreta','Imagens','Status','Resolução','Resolvido Em'];
@@ -7688,21 +8409,24 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         );
       }
 
-      if (shiftFilterValue !== 'todos' && dateFilterValue) {
-        const shift = parseInt(shiftFilterValue, 10);
+      if (!areAllFilterValues(shiftFilterValues) && dateFilterValue) {
+        const selectedShifts = shiftFilterValues.map(v => parseInt(v, 10)).filter(v => Number.isFinite(v));
         const shiftTimes = { 1:{start:6,end:14}, 2:{start:14,end:22}, 3:{start:22,end:6} };
-        const { start, end } = shiftTimes[shift];
 
         filteredHistorico = filteredHistorico.filter(op => {
           if (!op.finishedTime) return false;
           const opHour = new Date(op.finishedTime).getHours();
-          return start < end ? (opHour >= start && opHour < end) : (opHour >= start || opHour < end);
+          return selectedShifts.some(shift => {
+            const { start, end } = shiftTimes[shift] || {};
+            if (start === undefined) return false;
+            return start < end ? (opHour >= start && opHour < end) : (opHour >= start || opHour < end);
+          });
         });
       }
 
       dataToExport = filteredHistorico.filter(op => {
         const byText = matchesSearchOp(op, searchTerm, searchCompact);
-        const byTransp = (transportadoraFilter === 'todas' || op.transportadora === transportadoraFilter);
+        const byTransp = filterValuesMatchExact(transportadoraFilterValues, op.transportadora || '');
         return byText && byTransp;
       });
 
@@ -7710,12 +8434,12 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     } else {
       dataToExport = patioData.filter(op => {
         const { statusText } = getPriorityStatusLogic(op);
-        const statusMatch = (statusFilter === 'todos' || statusText.toLowerCase().includes(statusFilter.toLowerCase()));
+        const statusMatch = filterValuesMatchText(statusFilterValues, statusText);
         const textMatch = matchesSearchOp(op, searchTerm, searchCompact);
-        const transpMatch = (transportadoraFilter === 'todas' || op.transportadora === transportadoraFilter);
+        const transpMatch = filterValuesMatchExact(transportadoraFilterValues, op.transportadora || '');
 
         let tempoMatch = true;
-        if (tempoFilterValue !== 'todos') tempoMatch = (getTempoBucket(op.registrationTime) === tempoFilterValue);
+        if (!areAllFilterValues(tempoFilterValues)) tempoMatch = tempoFilterValues.includes(getTempoBucket(op.registrationTime));
 
         return textMatch && transpMatch && statusMatch && tempoMatch;
       });
@@ -8037,13 +8761,23 @@ async function handleAddOccurrence(e) {
     try {
       const occurrenceRef = doc(db, `artifacts/${appId}/public/data/ocorrencias`, selectedOperacao.id);
       const existingImages = getOccurrenceImages(selectedOperacao);
+      const isCancellingOccurrence = isOccurrenceCancelStatus(status);
+      let deletedImagesInfo = null;
       const payload = {
         resolucao: resolution,
         statusOcorrencia: status,
         resolvidoEm: status === 'Concluído' ? serverTimestamp() : null
       };
 
-      if (resolutionSelectedFiles.length) {
+      if (isCancellingOccurrence) {
+        // Ao cancelar a ocorrência, as evidências deixam de contar/exportar e são removidas do Storage quando houver path.
+        deletedImagesInfo = await deleteOccurrenceStoredImages(existingImages);
+        payload.imagens = [];
+        payload.imagensCount = 0;
+        payload.imagensExcluidasAoCancelar = existingImages.length;
+        payload.imagensExcluidasAoCancelarEm = serverTimestamp();
+        payload.bloqueioChecklistCancelado = true;
+      } else if (resolutionSelectedFiles.length) {
         try {
           uploadedImages = await uploadOccurrenceImages(resolutionSelectedFiles, selectedOperacao.id, selectedOperacao);
           const usedFallback = uploadedImages.some(img => img.fallbackFirestore);
@@ -8060,13 +8794,15 @@ async function handleAddOccurrence(e) {
 
       await addLogEntry(
         selectedOperacao.operacaoId,
-        `Resolução da ocorrência: ${resolution} (Status: ${status})${uploadedImages.length ? ` - ${uploadedImages.length} imagem(ns) anexada(s)` : ''}`
+        `Resolução da ocorrência: ${resolution} (Status: ${status})${uploadedImages.length ? ` - ${uploadedImages.length} imagem(ns) anexada(s)` : ''}${deletedImagesInfo?.removedFromFirestore ? ` - ${deletedImagesInfo.removedFromFirestore} imagem(ns) removida(s) ao cancelar` : ''}`
       );
       window.closeResolutionModal();
       showToast(
         imageUploadFailed
           ? 'Resolução salva, mas as novas imagens não foram enviadas. Verifique o Firebase Storage.'
-          : uploadedImages.some(img => img.fallbackFirestore) ? 'Resolução salva com imagem compactada no painel.' : 'Resolução salva.',
+          : deletedImagesInfo?.removedFromFirestore
+            ? `Ocorrência cancelada e ${deletedImagesInfo.removedFromFirestore} imagem(ns) removida(s).`
+            : uploadedImages.some(img => img.fallbackFirestore) ? 'Resolução salva com imagem compactada no painel.' : 'Resolução salva.',
         imageUploadFailed ? 'error' : 'success'
       );
     } catch (error) {
@@ -9665,7 +10401,7 @@ async function handleAddOccurrence(e) {
     try { updateTransportadoraFilter(); } catch (_) {}
 
     const transpSelect = document.getElementById('dashboard-transportadora-filter');
-    const selectedT = transpSelect ? transpSelect.value : 'todas';
+    const selectedTValues = transpSelect ? getMultiSelectValues(transpSelect) : ['todas'];
 
     const now = new Date();
     const start = startOfDay(now);
@@ -9677,7 +10413,7 @@ async function handleAddOccurrence(e) {
       .map(op => ({ ...op, _rt: toMs(op.registrationTime), _ft: toMs(op.finishedTime) }))
       .filter(op => op._rt && op._rt >= start.getTime() && op._rt < end.getTime());
 
-    const data = (selectedT === 'todas') ? baseAll : baseAll.filter(op => op.transportadora === selectedT);
+    const data = areAllFilterValues(selectedTValues) ? baseAll : baseAll.filter(op => filterValuesMatchExact(selectedTValues, op.transportadora || ''));
 
     const days = [];
     for (let i = 0; i < 7; i++) {
@@ -9938,10 +10674,10 @@ async function handleAddOccurrence(e) {
     if (!tbody) return;
 
     const term = compact(document.getElementById('drivers-search')?.value || '');
-    const transp = document.getElementById('drivers-transportadora-filter')?.value || 'todas';
+    const transpValues = getMultiSelectValues('drivers-transportadora-filter');
 
     const list = (driversMerged || []).filter(d => {
-      if (transp !== 'todas' && (d.transportadora || '') !== transp) return false;
+      if (!filterValuesMatchExact(transpValues, d.transportadora || '')) return false;
       if (!term) return true;
       const hay = compact(`${d.name} ${d.cpfKey} ${d.phone} ${d.truckPlate} ${d.trailerPlate} ${d.transportadora}`);
       return hay.includes(term);
@@ -10751,10 +11487,11 @@ async function handleAddOccurrence(e) {
   }
 
   function cdtAvailableDts(localPref = '') {
-    const filterLocal = localPref && localPref !== 'todos' ? localPref : '';
+    const localValues = Array.isArray(localPref) ? localPref : [localPref].filter(Boolean);
+    const useAllLocals = !localValues.length || localValues.some(v => ['todos', 'auto', ''].includes(String(v || '').toLowerCase()));
     return (controleDtDts || [])
       .filter(dt => (dt.status || 'Pendente') === 'Pendente')
-      .filter(dt => !filterLocal || String(dt.local || '').toLowerCase() === String(filterLocal).toLowerCase())
+      .filter(dt => useAllLocals || localValues.some(v => String(dt.local || '').toLowerCase() === String(v || '').toLowerCase()))
       .sort((a, b) => {
         const pa = cdtPriorityWeight(a.prioritySnapshot || cdtProductPriority(a.productId));
         const pb = cdtPriorityWeight(b.prioritySnapshot || cdtProductPriority(b.productId));
@@ -10806,8 +11543,8 @@ async function handleAddOccurrence(e) {
     if (!select) return;
 
     const previous = select.value || '';
-    const localFilter = document.getElementById('cdt-manual-local-filter')?.value || 'todos';
-    const rows = cdtAvailableDts(localFilter);
+    const localFilterValues = getMultiSelectValues('cdt-manual-local-filter');
+    const rows = cdtAvailableDts(localFilterValues);
 
     select.innerHTML = rows.length
       ? rows.map(dt => {
@@ -10915,10 +11652,10 @@ async function handleAddOccurrence(e) {
 
     const vaziasBox = document.getElementById('cdt-vazias-list');
     if (vaziasBox) {
-      const localFilter = document.getElementById('cdt-vazia-local-filter')?.value || 'auto';
+      const localFilterValues = getMultiSelectValues('cdt-vazia-local-filter');
       const vazias = cdtGetLatestRitmoVazias();
       if (!vazias.length) {
-        const fallback = cdtAvailableDts(localFilter === 'auto' ? '' : localFilter)[0];
+        const fallback = cdtAvailableDts(areAllFilterValues(localFilterValues) ? '' : localFilterValues)[0];
         vaziasBox.innerHTML = fallback ? `
           <div class="cdt-suggestion-card lg:col-span-2">
             <div class="flex flex-wrap items-center justify-between gap-3">
@@ -10934,7 +11671,7 @@ async function handleAddOccurrence(e) {
         ` : `<div class="cdt-card-soft p-5 lg:col-span-2 text-center cdt-muted font-black">Cadastre DTs pendentes. Quando a Ritmo marcar uma carreta vazia, a sugestão aparece aqui automaticamente.</div>`;
       } else {
         vaziasBox.innerHTML = vazias.map(({ op, plate, local, ms }) => {
-          const preferredLocal = localFilter === 'auto' ? (local || '') : (localFilter === 'todos' ? '' : localFilter);
+          const preferredLocal = localFilterValues.includes('auto') ? (local || '') : (areAllFilterValues(localFilterValues) ? '' : localFilterValues);
           const suggestion = cdtAvailableDts(preferredLocal)[0] || cdtAvailableDts('')[0];
           const dtId = suggestion?._id || suggestion?.id || '';
           const opId = op?.id || '';
@@ -10998,11 +11735,11 @@ async function handleAddOccurrence(e) {
       }).join('') : `<tr><td colspan="7" class="p-6 text-center cdt-muted font-black">Nenhum produto cadastrado.</td></tr>`;
     }
 
-    const statusFilter = document.getElementById('cdt-status-filter')?.value || 'todos';
+    const statusFilterValues = getMultiSelectValues('cdt-status-filter');
     const tbody = document.getElementById('cdt-dts-table-body');
     if (tbody) {
       const rows = (controleDtDts || [])
-        .filter(dt => statusFilter === 'todos' || (dt.status || 'Pendente') === statusFilter)
+        .filter(dt => filterValuesMatchExact(statusFilterValues, dt.status || 'Pendente'))
         .sort((a, b) => cdtPriorityWeight(a.prioritySnapshot || cdtProductPriority(a.productId)) - cdtPriorityWeight(b.prioritySnapshot || cdtProductPriority(b.productId)) || cdtNum(b.createdAt) - cdtNum(a.createdAt));
       tbody.innerHTML = rows.length ? rows.map(dt => {
         const id = dt._id || dt.id || '';
@@ -11301,7 +12038,7 @@ async function handleAddOccurrence(e) {
     const searchCompact = searchRaw.replace(/[^A-Z0-9]/g, '');
 
     const mode = document.getElementById('baldeios-plate-mode')?.value || 'carreta';
-    const originFilter = document.getElementById('baldeios-origin-filter')?.value || 'todos';
+    const originFilterValues = getMultiSelectValues('baldeios-origin-filter');
 
     const baseDate = (dateEl && dateEl.value) ? new Date(dateEl.value) : new Date();
     const dayStart = startOfDay(baseDate).getTime();
@@ -11360,7 +12097,7 @@ async function handleAddOccurrence(e) {
     const filtered = allOps.filter(op => {
       if (!isBaldeioOp(op)) return false;
       const origemKey = getBaldeioOrigemKey(op);
-      if (originFilter !== 'todos' && origemKey !== originFilter) return false;
+      if (!filterValuesMatchExact(originFilterValues, origemKey)) return false;
       return true;
     });
 
@@ -11417,7 +12154,7 @@ async function handleAddOccurrence(e) {
     window.__baldeiosReport = {
       date: new Date(dayStart).toISOString().slice(0, 10),
       mode,
-      originFilter,
+      originFilter: areAllFilterValues(originFilterValues) ? 'todos' : originFilterValues.join('|'),
       rows
     };
 
@@ -12263,6 +13000,8 @@ async function handleAddOccurrence(e) {
     document.getElementById('occurrenceType')?.addEventListener('change', renderOccurrenceChecklistWarning);
 
     updateStatusFilterOptions('patio');
+    initAllMultiFilters();
+    setMultiFilterVisible('filter-tempo-patio', true);
 
     // listeners filtros
     document.getElementById('search-input').addEventListener('input', debouncedRender);
@@ -12304,7 +13043,7 @@ async function handleAddOccurrence(e) {
     });
 document.getElementById('clear-date-filter-btn').addEventListener('click', () => {
       document.getElementById('filter-date').valueAsDate = new Date();
-      document.getElementById('filter-shift').value = 'todos';
+      setMultiSelectValues('filter-shift', ['todos']);
       debouncedRender();
     });
 
@@ -13318,9 +14057,9 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
       document.getElementById('clear-history-btn').style.display = showHistorico ? 'flex' : 'none';
       document.getElementById('clear-occurrences-btn').style.display = showOcorrencias ? 'flex' : 'none';
       document.getElementById('advanced-filters').style.display = showHistorico ? 'flex' : 'none';
-      document.getElementById('filter-status').style.display = showHistorico ? 'none' : 'block';
+      setMultiFilterVisible('filter-status', !showHistorico);
 
-      document.getElementById('filter-tempo-patio').style.display = (activeTab === 'patio') ? 'block' : 'none';
+      setMultiFilterVisible('filter-tempo-patio', activeTab === 'patio');
       document.getElementById('mass-finish-btn').style.display = (activeTab === 'patio') ? 'flex' : 'none';
 
       updateStatusFilterOptions(activeTab);
@@ -13514,7 +14253,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
     }, 60000);
 
     // estado inicial
-    document.getElementById('filter-tempo-patio').style.display = 'block';
+    setMultiFilterVisible('filter-tempo-patio', true);
     document.getElementById('mass-finish-btn').style.display = 'flex';
     initPerformanceCardLayout();
     debouncedRender();
