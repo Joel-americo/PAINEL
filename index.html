@@ -4066,6 +4066,481 @@ button[data-action="cancel"]:hover {
   #controle-dt-content .cdt-kpi-value { font-size: 1.7rem; }
 }
 
+
+
+
+/* ===== Patch: ações e ocorrências mais visíveis ===== */
+#table-main-content table th:last-child,
+#table-main-content table td:last-child {
+  min-width: 150px !important;
+}
+#table-body .action-cell {
+  min-width: 150px !important;
+  justify-content: flex-start !important;
+}
+#table-body button[data-action="occurrence"].table-action-btn {
+  min-width: 96px !important;
+  height: 40px !important;
+  background: #fff4d6 !important;
+  color: #92400e !important;
+  -webkit-text-fill-color: #92400e !important;
+  border-color: rgba(180, 83, 9, 0.28) !important;
+  font-weight: 900 !important;
+}
+#table-body button[data-action="occurrence"].table-action-btn svg {
+  color: #92400e !important;
+  stroke: currentColor !important;
+}
+#table-body button[data-action="edit-occurrence"].table-action-btn {
+  min-width: 116px !important;
+  height: 40px !important;
+  background: #07351f !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border-color: rgba(0, 122, 61, 0.28) !important;
+  box-shadow: 0 10px 20px rgba(7, 53, 31, 0.18) !important;
+}
+#table-body button[data-action="edit-occurrence"].table-action-btn svg,
+#table-body button[data-action="edit-occurrence"].table-action-btn span {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  stroke: currentColor !important;
+}
+#occurrence-form button[type="submit"],
+#resolution-form button[type="submit"] {
+  background: #07351f !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(0, 122, 61, 0.22) !important;
+  box-shadow: 0 10px 20px rgba(7, 53, 31, 0.18) !important;
+}
+#occurrence-form button:disabled,
+#resolution-form button:disabled {
+  opacity: 0.78 !important;
+  cursor: wait !important;
+}
+
+/* ===== Ocorrências: evidências com imagem + botões visíveis ===== */
+#table-body .action-cell {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+}
+
+#table-body .table-action-btn,
+#table-body a.table-action-btn {
+  min-width: 38px !important;
+  height: 38px !important;
+  padding: 0 0.65rem !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06) !important;
+  transform: none !important;
+  text-decoration: none !important;
+  opacity: 1 !important;
+}
+
+#table-body .table-action-btn svg,
+#table-body a.table-action-btn svg {
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 auto !important;
+}
+
+#table-body .table-action-label {
+  font-size: 0.74rem !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.01em;
+}
+
+#table-body a.table-action-whatsapp {
+  background: #e9fbf1 !important;
+  color: #047857 !important;
+  -webkit-text-fill-color: #047857 !important;
+  border-color: rgba(5, 150, 105, 0.22) !important;
+}
+#table-body a.table-action-whatsapp svg { color: #047857 !important; fill: currentColor !important; }
+
+#table-body button[data-action="details"].table-action-btn {
+  background: #eaf6ff !important;
+  color: #0369a1 !important;
+  -webkit-text-fill-color: #0369a1 !important;
+  border-color: rgba(2, 132, 199, 0.20) !important;
+}
+#table-body button[data-action="details"].table-action-btn svg { color: #0369a1 !important; stroke: currentColor !important; }
+
+#table-body button[data-action="occurrence"].table-action-btn {
+  background: #fff7e6 !important;
+  color: #b45309 !important;
+  -webkit-text-fill-color: #b45309 !important;
+  border-color: rgba(217, 119, 6, 0.26) !important;
+}
+#table-body button[data-action="occurrence"].table-action-btn svg { color: #b45309 !important; stroke: currentColor !important; }
+
+#table-body button[data-action="finish"].table-action-btn {
+  background: #e9fbf1 !important;
+  color: #047857 !important;
+  -webkit-text-fill-color: #047857 !important;
+  border-color: rgba(5, 150, 105, 0.22) !important;
+}
+#table-body button[data-action="finish"].table-action-btn svg { color: #047857 !important; stroke: currentColor !important; }
+
+#table-body button[data-action="edit-occurrence"].table-action-btn {
+  background: #eef4ff !important;
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+  border-color: rgba(37, 99, 235, 0.24) !important;
+}
+#table-body button[data-action="edit-occurrence"].table-action-btn svg { color: #1d4ed8 !important; stroke: currentColor !important; }
+
+#table-body button[data-action="view-occurrence-images"].table-action-btn {
+  background: #f0fdf4 !important;
+  color: #15803d !important;
+  -webkit-text-fill-color: #15803d !important;
+  border-color: rgba(22, 163, 74, 0.24) !important;
+}
+#table-body button[data-action="view-occurrence-images"].table-action-btn svg { color: #15803d !important; stroke: currentColor !important; }
+
+#table-body button[data-action="cancel"].table-action-btn {
+  background: #fff1f2 !important;
+  color: #be123c !important;
+  -webkit-text-fill-color: #be123c !important;
+  border-color: rgba(225, 29, 72, 0.22) !important;
+}
+#table-body button[data-action="cancel"].table-action-btn svg { color: #be123c !important; stroke: currentColor !important; }
+
+.occ-evidence-button {
+  width: 142px !important;
+  max-width: 142px !important;
+  padding: 0 !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.45rem !important;
+  box-shadow: 0 8px 18px rgba(15,23,42,0.06) !important;
+}
+.occ-evidence-button img {
+  width: 44px !important;
+  height: 38px !important;
+  object-fit: cover !important;
+  flex: 0 0 auto !important;
+}
+.occ-evidence-button span {
+  font-size: 0.76rem !important;
+  font-weight: 900 !important;
+  color: #064e3b !important;
+  -webkit-text-fill-color: #064e3b !important;
+  white-space: nowrap !important;
+}
+.occ-no-evidence {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 106px !important;
+  padding: 0.42rem 0.65rem !important;
+  border-radius: 999px !important;
+  background: #f1f5f9 !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  border: 1px dashed rgba(100, 116, 139, 0.28) !important;
+  font-size: 0.76rem !important;
+  font-weight: 800 !important;
+}
+
+.occ-image-dropzone {
+  border: 1.5px dashed rgba(0, 122, 61, 0.32) !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #ffffff, #f2fbf5) !important;
+  padding: 12px !important;
+}
+.occ-image-dropzone-label {
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  color: #07351f !important;
+  -webkit-text-fill-color: #07351f !important;
+  font-weight: 900 !important;
+}
+.occ-image-dropzone-label small {
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  font-weight: 700 !important;
+}
+.occ-image-preview-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)) !important;
+  gap: 10px !important;
+  margin-top: 10px !important;
+}
+.occ-image-preview-grid.hidden { display: none !important; }
+.occ-preview-card {
+  position: relative !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(15, 23, 42, 0.10) !important;
+  background: #ffffff !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06) !important;
+}
+.occ-preview-card img {
+  width: 100% !important;
+  height: 84px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+.occ-preview-card span {
+  display: block !important;
+  padding: 6px 8px !important;
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  color: #334155 !important;
+  -webkit-text-fill-color: #334155 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.occ-preview-remove {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 999px !important;
+  background: rgba(190, 18, 60, 0.92) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 6px 12px rgba(190,18,60,0.25) !important;
+}
+.occ-existing-images {
+  margin-top: 0.75rem !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+  gap: 10px !important;
+}
+.occ-existing-image-card {
+  display: block !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(15, 23, 42, 0.10) !important;
+  background: #ffffff !important;
+  text-decoration: none !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06) !important;
+}
+.occ-existing-image-card img {
+  width: 100% !important;
+  height: 104px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+.occ-existing-image-card span {
+  display: block !important;
+  padding: 7px 8px !important;
+  font-size: 0.72rem !important;
+  font-weight: 850 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+#occurrence-image-modal .occ-image-modal-card {
+  background: #ffffff !important;
+  color: #102018 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.35) !important;
+  width: min(96vw, 1040px) !important;
+  max-height: 92vh !important;
+  overflow: auto !important;
+  padding: 22px !important;
+  position: relative !important;
+}
+#occurrence-image-modal .occ-image-modal-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+  gap: 14px !important;
+}
+#occurrence-image-modal .occ-image-modal-grid a {
+  display: block !important;
+  border: 1px solid rgba(15, 23, 42, 0.10) !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  text-decoration: none !important;
+  background: #f8fafc !important;
+}
+#occurrence-image-modal .occ-image-modal-grid img {
+  width: 100% !important;
+  max-height: 420px !important;
+  object-fit: contain !important;
+  background: #0f172a !important;
+  display: block !important;
+}
+#occurrence-image-modal .occ-image-modal-grid span {
+  display: block !important;
+  padding: 9px 11px !important;
+  font-weight: 850 !important;
+  color: #102018 !important;
+  -webkit-text-fill-color: #102018 !important;
+}
+#occurrence-image-modal .occ-image-modal-close {
+  position: absolute !important;
+  top: 14px !important;
+  right: 14px !important;
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 999px !important;
+  background: #f1f5f9 !important;
+  color: #334155 !important;
+  -webkit-text-fill-color: #334155 !important;
+  border: 1px solid rgba(15,23,42,0.10) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+
+/* ===== Ocorrências: checklist, alerta de bloqueio e exportação com links ===== */
+.occ-checklist-warning {
+  border-radius: 16px !important;
+  border: 1px solid rgba(217, 119, 6, 0.26) !important;
+  background: #fff7e6 !important;
+  color: #92400e !important;
+  -webkit-text-fill-color: #92400e !important;
+  padding: 0.72rem 0.85rem !important;
+  font-size: 0.82rem !important;
+  font-weight: 850 !important;
+  line-height: 1.35 !important;
+}
+.occ-checklist-warning.danger {
+  border-color: rgba(220, 38, 38, 0.34) !important;
+  background: #fff1f2 !important;
+  color: #9f1239 !important;
+  -webkit-text-fill-color: #9f1239 !important;
+}
+.occ-repeated-block-badge {
+  margin-top: 0.45rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  padding: 0.35rem 0.58rem !important;
+  border-radius: 999px !important;
+  background: #fff1f2 !important;
+  color: #be123c !important;
+  -webkit-text-fill-color: #be123c !important;
+  border: 1px solid rgba(225, 29, 72, 0.24) !important;
+  font-size: 0.72rem !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+}
+.checklist-block-alert-banner {
+  background: #fff1f2 !important;
+  border-color: rgba(225, 29, 72, 0.30) !important;
+  color: #9f1239 !important;
+  -webkit-text-fill-color: #9f1239 !important;
+  box-shadow: 0 12px 26px rgba(225, 29, 72, 0.10) !important;
+}
+
+.checklist-block-alert-banner.sap-ok {
+  background: #ecfdf5 !important;
+  border-color: rgba(5, 150, 105, 0.26) !important;
+  color: #065f46 !important;
+  -webkit-text-fill-color: #065f46 !important;
+}
+.occ-plate-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  padding: 0.32rem 0.55rem !important;
+  border-radius: 999px !important;
+  background: #eef7f1 !important;
+  border: 1px solid rgba(0, 122, 61, 0.18) !important;
+  color: #064e3b !important;
+  -webkit-text-fill-color: #064e3b !important;
+  font-size: 0.74rem !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+}
+.occ-plate-chip.empty {
+  background: #f1f5f9 !important;
+  border-color: rgba(100,116,139,0.18) !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+}
+.table-action-btn.sap-locked,
+.table-action-btn.sap-locked:hover,
+#table-body button[data-action="finish"].sap-locked,
+#table-body button[data-action="sap-whatsapp"].sap-locked {
+  background: #fff1f2 !important;
+  color: #be123c !important;
+  -webkit-text-fill-color: #be123c !important;
+  border-color: rgba(225,29,72,0.28) !important;
+  cursor: not-allowed !important;
+  box-shadow: 0 8px 18px rgba(225,29,72,0.10) !important;
+}
+.table-action-btn.sap-locked svg {
+  color: #be123c !important;
+  stroke: currentColor !important;
+  fill: none;
+}
+.sap-unlock-modal-card {
+  width: min(94vw, 440px);
+  background: #ffffff;
+  color: #102018;
+  border-radius: 24px;
+  padding: 1.35rem;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.32);
+  border: 1px solid rgba(15,23,42,0.10);
+}
+.sap-unlock-modal-card h3 {
+  color: #102018 !important;
+  font-weight: 950 !important;
+  font-size: 1.28rem !important;
+  margin: 0 0 0.45rem !important;
+}
+.sap-unlock-modal-card p,
+.sap-unlock-modal-card strong,
+.sap-unlock-modal-card span {
+  color: #475569 !important;
+  -webkit-text-fill-color: #475569 !important;
+}
+.sap-unlock-modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.sap-unlock-modal-actions button {
+  border-radius: 14px !important;
+  padding: 0.85rem 1rem !important;
+  font-weight: 900 !important;
+}
+.sap-unlock-yes {
+  background: #07351f !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+.sap-unlock-no {
+  background: #be123c !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
 </style>
 </head>
 
@@ -5049,6 +5524,7 @@ button[data-action="cancel"]:hover {
     orderBy,
     limit
   } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+  import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
   // ==============================
   // CONFIG
@@ -5059,7 +5535,7 @@ button[data-action="cancel"]:hover {
       apiKey: "AIzaSyB9B2-xYb6gr92cQDbajriQiinfQurrOwI",
       authDomain: "heilog-logistica.firebaseapp.com",
       projectId: "heilog-logistica",
-      storageBucket: "heilog-logistica.appspot.com",
+      storageBucket: "heilog-logistica.firebasestorage.app",
       messagingSenderId: "790492229739",
       appId: "1:790492229739:web:de49887de535a839e8412e"
     };
@@ -5071,11 +5547,16 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   // ESTADO GLOBAL
   // ==============================
   let db;
+  let storage;
+  let storageCandidates = [];
   let patioData = [];
   let historicoData = [];
   let ocorrenciasData = [];
+  let sapUnlocksData = {};
   let activeTab = 'patio';
   let selectedOperacao = null;
+  let occurrenceSelectedFiles = [];
+  let resolutionSelectedFiles = [];
 
   let contextChart = null;
   let performanceChart = null;
@@ -5197,6 +5678,640 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       '=': '&#x3D;',
       '/': '&#x2F;'
     }[s]));
+  };
+
+
+
+  // ==============================
+  // OCORRÊNCIAS: IMAGENS / EVIDÊNCIAS
+  // ==============================
+  const MAX_OCCURRENCE_IMAGES = 8;
+  const MAX_OCCURRENCE_IMAGE_MB = 8;
+
+  const sanitizeStorageName = (value = 'arquivo') => {
+    const cleaned = String(value || 'arquivo')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9._-]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 90);
+    return cleaned || 'arquivo';
+  };
+
+  const getOccurrenceImages = (op = {}) => {
+    const raw = Array.isArray(op.imagens)
+      ? op.imagens
+      : (Array.isArray(op.images) ? op.images : []);
+    return raw.filter(img => img && img.url);
+  };
+
+
+  const normalizePlate = (value = '') => String(value || '')
+    .toUpperCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^A-Z0-9]/g, '')
+    .trim();
+
+  const isChecklistOccurrence = (op = {}) => {
+    const type = String(op.type || '').toLowerCase();
+    return type.includes('checklist') || op.bloqueioChecklist === true;
+  };
+
+
+  const isOccurrenceCancelled = (op = {}) => {
+    const status = String(op.statusOcorrencia || op.status || '').toLowerCase();
+    return status.includes('cancelado') || status.includes('cancelada') || op.bloqueioChecklistCancelado === true;
+  };
+
+  const getSapUnlockLocalMap = () => {
+    try { return JSON.parse(localStorage.getItem('heilogSapUnlocks') || '{}') || {}; }
+    catch (_) { return {}; }
+  };
+
+  const saveSapUnlockLocal = (plate, data = {}) => {
+    const normalized = normalizePlate(plate);
+    if (!normalized) return;
+    const map = getSapUnlockLocalMap();
+    map[normalized] = { ...(map[normalized] || {}), ...data, trailerPlate: normalized, unlocked: true, localUpdatedAt: new Date().toISOString() };
+    localStorage.setItem('heilogSapUnlocks', JSON.stringify(map));
+    sapUnlocksData = { ...sapUnlocksData, [normalized]: map[normalized] };
+  };
+
+  const getSapUnlockInfo = (plate = '') => {
+    const normalized = normalizePlate(plate);
+    if (!normalized) return null;
+    return sapUnlocksData[normalized] || getSapUnlockLocalMap()[normalized] || null;
+  };
+
+  const isTrailerSapUnlocked = (plate = '') => {
+    const info = getSapUnlockInfo(plate);
+    return !!(info && info.unlocked === true);
+  };
+
+  const getOccurrenceRelatedOperation = (op = {}) => {
+    if (!op) return {};
+    return patioData.find(p => p.id === op.operacaoId) ||
+      historicoData.find(h => h.id === op.operacaoId) ||
+      {};
+  };
+
+  const getOccurrenceTrailerPlate = (op = {}) => {
+    const direct = op.placaCarreta || op.placaCarretaSnapshot || op.trailerPlate || op.carreta || op.carreta1 || op.carreta2 || '';
+    if (direct) return normalizePlate(direct);
+    const related = getOccurrenceRelatedOperation(op);
+    return normalizePlate(getTrailerPlate(related) || '');
+  };
+
+  const getOccurrenceTruckPlate = (op = {}) => {
+    const direct = op.placaCavalo || op.placaCavaloSnapshot || op.truckPlate || op.cavalo || '';
+    if (direct) return normalizePlate(direct);
+    const related = getOccurrenceRelatedOperation(op);
+    return normalizePlate(getTruckPlate(related) || '');
+  };
+
+  const getTrailerChecklistBlockCount = (trailerPlate, extraOccurrence = null) => {
+    const normalized = normalizePlate(trailerPlate);
+    if (!normalized) return 0;
+    const allOccurrences = [
+      ...(Array.isArray(ocorrenciasData) ? ocorrenciasData : []),
+      ...(extraOccurrence ? [extraOccurrence] : [])
+    ];
+    const seen = new Set();
+    return allOccurrences.filter(op => {
+      if (!op || !isChecklistOccurrence(op) || isOccurrenceCancelled(op)) return false;
+      const plate = getOccurrenceTrailerPlate(op);
+      if (plate !== normalized) return false;
+      const key = op.id || `${plate}-${op.dt || ''}-${op.description || ''}-${op.timestamp?.seconds || ''}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    }).length;
+  };
+
+  const getActionSourceOperation = (op = {}) => {
+    if (!op) return {};
+    if (op.operacaoId) {
+      return patioData.find(p => p.id === op.operacaoId) || historicoData.find(h => h.id === op.operacaoId) || op;
+    }
+    return op;
+  };
+
+  const getTrailerForOperationLock = (op = {}) => {
+    const actionOp = getActionSourceOperation(op);
+    return normalizePlate(getTrailerPlate(actionOp) || getOccurrenceTrailerPlate(op) || '');
+  };
+
+  const isOperationBlockedByChecklist = (op = {}) => {
+    const trailerPlate = getTrailerForOperationLock(op);
+    if (!trailerPlate) return false;
+    return getTrailerChecklistBlockCount(trailerPlate) >= 3 && !isTrailerSapUnlocked(trailerPlate);
+  };
+
+
+  const ensureSapUnlockModal = () => {
+    let modal = document.getElementById('sap-unlock-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'sap-unlock-modal';
+      modal.className = 'fixed inset-0 bg-black bg-opacity-60 z-[75] flex justify-center items-center modal-backdrop hidden p-4';
+      document.body.appendChild(modal);
+    }
+    return modal;
+  };
+
+  window.closeSapUnlockModal = () => {
+    const modal = document.getElementById('sap-unlock-modal');
+    if (modal) modal.classList.add('hidden');
+  };
+
+  const markTrailerSapUnlocked = async (trailerPlate = '') => {
+    const plate = normalizePlate(trailerPlate);
+    if (!plate) return false;
+    saveSapUnlockLocal(plate, { blockCount: getTrailerChecklistBlockCount(plate), source: 'confirmacao_usuario' });
+    if (db) {
+      try {
+        await setDoc(doc(db, `artifacts/${appId}/public/data/sap_desbloqueios`, plate), {
+          trailerPlate: plate,
+          unlocked: true,
+          blockCount: getTrailerChecklistBlockCount(plate),
+          source: 'confirmacao_usuario',
+          updatedAt: serverTimestamp(),
+          unlockedAt: serverTimestamp()
+        }, { merge: true });
+      } catch (err) {
+        console.warn('Não foi possível salvar desbloqueio SAP no Firestore. Mantido localmente.', err);
+      }
+    }
+    showToast(`Carreta ${plate} marcada como desbloqueada no SAP. Funções liberadas.`, 'success');
+    debouncedRender();
+    return true;
+  };
+
+  const openSapUnlockPrompt = (trailerPlate = '', onUnlocked = null) => {
+    const plate = normalizePlate(trailerPlate);
+    if (!plate) return;
+    const count = getTrailerChecklistBlockCount(plate);
+    const modal = ensureSapUnlockModal();
+    modal.innerHTML = `
+      <div class="sap-unlock-modal-card">
+        <h3>⚠️ Carreta bloqueada por Checklist</h3>
+        <p>A carreta <strong>${escapeHtml(plate)}</strong> possui <strong>${count} bloqueios ativos</strong>.</p>
+        <p class="mt-2 font-bold">Motorista já foi desbloqueado no SAP?</p>
+        <div class="sap-unlock-modal-actions">
+          <button type="button" id="sap-unlock-yes" class="sap-unlock-yes">Sim</button>
+          <button type="button" id="sap-unlock-no" class="sap-unlock-no">Não</button>
+        </div>
+        <p class="mt-3 text-xs">Se marcar “Não”, o botão de concluir e o WhatsApp continuam bloqueados até confirmar o desbloqueio no SAP.</p>
+      </div>`;
+    modal.classList.remove('hidden');
+    document.getElementById('sap-unlock-yes')?.addEventListener('click', async () => {
+      await markTrailerSapUnlocked(plate);
+      window.closeSapUnlockModal();
+      if (typeof onUnlocked === 'function') onUnlocked();
+    });
+    document.getElementById('sap-unlock-no')?.addEventListener('click', () => {
+      window.closeSapUnlockModal();
+      showToast(`Carreta ${plate} segue bloqueada até o desbloqueio no SAP.`, 'error');
+    });
+  };
+
+  const requireSapUnlockForOperation = (op = {}, onUnlocked = null) => {
+    const plate = getTrailerForOperationLock(op);
+    if (!plate || !isOperationBlockedByChecklist(op)) return false;
+    openSapUnlockPrompt(plate, onUnlocked);
+    return true;
+  };
+
+  const buildWhatsAppUrlForOperation = (op = {}) => {
+    const actionOp = getActionSourceOperation(op);
+    const telefoneDigits = getTelefoneFromOperacao(actionOp);
+    if (!telefoneDigits) return '';
+    const motorista = actionOp.motorista || actionOp.name || 'Motorista';
+    const dt = actionOp.dt || op.dt || '';
+    const message = `Olá ${motorista}, por favor, dirija-se à doca para o carregamento da DT ${dt}.`;
+    return `https://wa.me/55${telefoneDigits}?text=${encodeURIComponent(message)}`;
+  };
+
+  const openWhatsAppForOperation = (op = {}) => {
+    const url = buildWhatsAppUrlForOperation(op);
+    if (!url) {
+      showToast('Telefone do motorista indisponível para WhatsApp.', 'error');
+      return;
+    }
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const buildOccurrenceSnapshotPayload = (operacao = {}, type = '') => {
+    const placaCavalo = normalizePlate(getTruckPlate(operacao) || '');
+    const placaCarreta = normalizePlate(getTrailerPlate(operacao) || '');
+    const isChecklist = String(type || '').toLowerCase().includes('checklist');
+    return {
+      placaCavalo,
+      placaCarreta,
+      transportadora: operacao.transportadora || '',
+      motorista: operacao.motorista || operacao.name || '',
+      bloqueioChecklist: isChecklist,
+      bloqueioChecklistAvisado: false
+    };
+  };
+
+  const renderOccurrenceChecklistWarning = () => {
+    const warning = document.getElementById('occurrence-checklist-warning');
+    if (!warning) return;
+    const type = document.getElementById('occurrenceType')?.value || '';
+    const isChecklist = String(type).toLowerCase().includes('checklist');
+    const trailerPlate = normalizePlate(getTrailerPlate(selectedOperacao || {}) || '');
+
+    if (!isChecklist || !trailerPlate) {
+      warning.classList.add('hidden');
+      warning.classList.remove('danger');
+      warning.innerHTML = '';
+      return;
+    }
+
+    const currentCount = getTrailerChecklistBlockCount(trailerPlate);
+    const nextCount = currentCount + 1;
+    warning.classList.remove('hidden');
+    warning.classList.toggle('danger', nextCount >= 3);
+    warning.innerHTML = nextCount >= 3
+      ? `⚠️ Atenção: ao salvar, a carreta <strong>${escapeHtml(trailerPlate)}</strong> ficará com <strong>${nextCount} bloqueios</strong> no checklist.`
+      : `Checklist selecionado. A carreta <strong>${escapeHtml(trailerPlate)}</strong> possui ${currentCount} bloqueio(s) registrado(s).`;
+  };
+
+  const createChecklistBlockAlertBanner = (trailerPlate, count, dts = []) => {
+    createAlertBanner(`Carreta ${escapeHtml(trailerPlate)} bloqueada ${count} vezes no checklist${dts.length ? ` — DTs: ${escapeHtml(dts.join(', '))}` : ''}.`, 'high');
+    const alertsContainer = document.getElementById('system-alerts-container');
+    const last = alertsContainer?.lastElementChild;
+    if (last) last.classList.add('checklist-block-alert-banner');
+  };
+
+  const checkChecklistBlockAlerts = () => {
+    const grouped = {};
+    (ocorrenciasData || []).forEach(op => {
+      if (!isChecklistOccurrence(op) || isOccurrenceCancelled(op)) return;
+      const plate = getOccurrenceTrailerPlate(op);
+      if (!plate) return;
+      grouped[plate] ||= [];
+      grouped[plate].push(op);
+    });
+
+    Object.entries(grouped).forEach(([plate, ops]) => {
+      const unique = [];
+      const seen = new Set();
+      ops.forEach(op => {
+        const key = op.id || `${plate}-${op.dt || ''}-${op.description || ''}-${op.timestamp?.seconds || ''}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        unique.push(op);
+      });
+      if (unique.length >= 3 && !isTrailerSapUnlocked(plate)) {
+        const dts = [...new Set(unique.map(op => op.dt).filter(Boolean))].slice(0, 5);
+        createChecklistBlockAlertBanner(plate, unique.length, dts);
+      }
+    });
+  };
+
+  const warnIfTrailerBlockedThreeTimes = (operacao = {}, savedOccurrence = {}) => {
+    const trailerPlate = normalizePlate(savedOccurrence.placaCarreta || getTrailerPlate(operacao) || '');
+    if (!trailerPlate || !isChecklistOccurrence(savedOccurrence)) return;
+
+    const count = getTrailerChecklistBlockCount(trailerPlate, savedOccurrence);
+    if (count >= 3) {
+      if (isTrailerSapUnlocked(trailerPlate)) {
+        showToast(`Carreta ${trailerPlate} já possui ${count} bloqueios, mas está marcada como desbloqueada no SAP.`, 'info');
+        return;
+      }
+      showToast(`Atenção: a carreta ${trailerPlate} já foi bloqueada ${count} vezes no checklist.`, 'error');
+      createChecklistBlockAlertBanner(trailerPlate, count, [savedOccurrence.dt].filter(Boolean));
+      setTimeout(() => openSapUnlockPrompt(trailerPlate), 250);
+    }
+  };
+
+  const normalizeOccurrenceFiles = (files = [], currentFiles = []) => {
+    const accepted = [];
+    const seen = new Set(currentFiles.map(f => `${f.name}-${f.size}-${f.lastModified}`));
+
+    for (const file of files) {
+      if (!file) continue;
+      if (!String(file.type || '').startsWith('image/')) {
+        showToast(`Arquivo ignorado: ${file.name || 'sem nome'} não é imagem.`, 'error');
+        continue;
+      }
+      if (file.size > MAX_OCCURRENCE_IMAGE_MB * 1024 * 1024) {
+        showToast(`Imagem muito grande: ${file.name}. Limite: ${MAX_OCCURRENCE_IMAGE_MB} MB.`, 'error');
+        continue;
+      }
+      const key = `${file.name}-${file.size}-${file.lastModified}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      accepted.push(file);
+    }
+
+    const merged = [...currentFiles, ...accepted];
+    if (merged.length > MAX_OCCURRENCE_IMAGES) {
+      showToast(`Limite de ${MAX_OCCURRENCE_IMAGES} imagens por ocorrência.`, 'info');
+    }
+    return merged.slice(0, MAX_OCCURRENCE_IMAGES);
+  };
+
+  const renderSelectedImagePreview = (containerId, files, kind) => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    if (!files.length) {
+      container.innerHTML = '';
+      container.classList.add('hidden');
+      return;
+    }
+
+    container.classList.remove('hidden');
+    container.innerHTML = files.map((file, index) => {
+      const url = URL.createObjectURL(file);
+      return `
+        <div class="occ-preview-card">
+          <img src="${url}" alt="${escapeHtml(file.name || 'Imagem da ocorrência')}" loading="lazy">
+          <button type="button" class="occ-preview-remove" data-occ-remove="${kind}" data-index="${index}" title="Remover imagem">×</button>
+          <span title="${escapeHtml(file.name || 'Imagem')}">${escapeHtml(file.name || 'Imagem')}</span>
+        </div>`;
+    }).join('');
+  };
+
+  const bindOccurrenceImageInputs = () => {
+    const occurrenceInput = document.getElementById('occurrenceImages');
+    const occurrencePreview = document.getElementById('occurrence-image-preview');
+    const resolutionInput = document.getElementById('resolutionImages');
+    const resolutionPreview = document.getElementById('resolution-image-preview');
+
+    occurrenceInput?.addEventListener('change', (event) => {
+      occurrenceSelectedFiles = normalizeOccurrenceFiles(Array.from(event.target.files || []), occurrenceSelectedFiles);
+      occurrenceInput.value = '';
+      renderSelectedImagePreview('occurrence-image-preview', occurrenceSelectedFiles, 'occurrence');
+    });
+
+    occurrencePreview?.addEventListener('click', (event) => {
+      const btn = event.target.closest('[data-occ-remove="occurrence"]');
+      if (!btn) return;
+      const index = Number(btn.dataset.index);
+      occurrenceSelectedFiles.splice(index, 1);
+      renderSelectedImagePreview('occurrence-image-preview', occurrenceSelectedFiles, 'occurrence');
+    });
+
+    resolutionInput?.addEventListener('change', (event) => {
+      resolutionSelectedFiles = normalizeOccurrenceFiles(Array.from(event.target.files || []), resolutionSelectedFiles);
+      resolutionInput.value = '';
+      renderSelectedImagePreview('resolution-image-preview', resolutionSelectedFiles, 'resolution');
+    });
+
+    resolutionPreview?.addEventListener('click', (event) => {
+      const btn = event.target.closest('[data-occ-remove="resolution"]');
+      if (!btn) return;
+      const index = Number(btn.dataset.index);
+      resolutionSelectedFiles.splice(index, 1);
+      renderSelectedImagePreview('resolution-image-preview', resolutionSelectedFiles, 'resolution');
+    });
+  };
+
+  const buildStorageCandidates = (firebaseApp) => {
+    const projectId = firebaseConfig?.projectId || appId;
+    const rawBuckets = [
+      firebaseConfig?.storageBucket,
+      projectId ? `${projectId}.firebasestorage.app` : '',
+      projectId ? `${projectId}.appspot.com` : ''
+    ].filter(Boolean);
+
+    const uniqueBuckets = [...new Set(rawBuckets.map(b => String(b).replace(/^gs:\/\//, '').trim()).filter(Boolean))];
+
+    return uniqueBuckets.map((bucket) => ({
+      bucket,
+      client: getStorage(firebaseApp, `gs://${bucket}`)
+    }));
+  };
+
+  const isLocalFileOrigin = () => {
+    try {
+      return window.location.protocol === 'file:' || window.location.origin === 'null';
+    } catch (_) {
+      return true;
+    }
+  };
+
+  const withTimeout = (promise, timeoutMs = 8000, label = 'operação') => Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(`${label} demorou demais e foi cancelada.`)), timeoutMs))
+  ]);
+
+  const dataUrlToBlobSize = (dataUrl = '') => {
+    const base64 = String(dataUrl).split(',')[1] || '';
+    return Math.ceil((base64.length * 3) / 4);
+  };
+
+  const buildCompressedFirestoreImage = async (file, occurrenceId, operacao = {}, index = 0, lastError = null) => {
+    const safeFile = sanitizeStorageName(file.name || `imagem-${index + 1}.jpg`);
+    const compressed = await compressOccurrenceImageToDataUrl(file);
+    return {
+      nome: file.name || safeFile,
+      url: compressed.dataUrl,
+      path: '',
+      bucket: '',
+      tamanho: compressed.tamanho || 0,
+      tamanhoOriginal: file.size || 0,
+      tipo: 'image/jpeg',
+      largura: compressed.width,
+      altura: compressed.height,
+      criadoEm: new Date().toISOString(),
+      armazenamento: 'Firestore compactado',
+      fallbackFirestore: true,
+      modoLocal: isLocalFileOrigin(),
+      storageError: String(lastError?.message || lastError || '')
+    };
+  };
+
+  const compressOccurrenceImageToDataUrl = (file, targetBytes = 65 * 1024) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Não foi possível ler a imagem.'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Não foi possível processar a imagem.'));
+      img.onload = () => {
+        let maxSide = 900;
+        let quality = 0.72;
+        let bestDataUrl = '';
+        let bestWidth = 0;
+        let bestHeight = 0;
+
+        for (let attempt = 0; attempt < 9; attempt++) {
+          const scale = Math.min(1, maxSide / Math.max(img.width || 1, img.height || 1));
+          const width = Math.max(1, Math.round((img.width || 1) * scale));
+          const height = Math.max(1, Math.round((img.height || 1) * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d', { alpha: false });
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          bestDataUrl = dataUrl;
+          bestWidth = width;
+          bestHeight = height;
+
+          if (dataUrlToBlobSize(dataUrl) <= targetBytes) break;
+
+          if (quality > 0.42) {
+            quality -= 0.10;
+          } else {
+            maxSide = Math.max(520, Math.round(maxSide * 0.82));
+            quality = 0.58;
+          }
+        }
+
+        resolve({ dataUrl: bestDataUrl, width: bestWidth, height: bestHeight, tamanho: dataUrlToBlobSize(bestDataUrl) });
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  const uploadSingleOccurrenceImage = async (file, occurrenceId, operacao = {}, index = 0, stamp = Date.now()) => {
+    const safeDt = sanitizeStorageName(operacao.dt || 'sem-dt');
+    const safeFile = sanitizeStorageName(file.name || `imagem-${index + 1}.jpg`);
+    const path = `artifacts/${appId}/public/data/ocorrencias-imagens/${safeDt}/${occurrenceId}/${stamp}_${index}_${safeFile}`;
+
+    // Quando o arquivo roda direto no computador (file://), o navegador bloqueia o Firebase Storage por CORS
+    // antes mesmo do upload sair. Então pulamos o Storage e salvamos uma versão compactada no Firestore.
+    // Isso evita o botão ficar travado em "Salvando e enviando imagens...".
+    if (isLocalFileOrigin()) {
+      return buildCompressedFirestoreImage(file, occurrenceId, operacao, index, 'Execução local via file://. Storage ignorado para evitar CORS.');
+    }
+
+    const candidates = storageCandidates.length ? storageCandidates : [{ bucket: firebaseConfig.storageBucket, client: storage }];
+    let lastError = null;
+
+    for (const candidate of candidates) {
+      if (!candidate?.client) continue;
+      try {
+        const imageRef = storageRef(candidate.client, path);
+        await withTimeout(uploadBytes(imageRef, file, {
+          contentType: file.type || 'image/jpeg',
+          customMetadata: {
+            app: 'HEILOG',
+            occurrenceId,
+            dt: String(operacao.dt || '')
+          }
+        }), 8000, 'Upload da imagem');
+
+        const url = await withTimeout(getDownloadURL(imageRef), 8000, 'Busca do link da imagem');
+        return {
+          nome: file.name || safeFile,
+          url,
+          path,
+          bucket: candidate.bucket || firebaseConfig.storageBucket || '',
+          tamanho: file.size || 0,
+          tipo: file.type || 'image/jpeg',
+          criadoEm: new Date().toISOString(),
+          armazenamento: 'Firebase Storage'
+        };
+      } catch (err) {
+        lastError = err;
+        console.warn(`Falha ao enviar imagem para Storage (${candidate.bucket || 'bucket padrão'}). Tentando próximo/fallback...`, err);
+      }
+    }
+
+    // Fallback final: caso Storage esteja sem CORS/regra/bucket, salva uma cópia leve direto no Firestore.
+    return buildCompressedFirestoreImage(file, occurrenceId, operacao, index, lastError);
+  };
+
+  const uploadOccurrenceImages = async (files, occurrenceId, operacao = {}) => {
+    if (!files?.length) return [];
+    const stamp = Date.now();
+    const uploads = [];
+
+    for (let index = 0; index < files.length; index++) {
+      uploads.push(await uploadSingleOccurrenceImage(files[index], occurrenceId, operacao, index, stamp));
+    }
+
+    return uploads;
+  };
+
+  const renderOccurrenceEvidence = (op) => {
+    const images = getOccurrenceImages(op);
+    if (!images.length) return `<span class="occ-no-evidence">Sem imagem</span>`;
+
+    const first = images[0];
+    const label = `${images.length} foto${images.length > 1 ? 's' : ''}`;
+    return `
+      <button type="button" data-action="view-occurrence-images" data-id="${op.id}" class="occ-evidence-button" title="Ver evidências">
+        <img src="${escapeHtml(first.url)}" alt="Evidência da ocorrência" loading="lazy">
+        <span>${label}</span>
+      </button>`;
+  };
+
+  const renderOccurrenceImagesBlock = (op) => {
+    const images = getOccurrenceImages(op);
+    if (!images.length) {
+      return `
+        <div class="mt-3 rounded-xl border border-dashed border-gray-300 bg-gray-50 p-3 text-sm text-gray-500">
+          Nenhuma imagem anexada nesta ocorrência.
+        </div>`;
+    }
+
+    return `
+      <div class="mt-4">
+        <p class="text-sm font-bold text-gray-700 mb-2">Evidências anexadas</p>
+        <div class="occ-existing-images">
+          ${images.map((img, index) => `
+            <a class="occ-existing-image-card" href="${escapeHtml(img.url)}" target="_blank" rel="noopener noreferrer" title="Abrir imagem">
+              <img src="${escapeHtml(img.url)}" alt="Evidência ${index + 1}" loading="lazy">
+              <span>${escapeHtml(img.nome || `Imagem ${index + 1}`)}</span>
+            </a>
+          `).join('')}
+        </div>
+      </div>`;
+  };
+
+  const ensureOccurrenceImageModal = () => {
+    let modal = document.getElementById('occurrence-image-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'occurrence-image-modal';
+      modal.className = 'fixed inset-0 bg-black bg-opacity-70 z-[60] flex justify-center items-center modal-backdrop hidden p-4';
+      document.body.appendChild(modal);
+    }
+    return modal;
+  };
+
+  window.closeOccurrenceImagesModal = () => {
+    const modal = document.getElementById('occurrence-image-modal');
+    if (modal) modal.classList.add('hidden');
+  };
+
+  window.showOccurrenceImagesModal = () => {
+    if (!selectedOperacao) return;
+    const images = getOccurrenceImages(selectedOperacao);
+    const modal = ensureOccurrenceImageModal();
+    const title = `Evidências da DT ${escapeHtml(selectedOperacao.dt || '—')}`;
+
+    modal.innerHTML = `
+      <div class="occ-image-modal-card">
+        <button type="button" onclick="window.closeOccurrenceImagesModal()" class="occ-image-modal-close" title="Fechar">×</button>
+        <h3 class="text-2xl font-black mb-2 text-gray-900">${title}</h3>
+        <p class="text-sm text-gray-500 mb-4">Clique em uma imagem para abrir em nova aba.</p>
+        ${images.length ? `
+          <div class="occ-image-modal-grid">
+            ${images.map((img, index) => `
+              <a href="${escapeHtml(img.url)}" target="_blank" rel="noopener noreferrer">
+                <img src="${escapeHtml(img.url)}" alt="Evidência ${index + 1}" loading="lazy">
+                <span>${escapeHtml(img.nome || `Imagem ${index + 1}`)}</span>
+              </a>
+            `).join('')}
+          </div>` : `
+          <div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-gray-500 font-semibold">
+            Esta ocorrência ainda não tem imagem anexada.
+          </div>`}
+      </div>`;
+    modal.classList.remove('hidden');
   };
 
   const formatMilliseconds = (ms) => {
@@ -5587,8 +6702,24 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
     const filteredData = dataSet.filter(op => {
       if (activeTab === 'ocorrencias') {
-        return (op.dt?.toLowerCase() || '').includes(searchTerm) ||
-               (op.description?.toLowerCase() || '').includes(searchTerm);
+        const relatedOp = patioData.find(p => p.id === op.operacaoId) || historicoData.find(h => h.id === op.operacaoId) || {};
+        const byText = !searchTerm || [
+          op.dt,
+          op.description,
+          op.type,
+          op.canal,
+          op.statusOcorrencia,
+          relatedOp.motorista,
+          relatedOp.name,
+          relatedOp.transportadora,
+          getTruckPlate(relatedOp),
+          getTrailerPlate(relatedOp),
+          getOccurrenceTruckPlate(op),
+          getOccurrenceTrailerPlate(op)
+        ].filter(Boolean).some(v => norm(v).includes(searchTerm) || compact(v).includes(searchCompact));
+        const byStatus = statusFilter === 'todos' || String(op.statusOcorrencia || '').toLowerCase().includes(statusFilter.toLowerCase());
+        const byTransp = transportadoraFilter === 'todas' || relatedOp.transportadora === transportadoraFilter;
+        return byText && byStatus && byTransp;
       }
 
       const textMatch = matchesSearchOp(op, searchTerm, searchCompact);
@@ -5630,7 +6761,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const headers = {
       patio: 'DT,Status,Agenda,Tipo,Tempo no Pátio,Motorista,Transportadora,Placa Cavalo,Placa Carreta,Ações',
       historico: 'DT,Status Final,Agenda,Tipo,Motorista,Transportadora,Placa Cavalo,Placa Carreta,Finalizado Em,Ações',
-      ocorrencias: 'Data,DT,Canal,Prioridade,Problema Identificado,Descrição,Status,Ações'
+      ocorrencias: 'Data,DT,Canal,Prioridade,Problema Identificado,Descrição,Cavalo,Carreta,Evidências,Status,Ações'
     };
 
     tableHead.innerHTML =
@@ -5660,8 +6791,14 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           historicoData.find(h => h.id === op.operacaoId) || {};
       }
 
-      const truckPlate = getTruckPlate(opDataForActions) || '—';
-      const trailerPlate = getTrailerPlate(opDataForActions) || '—';
+      const occurrenceTruckPlate = activeTab === 'ocorrencias' ? getOccurrenceTruckPlate(op) : '';
+      const occurrenceTrailerPlate = activeTab === 'ocorrencias' ? getOccurrenceTrailerPlate(op) : '';
+      const truckPlate = occurrenceTruckPlate || getTruckPlate(opDataForActions) || '—';
+      const trailerPlate = occurrenceTrailerPlate || getTrailerPlate(opDataForActions) || '—';
+      const lockSourceOp = activeTab === 'ocorrencias'
+        ? { ...opDataForActions, ...op, placaCavalo: occurrenceTruckPlate || getTruckPlate(opDataForActions) || '', placaCarreta: occurrenceTrailerPlate || getTrailerPlate(opDataForActions) || '' }
+        : opDataForActions;
+      const isSapLocked = isOperationBlockedByChecklist(lockSourceOp);
 
       const telefoneDigits = getTelefoneFromOperacao(opDataForActions);
       const motorista = opDataForActions.motorista || opDataForActions.name || 'Motorista';
@@ -5684,19 +6821,25 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         </svg>`;
 
       let whatsappButtonHTML;
-      if (telefoneDigits) {
+      if (telefoneDigits && isSapLocked) {
+        whatsappButtonHTML =
+          `<button type="button" data-action="sap-whatsapp" data-id="${op.id}" title="WhatsApp bloqueado: confirmar desbloqueio no SAP"
+              class="table-action-btn table-action-whatsapp sap-locked">
+            ${whatsappMsgIcon}
+          </button>`;
+      } else if (telefoneDigits) {
         const message = `Olá ${motorista}, por favor, dirija-se à doca para o carregamento da DT ${dt}.`;
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/55${telefoneDigits}?text=${encodedMessage}`;
         whatsappButtonHTML =
           `<a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer"
-              title="WhatsApp" class="text-green-400 hover:text-green-300">
+              title="WhatsApp" class="table-action-btn table-action-whatsapp">
             ${whatsappMsgIcon.replace('pointer-events-none', '')}
           </a>`;
       } else {
         whatsappButtonHTML =
           `<button title="WhatsApp (Telefone indisponível)"
-              class="text-gray-600 cursor-not-allowed" disabled>
+              class="table-action-btn cursor-not-allowed" disabled>
             ${whatsappMsgIcon}
           </button>`;
       }
@@ -5704,7 +6847,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       let specificActions = '';
       if (activeTab === 'patio') {
         specificActions = `
-          <button type="button" data-action="details" data-id="${op.id}" title="Ver Detalhes">
+          <button type="button" data-action="details" data-id="${op.id}" title="Ver Detalhes" class="table-action-btn">
             <svg class="w-5 h-5 text-sky-400 hover:text-sky-300 pointer-events-none"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -5712,7 +6855,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
               <circle cx="12" cy="12" r="3"/>
             </svg>
           </button>
-          <button type="button" data-action="occurrence" data-id="${op.id}" title="Ocorrência / Power Apps">
+          <button type="button" data-action="occurrence" data-id="${op.id}" title="Ocorrência / Power Apps" class="table-action-btn">
             <svg class="w-5 h-5 text-amber-400 hover:text-amber-300 pointer-events-none"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -5721,8 +6864,9 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
               <path d="M12 6v6"/>
               <path d="M9 9h6"/>
             </svg>
+            <span class="table-action-label">Ocorr.</span>
           </button>
-          <button type="button" data-action="finish" data-id="${op.id}" title="Finalizar Operação">
+          <button type="button" data-action="finish" data-id="${op.id}" title="${isSapLocked ? 'Concluir bloqueado: confirmar desbloqueio no SAP' : 'Finalizar Operação'}" class="table-action-btn ${isSapLocked ? 'sap-locked' : ''}">
             <svg class="w-5 h-5 text-green-400 hover:text-green-300 pointer-events-none"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -5730,7 +6874,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
               <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
             </svg>
           </button>
-          <button type="button" data-action="cancel" data-id="${op.id}" title="Cancelar DT" class="text-red-500 hover:text-red-400">
+          <button type="button" data-action="cancel" data-id="${op.id}" title="Cancelar DT" class="table-action-btn">
             <svg class="w-5 h-5 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="3 6 5 6 21 6"></polyline>
@@ -5739,28 +6883,46 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           </button>
         `;
       } else if (activeTab === 'ocorrencias') {
+        const hasImages = getOccurrenceImages(op).length > 0;
         specificActions = `
-          <button type="button" data-action="edit-occurrence" data-id="${op.id}" title="Ver/Editar Resolução"
-              class="text-blue-400 hover:text-blue-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24"
+          ${hasImages ? `
+            <button type="button" data-action="view-occurrence-images" data-id="${op.id}" title="Ver imagens" class="table-action-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+            </button>` : ''}
+          <button type="button" data-action="edit-occurrence" data-id="${op.id}" title="Ver/Editar Resolução" class="table-action-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
             </svg>
+            <span class="table-action-label">Resolver</span>
           </button>`;
       }
 
-      const actionButtonsHTML = `<td class="p-4 flex items-center gap-4">${whatsappButtonHTML}${specificActions}</td>`;
+      const actionButtonsHTML = `<td class="p-4 action-cell">${whatsappButtonHTML}${specificActions}</td>`;
 
       let rowCells = '';
       if (activeTab === 'ocorrencias') {
         rowCells = `
           <td class="p-4 text-sm">${op.timestamp ? new Date(op.timestamp.seconds * 1000).toLocaleString('pt-BR') : 'N/A'}</td>
-          <td class="p-4 font-mono text-sm">${op.dt}</td>
-          <td class="p-4 text-sm">${op.canal || 'N/A'}</td>
-          <td class="p-4 text-sm">${op.prioridade || 'N/A'}</td>
-          <td class="p-4 text-sm">${op.type}</td>
-          <td class="p-4 text-sm">${op.description}</td>
-          <td class="p-4 text-sm">${op.statusOcorrencia || 'Em andamento'}</td>
+          <td class="p-4 font-mono text-sm">${escapeHtml(op.dt || '')}</td>
+          <td class="p-4 text-sm">${escapeHtml(op.canal || 'N/A')}</td>
+          <td class="p-4 text-sm">${escapeHtml(op.prioridade || 'N/A')}</td>
+          <td class="p-4 text-sm">${escapeHtml(op.type || '')}</td>
+          <td class="p-4 text-sm max-w-[360px] break-words">
+            ${escapeHtml(op.description || '')}
+            ${isChecklistOccurrence(op) && getOccurrenceTrailerPlate(op) && getTrailerChecklistBlockCount(getOccurrenceTrailerPlate(op)) >= 3
+              ? `<div class="occ-repeated-block-badge">⚠️ ${getTrailerChecklistBlockCount(getOccurrenceTrailerPlate(op))} bloqueios • ${escapeHtml(getOccurrenceTrailerPlate(op))}${isTrailerSapUnlocked(getOccurrenceTrailerPlate(op)) ? ' • SAP OK' : ''}</div>`
+              : ''}
+          </td>
+          <td class="p-4 text-sm"><span class="occ-plate-chip ${truckPlate === '—' ? 'empty' : ''}">${escapeHtml(truckPlate)}</span></td>
+          <td class="p-4 text-sm"><span class="occ-plate-chip ${trailerPlate === '—' ? 'empty' : ''}">${escapeHtml(trailerPlate)}</span></td>
+          <td class="p-4 text-sm">${renderOccurrenceEvidence(op)}</td>
+          <td class="p-4 text-sm">${escapeHtml(op.statusOcorrencia || 'Em andamento')}</td>
           ${actionButtonsHTML}
         `;
       } else {
@@ -6000,6 +7162,14 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         <option value="Finalizado">Finalizado</option>
         <option value="Cancelado">Cancelado</option>
       `;
+    } else if (tab === 'ocorrencias') {
+      filterStatusSelect.innerHTML = `
+        <option value="todos">Todos Status</option>
+        <option value="Em andamento">Em andamento</option>
+        <option value="Concluído">Concluído</option>
+        <option value="Aberto no Power Apps">Aberto no Power Apps</option>
+        <option value="Cancelado">Cancelado</option>
+      `;
     } else {
       filterStatusSelect.innerHTML = `
         <option value="todos">Todos Status</option>
@@ -6067,9 +7237,19 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     switch (action) {
       case 'details': window.showDetailsModal(); break;
       case 'occurrence': window.showOccurrenceModal(); break;
-      case 'finish': showConfirmModal('Tem certeza que deseja finalizar esta operação?', finalizarOperacao); break;
+      case 'finish': {
+        if (requireSapUnlockForOperation(selectedOperacao, () => showConfirmModal('Tem certeza que deseja finalizar esta operação?', finalizarOperacao))) break;
+        showConfirmModal('Tem certeza que deseja finalizar esta operação?', finalizarOperacao);
+        break;
+      }
+      case 'sap-whatsapp': {
+        if (requireSapUnlockForOperation(selectedOperacao, () => openWhatsAppForOperation(selectedOperacao))) break;
+        openWhatsAppForOperation(selectedOperacao);
+        break;
+      }
       case 'cancel': showConfirmModal(`Tem certeza que deseja cancelar a DT ${selectedOperacao.dt}? Esta ação não pode ser desfeita.`, cancelarOperacao); break;
       case 'edit-occurrence': window.showResolutionModal(); break;
+      case 'view-occurrence-images': window.showOccurrenceImagesModal(); break;
     }
   }
 
@@ -6149,28 +7329,53 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   window.showOccurrenceModal = () => {
     if (!selectedOperacao) return;
     document.getElementById('occurrence-modal-title').textContent = `Registrar Ocorrência para DT: ${selectedOperacao.dt}`;
+    const form = document.getElementById('occurrence-form');
+    if (form) form.reset();
+    const truckInput = document.getElementById('occurrenceTruckPlate');
+    const trailerInput = document.getElementById('occurrenceTrailerPlate');
+    if (truckInput) truckInput.value = normalizePlate(getTruckPlate(selectedOperacao) || '') || 'NÃO INFORMADO';
+    if (trailerInput) trailerInput.value = normalizePlate(getTrailerPlate(selectedOperacao) || '') || 'NÃO INFORMADO';
+    occurrenceSelectedFiles = [];
+    renderSelectedImagePreview('occurrence-image-preview', occurrenceSelectedFiles, 'occurrence');
+    renderOccurrenceChecklistWarning();
     document.getElementById('occurrence-modal').classList.remove('hidden');
   };
 
-  window.closeOccurrenceModal = () => document.getElementById('occurrence-modal').classList.add('hidden');
+  window.closeOccurrenceModal = () => {
+    occurrenceSelectedFiles = [];
+    renderSelectedImagePreview('occurrence-image-preview', occurrenceSelectedFiles, 'occurrence');
+    const warning = document.getElementById('occurrence-checklist-warning');
+    if (warning) { warning.classList.add('hidden'); warning.innerHTML = ''; }
+    document.getElementById('occurrence-modal').classList.add('hidden');
+  };
 
   window.showResolutionModal = () => {
     if (!selectedOperacao) return;
     document.getElementById('resolution-modal-title').textContent = `Resolver Ocorrência: ${selectedOperacao.dt}`;
 
     document.getElementById('resolution-modal-content').innerHTML = `
-      <p><strong>Problema:</strong> ${selectedOperacao.type}</p>
-      <p><strong>Descrição:</strong> ${selectedOperacao.description}</p>
-      <p><strong>Resolução Anterior:</strong> ${selectedOperacao.resolucao || 'Nenhuma'}</p>
+      <p><strong>Problema:</strong> ${escapeHtml(selectedOperacao.type || '')}</p>
+      <p><strong>Cavalo:</strong> ${escapeHtml(getOccurrenceTruckPlate(selectedOperacao) || '—')}</p>
+      <p><strong>Carreta:</strong> ${escapeHtml(getOccurrenceTrailerPlate(selectedOperacao) || '—')}</p>
+      <p><strong>Bloqueios ativos da carreta:</strong> ${escapeHtml(getOccurrenceTrailerPlate(selectedOperacao) ? String(getTrailerChecklistBlockCount(getOccurrenceTrailerPlate(selectedOperacao))) : '0')}</p>
+      <p><strong>Descrição:</strong> ${escapeHtml(selectedOperacao.description || '')}</p>
+      <p><strong>Resolução Anterior:</strong> ${escapeHtml(selectedOperacao.resolucao || 'Nenhuma')}</p>
+      ${renderOccurrenceImagesBlock(selectedOperacao)}
     `;
 
     document.getElementById('resolutionText').value = selectedOperacao.resolucao || '';
     document.getElementById('resolutionStatus').value = selectedOperacao.statusOcorrencia || 'Em andamento';
+    resolutionSelectedFiles = [];
+    renderSelectedImagePreview('resolution-image-preview', resolutionSelectedFiles, 'resolution');
 
     document.getElementById('resolution-modal').classList.remove('hidden');
   };
 
-  window.closeResolutionModal = () => document.getElementById('resolution-modal').classList.add('hidden');
+  window.closeResolutionModal = () => {
+    resolutionSelectedFiles = [];
+    renderSelectedImagePreview('resolution-image-preview', resolutionSelectedFiles, 'resolution');
+    document.getElementById('resolution-modal').classList.add('hidden');
+  };
 
   // ==============================
   // LOGS
@@ -6317,10 +7522,122 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const collectionRef = collection(db, `artifacts/${appId}/public/data/ocorrencias`);
     const querySnapshot = await getDocs(collectionRef);
     const batch = writeBatch(db);
-    querySnapshot.forEach(docu => batch.delete(docu.ref));
+    const storagePaths = [];
+
+    querySnapshot.forEach(docu => {
+      const data = docu.data() || {};
+      getOccurrenceImages(data).forEach(img => {
+        if (img.path) storagePaths.push(img.path);
+      });
+      batch.delete(docu.ref);
+    });
+
+    if (storage && storagePaths.length) {
+      await Promise.allSettled(storagePaths.map(path => deleteObject(storageRef(storage, path))));
+    }
+
     await batch.commit();
-    showToast("Ocorrências limpas com sucesso.", "success");
+    showToast("Ocorrências e evidências limpas com sucesso.", "success");
   }
+
+
+  const formatOccurrenceDate = (value) => {
+    if (!value) return '';
+    if (value.seconds) return new Date(value.seconds * 1000).toLocaleString('pt-BR');
+    if (typeof value === 'number') return new Date(value).toLocaleString('pt-BR');
+    return String(value || '');
+  };
+
+  const buildEvidenceDownloadLinksHtml = (op = {}) => {
+    const images = getOccurrenceImages(op);
+    if (!images.length) return '<span class="muted">Sem imagem</span>';
+
+    return images.map((img, index) => {
+      const ext = String(img.tipo || img.type || 'image/jpeg').includes('png') ? 'png' : 'jpg';
+      const fileName = sanitizeStorageName(`${op.dt || 'sem-dt'}_evidencia_${index + 1}.${ext}`);
+      const label = `Baixar imagem ${index + 1}`;
+      const href = img.url || '';
+      const isData = String(href).startsWith('data:');
+      const thumb = href ? `<img src="${escapeHtml(href)}" alt="Evidência ${index + 1}">` : '';
+      return `
+        <div class="evidence-export-card">
+          ${thumb}
+          <a href="${escapeHtml(href)}" ${isData ? `download="${escapeHtml(fileName)}"` : `target="_blank" rel="noopener noreferrer" download="${escapeHtml(fileName)}"`}>${label}</a>
+          <small>${escapeHtml(img.nome || fileName)}</small>
+        </div>`;
+    }).join('');
+  };
+
+  const exportOccurrencesWithEvidenceLinks = (rows = []) => {
+    const generatedAt = new Date().toLocaleString('pt-BR');
+    const htmlRows = rows.map(op => {
+      const trailer = getOccurrenceTrailerPlate(op) || '';
+      const truck = getOccurrenceTruckPlate(op) || '';
+      const blockCount = isChecklistOccurrence(op) && trailer ? getTrailerChecklistBlockCount(trailer) : 0;
+      return `
+        <tr>
+          <td>${escapeHtml(formatOccurrenceDate(op.timestamp))}</td>
+          <td class="mono">${escapeHtml(op.dt || '')}</td>
+          <td>${escapeHtml(op.canal || '')}</td>
+          <td>${escapeHtml(op.prioridade || '')}</td>
+          <td>${escapeHtml(op.type || '')}${blockCount >= 3 ? `<br><strong class="danger">⚠️ ${blockCount} bloqueios • ${escapeHtml(trailer)}${isTrailerSapUnlocked(trailer) ? ' • SAP OK' : ''}</strong>` : ''}</td>
+          <td>${escapeHtml(op.description || '')}</td>
+          <td class="mono">${escapeHtml(truck || '—')}</td>
+          <td class="mono">${escapeHtml(trailer || '—')}</td>
+          <td>${buildEvidenceDownloadLinksHtml(op)}</td>
+          <td>${escapeHtml(op.statusOcorrencia || '')}</td>
+          <td>${escapeHtml(op.resolucao || '')}</td>
+          <td>${escapeHtml(formatOccurrenceDate(op.resolvidoEm))}</td>
+        </tr>`;
+    }).join('');
+
+    const html = `<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HEILOG - Ocorrências com Evidências</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 24px; color: #102018; background: #f6faf7; }
+  h1 { margin: 0 0 6px; color: #07351f; }
+  .muted { color: #64748b; font-weight: 700; }
+  .mono { font-family: Consolas, monospace; color: #006637; font-weight: 700; }
+  .danger { color: #be123c; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 28px rgba(15,23,42,.08); }
+  th, td { border-bottom: 1px solid #e2e8f0; padding: 10px; vertical-align: top; font-size: 13px; }
+  th { background: #07351f; color: white; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .evidence-export-card { display: inline-flex; flex-direction: column; gap: 5px; margin: 0 8px 8px 0; width: 134px; border: 1px solid #dbe6df; border-radius: 12px; padding: 7px; background: #f8fbf9; }
+  .evidence-export-card img { width: 100%; height: 78px; object-fit: cover; border-radius: 9px; background: #e2e8f0; }
+  .evidence-export-card a { display: inline-flex; justify-content: center; border-radius: 999px; padding: 7px 9px; background: #07351f; color: #fff; text-decoration: none; font-weight: 800; font-size: 12px; }
+  .evidence-export-card small { color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; }
+  @media print { body { background: #fff; margin: 10mm; } .evidence-export-card a { color: #07351f; background: #eef7f1; border: 1px solid #dbe6df; } }
+</style>
+</head>
+<body>
+  <h1>HEILOG - Ocorrências com Evidências</h1>
+  <p class="muted">Gerado em ${escapeHtml(generatedAt)} • ${rows.length} ocorrência(s). Clique em “Baixar imagem” para abrir ou baixar a evidência.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Data</th><th>DT</th><th>Canal</th><th>Prioridade</th><th>Problema</th><th>Descrição</th><th>Cavalo</th><th>Carreta</th><th>Evidências</th><th>Status</th><th>Resolução</th><th>Resolvido em</th>
+      </tr>
+    </thead>
+    <tbody>${htmlRows || '<tr><td colspan="12">Nenhuma ocorrência encontrada.</td></tr>'}</tbody>
+  </table>
+</body>
+</html>`;
+
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `heilog_ocorrencias_evidencias_${new Date().toISOString().split('T')[0]}.html`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+    showToast('Exportação de ocorrências gerada com links para baixar as imagens.', 'success');
+  };
 
   // ==============================
   // EXPORT CSV (com placas)
@@ -6338,11 +7655,27 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     let dataToExport, headers;
 
     if (activeTab === 'ocorrencias') {
-      dataToExport = ocorrenciasData.filter(op =>
-        (op.dt?.toLowerCase() || '').includes(searchTerm) ||
-        (op.description?.toLowerCase() || '').includes(searchTerm)
-      );
-      headers = ['Data','DT','Canal','Prioridade','Problema','Descrição','Status','Resolução','Resolvido Em'];
+      dataToExport = ocorrenciasData.filter(op => {
+        const relatedOp = patioData.find(p => p.id === op.operacaoId) || historicoData.find(h => h.id === op.operacaoId) || {};
+        const byText = !searchTerm || [
+          op.dt,
+          op.description,
+          op.type,
+          op.canal,
+          op.statusOcorrencia,
+          relatedOp.motorista,
+          relatedOp.name,
+          relatedOp.transportadora,
+          getTruckPlate(relatedOp),
+          getTrailerPlate(relatedOp),
+          getOccurrenceTruckPlate(op),
+          getOccurrenceTrailerPlate(op)
+        ].filter(Boolean).some(v => norm(v).includes(searchTerm) || compact(v).includes(searchCompact));
+        const byStatus = statusFilter === 'todos' || String(op.statusOcorrencia || '').toLowerCase().includes(statusFilter.toLowerCase());
+        const byTransp = transportadoraFilter === 'todas' || relatedOp.transportadora === transportadoraFilter;
+        return byText && byStatus && byTransp;
+      });
+      headers = ['Data','DT','Canal','Prioridade','Problema','Descrição','Cavalo','Carreta','Imagens','Status','Resolução','Resolvido Em'];
     } else if (activeTab === 'historico') {
       let filteredHistorico = historicoData;
 
@@ -6390,17 +7723,26 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       headers = ['DT','Status','Agenda','Tipo','Tempo no Pátio','Motorista','Transportadora','Placa Cavalo','Placa Carreta'];
     }
 
+    if (activeTab === 'ocorrencias') {
+      exportOccurrencesWithEvidenceLinks(dataToExport);
+      return;
+    }
+
     const rows = dataToExport.map(op => {
       if (activeTab === 'ocorrencias') {
+        const imageUrls = getOccurrenceImages(op).map(img => img.url).join(' | ');
         return [
           `"${op.timestamp ? new Date(op.timestamp.seconds * 1000).toLocaleString('pt-BR') : 'N/A'}"`,
-          `"${op.dt}"`,
+          `"${op.dt || ''}"`,
           `"${op.canal || ''}"`,
           `"${op.prioridade || ''}"`,
           `"${op.type || ''}"`,
-          `"${op.description || ''}"`,
+          `"${String(op.description || '').replace(/"/g, '""')}"`,
+          `"${getOccurrenceTruckPlate(op) || ''}"`,
+          `"${getOccurrenceTrailerPlate(op) || ''}"`,
+          `"${imageUrls.replace(/"/g, '""')}"`,
           `"${op.statusOcorrencia || ''}"`,
-          `"${op.resolucao || ''}"`,
+          `"${String(op.resolucao || '').replace(/"/g, '""')}"`,
           `"${op.resolvidoEm ? new Date(op.resolvidoEm.seconds * 1000).toLocaleString('pt-BR') : ''}"`
         ].join(',');
       }
@@ -6502,6 +7844,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   // ==============================
   async function finalizarOperacao() {
     if (!db || !selectedOperacao) return;
+    if (requireSapUnlockForOperation(selectedOperacao, () => showConfirmModal('Tem certeza que deseja finalizar esta operação?', finalizarOperacao))) return;
     try {
       const finalizada = { ...selectedOperacao, status: 'Finalizado', finishedTime: Date.now() };
       const batch = writeBatch(db);
@@ -6566,7 +7909,10 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       canal: "Power Apps",
       prioridade,
       statusOcorrencia: "Aberto no Power Apps",
-      resolucao: ""
+      resolucao: "",
+      imagens: [],
+      imagensCount: 0,
+      ...buildOccurrenceSnapshotPayload(selectedOperacao, "Abertura Power Apps")
     });
 
     // 2) grava também no log da operação
@@ -6594,25 +7940,79 @@ async function handleAddOccurrence(e) {
     if (!db || !selectedOperacao) return;
 
     const form = document.getElementById('occurrence-form');
+    const submitBtn = form?.querySelector('button[type="submit"]');
+    const originalSubmitText = submitBtn?.textContent || 'Salvar Ocorrência';
     const formData = new FormData(form);
-    const description = formData.get('description');
+    const description = String(formData.get('description') || '').trim();
+    const occurrenceType = String(formData.get('type') || '').trim();
+    if (!description) return;
+    const snapshotPayload = buildOccurrenceSnapshotPayload(selectedOperacao, occurrenceType);
 
-    await addDoc(collection(db, `artifacts/${appId}/public/data/ocorrencias`), {
-      type: formData.get('type'),
-      description,
-      dt: selectedOperacao.dt,
-      operacaoId: selectedOperacao.id,
-      timestamp: serverTimestamp(),
-      canal: 'Painel',
-      prioridade: getPriorityStatusLogic(selectedOperacao).statusText,
-      statusOcorrencia: 'Em andamento',
-      resolucao: ''
-    });
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = occurrenceSelectedFiles.length ? (isLocalFileOrigin() ? 'Compactando e salvando imagens...' : 'Salvando e enviando imagens...') : 'Salvando...';
+    }
 
-    await addLogEntry(selectedOperacao.id, `Ocorrência registrada: ${description}`);
-    window.closeOccurrenceModal();
-    form.reset();
-    showToast("Ocorrência registrada.", "success");
+    let uploadedImages = [];
+    let imageUploadFailed = false;
+
+    try {
+      const occurrencePayload = {
+        type: occurrenceType,
+        description,
+        dt: selectedOperacao.dt || '',
+        operacaoId: selectedOperacao.id || '',
+        timestamp: serverTimestamp(),
+        canal: 'Painel',
+        prioridade: getPriorityStatusLogic(selectedOperacao).statusText,
+        statusOcorrencia: 'Em andamento',
+        resolucao: '',
+        imagens: [],
+        imagensCount: 0,
+        ...snapshotPayload
+      };
+
+      const occurrenceRef = await addDoc(collection(db, `artifacts/${appId}/public/data/ocorrencias`), occurrencePayload);
+
+      if (occurrenceSelectedFiles.length) {
+        try {
+          uploadedImages = await uploadOccurrenceImages(occurrenceSelectedFiles, occurrenceRef.id, selectedOperacao);
+          const usedFallback = uploadedImages.some(img => img.fallbackFirestore);
+          if (usedFallback) console.info('HEILOG: imagens salvas em modo fallback compactado no Firestore.');
+          await updateDoc(occurrenceRef, {
+            imagens: uploadedImages,
+            imagensCount: uploadedImages.length
+          });
+        } catch (imageError) {
+          imageUploadFailed = true;
+          console.error('Erro ao enviar imagens da ocorrência:', imageError);
+        }
+      }
+
+      await addLogEntry(
+        selectedOperacao.id,
+        `Ocorrência registrada: ${description}${uploadedImages.length ? ` (${uploadedImages.length} imagem(ns) anexada(s))` : ''}`
+      );
+
+      warnIfTrailerBlockedThreeTimes(selectedOperacao, { ...occurrencePayload, id: occurrenceRef.id });
+
+      window.closeOccurrenceModal();
+      form.reset();
+      showToast(
+        imageUploadFailed
+          ? 'Ocorrência salva, mas as imagens não foram enviadas. Verifique o Firebase Storage.'
+          : uploadedImages.some(img => img.fallbackFirestore) ? 'Ocorrência salva com imagem compactada no painel.' : 'Ocorrência registrada com sucesso.',
+        imageUploadFailed ? 'error' : 'success'
+      );
+    } catch (error) {
+      console.error('Erro ao registrar ocorrência:', error);
+      showToast('Não foi possível salvar a ocorrência. Veja o console.', 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalSubmitText;
+      }
+    }
   }
 
   async function handleUpdateResolution(e) {
@@ -6620,20 +8020,64 @@ async function handleAddOccurrence(e) {
     if (!db || !selectedOperacao) return;
 
     const form = document.getElementById('resolution-form');
+    const submitBtn = form?.querySelector('button[type="submit"]');
+    const originalSubmitText = submitBtn?.textContent || 'Salvar Resolução';
     const formData = new FormData(form);
     const resolution = formData.get('resolution');
     const status = formData.get('status');
 
-    const occurrenceRef = doc(db, `artifacts/${appId}/public/data/ocorrencias`, selectedOperacao.id);
-    await updateDoc(occurrenceRef, {
-      resolucao: resolution,
-      statusOcorrencia: status,
-      resolvidoEm: status === 'Concluído' ? serverTimestamp() : null
-    });
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = resolutionSelectedFiles.length ? (isLocalFileOrigin() ? 'Compactando e salvando imagens...' : 'Salvando e enviando imagens...') : 'Salvando...';
+    }
 
-    await addLogEntry(selectedOperacao.operacaoId, `Resolução da ocorrência: ${resolution} (Status: ${status})`);
-    window.closeResolutionModal();
-    showToast("Resolução salva.", "success");
+    let uploadedImages = [];
+    let imageUploadFailed = false;
+
+    try {
+      const occurrenceRef = doc(db, `artifacts/${appId}/public/data/ocorrencias`, selectedOperacao.id);
+      const existingImages = getOccurrenceImages(selectedOperacao);
+      const payload = {
+        resolucao: resolution,
+        statusOcorrencia: status,
+        resolvidoEm: status === 'Concluído' ? serverTimestamp() : null
+      };
+
+      if (resolutionSelectedFiles.length) {
+        try {
+          uploadedImages = await uploadOccurrenceImages(resolutionSelectedFiles, selectedOperacao.id, selectedOperacao);
+          const usedFallback = uploadedImages.some(img => img.fallbackFirestore);
+          if (usedFallback) console.info('HEILOG: imagens salvas em modo fallback compactado no Firestore.');
+          payload.imagens = [...existingImages, ...uploadedImages];
+          payload.imagensCount = payload.imagens.length;
+        } catch (imageError) {
+          imageUploadFailed = true;
+          console.error('Erro ao enviar novas imagens da resolução:', imageError);
+        }
+      }
+
+      await updateDoc(occurrenceRef, payload);
+
+      await addLogEntry(
+        selectedOperacao.operacaoId,
+        `Resolução da ocorrência: ${resolution} (Status: ${status})${uploadedImages.length ? ` - ${uploadedImages.length} imagem(ns) anexada(s)` : ''}`
+      );
+      window.closeResolutionModal();
+      showToast(
+        imageUploadFailed
+          ? 'Resolução salva, mas as novas imagens não foram enviadas. Verifique o Firebase Storage.'
+          : uploadedImages.some(img => img.fallbackFirestore) ? 'Resolução salva com imagem compactada no painel.' : 'Resolução salva.',
+        imageUploadFailed ? 'error' : 'success'
+      );
+    } catch (error) {
+      console.error('Erro ao salvar resolução:', error);
+      showToast('Não foi possível salvar a resolução. Veja o console.', 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalSubmitText;
+      }
+    }
   }
 
   // ==============================
@@ -6702,6 +8146,8 @@ async function handleAddOccurrence(e) {
     if (attentionCount > 5) {
       createAlertBanner(`Alerta de Volume: ${attentionCount} veículos em status de 'Atenção'. Risco de atrasos.`, 'medium');
     }
+
+    checkChecklistBlockAlerts();
   }
 
   // ===================================================================
@@ -10634,6 +12080,8 @@ async function handleAddOccurrence(e) {
 
     const app = initializeApp(firebaseConfig);
     db = getFirestore(app);
+    storage = getStorage(app);
+    storageCandidates = buildStorageCandidates(app);
     const auth = getAuth(app);
     setLogLevel('error');
 
@@ -10692,12 +12140,27 @@ async function handleAddOccurrence(e) {
                 class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm
                        py-2 px-3 focus:outline-none focus:ring-blue-500 sm:text-sm">
           <option>Mecânico</option>
+          <option>Checklist</option>
           <option>Operacional</option>
           <option>Trânsito</option>
           <option>Climático</option>
           <option>Fiscal</option>
           <option>Outro</option>
         </select>
+        <div id="occurrence-checklist-warning" class="occ-checklist-warning hidden mt-3"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label for="occurrenceTruckPlate" class="block text-sm font-medium text-gray-300">Cavalo</label>
+          <input id="occurrenceTruckPlate" type="text" readonly
+                 class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 sm:text-sm">
+        </div>
+        <div>
+          <label for="occurrenceTrailerPlate" class="block text-sm font-medium text-gray-300">Carreta</label>
+          <input id="occurrenceTrailerPlate" type="text" readonly
+                 class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 sm:text-sm">
+        </div>
       </div>
 
       <div>
@@ -10707,17 +12170,35 @@ async function handleAddOccurrence(e) {
                          py-2 px-3 focus:outline-none focus:ring-blue-500 sm:text-sm"></textarea>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Evidências da ocorrência</label>
+        <div class="occ-image-dropzone">
+          <input id="occurrenceImages" name="images" type="file" accept="image/*" multiple class="sr-only">
+          <label for="occurrenceImages" class="occ-image-dropzone-label">
+            <span>📷 Anexar imagem</span>
+            <small>Até 8 imagens • 8 MB cada</small>
+          </label>
+        </div>
+        <p class="mt-2 text-xs text-gray-500">Rodando localmente, as imagens são compactadas e salvas no painel sem usar Storage.</p>
+        <div id="occurrence-image-preview" class="occ-image-preview-grid hidden"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <button type="submit"
                 class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-          Salvar Ocorrência
+          Salvar
         </button>
 
         <button type="button"
         id="open-powerapps-btn"
         class="w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg">
-  Ir para Power Apps
+  Power Apps
 </button>
+
+        <button type="button" onclick="window.closeOccurrenceModal()"
+                class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">
+          Cancelar
+        </button>
       </div>
     </form>
   </div>`;
@@ -10753,12 +12234,33 @@ async function handleAddOccurrence(e) {
               <option value="Cancelado">Cancelado</option>
             </select>
           </div>
-          <button type="submit"
-                  class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-            Salvar Resolução
-          </button>
+          <div>
+            <label class="block text-sm font-medium text-gray-300">Anexar novas evidências</label>
+            <div class="occ-image-dropzone mt-1">
+              <input id="resolutionImages" name="resolutionImages" type="file" accept="image/*" multiple class="sr-only">
+              <label for="resolutionImages" class="occ-image-dropzone-label">
+                <span>📷 Adicionar imagens</span>
+                <small>Opcional</small>
+              </label>
+            </div>
+            <div id="resolution-image-preview" class="occ-image-preview-grid hidden"></div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+              Salvar Resolução
+            </button>
+            <button type="button" onclick="window.closeResolutionModal()"
+                    class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">
+              Cancelar
+            </button>
+          </div>
         </form>
       </div>`;
+
+    bindOccurrenceImageInputs();
+    document.getElementById('occurrenceType')?.addEventListener('change', renderOccurrenceChecklistWarning);
 
     updateStatusFilterOptions('patio');
 
@@ -11971,6 +13473,23 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
       onSnapshot(collection(db, `artifacts/${appId}/public/data/ocorrencias`), snap => {
         ocorrenciasData = snap.docs.map(d => ({ ...d.data(), id: d.id }))
           .sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+        checkSystemAlerts();
+        debouncedRender();
+      });
+
+      onSnapshot(collection(db, `artifacts/${appId}/public/data/sap_desbloqueios`), snap => {
+        const remote = {};
+        snap.docs.forEach(d => {
+          const data = d.data() || {};
+          const plate = normalizePlate(data.trailerPlate || d.id || '');
+          if (plate && data.unlocked === true) remote[plate] = { ...data, trailerPlate: plate, unlocked: true };
+        });
+        sapUnlocksData = { ...getSapUnlockLocalMap(), ...remote };
+        checkSystemAlerts();
+        debouncedRender();
+      }, err => {
+        console.warn('Não foi possível ler sap_desbloqueios. Usando desbloqueios locais.', err);
+        sapUnlocksData = getSapUnlockLocalMap();
         debouncedRender();
       });
     });
