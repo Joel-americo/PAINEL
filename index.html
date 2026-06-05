@@ -6131,7 +6131,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     if (!telefoneDigits) return '';
     const motorista = actionOp.motorista || actionOp.name || 'Motorista';
     const dt = actionOp.dt || op.dt || '';
-    const message = `Olá ${motorista}, por favor, dirija-se à doca para o carregamento da DT ${dt}.`;
+    const message = `Olá ${motorista}, por favor, dirija-se ao Atendimento para retirar sua ordem de carregamento/Descarga ${dt}.`;
     return `https://wa.me/55${telefoneDigits}?text=${encodeURIComponent(message)}`;
   };
 
