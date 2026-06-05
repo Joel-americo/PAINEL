@@ -7147,7 +7147,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
             ${whatsappMsgIcon}
           </button>`;
       } else if (telefoneDigits) {
-        const message = `Olá ${motorista}, por favor, dirija-se à doca para o carregamento da DT ${dt}.`;
+        const message = `Olá ${motorista}, por favor, dirija-se ao Atendimento para retirar sua ordem de Carregamento/Descarga ${dt}.`;
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/55${telefoneDigits}?text=${encodedMessage}`;
         whatsappButtonHTML =
@@ -7866,7 +7866,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
     modalActions.innerHTML = '';
     if (telefoneDigits) {
-      const message = `Olá ${selectedOperacao.motorista || selectedOperacao.name || 'Motorista'}, por favor, dirija-se à doca para o carregamento da DT ${selectedOperacao.dt}.`;
+      const message = `Olá ${selectedOperacao.motorista || selectedOperacao.name || 'Motorista'}, por favor, Dirija-se ao Atendimento para retirar sua ordem de carregamento/Descarga ${selectedOperacao.dt}.`;
       const encodedMessage = encodeURIComponent(message);
       const whatsappUrl = `https://wa.me/55${telefoneDigits}?text=${encodedMessage}`;
       modalActions.innerHTML = `
