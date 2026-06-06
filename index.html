@@ -5925,6 +5925,807 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
 
   // ==============================
+  // FILTROS ESTILO EWM NAS TABELAS
+  // ==============================
+  const EWM_FILTER_EXCLUDED_TABS = new Set(['dashboard', 'ritmo']); // Dashboard e Controle Baldeios
+  const ewmColumnFilterState = {};
+  const ewmColumnSortState = {};
+  let ewmApplyTimer = null;
+  let ewmMutationObserver = null;
+
+  const injectEwmColumnFilterStyles = () => {
+    if (document.getElementById('ewm-column-filter-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'ewm-column-filter-styles';
+    style.textContent = `
+      .ewm-filterable-th {
+        position: relative !important;
+        white-space: nowrap;
+      }
+      .ewm-filterable-th .ewm-filter-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        vertical-align: middle;
+      }
+      .ewm-filter-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.85rem;
+        height: 1.85rem;
+        margin-left: 0.38rem;
+        border-radius: 0.65rem;
+        border: 1px solid rgba(3, 53, 31, 0.22) !important;
+        background: linear-gradient(135deg, #e7f3ec, #cfe7d8) !important;
+        color: #06351f !important;
+        cursor: pointer;
+        box-shadow:
+          0 6px 14px rgba(15, 23, 42, 0.12),
+          inset 0 1px 0 rgba(255,255,255,0.75) !important;
+        opacity: 1 !important;
+      }
+      .ewm-filter-btn svg {
+        width: 15px;
+        height: 15px;
+        display: block;
+        stroke: #06351f !important;
+        fill: none !important;
+        opacity: 1 !important;
+        pointer-events: none;
+        filter: drop-shadow(0 1px 0 rgba(255,255,255,0.45));
+      }
+      .ewm-filter-btn:hover {
+        background: linear-gradient(135deg, #d7eee1, #bfe0cc) !important;
+        border-color: rgba(0, 122, 61, 0.38) !important;
+        transform: translateY(-1px);
+      }
+      .ewm-filter-btn.ewm-filter-active {
+        background: linear-gradient(135deg, #07351f, #0b5a35) !important;
+        color: #ffffff !important;
+        border-color: rgba(0, 122, 61, 0.55) !important;
+        box-shadow:
+          0 8px 18px rgba(0, 79, 42, 0.25),
+          inset 0 1px 0 rgba(255,255,255,0.12) !important;
+      }
+      .ewm-filter-btn.ewm-filter-active svg {
+        stroke: #ffffff !important;
+      }
+      .ewm-filter-btn.ewm-sort-active:not(.ewm-filter-active) {
+        background: #e8f6ee;
+        color: #006b36 !important;
+        border-color: rgba(0, 122, 61, 0.45);
+      }
+      .ewm-filter-btn.ewm-sort-active::after {
+        content: attr(data-ewm-sort-symbol);
+        margin-left: 2px;
+        font-size: 0.72rem;
+        line-height: 1;
+        font-weight: 900;
+      }
+      .ewm-row-hidden-by-filter { display: none !important; }
+      .ewm-filter-panel,
+      .ewm-context-menu {
+        position: fixed;
+        z-index: 99999;
+        width: min(360px, calc(100vw - 24px));
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbf9 100%);
+        color: #102018;
+        border: 1px solid rgba(3, 53, 31, 0.14);
+        border-radius: 24px;
+        box-shadow:
+          0 28px 80px rgba(15, 23, 42, 0.24),
+          0 0 0 1px rgba(255,255,255,0.65) inset;
+        overflow: hidden;
+      }
+      .ewm-filter-panel *:not(button),
+      .ewm-context-menu *:not(button) {
+        color: #102018 !important;
+      }
+      .ewm-filter-panel-header {
+        padding: 1.05rem 1.1rem;
+        background:
+          radial-gradient(circle at top right, rgba(255,255,255,0.16), transparent 34%),
+          linear-gradient(135deg, #05331e, #064527 62%, #086136);
+        color: #ffffff !important;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .ewm-filter-panel-header strong,
+      .ewm-filter-panel-header span { color: #ffffff !important; }
+      .ewm-filter-panel-close {
+        border: 0;
+        background: rgba(255,255,255,0.16);
+        color: #ffffff !important;
+        border-radius: 999px;
+        width: 2rem;
+        height: 2rem;
+        cursor: pointer;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+      }
+      .ewm-filter-panel-close:hover {
+        background: rgba(255,255,255,0.24);
+      }
+      .ewm-filter-panel-body {
+        padding: 0.95rem 1rem 1rem;
+        background: linear-gradient(180deg, #ffffff, #f7fbf8);
+      }
+      .ewm-filter-search {
+        width: 100%;
+        min-height: 2.75rem;
+        border: 1px solid rgba(0, 122, 61, 0.18) !important;
+        border-radius: 16px !important;
+        padding: 0.68rem 0.85rem !important;
+        background: #ffffff !important;
+        color: #102018 !important;
+        -webkit-text-fill-color: #102018 !important;
+        margin-bottom: 0.85rem;
+        box-shadow:
+          0 6px 16px rgba(15,23,42,0.05),
+          inset 0 1px 0 rgba(255,255,255,0.95) !important;
+      }
+      .ewm-filter-search:focus {
+        border-color: rgba(0, 122, 61, 0.45) !important;
+        box-shadow: 0 0 0 4px rgba(0, 122, 61, 0.11) !important;
+      }
+      .ewm-filter-options {
+        max-height: 260px;
+        overflow: auto;
+        border: 1px solid rgba(3, 53, 31, 0.11);
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+      }
+      .ewm-filter-option {
+        display: flex;
+        gap: 0.65rem;
+        align-items: center;
+        padding: 0.68rem 0.8rem;
+        border-bottom: 1px solid rgba(16, 32, 24, 0.055);
+        cursor: pointer;
+        font-size: 0.94rem;
+        border-radius: 0;
+      }
+      .ewm-filter-option:last-child { border-bottom: 0; }
+      .ewm-filter-option:hover { background: #eef8f2; }
+      .ewm-filter-option input {
+        accent-color: #007a3d;
+        width: 1rem;
+        height: 1rem;
+      }
+      .ewm-filter-option span {
+        font-weight: 650;
+      }
+      .ewm-sort-section {
+        margin-bottom: 0.85rem;
+        padding: 0.75rem;
+        border: 1px solid rgba(16, 32, 24, 0.10);
+        border-radius: 14px;
+        background: #f8fbf9;
+      }
+      .ewm-sort-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 0.55rem;
+        font-size: 0.78rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #5f7067 !important;
+      }
+      .ewm-sort-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.45rem;
+      }
+      .ewm-sort-buttons button,
+      .ewm-sort-buttons button[data-ewm-sort="clear"] {
+        grid-column: 1 / -1;
+      }
+      
+      .ewm-filter-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1.15fr;
+        gap: 0.65rem;
+        margin-top: 0.9rem;
+      }
+      .ewm-btn-primary { background: #007a3d; color: #fff !important; }
+      .ewm-btn-dark { background: #07351f; color: #fff !important; }
+      .ewm-btn-light { background: #eef7f1; color: #102018 !important; }
+      .ewm-btn-danger { background: #fee2e2; color: #991b1b !important; }
+      .ewm-context-menu {
+        width: min(320px, calc(100vw - 24px));
+        padding: 0.65rem;
+      }
+      .ewm-context-title {
+        padding: 0.75rem 0.8rem;
+        margin-bottom: 0.4rem;
+        font-size: 0.76rem;
+        font-weight: 900;
+        color: #5f7067 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 16px;
+        background: linear-gradient(180deg, rgba(247,251,248,0.98), rgba(238,247,242,0.98));
+        border: 1px solid rgba(3, 53, 31, 0.08);
+      }
+      .ewm-context-value {
+        display: block;
+        margin-top: 0.32rem;
+        font-size: 0.98rem;
+        font-weight: 900;
+        text-transform: none;
+        letter-spacing: 0;
+        color: #102018 !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .ewm-context-menu button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-top: 0.36rem;
+        padding: 0.72rem 0.82rem;
+        background: linear-gradient(135deg, #ffffff, #f6faf7);
+        color: #102018 !important;
+        text-align: left;
+        border: 1px solid rgba(3, 53, 31, 0.08) !important;
+        border-radius: 14px;
+        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
+        font-weight: 800;
+        line-height: 1.15;
+        transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+      }
+      .ewm-context-menu button:hover {
+        background: linear-gradient(135deg, #eef8f2, #dff1e6);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.10);
+      }
+      .ewm-context-menu button[data-ewm-context="include"] {
+        background: linear-gradient(135deg, #f7fcf9, #e7f4ed);
+        color: #0b4a2b !important;
+      }
+      .ewm-context-menu button[data-ewm-context="exclude"] {
+        background: linear-gradient(135deg, #fff8eb, #fef0cc);
+        color: #8a5a00 !important;
+      }
+      .ewm-context-menu button[data-ewm-context^="sort"] {
+        background: linear-gradient(135deg, #f5f9ff, #e8f0ff);
+        color: #1d4ed8 !important;
+      }
+      .ewm-context-menu button[data-ewm-context^="clear"],
+      .ewm-context-menu button[data-ewm-context="clear-column"],
+      .ewm-context-menu button[data-ewm-context="clear-table"] {
+        background: linear-gradient(135deg, #fff1f2, #ffe4e6);
+        color: #9f1239 !important;
+      }
+      .ewm-empty-row td {
+        text-align: center;
+        padding: 1.5rem !important;
+        color: #5f7067 !important;
+        background: #fbfdfb !important;
+      }
+      #drivers-search {
+        background: #ffffff !important;
+        color: #102018 !important;
+        -webkit-text-fill-color: #102018 !important;
+        border-color: rgba(16, 32, 24, 0.16) !important;
+      }
+      #drivers-search::placeholder {
+        color: #718177 !important;
+        -webkit-text-fill-color: #718177 !important;
+      }
+    `;
+    document.head.appendChild(style);
+  };
+
+  const shouldUseEwmFilters = () => !EWM_FILTER_EXCLUDED_TABS.has(activeTab);
+
+  const getEwmActiveRoot = () => {
+    const map = {
+      patio: 'table-main-content',
+      historico: 'table-main-content',
+      ocorrencias: 'table-main-content',
+      performance: 'performance-content',
+      motoristas: 'motoristas-content',
+      baldeios: 'baldeios-content',
+      'controle-dt': 'controle-dt-content'
+    };
+    return document.getElementById(map[activeTab] || 'main-content');
+  };
+
+  const normalizeEwmValue = (value = '') => String(value ?? '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const normalizeEwmKey = (value = '') => normalizeEwmValue(value).toLocaleLowerCase('pt-BR');
+
+  const getEwmCellText = (cell) => {
+    if (!cell) return '';
+    const input = cell.querySelector('input, select, textarea');
+    if (input) return normalizeEwmValue(input.value || input.options?.[input.selectedIndex]?.text || '');
+    return normalizeEwmValue(cell.innerText || cell.textContent || '');
+  };
+
+  const getEwmHeaderText = (th, index) => {
+    if (!th) return `Coluna ${index + 1}`;
+    const cloned = th.cloneNode(true);
+    cloned.querySelectorAll('.ewm-filter-btn').forEach(btn => btn.remove());
+    return normalizeEwmValue(cloned.innerText || cloned.textContent || '') || `Coluna ${index + 1}`;
+  };
+
+  const getEwmTableKey = (table) => {
+    if (!table) return `ewm:${activeTab}:sem-tabela`;
+    if (table.closest('#table-main-content')) return `principal:${activeTab}`;
+    const tbodyId = table.tBodies?.[0]?.id;
+    if (tbodyId) return `${activeTab}:${tbodyId}`;
+    const wrapper = table.closest('[id]');
+    const tables = Array.from((getEwmActiveRoot() || document).querySelectorAll('table'));
+    return `${activeTab}:${wrapper?.id || 'table'}:${tables.indexOf(table)}`;
+  };
+
+  const isEwmFilterableHeader = (label = '') => {
+    const clean = normalizeEwmKey(label);
+    if (!clean) return false;
+    return !['ações', 'acao', 'ação'].includes(clean);
+  };
+
+  const removeEwmFloatingMenus = () => {
+    document.getElementById('ewm-filter-panel')?.remove();
+    document.getElementById('ewm-context-menu')?.remove();
+  };
+
+  const positionEwmPanel = (panel, x, y) => {
+    document.body.appendChild(panel);
+    const rect = panel.getBoundingClientRect();
+    const margin = 10;
+    const left = Math.min(Math.max(margin, x), window.innerWidth - rect.width - margin);
+    const top = Math.min(Math.max(margin, y), window.innerHeight - rect.height - margin);
+    panel.style.left = `${left}px`;
+    panel.style.top = `${top}px`;
+  };
+
+  const getEwmRows = (table) => Array.from(table?.tBodies?.[0]?.rows || [])
+    .filter(row => !row.classList.contains('ewm-empty-row') && row.cells.length > 1);
+
+  const getEwmUniqueValues = (table, columnIndex) => {
+    const values = new Map();
+    getEwmRows(table).forEach(row => {
+      const value = getEwmCellText(row.cells[columnIndex]) || '—';
+      values.set(normalizeEwmKey(value), value);
+    });
+    return Array.from(values.values()).sort((a, b) => a.localeCompare(b, 'pt-BR', { numeric: true, sensitivity: 'base' }));
+  };
+
+  const ensureEwmOriginalOrder = (table) => {
+    if (!table) return;
+    getEwmRows(table).forEach((row, index) => {
+      if (!row.dataset.ewmOriginalIndex) row.dataset.ewmOriginalIndex = String(index);
+    });
+  };
+
+  const parseEwmDateTimeValue = (value = '') => {
+    let s = normalizeEwmValue(value);
+    if (!s || s === '—') return null;
+    s = s.replace(/\s+às\s+/i, ' ').replace(/,/g, ' ');
+
+    let match = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+    if (match) {
+      let [, dd, mm, yyyy, hh = '0', min = '0', sec = '0'] = match;
+      let year = Number(yyyy);
+      if (year < 100) year += 2000;
+      const date = new Date(year, Number(mm) - 1, Number(dd), Number(hh), Number(min), Number(sec));
+      const time = date.getTime();
+      return Number.isFinite(time) ? time : null;
+    }
+
+    match = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[T\s]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+    if (match) {
+      const [, yyyy, mm, dd, hh = '0', min = '0', sec = '0'] = match;
+      const date = new Date(Number(yyyy), Number(mm) - 1, Number(dd), Number(hh), Number(min), Number(sec));
+      const time = date.getTime();
+      return Number.isFinite(time) ? time : null;
+    }
+
+    match = s.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+    if (match) {
+      const [, hh, min, sec = '0'] = match;
+      return (Number(hh) * 3600) + (Number(min) * 60) + Number(sec);
+    }
+
+    match = s.match(/^(?:(\d+)\s*h)?\s*(?:(\d+)\s*(?:m|min))?$/i);
+    if (match && (match[1] || match[2])) {
+      return (Number(match[1] || 0) * 60) + Number(match[2] || 0);
+    }
+
+    return null;
+  };
+
+  const parseEwmNumberValue = (value = '') => {
+    let s = normalizeEwmValue(value);
+    if (!s || s === '—') return null;
+    s = s.replace(/R\$/gi, '').replace(/%/g, '').replace(/\s+/g, '');
+    if (!/^[+-]?(?:\d{1,3}(?:\.\d{3})*(?:,\d+)?|\d+(?:,\d+)?|\d+(?:\.\d+)?)$/.test(s)) return null;
+    if (s.includes(',') && s.includes('.')) s = s.replace(/\./g, '').replace(',', '.');
+    else if (s.includes(',')) s = s.replace(',', '.');
+    const number = Number(s);
+    return Number.isFinite(number) ? number : null;
+  };
+
+  const getEwmSortComparable = (value = '') => {
+    const text = normalizeEwmValue(value);
+    const empty = !text || text === '—';
+    if (empty) return { type: 'empty', value: null, text };
+    const dateValue = parseEwmDateTimeValue(text);
+    if (dateValue !== null) return { type: 'number', value: dateValue, text };
+    const numberValue = parseEwmNumberValue(text);
+    if (numberValue !== null) return { type: 'number', value: numberValue, text };
+    return { type: 'text', value: normalizeEwmKey(text), text };
+  };
+
+  const compareEwmSortValues = (a, b, direction = 'asc') => {
+    const va = getEwmSortComparable(a);
+    const vb = getEwmSortComparable(b);
+    let result = 0;
+
+    if (va.type === 'empty' && vb.type !== 'empty') result = 1;
+    else if (va.type !== 'empty' && vb.type === 'empty') result = -1;
+    else if (va.type === 'number' && vb.type === 'number') result = va.value - vb.value;
+    else result = String(va.text).localeCompare(String(vb.text), 'pt-BR', { numeric: true, sensitivity: 'base' });
+
+    return direction === 'desc' ? result * -1 : result;
+  };
+
+  const sortEwmTable = (table, columnIndex, direction = 'asc', persist = true) => {
+    if (!table || !table.tBodies?.[0]) return;
+    ensureEwmOriginalOrder(table);
+    const key = getEwmTableKey(table);
+    const tbody = table.tBodies[0];
+    const rows = getEwmRows(table);
+
+    tbody.querySelectorAll('.ewm-empty-row').forEach(row => row.remove());
+
+    if (!direction) {
+      if (persist) delete ewmColumnSortState[key];
+      rows
+        .sort((a, b) => Number(a.dataset.ewmOriginalIndex || 0) - Number(b.dataset.ewmOriginalIndex || 0))
+        .forEach(row => tbody.appendChild(row));
+      applyEwmTableFilters(table);
+      return;
+    }
+
+    if (persist) ewmColumnSortState[key] = { columnIndex: Number(columnIndex), direction };
+    rows
+      .sort((rowA, rowB) => {
+        const result = compareEwmSortValues(
+          getEwmCellText(rowA.cells[columnIndex]),
+          getEwmCellText(rowB.cells[columnIndex]),
+          direction
+        );
+        if (result !== 0) return result;
+        return Number(rowA.dataset.ewmOriginalIndex || 0) - Number(rowB.dataset.ewmOriginalIndex || 0);
+      })
+      .forEach(row => tbody.appendChild(row));
+
+    applyEwmTableFilters(table);
+  };
+
+  const applyEwmCurrentSort = (table) => {
+    const key = getEwmTableKey(table);
+    const sort = ewmColumnSortState[key];
+    if (!sort) return false;
+    sortEwmTable(table, sort.columnIndex, sort.direction, false);
+    return true;
+  };
+
+  const updateEwmHeaderButtons = (table) => {
+    const key = getEwmTableKey(table);
+    const state = ewmColumnFilterState[key] || {};
+    const sort = ewmColumnSortState[key];
+    Array.from(table.tHead?.rows?.[0]?.cells || []).forEach((th, index) => {
+      const btn = th.querySelector('.ewm-filter-btn');
+      if (!btn) return;
+      const filterActive = !!(state[index]?.values?.length);
+      const sortActive = !!sort && Number(sort.columnIndex) === Number(index);
+      btn.classList.toggle('ewm-filter-active', filterActive);
+      btn.classList.toggle('ewm-sort-active', sortActive);
+      if (sortActive) btn.setAttribute('data-ewm-sort-symbol', sort.direction === 'desc' ? '↓' : '↑');
+      else btn.removeAttribute('data-ewm-sort-symbol');
+
+      if (filterActive && sortActive) btn.title = `Filtro e classificação aplicados (${sort.direction === 'desc' ? 'decrescente' : 'crescente'})`;
+      else if (filterActive) btn.title = 'Filtro aplicado nesta coluna';
+      else if (sortActive) btn.title = `Classificação aplicada (${sort.direction === 'desc' ? 'decrescente' : 'crescente'})`;
+      else btn.title = 'Filtrar e classificar coluna';
+    });
+  };
+
+  const applyEwmTableFilters = (table) => {
+    if (!table || !table.tBodies?.[0]) return;
+    const key = getEwmTableKey(table);
+    const state = ewmColumnFilterState[key] || {};
+    const filters = Object.entries(state).filter(([, cfg]) => cfg?.values?.length);
+    const tbody = table.tBodies[0];
+    tbody.querySelectorAll('.ewm-empty-row').forEach(row => row.remove());
+
+    let visibleCount = 0;
+    getEwmRows(table).forEach(row => {
+      const keep = filters.every(([columnIndex, cfg]) => {
+        const value = normalizeEwmKey(getEwmCellText(row.cells[Number(columnIndex)]) || '—');
+        const selected = (cfg.values || []).map(normalizeEwmKey);
+        const hasValue = selected.includes(value);
+        return cfg.mode === 'exclude' ? !hasValue : hasValue;
+      });
+      row.classList.toggle('ewm-row-hidden-by-filter', !keep);
+      if (keep) visibleCount += 1;
+    });
+
+    if (filters.length && visibleCount === 0) {
+      const colspan = table.tHead?.rows?.[0]?.cells?.length || 1;
+      const row = document.createElement('tr');
+      row.className = 'ewm-empty-row';
+      row.innerHTML = `<td colspan="${colspan}">Nenhuma linha encontrada para os filtros EWM aplicados.</td>`;
+      tbody.appendChild(row);
+    }
+    updateEwmHeaderButtons(table);
+  };
+
+  const clearEwmTableFilter = (table, columnIndex = null) => {
+    const key = getEwmTableKey(table);
+    if (!ewmColumnFilterState[key]) return;
+    if (columnIndex === null) delete ewmColumnFilterState[key];
+    else delete ewmColumnFilterState[key][columnIndex];
+    applyEwmTableFilters(table);
+  };
+
+  const setEwmColumnFilter = (table, columnIndex, values, mode = 'include') => {
+    const key = getEwmTableKey(table);
+    if (!ewmColumnFilterState[key]) ewmColumnFilterState[key] = {};
+    const cleanValues = Array.from(new Set((values || []).map(v => normalizeEwmValue(v) || '—')));
+    if (!cleanValues.length) delete ewmColumnFilterState[key][columnIndex];
+    else ewmColumnFilterState[key][columnIndex] = { mode, values: cleanValues };
+    applyEwmTableFilters(table);
+  };
+
+  const openEwmFilterPanel = (table, columnIndex, anchorEl) => {
+    removeEwmFloatingMenus();
+    const key = getEwmTableKey(table);
+    const header = table.tHead?.rows?.[0]?.cells?.[columnIndex];
+    const label = getEwmHeaderText(header, columnIndex);
+    const values = getEwmUniqueValues(table, columnIndex);
+    const current = ewmColumnFilterState[key]?.[columnIndex];
+    const selected = new Set((current?.values?.length ? current.values : values).map(normalizeEwmKey));
+
+    const panel = document.createElement('div');
+    panel.id = 'ewm-filter-panel';
+    panel.className = 'ewm-filter-panel';
+    panel.innerHTML = `
+      <div class="ewm-filter-panel-header">
+        <div>
+          <strong>Filtro da coluna</strong><br>
+          <span>${escapeHtml(label)}</span>
+        </div>
+        <button type="button" class="ewm-filter-panel-close" aria-label="Fechar">×</button>
+      </div>
+      <div class="ewm-filter-panel-body">
+        <div class="ewm-sort-section">
+          <div class="ewm-sort-title">Classificar</div>
+          <div class="ewm-sort-buttons">
+            <button type="button" class="ewm-btn-light" data-ewm-sort="asc">A-Z / Menor / Novo</button>
+            <button type="button" class="ewm-btn-light" data-ewm-sort="desc">Z-A / Maior / Antigo</button>
+            <button type="button" class="ewm-btn-danger" data-ewm-sort="clear">Limpar classificação</button>
+          </div>
+        </div>
+        <input class="ewm-filter-search" type="text" placeholder="Pesquisar opções...">
+        <div class="ewm-filter-options">
+          ${values.map(value => {
+            const checked = selected.has(normalizeEwmKey(value)) ? 'checked' : '';
+            return `<label class="ewm-filter-option" data-ewm-option="${escapeHtml(normalizeEwmKey(value))}">
+              <input type="checkbox" value="${escapeHtml(value)}" ${checked}>
+              <span>${escapeHtml(value)}</span>
+            </label>`;
+          }).join('') || '<div class="ewm-filter-option">Sem opções disponíveis.</div>'}
+        </div>
+        <div class="ewm-filter-actions">
+          <button type="button" class="ewm-btn-light" data-ewm-action="all">Todos</button>
+          <button type="button" class="ewm-btn-danger" data-ewm-action="clear">Limpar</button>
+          <button type="button" class="ewm-btn-primary" data-ewm-action="apply">Aplicar</button>
+        </div>
+      </div>
+    `;
+
+    panel.addEventListener('click', (ev) => ev.stopPropagation());
+    panel.querySelector('.ewm-filter-panel-close')?.addEventListener('click', removeEwmFloatingMenus);
+    panel.querySelector('[data-ewm-sort="asc"]')?.addEventListener('click', () => {
+      sortEwmTable(table, columnIndex, 'asc');
+      removeEwmFloatingMenus();
+    });
+    panel.querySelector('[data-ewm-sort="desc"]')?.addEventListener('click', () => {
+      sortEwmTable(table, columnIndex, 'desc');
+      removeEwmFloatingMenus();
+    });
+    panel.querySelector('[data-ewm-sort="clear"]')?.addEventListener('click', () => {
+      sortEwmTable(table, columnIndex, null);
+      removeEwmFloatingMenus();
+    });
+    const search = panel.querySelector('.ewm-filter-search');
+    search?.addEventListener('input', () => {
+      const term = normalizeEwmKey(search.value);
+      panel.querySelectorAll('.ewm-filter-option[data-ewm-option]').forEach(option => {
+        option.style.display = option.getAttribute('data-ewm-option')?.includes(term) ? '' : 'none';
+      });
+    });
+    panel.querySelector('[data-ewm-action="all"]')?.addEventListener('click', () => {
+      const inputs = Array.from(panel.querySelectorAll('.ewm-filter-option input[type="checkbox"]'));
+      const visibleInputs = inputs.filter(input => {
+        const option = input.closest('.ewm-filter-option');
+        return !option || option.style.display !== 'none';
+      });
+      const targetInputs = visibleInputs.length ? visibleInputs : inputs;
+      const allChecked = targetInputs.length > 0 && targetInputs.every(input => input.checked);
+      targetInputs.forEach(input => { input.checked = !allChecked; });
+    });
+    panel.querySelector('[data-ewm-action="clear"]')?.addEventListener('click', () => {
+      clearEwmTableFilter(table, columnIndex);
+      removeEwmFloatingMenus();
+    });
+    panel.querySelector('[data-ewm-action="apply"]')?.addEventListener('click', () => {
+      const checked = Array.from(panel.querySelectorAll('.ewm-filter-option input[type="checkbox"]:checked')).map(input => input.value);
+      if (checked.length === values.length) clearEwmTableFilter(table, columnIndex);
+      else setEwmColumnFilter(table, columnIndex, checked, 'include');
+      removeEwmFloatingMenus();
+    });
+
+    const rect = anchorEl.getBoundingClientRect();
+    positionEwmPanel(panel, rect.left, rect.bottom + 6);
+    search?.focus();
+  };
+
+  const openEwmContextMenu = (table, cell, event) => {
+    const columnIndex = Array.from(cell.parentElement.cells).indexOf(cell);
+    const header = table.tHead?.rows?.[0]?.cells?.[columnIndex];
+    const label = getEwmHeaderText(header, columnIndex);
+    if (!isEwmFilterableHeader(label)) return;
+    const rawValue = getEwmCellText(cell) || '—';
+    removeEwmFloatingMenus();
+
+    const menu = document.createElement('div');
+    menu.id = 'ewm-context-menu';
+    menu.className = 'ewm-context-menu';
+    menu.innerHTML = `
+      <div class="ewm-context-title">
+        ${escapeHtml(label)}
+        <span class="ewm-context-value" title="${escapeHtml(rawValue)}">${escapeHtml(rawValue)}</span>
+      </div>
+      <button type="button" data-ewm-context="include">Definir filtro por este valor</button>
+      <button type="button" data-ewm-context="exclude">Excluir este valor do filtro</button>
+      <button type="button" data-ewm-context="sort-asc">Classificar A-Z / menor / antigo</button>
+      <button type="button" data-ewm-context="sort-desc">Classificar Z-A / maior / novo</button>
+      <button type="button" data-ewm-context="clear-sort">Limpar classificação da tabela</button>
+      <button type="button" data-ewm-context="clear-column">Limpar filtro desta coluna</button>
+      <button type="button" data-ewm-context="clear-table">Limpar todos os filtros da tabela</button>
+    `;
+    menu.addEventListener('click', (ev) => ev.stopPropagation());
+    menu.querySelector('[data-ewm-context="include"]')?.addEventListener('click', () => {
+      setEwmColumnFilter(table, columnIndex, [rawValue], 'include');
+      removeEwmFloatingMenus();
+    });
+    menu.querySelector('[data-ewm-context="exclude"]')?.addEventListener('click', () => {
+      const key = getEwmTableKey(table);
+      const current = ewmColumnFilterState[key]?.[columnIndex];
+      const values = current?.mode === 'exclude' ? [...current.values, rawValue] : [rawValue];
+      setEwmColumnFilter(table, columnIndex, values, 'exclude');
+      removeEwmFloatingMenus();
+    });
+    menu.querySelector('[data-ewm-context="sort-asc"]')?.addEventListener('click', () => {
+      sortEwmTable(table, columnIndex, 'asc');
+      removeEwmFloatingMenus();
+    });
+    menu.querySelector('[data-ewm-context="sort-desc"]')?.addEventListener('click', () => {
+      sortEwmTable(table, columnIndex, 'desc');
+      removeEwmFloatingMenus();
+    });
+    menu.querySelector('[data-ewm-context="clear-sort"]')?.addEventListener('click', () => {
+      sortEwmTable(table, columnIndex, null);
+      removeEwmFloatingMenus();
+    });
+    menu.querySelector('[data-ewm-context="clear-column"]')?.addEventListener('click', () => {
+      clearEwmTableFilter(table, columnIndex);
+      removeEwmFloatingMenus();
+    });
+    menu.querySelector('[data-ewm-context="clear-table"]')?.addEventListener('click', () => {
+      clearEwmTableFilter(table, null);
+      sortEwmTable(table, columnIndex, null);
+      removeEwmFloatingMenus();
+    });
+    positionEwmPanel(menu, event.clientX, event.clientY);
+  };
+
+  const enhanceEwmTable = (table) => {
+    if (!table || !table.tHead || !table.tBodies?.[0]) return;
+    ensureEwmOriginalOrder(table);
+    const headerCells = Array.from(table.tHead.rows?.[0]?.cells || []);
+    if (!headerCells.length) return;
+
+    headerCells.forEach((th, index) => {
+      const label = getEwmHeaderText(th, index);
+      if (!isEwmFilterableHeader(label)) return;
+      th.classList.add('ewm-filterable-th');
+
+      let button = th.querySelector('.ewm-filter-btn');
+      if (!button) {
+        button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'ewm-filter-btn';
+        button.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v5l-4 2v-7L3 5z"/></svg>`;
+        button.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          openEwmFilterPanel(table, index, button);
+        });
+        th.appendChild(button);
+      }
+
+      button.setAttribute('aria-label', `Filtrar ${label}`);
+      button.title = `Filtrar ${label}`;
+    });
+
+    if (!table.dataset.ewmContextBound) {
+      table.dataset.ewmContextBound = '1';
+      table.addEventListener('contextmenu', (ev) => {
+        if (!shouldUseEwmFilters()) return;
+        const cell = ev.target.closest('td');
+        if (!cell || !table.contains(cell)) return;
+        ev.preventDefault();
+        openEwmContextMenu(table, cell, ev);
+      });
+    }
+
+    if (!applyEwmCurrentSort(table)) applyEwmTableFilters(table);
+  };
+
+  const applyEwmFiltersToVisibleTables = () => {
+    injectEwmColumnFilterStyles();
+    if (!shouldUseEwmFilters()) return;
+    const root = getEwmActiveRoot();
+    if (!root || root.classList.contains('hidden') || root.style.display === 'none') return;
+    const tables = Array.from(root.querySelectorAll('table'))
+      .filter(table => table.offsetParent !== null || table.getClientRects().length > 0)
+      .filter(table => table.tHead && table.tBodies?.[0]);
+    tables.forEach(enhanceEwmTable);
+  };
+
+  const scheduleEwmFiltersApply = () => {
+    clearTimeout(ewmApplyTimer);
+    ewmApplyTimer = setTimeout(applyEwmFiltersToVisibleTables, 120);
+  };
+
+  const initEwmColumnFilters = () => {
+    injectEwmColumnFilterStyles();
+    if (!ewmMutationObserver) {
+      ewmMutationObserver = new MutationObserver(() => scheduleEwmFiltersApply());
+      const root = document.getElementById('main-content');
+      if (root) ewmMutationObserver.observe(root, { childList: true, subtree: true });
+    }
+    document.addEventListener('click', (ev) => {
+      if (!ev.target.closest('#ewm-filter-panel') && !ev.target.closest('#ewm-context-menu') && !ev.target.closest('.ewm-filter-btn')) {
+        removeEwmFloatingMenus();
+      }
+    });
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape') removeEwmFloatingMenus();
+    });
+    scheduleEwmFiltersApply();
+  };
+
+
+
+  // ==============================
   // OCORRÊNCIAS: IMAGENS / EVIDÊNCIAS
   // ==============================
   const MAX_OCCURRENCE_IMAGES = 8;
@@ -5964,6 +6765,12 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   const isOccurrenceCancelled = (op = {}) => {
     const status = String(op.statusOcorrencia || op.status || '').toLowerCase();
     return status.includes('cancelado') || status.includes('cancelada') || op.bloqueioChecklistCancelado === true;
+  };
+
+  // Ocorrências canceladas deixam de aparecer no histórico/lista, gráficos e exportações.
+  // O documento pode continuar no Firestore como auditoria, mas fica oculto do painel.
+  const getVisibleOccurrences = (items = ocorrenciasData) => {
+    return (Array.isArray(items) ? items : []).filter(op => !isOccurrenceCancelled(op));
   };
 
   const getSapUnlockLocalMap = () => {
@@ -6986,7 +7793,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     let dataSet = [];
 
     if (activeTab === 'patio') dataSet = patioData || [];
-    else if (activeTab === 'ocorrencias') dataSet = ocorrenciasData || [];
+    else if (activeTab === 'ocorrencias') dataSet = getVisibleOccurrences();
     else if (activeTab === 'historico') {
       let filteredHistorico = historicoData || [];
 
@@ -7377,7 +8184,9 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     if (activeTab === 'ocorrencias') {
       titleEl.textContent = 'Análise de Ocorrências';
 
-      if (!ocorrenciasData.length) {
+      const visibleOccurrences = getVisibleOccurrences();
+
+      if (!visibleOccurrences.length) {
         noDataMsg.textContent = 'Nenhuma ocorrência registrada.';
         noDataMsg.classList.remove('hidden');
         canvas.style.display = 'none';
@@ -7387,7 +8196,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       noDataMsg.classList.add('hidden');
       canvas.style.display = 'block';
 
-      const counts = ocorrenciasData.reduce((acc, op) => {
+      const counts = visibleOccurrences.reduce((acc, op) => {
         const type = op.type || 'Outro';
         acc[type] = (acc[type] || 0) + 1;
         return acc;
@@ -7721,7 +8530,6 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         <option value="Em andamento">Em andamento</option>
         <option value="Concluído">Concluído</option>
         <option value="Aberto no Power Apps">Aberto no Power Apps</option>
-        <option value="Cancelado">Cancelado</option>
       `;
     } else {
       filterStatusSelect.innerHTML = `
@@ -8376,7 +9184,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     let dataToExport, headers;
 
     if (activeTab === 'ocorrencias') {
-      dataToExport = ocorrenciasData.filter(op => {
+      dataToExport = getVisibleOccurrences().filter(op => {
         const relatedOp = patioData.find(p => p.id === op.operacaoId) || historicoData.find(h => h.id === op.operacaoId) || {};
         const byText = !searchTerm || [
           op.dt,
@@ -8791,6 +9599,16 @@ async function handleAddOccurrence(e) {
       }
 
       await updateDoc(occurrenceRef, payload);
+
+      if (isCancellingOccurrence) {
+        ocorrenciasData = (ocorrenciasData || []).filter(op => op.id !== selectedOperacao.id);
+        debouncedRender();
+      } else {
+        ocorrenciasData = (ocorrenciasData || []).map(op =>
+          op.id === selectedOperacao.id ? { ...op, ...payload } : op
+        );
+        debouncedRender();
+      }
 
       await addLogEntry(
         selectedOperacao.operacaoId,
@@ -14210,7 +15028,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
       });
 
       onSnapshot(collection(db, `artifacts/${appId}/public/data/ocorrencias`), snap => {
-        ocorrenciasData = snap.docs.map(d => ({ ...d.data(), id: d.id }))
+        ocorrenciasData = getVisibleOccurrences(snap.docs.map(d => ({ ...d.data(), id: d.id })))
           .sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
         checkSystemAlerts();
         debouncedRender();
@@ -14256,6 +15074,7 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
     setMultiFilterVisible('filter-tempo-patio', true);
     document.getElementById('mass-finish-btn').style.display = 'flex';
     initPerformanceCardLayout();
+    initEwmColumnFilters();
     debouncedRender();
   });
 
