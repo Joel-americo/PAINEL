@@ -4783,6 +4783,142 @@ select.hl-native-multi-hidden {
   box-shadow: 0 10px 20px rgba(71, 85, 105, 0.14) !important;
 }
 
+
+
+/* ============================== */
+/* DROP & HOOK - DASH / PAINEL    */
+/* Adicionado sem remover telas existentes */
+/* ============================== */
+#drop-dashboard-content,
+#drop-panel-content {
+  display: none;
+}
+
+#drop-dashboard-content .drop-card,
+#drop-panel-content .drop-card {
+  background: #ffffff !important;
+  color: #102018 !important;
+  border: 1px solid rgba(16, 32, 24, 0.10) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.075) !important;
+}
+
+.drop-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .drop-kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.drop-kpi-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  padding: 1.15rem;
+  background: linear-gradient(135deg, #062014, #0b3420 72%, #0f3f28) !important;
+  color: #ffffff !important;
+  box-shadow: 0 16px 34px rgba(4, 21, 13, 0.16);
+}
+
+.drop-kpi-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 88% 12%, rgba(255,255,255,0.14), transparent 32%);
+  pointer-events: none;
+}
+
+.drop-kpi-card * { position: relative; z-index: 1; color: inherit !important; }
+.drop-kpi-card .drop-kpi-label { opacity: .82; font-size: .86rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+.drop-kpi-card .drop-kpi-value { font-size: clamp(2rem, 3vw, 3.4rem); line-height: 1; font-weight: 950; margin-top: .35rem; }
+.drop-kpi-card.drop-orange { background: linear-gradient(135deg, #92400e, #d97706) !important; }
+.drop-kpi-card.drop-blue { background: linear-gradient(135deg, #0f3b66, #2563eb) !important; }
+.drop-kpi-card.drop-purple { background: linear-gradient(135deg, #4c1d95, #7c3aed) !important; }
+
+.drop-time-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: .85rem;
+}
+
+@media (min-width: 768px) {
+  .drop-time-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.drop-time-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  border-radius: 999px;
+  padding: .25rem .55rem;
+  background: #eef7f1;
+  border: 1px solid rgba(0,122,61,.16);
+  color: #07351f !important;
+  font-size: .78rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+
+.drop-status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: .35rem .7rem;
+  font-size: .78rem;
+  font-weight: 900;
+  border: 1px solid rgba(15,23,42,.10);
+  background: #eef7f1;
+  color: #07351f !important;
+  white-space: nowrap;
+}
+
+.drop-action-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .38rem;
+  min-width: 430px;
+}
+
+.drop-action-btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: .45rem .65rem !important;
+  font-size: .78rem !important;
+  font-weight: 900 !important;
+  box-shadow: 0 8px 16px rgba(15,23,42,.10) !important;
+}
+
+.drop-action-btn.vazio { background: linear-gradient(135deg, #475569, #64748b) !important; }
+.drop-action-btn.carregado { background: linear-gradient(135deg, #047857, #10b981) !important; }
+.drop-action-btn.drop { background: linear-gradient(135deg, #0f766e, #14b8a6) !important; }
+.drop-action-btn.nao-drop { background: linear-gradient(135deg, #92400e, #f59e0b) !important; }
+.drop-action-btn.obs { background: linear-gradient(135deg, #1d4ed8, #3b82f6) !important; }
+.drop-action-btn.cancelar { background: linear-gradient(135deg, #991b1b, #ef4444) !important; }
+.drop-action-btn.excluir { background: linear-gradient(135deg, #111827, #374151) !important; }
+
+.drop-table th,
+.drop-table td { white-space: nowrap; }
+.drop-table td.drop-observacao { white-space: normal; min-width: 180px; max-width: 320px; }
+
+
+/* DROP & HOOK — controles de dia/exportação */
+#drop-dashboard-content input[type="date"],
+#drop-panel-content input[type="date"] {
+  min-height: 44px;
+  font-weight: 800;
+}
+#drop-dashboard-content .drop-kpi-label,
+#drop-dashboard-content .drop-kpi-value {
+  color: #ffffff !important;
+}
+
 </style>
 </head>
 
@@ -4901,6 +5037,22 @@ select.hl-native-multi-hidden {
       <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h9m-9 4.5h9m-9 4.5h5.25M6 3.75h12A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75Z"/>
     </svg>
     <span>Controle DTs</span>
+  </button>
+
+
+
+  <button id="tab-drop-dashboard" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
+    <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 19V5m5 14V9m5 10V7m5 12v-5"/>
+    </svg>
+    <span>Dash Drop &amp; Hook</span>
+  </button>
+
+  <button id="tab-drop-panel" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
+    <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M5 7v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7M9 11h6m-6 4h6"/>
+    </svg>
+    <span>Painel Drop &amp; Hook</span>
   </button>
 
   <button id="tab-dashboard" class="tab-btn inactive-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">
@@ -5548,6 +5700,102 @@ select.hl-native-multi-hidden {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+
+
+    <!-- ✅ DASH DROP & HOOK -->
+    <div id="drop-dashboard-content" class="hidden">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-4">
+        <div>
+          <h3 class="text-2xl font-bold">Dash Drop &amp; Hook</h3>
+          <p class="text-sm text-gray-400 mt-1">Contabiliza cargas e descargas dos caminhões Drop &amp; Hook por dia, sem alterar as abas antigas.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <label class="text-sm font-bold text-gray-500">Visualizar dia</label>
+          <input id="drop-dash-date" type="date" class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <button id="drop-dash-today" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">Hoje</button>
+          <button id="drop-dash-export" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Exportar</button>
+          <button id="drop-dash-refresh" class="bg-green-700 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg">Atualizar</button>
+        </div>
+      </div>
+      <div id="drop-dashboard-kpis" class="drop-kpi-grid mb-6"></div>
+
+      <div class="drop-card p-6 mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h4 class="text-xl font-bold">Controle de tempo do processo Drop</h4>
+            <p class="text-sm text-gray-400 mt-1">Agrupa por placa e calcula o ciclo entre uma marcação Drop e a próxima marcação do mesmo caminhão.</p>
+          </div>
+          <span class="drop-status-pill bg-emerald-50 text-emerald-900 border-emerald-200">Base: marcações do motorista</span>
+        </div>
+        <div id="drop-cycle-kpis" class="drop-time-grid mb-4"></div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left drop-table">
+            <thead class="border-b border-gray-700">
+              <tr>
+                <th class="p-4 text-sm font-semibold text-gray-400">Placa</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Motorista Manobra</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Motorista Viagem</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Marcações</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Horários</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Ciclos fechados</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Tempo dos ciclos</th>
+                <th class="p-4 text-sm font-semibold text-gray-400">Status</th>
+              </tr>
+            </thead>
+            <tbody id="drop-cycle-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="drop-card p-6">
+          <h4 class="text-xl font-bold mb-3">Resumo de status do Painel Drop</h4>
+          <div id="drop-dashboard-status-list" class="space-y-2"></div>
+        </div>
+        <div class="drop-card p-6">
+          <h4 class="text-xl font-bold mb-3">Últimos Drop &amp; Hook</h4>
+          <div id="drop-dashboard-last-list" class="space-y-2 max-h-80 overflow-auto"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ PAINEL DROP & HOOK -->
+    <div id="drop-panel-content" class="hidden">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <div>
+          <h3 class="text-2xl font-bold">Painel Drop &amp; Hook</h3>
+          <p class="text-sm text-gray-400 mt-1">Controle dedicado para DT, motoristas e placas do Drop &amp; Hook. Mantém o fluxo mesmo após finalizar a DT no Pátio.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <input id="drop-panel-search" type="text" placeholder="Buscar DT, motorista ou placa..."
+                 class="w-full sm:w-80 bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          <label class="text-sm font-bold text-gray-500">Dia</label>
+          <input id="drop-panel-date" type="date" class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <button id="drop-panel-today" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">Hoje</button>
+          <button id="drop-panel-export" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Exportar</button>
+          <button id="drop-panel-refresh" class="bg-green-700 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg">Atualizar</button>
+        </div>
+      </div>
+
+      <div class="drop-card p-4 overflow-x-auto">
+        <table class="w-full text-left drop-table">
+          <thead class="border-b border-gray-700">
+            <tr>
+              <th class="p-4 text-sm font-semibold text-gray-400">DT</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Motorista Manobra</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Motorista Viagem</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Placa Cavalo</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Placa Carreta</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Status Painel</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Observação</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Ação</th>
+            </tr>
+          </thead>
+          <tbody id="drop-panel-table-body"></tbody>
+        </table>
       </div>
     </div>
 
@@ -7560,11 +7808,26 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   };
 
   const getSegmentacaoLabel = (op = {}) => {
+    // Drop & Hook: no painel principal, o tipo deve aparecer como Drop.
+    const dropBlob = [
+      op.tipoMarcacao,
+      op.flowKey,
+      op.flowLabel,
+      op.operacao,
+      op.operation,
+      op.statusDrop,
+      op.controleIdaRetorno,
+      op.dropHook ? 'DROP' : '',
+      op.isDropHook === true || op.isDrop === true ? 'DROP' : ''
+    ].filter(Boolean).join(' ').toUpperCase();
+    if (dropBlob.includes('DROP') || op.dropHookAlsoUnload === true || Number(op.contabilizarCarga || 0) > 0 || Number(op.contabilizarDescarga || 0) > 0) return 'Drop';
+
     // 1) Se já veio "gravado" do HEILOG, nunca muda
     if (op.tipoSnapshot && String(op.tipoSnapshot).trim() !== '') return String(op.tipoSnapshot).trim();
 
     // 2) Se existir campo direto no documento (vindo do HEILOG), usa esse
     const direct = getTipoHeilogDirect(op);
+    if (String(direct || '').toUpperCase().includes('DROP')) return 'Drop';
     if (direct) return direct;
 
     // 3) Fallback: tenta extrair de texto (apenas visual; não "grava" isso como oficial)
@@ -7762,6 +8025,14 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       op?.dt,
       op?.motorista,
       op?.name,
+      op?.dropCycleMotoristaManobra,
+      op?.dropCycleMotoristaViagem,
+      op?.dropMotoristaManobraNome,
+      op?.dropMotoristaViagemNome,
+      op?.motoristaManobraNome,
+      op?.motoristaViagemNome,
+      op?.dropHookMotoristaManobra,
+      op?.dropHookMotoristaViagem,
       op?.transportadora,
       getTruckPlate(op),
       getTrailerPlate(op),
@@ -7770,12 +8041,795 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     return candidates.some(v => norm(v).includes(term) || compact(v).includes(termCompact));
   };
 
+
+
+  // ==============================
+  // DROP & HOOK — DASH / PAINEL
+  // ==============================
+  const isDropHookOperation = (op = {}) => {
+    if (!op || typeof op !== 'object') return false;
+    const raw = [
+      op.tipoMarcacao,
+      op.flowKey,
+      op.flowLabel,
+      op.operacao,
+      op.operation,
+      op.tipo,
+      op.statusDrop,
+      op.controleIdaRetorno
+    ].filter(Boolean).join(' ').toUpperCase();
+
+    return op.isDropHook === true ||
+      op.isDrop === true ||
+      !!op.dropHook ||
+      op.dropHookAlsoUnload === true ||
+      op.contabilizarCarga === 1 ||
+      op.contabilizarDescarga === 1 ||
+      raw.includes('DROP');
+  };
+
+  const dropText = (value = '') => String(value ?? '').trim();
+  const dropNestedName = (value) => {
+    if (!value) return '';
+    if (typeof value === 'string') return dropText(value);
+    return dropText(value.nome || value.name || value.motorista || value.motoristaNome || value.fullName || '');
+  };
+  const dropNestedCpf = (value) => {
+    if (!value || typeof value !== 'object') return '';
+    return cpf11(value.cpf || value.documento || value.cpfMotorista || '');
+  };
+
+  const getDropDt = (op = {}) => dropText(op.dt || op.dts || op.printableDt || op.printableDtCarga || op.dropHook?.dt || op.dropHook?.dts || op.id || '');
+  const getDropManobra = (op = {}) => dropText(op.dropCycleMotoristaManobra || op.dropMotoristaManobraNome || op.motoristaManobraNome || op.dropHookMotoristaManobra || op.dropHook?.motoristaManobraNome || '') || dropNestedName(op.motoristaManobra) || dropNestedName(op.dropHook?.motoristaManobra) || dropText(op.motorista || op.name || '—');
+  const getDropViagem = (op = {}) => dropText(op.dropCycleMotoristaViagem || op.dropMotoristaViagemNome || op.motoristaViagemNome || op.dropHookMotoristaViagem || op.dropHook?.motoristaViagemNome || '') || dropNestedName(op.motoristaViagem) || dropNestedName(op.dropHook?.motoristaViagem) || dropText(op.dropHookTripDriver?.name || '—');
+
+  const getHistoricoMotoristaNome = (op = {}) => op.motorista || op.name || '—';
+
+  const prepareDropHistoricoRecord = (op = {}) => {
+    if (!isDropHookOperation(op)) return op;
+    const manobra = getDropManobra(op);
+    const viagem = getDropViagem(op);
+    return {
+      ...op,
+      // Mantém a base do ciclo no Dash Drop & Hook mesmo depois que a DT sai do Pátio.
+      // Observação: não altera o campo Motorista do Histórico principal.
+      dropCycleMotoristaManobra: manobra && manobra !== '—' ? manobra : '',
+      dropCycleMotoristaViagem: viagem && viagem !== '—' ? viagem : '',
+      dropMotoristaManobraNome: manobra && manobra !== '—' ? manobra : '',
+      dropMotoristaViagemNome: viagem && viagem !== '—' ? viagem : '',
+      motoristaManobraNome: manobra && manobra !== '—' ? manobra : '',
+      motoristaViagemNome: viagem && viagem !== '—' ? viagem : ''
+    };
+  };
+
+  const getDropCargaQtd = (op = {}) => {
+    const direct = Number(op.contabilizarCarga ?? op.dropHook?.contabilizarCarga ?? NaN);
+    if (Number.isFinite(direct)) return direct;
+    return isDropHookOperation(op) ? 1 : 0;
+  };
+
+  const getDropDescargaQtd = (op = {}) => {
+    const direct = Number(op.contabilizarDescarga ?? op.dropHook?.contabilizarDescarga ?? NaN);
+    if (Number.isFinite(direct)) return direct;
+    const raw = dropText(op.controleIdaRetorno || op.dropHook?.controleIdaRetorno || op.flowStep2 || op.flowLabel || op.operacao).toUpperCase();
+    return (op.dropHookAlsoUnload === true || op.dropHook?.dropHookAlsoUnload === true || raw.includes('DESCARGA')) ? 1 : 0;
+  };
+
+  const dropNormStatus = (value = '') => dropText(value)
+    .toUpperCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
+  const isDropCanceled = (op = {}) => {
+    const raw = [
+      op.dropCancelado,
+      op.dropPainelCancelado,
+      op.dropPainelStatus,
+      op.dropPanelStatus,
+      op.dropPainelClassificacao
+    ].filter(v => v !== undefined && v !== null).join(' ');
+    return raw === true || dropNormStatus(raw).includes('CANCEL');
+  };
+
+  const isDropRemoved = (op = {}) => {
+    if (op.dropPainelExcluido === true || op.dropExcluido === true || op.dropHookExcluido === true) return true;
+    const raw = [
+      op.dropPainelStatus,
+      op.dropPanelStatus,
+      op.dropPainelClassificacao,
+      op.dropClassificacao
+    ].filter(v => v !== undefined && v !== null).join(' ');
+    const norm = dropNormStatus(raw);
+    return norm.includes('EXCLUIDO') || norm.includes('EXCLUIDA');
+  };
+
+  const isDropCargaDone = (op = {}) => {
+    if (op.dropCargaConcluida === true || op.dropCargaFinalizada === true) return true;
+    const raw = [op.dropCargaStatus, op.dropPainelStatus, op.dropPanelStatus, op.dropPainelClassificacao].filter(Boolean).join(' ');
+    const norm = dropNormStatus(raw);
+    return norm.includes('CARREGADO') || norm.includes('CONCLUIDO') || norm.includes('FINALIZADO');
+  };
+
+  const isDropDescargaDone = (op = {}) => {
+    if (op.dropDescargaConcluida === true || op.dropDescargaFinalizada === true) return true;
+    const raw = [op.dropDescargaStatus, op.dropPainelStatus, op.dropPanelStatus, op.dropPainelClassificacao].filter(Boolean).join(' ');
+    const norm = dropNormStatus(raw);
+    return norm.includes('VAZIO') || norm.includes('CONCLUIDO') || norm.includes('FINALIZADO');
+  };
+
+  const getDropClassificacao = (op = {}) => {
+    const cls = dropText(op.dropClassificacao || op.dropTipoStatus || '');
+    if (cls) return cls;
+    const raw = dropNormStatus(op.dropPainelClassificacao || op.dropPainelStatus || op.dropPanelStatus || '');
+    if (raw === 'DROP') return 'Drop';
+    if (raw.includes('NAO_DROP')) return 'Não Drop';
+    return '';
+  };
+
+  const getDropMainStatusLabel = (op = {}) => {
+    if (isDropCanceled(op)) return 'Cancelado';
+    const carga = isDropCargaDone(op);
+    const temDescarga = getDropDescargaQtd(op) > 0;
+    const descarga = !temDescarga || isDropDescargaDone(op);
+    if (carga && descarga) return 'Concluído';
+    if (carga && temDescarga && !descarga) return 'Carga concluída';
+    if (!carga && temDescarga && isDropDescargaDone(op)) return 'Descarga concluída';
+    const cls = getDropClassificacao(op);
+    return cls || dropText(op.dropPainelStatus || op.dropPanelStatus || 'Aguardando');
+  };
+
+  const buildDropStatusPills = (op = {}) => {
+    if (isDropCanceled(op)) {
+      return `<span class="drop-status-pill ${dropStatusClass('Cancelado')}">Cancelado</span>`;
+    }
+    const hasDescarga = getDropDescargaQtd(op) > 0;
+    const cls = getDropClassificacao(op);
+    return `
+      <div class="flex flex-wrap gap-1.5">
+        <span class="drop-status-pill ${isDropCargaDone(op) ? dropStatusClass('Carregado') : dropStatusClass('Aguardando')}">Carga: ${isDropCargaDone(op) ? 'Carregado' : 'Pendente'}</span>
+        ${hasDescarga ? `<span class="drop-status-pill ${isDropDescargaDone(op) ? dropStatusClass('Vazio') : dropStatusClass('Aguardando')}">Descarga: ${isDropDescargaDone(op) ? 'Vazio' : 'Pendente'}</span>` : ''}
+        ${cls ? `<span class="drop-status-pill ${dropStatusClass(cls)}">${escapeHtml(cls)}</span>` : ''}
+      </div>
+    `;
+  };
+
+  const dropOpTime = (op = {}) => {
+    const candidates = [op.registrationTime, op.createdAtMs, op.createdAt, op.timestamp?.seconds ? op.timestamp.seconds * 1000 : '', op.finishedTime];
+    for (const c of candidates) {
+      if (!c) continue;
+      if (typeof c === 'number') return c;
+      if (typeof c === 'object' && typeof c.toDate === 'function') return c.toDate().getTime();
+      const d = new Date(c);
+      if (!Number.isNaN(d.getTime())) return d.getTime();
+    }
+    return 0;
+  };
+
+  const isDropToday = (op = {}) => {
+    const ms = dropOpTime(op);
+    if (!ms) return false;
+    const d = new Date(ms);
+    const now = new Date();
+    return d.toDateString() === now.toDateString();
+  };
+
+  const dropTodayInputValue = () => {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  };
+
+  const initDropDateInputs = () => {
+    const today = dropTodayInputValue();
+    ['drop-dash-date', 'drop-panel-date'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && !el.value) el.value = today;
+    });
+  };
+
+  const getDropSelectedDate = (id) => {
+    const el = document.getElementById(id);
+    return (el?.value || dropTodayInputValue()).trim();
+  };
+
+  const isSameDropDate = (ms, dateValue) => {
+    if (!dateValue || !ms) return !dateValue;
+    const d = new Date(ms);
+    if (Number.isNaN(d.getTime())) return false;
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` === dateValue;
+  };
+
+  const getDropDashStartMs = () => {
+    const key = 'heilog_drop_dash_start_ms_v1';
+    try {
+      const saved = Number(localStorage.getItem(key) || 0);
+      if (Number.isFinite(saved) && saved > 0) return saved;
+      const now = Date.now();
+      localStorage.setItem(key, String(now));
+      return now;
+    } catch (e) {
+      return Date.now();
+    }
+  };
+
+  const dropMetricTime = (op = {}) => {
+    const candidates = [
+      op.dropPainelUpdatedAtMs,
+      op.dropPainelUpdatedAt,
+      op.dropPanelUpdatedAtMs,
+      op.dropPanelUpdatedAt,
+      op.registrationTime,
+      op.createdAtMs,
+      op.createdAt,
+      op.timestamp?.seconds ? op.timestamp.seconds * 1000 : '',
+      op.finishedTime
+    ];
+    for (const c of candidates) {
+      if (!c) continue;
+      if (typeof c === 'number') return c;
+      if (typeof c === 'object' && typeof c.toDate === 'function') return c.toDate().getTime();
+      const d = new Date(c);
+      if (!Number.isNaN(d.getTime())) return d.getTime();
+    }
+    return 0;
+  };
+
+  const csvValueDrop = (value = '') => {
+    const text = String(value ?? '');
+    return /[",;\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : `"${text}"`;
+  };
+
+  const downloadDropCsv = (filename, headers, rows) => {
+    const csv = [headers, ...rows].map(line => line.map(csvValueDrop).join(';')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 15000);
+  };
+
+  const getDropRows = (opts = {}) => {
+    const includeHistoricoToday = !!opts.includeHistoricoToday;
+    const includeHistorico = !!opts.includeHistorico;
+    const selectedDate = opts.dateValue || '';
+    const base = [...(patioData || [])];
+
+    if (includeHistorico || includeHistoricoToday) {
+      base.push(...(historicoData || []).filter(op => {
+        if (selectedDate) return isSameDropDate(dropMetricTime(op) || dropOpTime(op), selectedDate);
+        return includeHistorico ? true : isDropToday(op);
+      }));
+    }
+
+    const map = new Map();
+    base.filter(isDropHookOperation).forEach(op => {
+      if (isDropRemoved(op)) return;
+      const metricMs = dropMetricTime(op) || dropOpTime(op);
+      if (selectedDate && !isSameDropDate(metricMs, selectedDate)) return;
+      const key = op.id || getDropDt(op) || `${getDropManobra(op)}-${metricMs || dropOpTime(op)}`;
+      if (!map.has(key)) map.set(key, op);
+    });
+    return Array.from(map.values()).sort((a, b) => (dropMetricTime(b) || dropOpTime(b)) - (dropMetricTime(a) || dropOpTime(a)));
+  };
+
+  const dropStatusClass = (status = '') => {
+    const s = dropText(status).toUpperCase();
+    if (s.includes('CARREG')) return 'bg-green-100 text-green-800 border-green-200';
+    if (s === 'DROP') return 'bg-teal-100 text-teal-800 border-teal-200';
+    if (s.includes('NÃO') || s.includes('NAO')) return 'bg-yellow-100 text-yellow-900 border-yellow-200';
+    if (s.includes('CANCEL')) return 'bg-red-100 text-red-800 border-red-200';
+    if (s.includes('VAZIO')) return 'bg-slate-100 text-slate-800 border-slate-200';
+    return 'bg-emerald-50 text-emerald-900 border-emerald-200';
+  };
+
+
+  const dropFmtHHMM = (ms) => {
+    if (!Number.isFinite(ms) || ms <= 0) return '—';
+    return new Date(ms).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const dropFmtDelta = (ms) => {
+    if (!Number.isFinite(ms) || ms < 0) return '—';
+    const totalMin = Math.round(ms / 60000);
+    const h = Math.floor(totalMin / 60);
+    const m = totalMin % 60;
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+  };
+
+  const dropCyclePlateKey = (op = {}) => {
+    const cavalo = dropText(getTruckPlate(op) || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const carreta = dropText(getTrailerPlate(op) || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const combo = `${carreta || 'SEMCARRETA'}_${cavalo || 'SEMCAVALO'}`;
+    if (carreta || cavalo) return combo;
+    const dt = dropText(getDropDt(op) || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (dt) return `DT_${dt}`;
+    const motorista = dropText(getDropManobra(op) || getDropViagem(op) || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    return motorista ? `MOT_${motorista}` : '';
+  };
+
+  const buildDropCycleReport = (selectedDate = '') => {
+    const base = [...(patioData || []), ...(historicoData || [])]
+      .filter(isDropHookOperation)
+      .filter(op => !isDropCanceled(op) && !isDropRemoved(op))
+      .map(op => ({ ...op, _dropMarkMs: dropOpTime(op) }))
+      .filter(op => op._dropMarkMs && (!selectedDate || isSameDropDate(op._dropMarkMs, selectedDate)));
+
+    const dedup = new Map();
+    base.forEach(op => {
+      const key = op.id || `${dropCyclePlateKey(op)}_${op._dropMarkMs}`;
+      if (!key) return;
+      if (!dedup.has(key)) dedup.set(key, op);
+    });
+
+    const groups = new Map();
+    Array.from(dedup.values()).forEach(op => {
+      const key = dropCyclePlateKey(op);
+      if (!key) return;
+      if (!groups.has(key)) groups.set(key, {
+        key,
+        cavalo: getTruckPlate(op) || '',
+        carreta: getTrailerPlate(op) || '',
+        manobra: getDropManobra(op),
+        viagem: getDropViagem(op),
+        entries: []
+      });
+      const g = groups.get(key);
+      if (!g.cavalo && getTruckPlate(op)) g.cavalo = getTruckPlate(op);
+      if (!g.carreta && getTrailerPlate(op)) g.carreta = getTrailerPlate(op);
+      if ((!g.manobra || g.manobra === '—') && getDropManobra(op)) g.manobra = getDropManobra(op);
+      if ((!g.viagem || g.viagem === '—') && getDropViagem(op)) g.viagem = getDropViagem(op);
+      g.entries.push({
+        ms: op._dropMarkMs,
+        dt: getDropDt(op),
+        id: op.id || '',
+        status: getDropMainStatusLabel(op)
+      });
+    });
+
+    const rows = Array.from(groups.values()).map(g => {
+      g.entries.sort((a, b) => a.ms - b.ms);
+      const cycles = [];
+      for (let i = 1; i < g.entries.length; i += 2) {
+        const start = g.entries[i - 1];
+        const end = g.entries[i];
+        const durationMs = end.ms - start.ms;
+        if (Number.isFinite(durationMs) && durationMs >= 0) {
+          cycles.push({ startMs: start.ms, endMs: end.ms, durationMs });
+        }
+      }
+      const aberto = g.entries.length % 2 === 1;
+      const last = g.entries[g.entries.length - 1]?.ms || 0;
+      return {
+        ...g,
+        count: g.entries.length,
+        horarios: g.entries.map(e => dropFmtHHMM(e.ms)),
+        cycles,
+        cycleTimes: cycles.length ? cycles.map(c => dropFmtDelta(c.durationMs)).join(' | ') : '—',
+        aberto,
+        statusCiclo: aberto ? 'Aguardando próxima marcação' : (cycles.length ? 'Ciclo fechado' : 'Sem ciclo'),
+        last
+      };
+    }).sort((a, b) => (b.last - a.last) || (b.count - a.count) || a.key.localeCompare(b.key, 'pt-BR'));
+
+    const durations = rows.flatMap(r => r.cycles.map(c => c.durationMs)).filter(v => Number.isFinite(v) && v >= 0);
+    const avgMs = durations.length ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
+    const maxMs = durations.length ? Math.max(...durations) : 0;
+    return {
+      date: selectedDate || '',
+      rows,
+      totalMarcacoes: rows.reduce((acc, r) => acc + r.count, 0),
+      ciclosFechados: durations.length,
+      avgMs,
+      maxMs,
+      emCiclo: rows.filter(r => r.aberto).length
+    };
+  };
+
+  const renderDropCycleControl = (selectedDate = '') => {
+    const kpis = document.getElementById('drop-cycle-kpis');
+    const tbody = document.getElementById('drop-cycle-table-body');
+    if (!kpis || !tbody) return;
+
+    const report = buildDropCycleReport(selectedDate);
+    window.__dropCycleReport = report;
+
+    kpis.innerHTML = `
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <div class="text-xs font-black uppercase text-gray-500">Ciclos fechados</div>
+        <div class="mt-1 text-3xl font-black">${report.ciclosFechados}</div>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <div class="text-xs font-black uppercase text-gray-500">Tempo médio</div>
+        <div class="mt-1 text-3xl font-black">${report.avgMs ? dropFmtDelta(report.avgMs) : '—'}</div>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <div class="text-xs font-black uppercase text-gray-500">Maior tempo</div>
+        <div class="mt-1 text-3xl font-black">${report.maxMs ? dropFmtDelta(report.maxMs) : '—'}</div>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <div class="text-xs font-black uppercase text-gray-500">Em ciclo</div>
+        <div class="mt-1 text-3xl font-black">${report.emCiclo}</div>
+      </div>
+    `;
+
+    if (!report.rows.length) {
+      tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-gray-400">Sem marcações Drop para calcular tempo no dia selecionado.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = report.rows.map(r => `
+      <tr class="border-b border-gray-700 hover:bg-gray-700/50 align-top">
+        <td class="p-4 font-mono text-sm">
+          <div>${escapeHtml(r.carreta || '—')}</div>
+          <div class="text-xs text-gray-400">Cavalo ${escapeHtml(r.cavalo || '—')}</div>
+        </td>
+        <td class="p-4">${escapeHtml(r.manobra || '—')}</td>
+        <td class="p-4">${escapeHtml(r.viagem || '—')}</td>
+        <td class="p-4 text-sm font-bold">${r.count}</td>
+        <td class="p-4 text-sm">
+          <div class="flex flex-wrap gap-2">
+            ${r.horarios.map(h => `<span class="drop-time-chip">${escapeHtml(h)}</span>`).join('')}
+          </div>
+        </td>
+        <td class="p-4 text-sm font-bold">${r.cycles.length}</td>
+        <td class="p-4 font-mono text-sm">${escapeHtml(r.cycleTimes)}</td>
+        <td class="p-4"><span class="drop-status-pill ${r.aberto ? dropStatusClass('Aguardando') : dropStatusClass('Concluído')}">${escapeHtml(r.statusCiclo)}</span></td>
+      </tr>
+    `).join('');
+  };
+
+  function renderDropDashboard() {
+    initDropDateInputs();
+    const kpiRoot = document.getElementById('drop-dashboard-kpis');
+    const statusRoot = document.getElementById('drop-dashboard-status-list');
+    const lastRoot = document.getElementById('drop-dashboard-last-list');
+    if (!kpiRoot || !statusRoot || !lastRoot) return;
+
+    const selectedDate = getDropSelectedDate('drop-dash-date');
+    const allDropRows = getDropRows({ includeHistorico: true, dateValue: selectedDate, dashOnly: true });
+    // Cancelado permanece no Painel Drop & Hook para histórico/controle,
+    // mas não entra nas contagens, resumo, últimos registros e exportação do Dash.
+    const activeDrops = allDropRows.filter(op => !isDropCanceled(op));
+    const cargasDia = activeDrops.reduce((acc, op) => acc + getDropCargaQtd(op), 0);
+    const descargasDia = activeDrops.reduce((acc, op) => acc + getDropDescargaQtd(op), 0);
+    const cargasAndamento = activeDrops.reduce((acc, op) => acc + (!isDropCanceled(op) && !isDropCargaDone(op) ? getDropCargaQtd(op) : 0), 0);
+    const descargasAndamento = activeDrops.reduce((acc, op) => acc + (!isDropCanceled(op) && !isDropDescargaDone(op) ? getDropDescargaQtd(op) : 0), 0);
+
+    kpiRoot.innerHTML = `
+      <div class="drop-kpi-card">
+        <div class="drop-kpi-label">Cargas Drop no dia</div>
+        <div class="drop-kpi-value">${cargasDia}</div>
+      </div>
+      <div class="drop-kpi-card drop-orange">
+        <div class="drop-kpi-label">Descargas Drop no dia</div>
+        <div class="drop-kpi-value">${descargasDia}</div>
+      </div>
+      <div class="drop-kpi-card drop-blue">
+        <div class="drop-kpi-label">Cargas em andamento</div>
+        <div class="drop-kpi-value">${cargasAndamento}</div>
+      </div>
+      <div class="drop-kpi-card drop-purple">
+        <div class="drop-kpi-label">Descargas em andamento</div>
+        <div class="drop-kpi-value">${descargasAndamento}</div>
+      </div>
+    `;
+
+    const statusCount = activeDrops.reduce((acc, op) => {
+      const status = getDropMainStatusLabel(op);
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    }, {});
+    const statusEntries = Object.entries(statusCount).sort((a, b) => b[1] - a[1]);
+    statusRoot.innerHTML = statusEntries.length
+      ? statusEntries.map(([status, qtd]) => `
+        <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+          <span class="drop-status-pill ${dropStatusClass(status)}">${escapeHtml(status)}</span>
+          <strong class="text-lg">${qtd}</strong>
+        </div>
+      `).join('')
+      : `<div class="text-sm text-gray-400">Dash zerado para o dia selecionado. Novos registros/ações do Drop aparecerão aqui.</div>`;
+
+    lastRoot.innerHTML = activeDrops.slice(0, 10).map(op => `
+      <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <strong class="font-mono">${escapeHtml(getDropDt(op) || 'Sem DT')}</strong>
+          <span class="drop-status-pill ${dropStatusClass(getDropMainStatusLabel(op))}">${escapeHtml(getDropMainStatusLabel(op))}</span>
+        </div>
+        <div class="mt-2 text-sm text-gray-500"><strong>Motorista viagem:</strong> ${escapeHtml(getDropViagem(op))}</div>
+        <div class="mt-1 text-xs text-gray-400"><strong>Motorista manobra:</strong> ${escapeHtml(getDropManobra(op))}</div>
+        <div class="mt-1 text-xs text-gray-400">Cavalo ${escapeHtml(getTruckPlate(op) || '—')} • Carreta ${escapeHtml(getTrailerPlate(op) || '—')}</div>
+      </div>
+    `).join('') || `<div class="text-sm text-gray-400">Sem registros para exibir no dia selecionado.</div>`;
+    renderDropCycleControl(selectedDate);
+  }
+
+  function renderDropPanel() {
+    initDropDateInputs();
+    const tbody = document.getElementById('drop-panel-table-body');
+    if (!tbody) return;
+    const term = compact(document.getElementById('drop-panel-search')?.value || '');
+    const selectedDate = getDropSelectedDate('drop-panel-date');
+    let rows = getDropRows({ includeHistorico: true, dateValue: selectedDate });
+    if (term) {
+      rows = rows.filter(op => [
+        getDropDt(op),
+        getDropManobra(op),
+        getDropViagem(op),
+        getTruckPlate(op),
+        getTrailerPlate(op),
+        op.dropPainelStatus,
+        op.dropPainelObservacao
+      ].filter(Boolean).some(v => compact(v).includes(term)));
+    }
+
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-gray-400">Nenhum Drop & Hook encontrado no dia selecionado.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = rows.map(op => {
+      const id = escapeHtml(op.id || '');
+      const status = getDropMainStatusLabel(op);
+      const obs = dropText(op.dropPainelObservacao || op.dropPanelObservation || '');
+      return `
+        <tr class="border-b border-gray-700 hover:bg-gray-700/50">
+          <td class="p-4 font-mono text-sm">${escapeHtml(getDropDt(op) || '')}</td>
+          <td class="p-4">${escapeHtml(getDropManobra(op))}</td>
+          <td class="p-4">${escapeHtml(getDropViagem(op))}</td>
+          <td class="p-4 font-mono text-sm">${escapeHtml(getTruckPlate(op) || '—')}</td>
+          <td class="p-4 font-mono text-sm">${escapeHtml(getTrailerPlate(op) || '—')}</td>
+          <td class="p-4">${buildDropStatusPills(op)}</td>
+          <td class="p-4 drop-observacao text-sm text-gray-500">${obs ? escapeHtml(obs) : '—'}</td>
+          <td class="p-4">
+            <div class="drop-action-wrap">
+              <button type="button" class="drop-action-btn vazio" title="Concluir descarga como vazio" data-drop-action="status" data-id="${id}" data-status="Vazio">Vazio</button>
+              <button type="button" class="drop-action-btn carregado" title="Concluir carga como carregado" data-drop-action="status" data-id="${id}" data-status="Carregado">Carregado</button>
+              <button type="button" class="drop-action-btn drop" title="Classificar como Drop e concluir carga/descarga" data-drop-action="status" data-id="${id}" data-status="Drop">Drop</button>
+              <button type="button" class="drop-action-btn nao-drop" title="Classificar como Não Drop" data-drop-action="status" data-id="${id}" data-status="Não Drop">Não Drop</button>
+              <button type="button" class="drop-action-btn obs" data-drop-action="obs" data-id="${id}">Observação</button>
+              <button type="button" class="drop-action-btn cancelar" title="Cancelar o controle Drop & Hook sem excluir a DT do pátio" data-drop-action="status" data-id="${id}" data-status="Cancelado">Cancelar</button>
+              <button type="button" class="drop-action-btn excluir" title="Excluir somente do Painel/Dash Drop & Hook, sem apagar a DT do pátio/histórico" data-drop-action="delete" data-id="${id}">Excluir</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function exportDropDashboardCsv() {
+    initDropDateInputs();
+    const selectedDate = getDropSelectedDate('drop-dash-date');
+    const rows = getDropRows({ includeHistorico: true, dateValue: selectedDate, dashOnly: true })
+      .filter(op => !isDropCanceled(op));
+    const cycleReport = buildDropCycleReport(selectedDate);
+    const cycleByKey = new Map((cycleReport.rows || []).map(r => [r.key, r]));
+    const csvRows = rows.map(op => {
+      const cycle = cycleByKey.get(dropCyclePlateKey(op)) || {};
+      return [
+        selectedDate,
+        getDropDt(op) || '',
+        getDropManobra(op),
+        getDropViagem(op),
+        getTruckPlate(op) || '',
+        getTrailerPlate(op) || '',
+        getDropMainStatusLabel(op),
+        getDropCargaQtd(op),
+        getDropDescargaQtd(op),
+        op.dropPainelObservacao || op.dropPanelObservation || '',
+        cycle.count || 0,
+        (cycle.horarios || []).join(' | '),
+        (cycle.cycles || []).length || 0,
+        cycle.cycleTimes || '',
+        cycle.statusCiclo || ''
+      ];
+    });
+    downloadDropCsv(`dash_drop_hook_${selectedDate || 'periodo'}.csv`, ['Dia','DT','Motorista Manobra','Motorista Viagem','Placa Cavalo','Placa Carreta','Status','Carga','Descarga','Observação','Marcações da Placa','Horários','Ciclos Fechados','Tempo dos Ciclos','Status do Ciclo'], csvRows);
+    showToast('Dash Drop & Hook exportado.', 'success');
+  }
+
+  function exportDropPanelCsv() {
+    initDropDateInputs();
+    const selectedDate = getDropSelectedDate('drop-panel-date');
+    const term = compact(document.getElementById('drop-panel-search')?.value || '');
+    let rows = getDropRows({ includeHistorico: true, dateValue: selectedDate });
+    if (term) rows = rows.filter(op => [getDropDt(op), getDropManobra(op), getDropViagem(op), getTruckPlate(op), getTrailerPlate(op), op.dropPainelStatus, op.dropPainelObservacao].filter(Boolean).some(v => compact(v).includes(term)));
+    const csvRows = rows.map(op => [
+      selectedDate,
+      getDropDt(op) || '',
+      getDropManobra(op),
+      getDropViagem(op),
+      getTruckPlate(op) || '',
+      getTrailerPlate(op) || '',
+      getDropMainStatusLabel(op),
+      op.dropPainelObservacao || op.dropPanelObservation || ''
+    ]);
+    downloadDropCsv(`painel_drop_hook_${selectedDate || 'periodo'}.csv`, ['Dia','DT','Motorista Manobra','Motorista Viagem','Placa Cavalo','Placa Carreta','Status Painel','Observação'], csvRows);
+    showToast('Painel Drop & Hook exportado.', 'success');
+  }
+
+  function getDropOpSource(id) {
+    const opPatio = (patioData || []).find(x => x.id === id);
+    if (opPatio) return { op: opPatio, collectionName: 'patio' };
+    const opHistorico = (historicoData || []).find(x => x.id === id);
+    if (opHistorico) return { op: opHistorico, collectionName: 'historico' };
+    return { op: null, collectionName: 'patio' };
+  }
+
+  async function persistDropPatch(id, patch, localNowMs = Date.now()) {
+    const source = getDropOpSource(id);
+    const collectionName = source.collectionName || 'patio';
+    await setDoc(doc(db, `artifacts/${appId}/public/data/${collectionName}`, id), patch, { merge: true });
+    if (source.op) Object.assign(source.op, { ...patch, dropPainelUpdatedAt: localNowMs });
+    return source;
+  }
+
+  async function updateDropPanelStatus(id, status) {
+    if (!db || !id) return;
+    const { op } = getDropOpSource(id);
+    const cleanStatus = dropText(status || 'Aguardando');
+    const nowMs = Date.now();
+    const patch = {
+      dropPainelUpdatedAt: serverTimestamp(),
+      dropPainelUpdatedAtMs: nowMs
+    };
+
+    let logText = `Painel Drop & Hook: ação ${cleanStatus}.`;
+
+    if (cleanStatus === 'Carregado') {
+      // Conclui somente a CARGA. A descarga continua em andamento até clicar em Vazio.
+      Object.assign(patch, {
+        dropCargaStatus: 'Carregado',
+        dropCargaConcluida: true,
+        dropCargaConcluidaAt: serverTimestamp(),
+        dropCargaConcluidaAtMs: nowMs,
+        dropPainelStatus: 'Carga concluída',
+        dropPainelClassificacao: 'CARGA_CONCLUIDA'
+      });
+      logText = 'Painel Drop & Hook: carga concluída como Carregado.';
+    } else if (cleanStatus === 'Vazio') {
+      // Conclui somente a DESCARGA/retorno.
+      Object.assign(patch, {
+        dropDescargaStatus: 'Vazio',
+        dropDescargaConcluida: true,
+        dropDescargaConcluidaAt: serverTimestamp(),
+        dropDescargaConcluidaAtMs: nowMs,
+        dropPainelStatus: isDropCargaDone(op || {}) ? 'Concluído' : 'Descarga concluída',
+        dropPainelClassificacao: isDropCargaDone(op || {}) ? 'CONCLUIDO' : 'DESCARGA_CONCLUIDA'
+      });
+      logText = 'Painel Drop & Hook: descarga concluída como Vazio.';
+    } else if (cleanStatus === 'Drop') {
+      // DROP: classifica como Drop e conclui as duas etapas no painel.
+      Object.assign(patch, {
+        dropClassificacao: 'Drop',
+        dropCargaStatus: 'Carregado',
+        dropCargaConcluida: true,
+        dropCargaConcluidaAt: serverTimestamp(),
+        dropCargaConcluidaAtMs: nowMs,
+        dropDescargaStatus: 'Vazio',
+        dropDescargaConcluida: true,
+        dropDescargaConcluidaAt: serverTimestamp(),
+        dropDescargaConcluidaAtMs: nowMs,
+        dropPainelStatus: 'Concluído',
+        dropPainelClassificacao: 'DROP_CONCLUIDO'
+      });
+      logText = 'Painel Drop & Hook: classificado como Drop e carga/descarga concluídas.';
+    } else if (cleanStatus === 'Não Drop') {
+      // Não Drop: apenas classifica; não conclui carga/descarga.
+      Object.assign(patch, {
+        dropClassificacao: cleanStatus,
+        dropPainelStatus: cleanStatus,
+        dropPainelClassificacao: cleanStatus.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_')
+      });
+      logText = `Painel Drop & Hook: classificado como ${cleanStatus}.`;
+    } else if (cleanStatus === 'Cancelado') {
+      Object.assign(patch, {
+        dropCancelado: true,
+        dropPainelStatus: 'Cancelado',
+        dropPainelClassificacao: 'CANCELADO'
+      });
+      logText = 'Painel Drop & Hook: controle cancelado. A DT não foi excluída do pátio e não será considerada na contagem do Dash.';
+    } else {
+      Object.assign(patch, {
+        dropPainelStatus: cleanStatus,
+        dropPainelClassificacao: cleanStatus.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_')
+      });
+    }
+
+    await persistDropPatch(id, patch, nowMs);
+    await addLogEntry(id, logText);
+    showToast(`Drop & Hook atualizado: ${cleanStatus}`, 'success');
+    renderDropPanel();
+    renderDropDashboard();
+  }
+
+  async function updateDropPanelObservation(id) {
+    if (!db || !id) return;
+    const { op } = getDropOpSource(id);
+    const current = dropText(op?.dropPainelObservacao || op?.dropPanelObservation || '');
+    const obs = window.prompt('Observação do Drop & Hook:', current);
+    if (obs === null) return;
+    const patch = {
+      dropPainelObservacao: obs.trim(),
+      dropPainelUpdatedAt: serverTimestamp(),
+      dropPainelUpdatedAtMs: Date.now()
+    };
+    await persistDropPatch(id, patch, Date.now());
+    await addLogEntry(id, `Painel Drop & Hook: observação atualizada${obs.trim() ? ` (${obs.trim()})` : ''}.`, true);
+    showToast('Observação salva no Drop & Hook.', 'success');
+    renderDropPanel();
+    renderDropDashboard();
+  }
+
+  async function deleteDropPanelRecord(id) {
+    if (!db || !id) return;
+    const nowMs = Date.now();
+    const patch = {
+      dropPainelExcluido: true,
+      dropExcluido: true,
+      dropPainelStatus: 'Excluído',
+      dropPainelClassificacao: 'EXCLUIDO',
+      dropPainelUpdatedAt: serverTimestamp(),
+      dropPainelUpdatedAtMs: nowMs
+    };
+    await persistDropPatch(id, patch, nowMs);
+    await addLogEntry(id, 'Painel Drop & Hook: registro excluído/limpo do Dash e do Painel Drop. A DT do pátio/histórico não foi apagada.', true);
+    showToast('Registro Drop & Hook removido do Painel/Dash.', 'success');
+    renderDropPanel();
+    renderDropDashboard();
+  }
+
+  function handleDropPanelClick(ev) {
+    const btn = ev.target.closest('[data-drop-action]');
+    if (!btn) return;
+    const id = btn.dataset.id || '';
+    const action = btn.dataset.dropAction || '';
+    if (!id) return;
+
+    if (action === 'obs') {
+      updateDropPanelObservation(id).catch(err => {
+        console.error('Falha ao salvar observação Drop & Hook:', err);
+        showToast('Erro ao salvar observação.', 'error');
+      });
+      return;
+    }
+
+    if (action === 'delete') {
+      showConfirmModal('Excluir este registro somente do Painel/Dash Drop & Hook? A DT do pátio/histórico não será apagada.', () => {
+        deleteDropPanelRecord(id).catch(err => {
+          console.error('Falha ao excluir registro Drop & Hook:', err);
+          showToast('Erro ao excluir registro Drop & Hook.', 'error');
+        });
+      });
+      return;
+    }
+
+    const status = btn.dataset.status || '';
+    const execute = () => updateDropPanelStatus(id, status).catch(err => {
+      console.error('Falha ao atualizar Drop & Hook:', err);
+      showToast('Erro ao atualizar Drop & Hook.', 'error');
+    });
+
+    if (status === 'Cancelado') {
+      showConfirmModal('Marcar este Drop & Hook como Cancelado no controle? A DT não será excluída do pátio.', execute);
+    } else {
+      execute();
+    }
+  }
+
+
   // ==============================
   // RENDER
   // ==============================
   const render = () => {
     if (activeTab === 'performance') { renderPerformanceDashboard(); return; }
     if (activeTab === 'dashboard') { renderManagerDashboard(); renderRitmoDashboard(); return; }
+    if (activeTab === 'drop-dashboard') { renderDropDashboard(); return; }
+    if (activeTab === 'drop-panel') { renderDropPanel(); return; }
     if (activeTab === 'motoristas') { renderDriversTab(); return; }
     if (activeTab === 'baldeios') { renderBaldeiosRitmo(); return; }
     if (activeTab === 'ritmo') { renderRitmoPlacaControl(); return; }
@@ -7919,6 +8973,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
       const occurrenceTruckPlate = activeTab === 'ocorrencias' ? getOccurrenceTruckPlate(op) : '';
       const occurrenceTrailerPlate = activeTab === 'ocorrencias' ? getOccurrenceTrailerPlate(op) : '';
+      const tableMotoristaNome = activeTab === 'historico' ? getHistoricoMotoristaNome(op) : (op.motorista || op.name || '—');
       const truckPlate = occurrenceTruckPlate || getTruckPlate(opDataForActions) || '—';
       const trailerPlate = occurrenceTrailerPlate || getTrailerPlate(opDataForActions) || '—';
       const lockSourceOp = activeTab === 'ocorrencias'
@@ -8063,7 +9118,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
                </td>`
             : ''
           }
-          <td class="p-4">${op.motorista || op.name || '—'}</td>
+          <td class="p-4">${escapeHtml(tableMotoristaNome)}</td>
           <td class="p-4">${op.transportadora || '—'}</td>
           <td class="p-4 font-mono text-sm">${truckPlate}</td>
           <td class="p-4 font-mono text-sm">${trailerPlate}</td>
@@ -9292,7 +10347,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           `"${op.dt || ''}"`,
           `"${op.status || ''}"`,
           `"${op.agenda || ''}"`,
-          `"${op.motorista || op.name || ''}"`,
+          `"${getSegmentacaoLabel(op) || ''}"`,
+          `"${getHistoricoMotoristaNome(op) || ''}"`,
           `"${op.transportadora || ''}"`,
           `"${truckPlate}"`,
           `"${trailerPlate}"`,
@@ -9306,6 +10362,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         `"${op.dt || ''}"`,
         `"${statusText}"`,
         `"${op.agenda || ''}"`,
+        `"${getSegmentacaoLabel(op) || ''}"`,
         `"${tempoPatio}"`,
         `"${op.motorista || op.name || ''}"`,
         `"${op.transportadora || ''}"`,
@@ -9354,7 +10411,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         const op = patioData.find(x => x.id === id);
         if (!op) return;
 
-        const finalizada = { ...op, status: 'Finalizado', finishedTime: now };
+        const finalizada = prepareDropHistoricoRecord({ ...op, status: 'Finalizado', finishedTime: now });
 
         const historicoRef = doc(db, `artifacts/${appId}/public/data/historico`, id);
         batch.set(historicoRef, finalizada);
@@ -9378,7 +10435,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     if (!db || !selectedOperacao) return;
     if (requireSapUnlockForOperation(selectedOperacao, () => showConfirmModal('Tem certeza que deseja finalizar esta operação?', finalizarOperacao))) return;
     try {
-      const finalizada = { ...selectedOperacao, status: 'Finalizado', finishedTime: Date.now() };
+      const finalizada = prepareDropHistoricoRecord({ ...selectedOperacao, status: 'Finalizado', finishedTime: Date.now() });
       const batch = writeBatch(db);
 
       const historicoRef = doc(db, `artifacts/${appId}/public/data/historico`, selectedOperacao.id);
@@ -9399,7 +10456,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   async function cancelarOperacao() {
     if (!db || !selectedOperacao) return;
     try {
-      const cancelada = { ...selectedOperacao, status: 'Cancelado', finishedTime: Date.now() };
+      const cancelada = prepareDropHistoricoRecord({ ...selectedOperacao, status: 'Cancelado', finishedTime: Date.now() });
       const batch = writeBatch(db);
 
       const historicoRef = doc(db, `artifacts/${appId}/public/data/historico`, selectedOperacao.id);
@@ -14817,6 +15874,16 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
     document.getElementById('open-powerapps-btn')?.addEventListener('click', openPowerAppsOccurrence);
     document.getElementById('resolution-form').addEventListener('submit', handleUpdateResolution);
     document.getElementById('table-body').addEventListener('click', handleTableClick);
+    document.getElementById('drop-panel-table-body')?.addEventListener('click', handleDropPanelClick);
+    document.getElementById('drop-panel-search')?.addEventListener('input', debouncedRender);
+    document.getElementById('drop-panel-date')?.addEventListener('change', renderDropPanel);
+    document.getElementById('drop-panel-today')?.addEventListener('click', () => { const el = document.getElementById('drop-panel-date'); if (el) el.value = dropTodayInputValue(); renderDropPanel(); });
+    document.getElementById('drop-panel-export')?.addEventListener('click', exportDropPanelCsv);
+    document.getElementById('drop-panel-refresh')?.addEventListener('click', () => { renderDropPanel(); showToast('Painel Drop & Hook atualizado.', 'success'); });
+    document.getElementById('drop-dash-date')?.addEventListener('change', renderDropDashboard);
+    document.getElementById('drop-dash-today')?.addEventListener('click', () => { const el = document.getElementById('drop-dash-date'); if (el) el.value = dropTodayInputValue(); renderDropDashboard(); });
+    document.getElementById('drop-dash-export')?.addEventListener('click', exportDropDashboardCsv);
+    document.getElementById('drop-dash-refresh')?.addEventListener('click', () => { renderDropDashboard(); showToast('Dash Drop & Hook atualizado.', 'success'); });
 
     document.getElementById('confirm-modal-cancel').addEventListener('click', () => {
       document.getElementById('confirm-modal').classList.add('hidden');
@@ -14839,6 +15906,8 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
       document.getElementById('tab-ritmo'),
       document.getElementById('tab-controle-dt'),
       document.getElementById('tab-motoristas'),
+      document.getElementById('tab-drop-dashboard'),
+      document.getElementById('tab-drop-panel'),
       document.getElementById('tab-dashboard')
     ];
 
@@ -14854,16 +15923,20 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
 
       const showPerformance = activeTab === 'performance';
       const showDashboard = activeTab === 'dashboard';
+      const showDropDashboard = activeTab === 'drop-dashboard';
+      const showDropPanel = activeTab === 'drop-panel';
       const showMotoristas = activeTab === 'motoristas';
       const showBaldeios = activeTab === 'baldeios';
       const showRitmo = activeTab === 'ritmo';
       const showControleDt = activeTab === 'controle-dt';
-      const showMainTable = !showPerformance && !showDashboard && !showMotoristas && !showBaldeios && !showRitmo && !showControleDt;
+      const showMainTable = !showPerformance && !showDashboard && !showDropDashboard && !showDropPanel && !showMotoristas && !showBaldeios && !showRitmo && !showControleDt;
 
       document.getElementById('kpi-section').style.display = showMainTable ? 'grid' : 'none';
       document.getElementById('table-main-content').style.display = showMainTable ? 'block' : 'none';
       document.getElementById('performance-content').style.display = showPerformance ? 'block' : 'none';
       document.getElementById('dashboard-content').style.display = showDashboard ? 'block' : 'none';
+      document.getElementById('drop-dashboard-content').style.display = showDropDashboard ? 'block' : 'none';
+      document.getElementById('drop-panel-content').style.display = showDropPanel ? 'block' : 'none';
       document.getElementById('motoristas-content').style.display = showMotoristas ? 'block' : 'none';
       document.getElementById('baldeios-content').style.display = showBaldeios ? 'block' : 'none';
       document.getElementById('ritmo-placa-content').style.display = showRitmo ? 'block' : 'none';
@@ -15065,6 +16138,8 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
       if (activeTab === 'performance') renderPerformanceDashboard();
       if (activeTab === 'patio') { checkSystemAlerts(); runPredictiveAnalysis(); }
       if (activeTab === 'dashboard') { renderManagerDashboard(); renderRitmoDashboard(); }
+      if (activeTab === 'drop-dashboard') renderDropDashboard();
+      if (activeTab === 'drop-panel') renderDropPanel();
       if (activeTab === 'baldeios') renderBaldeiosRitmo();
       if (activeTab === 'ritmo') renderRitmoPlacaControl(false);
       if (activeTab === 'controle-dt') renderControleDt();
