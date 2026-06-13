@@ -4923,6 +4923,11 @@ select.hl-native-multi-hidden {
 .drop-table th,
 .drop-table td { white-space: nowrap; }
 .drop-table td.drop-observacao { white-space: normal; min-width: 180px; max-width: 320px; }
+.drop-timer-cell {
+  color: #0f766e !important;
+  font-weight: 900 !important;
+  letter-spacing: .02em;
+}
 
 
 /* DROP & HOOK — controles de dia/exportação */
@@ -5792,6 +5797,8 @@ select.hl-native-multi-hidden {
           <label class="text-sm font-bold text-gray-500">Dia</label>
           <input id="drop-panel-date" type="date" class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
           <button id="drop-panel-today" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">Hoje</button>
+          <button id="drop-panel-toggle-resolved" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg">Mostrar resolvidos</button>
+          <button id="drop-panel-clear-resolved" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">Limpar resolvidos</button>
           <button id="drop-panel-export" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Exportar</button>
           <button id="drop-panel-refresh" class="bg-green-700 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg">Atualizar</button>
         </div>
@@ -5802,6 +5809,8 @@ select.hl-native-multi-hidden {
           <thead class="border-b border-gray-700">
             <tr>
               <th class="p-4 text-sm font-semibold text-gray-400">DT</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Chegada</th>
+              <th class="p-4 text-sm font-semibold text-gray-400">Tempo no Processo</th>
               <th class="p-4 text-sm font-semibold text-gray-400">Motorista Manobra</th>
               <th class="p-4 text-sm font-semibold text-gray-400">Motorista Viagem</th>
               <th class="p-4 text-sm font-semibold text-gray-400">Placa Cavalo</th>
@@ -8313,6 +8322,87 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     return 0;
   };
 
+  const dropPanelToMs = (value) => {
+    if (!value) return 0;
+    if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+    if (typeof value === 'object') {
+      if (typeof value.toDate === 'function') return value.toDate().getTime();
+      if (typeof value.seconds === 'number') return value.seconds * 1000;
+      if (typeof value._seconds === 'number') return value._seconds * 1000;
+    }
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? 0 : d.getTime();
+  };
+
+  const getDropArrivalTime = (op = {}) => {
+    const candidates = [
+      op.registrationTime,
+      op.dropMarcacaoAtMs,
+      op.dropMarkAtMs,
+      op.markedAtMs,
+      op.createdAtMs,
+      op.createdAt,
+      op.timestamp,
+      op.dataMarcacao,
+      op.dataRegistro
+    ];
+    for (const c of candidates) {
+      const ms = dropPanelToMs(c);
+      if (ms) return ms;
+    }
+    return 0;
+  };
+
+  const getDropTimerEndTime = (op = {}) => {
+    const start = getDropArrivalTime(op);
+    if (!start) return 0;
+
+    // O cronômetro só trava quando clicar no botão "Drop".
+    // Carregado, Vazio, Não Drop, Cancelar e Excluir continuam com o tempo rodando.
+    const clsNorm = dropNormStatus(getDropClassificacao(op));
+    const painelClsNorm = dropNormStatus(op.dropPainelClassificacao || op.dropPanelClassificacao || '');
+    const painelStatusNorm = dropNormStatus(op.dropPainelStatus || op.dropPanelStatus || '');
+
+    const isExplicitDrop =
+      clsNorm === 'DROP' ||
+      painelClsNorm === 'DROP' ||
+      painelClsNorm === 'DROP_CONCLUIDO' ||
+      painelStatusNorm === 'DROP';
+
+    if (!isExplicitDrop) return Date.now();
+
+    const candidates = [
+      op.dropPainelUpdatedAtMs,
+      op.dropPainelUpdatedAt,
+      op.dropPanelUpdatedAtMs,
+      op.dropPanelUpdatedAt,
+      op.dropDescargaConcluidaAtMs,
+      op.dropDescargaConcluidaAt,
+      op.dropCargaConcluidaAtMs,
+      op.dropCargaConcluidaAt,
+      op.finishedTime
+    ];
+
+    for (const c of candidates) {
+      const ms = dropPanelToMs(c);
+      if (ms) return ms;
+    }
+
+    return Date.now();
+  };
+
+  const formatDropArrivalTime = (op = {}) => {
+    const ms = getDropArrivalTime(op);
+    return ms ? new Date(ms).toLocaleString('pt-BR') : 'N/A';
+  };
+
+  const getDropElapsedDisplay = (op = {}) => {
+    const start = getDropArrivalTime(op);
+    if (!start) return '00:00:00';
+    const end = getDropTimerEndTime(op);
+    return formatMilliseconds(Math.max(0, end - start));
+  };
+
   const csvValueDrop = (value = '') => {
     const text = String(value ?? '');
     return /[",;\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : `"${text}"`;
@@ -8586,13 +8676,55 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     renderDropCycleControl(selectedDate);
   }
 
-  function renderDropPanel() {
+  const DROP_PANEL_HIDE_RESOLVED_KEY = 'heilog_drop_panel_hide_resolved_v1';
+
+  const getDropPanelHideResolved = () => {
+    const saved = localStorage.getItem(DROP_PANEL_HIDE_RESOLVED_KEY);
+    return saved === null ? true : saved === '1';
+  };
+
+  const setDropPanelHideResolved = (value) => {
+    localStorage.setItem(DROP_PANEL_HIDE_RESOLVED_KEY, value ? '1' : '0');
+  };
+
+  const isDropResolvedForPanel = (op = {}) => {
+    if (!op || !op.id) return false;
+    if (isDropRemoved(op) || isDropCanceled(op)) return true;
+
+    const main = dropNormStatus(getDropMainStatusLabel(op));
+    const cls = dropNormStatus(getDropClassificacao(op));
+
+    // Para manter o painel limpo, considera resolvido tudo que já recebeu uma ação operacional:
+    // Carregado, Vazio, Drop, Não Drop, Concluído, Cancelado ou Excluído.
+    return (
+      isDropCargaDone(op) ||
+      isDropDescargaDone(op) ||
+      main.includes('CONCLUIDO') ||
+      main.includes('CANCELADO') ||
+      main.includes('EXCLUIDO') ||
+      main.includes('CARREGADO') ||
+      main.includes('VAZIO') ||
+      cls.includes('DROP')
+    );
+  };
+
+  const updateDropPanelCleanButtons = () => {
+    const hideResolved = getDropPanelHideResolved();
+    const toggleBtn = document.getElementById('drop-panel-toggle-resolved');
+    if (toggleBtn) {
+      toggleBtn.textContent = hideResolved ? 'Mostrar resolvidos' : 'Ocultar resolvidos';
+      toggleBtn.title = hideResolved
+        ? 'Exibe novamente os registros já tratados no Painel Drop & Hook'
+        : 'Oculta registros já tratados e deixa somente pendências';
+    }
+  };
+
+  function getDropPanelCurrentRows({ includeResolved = true } = {}) {
     initDropDateInputs();
-    const tbody = document.getElementById('drop-panel-table-body');
-    if (!tbody) return;
     const term = compact(document.getElementById('drop-panel-search')?.value || '');
     const selectedDate = getDropSelectedDate('drop-panel-date');
     let rows = getDropRows({ includeHistorico: true, dateValue: selectedDate });
+
     if (term) {
       rows = rows.filter(op => [
         getDropDt(op),
@@ -8605,8 +8737,59 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       ].filter(Boolean).some(v => compact(v).includes(term)));
     }
 
+    if (!includeResolved && getDropPanelHideResolved()) {
+      rows = rows.filter(op => !isDropResolvedForPanel(op));
+    }
+
+    return rows;
+  }
+
+  async function clearDropPanelResolvedRows() {
+    if (!db) return;
+
+    const rows = getDropPanelCurrentRows({ includeResolved: true })
+      .filter(op => isDropResolvedForPanel(op) && !isDropRemoved(op));
+
     if (!rows.length) {
-      tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-gray-400">Nenhum Drop & Hook encontrado no dia selecionado.</td></tr>`;
+      showToast('Não há registros resolvidos para limpar no filtro atual.', 'info');
+      return;
+    }
+
+    const nowMs = Date.now();
+
+    for (const op of rows) {
+      if (!op?.id) continue;
+      const patch = {
+        dropPainelExcluido: true,
+        dropExcluido: true,
+        dropPainelStatus: 'Excluído',
+        dropPainelClassificacao: 'EXCLUIDO',
+        dropPainelUpdatedAt: serverTimestamp(),
+        dropPainelUpdatedAtMs: nowMs
+      };
+
+      await persistDropPatch(op.id, patch, nowMs);
+      await addLogEntry(op.id, 'Painel Drop & Hook: registro resolvido limpo do painel. A DT do pátio/histórico não foi apagada.', true);
+    }
+
+    showToast(`${rows.length} registro(s) resolvido(s) limpo(s) do Painel Drop & Hook.`, 'success');
+    renderDropPanel();
+    renderDropDashboard();
+  }
+
+  function renderDropPanel() {
+    initDropDateInputs();
+    updateDropPanelCleanButtons();
+    const tbody = document.getElementById('drop-panel-table-body');
+    if (!tbody) return;
+
+    let rows = getDropPanelCurrentRows({ includeResolved: false });
+
+    if (!rows.length) {
+      const msg = getDropPanelHideResolved()
+        ? 'Nenhuma pendência no Painel Drop & Hook. Clique em “Mostrar resolvidos” para ver os registros já tratados.'
+        : 'Nenhum Drop & Hook encontrado no dia selecionado.';
+      tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-gray-400">${msg}</td></tr>`;
       return;
     }
 
@@ -8617,6 +8800,10 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       return `
         <tr class="border-b border-gray-700 hover:bg-gray-700/50">
           <td class="p-4 font-mono text-sm">${escapeHtml(getDropDt(op) || '')}</td>
+          <td class="p-4 text-sm font-mono">${escapeHtml(formatDropArrivalTime(op))}</td>
+          <td class="p-4 font-mono text-sm drop-timer-cell" data-drop-start-time="${getDropArrivalTime(op)}" data-drop-end-time="${getDropTimerEndTime(op)}">
+            ${escapeHtml(getDropElapsedDisplay(op))}
+          </td>
           <td class="p-4">${escapeHtml(getDropManobra(op))}</td>
           <td class="p-4">${escapeHtml(getDropViagem(op))}</td>
           <td class="p-4 font-mono text-sm">${escapeHtml(getTruckPlate(op) || '—')}</td>
@@ -8679,6 +8866,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const csvRows = rows.map(op => [
       selectedDate,
       getDropDt(op) || '',
+      formatDropArrivalTime(op),
+      getDropElapsedDisplay(op),
       getDropManobra(op),
       getDropViagem(op),
       getTruckPlate(op) || '',
@@ -8686,7 +8875,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       getDropMainStatusLabel(op),
       op.dropPainelObservacao || op.dropPanelObservation || ''
     ]);
-    downloadDropCsv(`painel_drop_hook_${selectedDate || 'periodo'}.csv`, ['Dia','DT','Motorista Manobra','Motorista Viagem','Placa Cavalo','Placa Carreta','Status Painel','Observação'], csvRows);
+    downloadDropCsv(`painel_drop_hook_${selectedDate || 'periodo'}.csv`, ['Dia','DT','Chegada','Tempo no Processo','Motorista Manobra','Motorista Viagem','Placa Cavalo','Placa Carreta','Status Painel','Observação'], csvRows);
     showToast('Painel Drop & Hook exportado.', 'success');
   }
 
@@ -17645,6 +17834,21 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
     document.getElementById('drop-panel-date')?.addEventListener('change', renderDropPanel);
     document.getElementById('drop-panel-today')?.addEventListener('click', () => { const el = document.getElementById('drop-panel-date'); if (el) el.value = dropTodayInputValue(); renderDropPanel(); });
     document.getElementById('drop-panel-export')?.addEventListener('click', exportDropPanelCsv);
+
+    document.getElementById('drop-panel-toggle-resolved')?.addEventListener('click', () => {
+      setDropPanelHideResolved(!getDropPanelHideResolved());
+      renderDropPanel();
+    });
+
+    document.getElementById('drop-panel-clear-resolved')?.addEventListener('click', () => {
+      showConfirmModal('Limpar todos os registros resolvidos do Painel Drop & Hook no filtro atual? A DT do pátio/histórico não será apagada.', () => {
+        clearDropPanelResolvedRows().catch(err => {
+          console.error('Falha ao limpar resolvidos do Painel Drop & Hook:', err);
+          showToast('Erro ao limpar resolvidos do Painel Drop & Hook.', 'error');
+        });
+      });
+    });
+
     document.getElementById('drop-panel-refresh')?.addEventListener('click', () => { renderDropPanel(); showToast('Painel Drop & Hook atualizado.', 'success'); });
     document.getElementById('drop-dash-date')?.addEventListener('change', renderDropDashboard);
     document.getElementById('drop-dash-today')?.addEventListener('click', () => { const el = document.getElementById('drop-dash-date'); if (el) el.value = dropTodayInputValue(); renderDropDashboard(); });
@@ -17896,6 +18100,19 @@ document.getElementById('clear-date-filter-btn').addEventListener('click', () =>
         document.querySelectorAll('.timer-cell').forEach(cell => {
           const time = cell.getAttribute('data-registration-time');
           if (time) cell.textContent = getElapsedTime(parseInt(time));
+        });
+      }
+
+      if (activeTab === 'drop-panel') {
+        document.querySelectorAll('.drop-timer-cell').forEach(cell => {
+          const start = parseInt(cell.getAttribute('data-drop-start-time') || '0', 10);
+          const endAttr = parseInt(cell.getAttribute('data-drop-end-time') || '0', 10);
+          if (!start) {
+            cell.textContent = '00:00:00';
+            return;
+          }
+          const end = endAttr && endAttr > 0 ? endAttr : Date.now();
+          cell.textContent = formatMilliseconds(Math.max(0, end - start));
         });
       }
     }, 1000);
