@@ -4175,6 +4175,23 @@ button[data-action="cancel"]:hover {
   border-color: rgba(2, 132, 199, 0.20) !important;
 }
 #table-body button[data-action="details"].table-action-btn svg { color: #0369a1 !important; stroke: currentColor !important; }
+#table-body button[data-action="reprint-sheet"].table-action-btn {
+  background: #f5f3ff !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  border-color: rgba(109, 40, 217, 0.22) !important;
+}
+#table-body button[data-action="reprint-sheet"].table-action-btn span,
+#table-body button[data-action="reprint-sheet"].table-action-btn .table-action-label {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-shadow: none !important;
+}
+#table-body button[data-action="reprint-sheet"].table-action-btn svg {
+  color: #6d28d9 !important;
+  stroke: currentColor !important;
+}
+
 
 #table-body button[data-action="occurrence"].table-action-btn {
   background: #fff7e6 !important;
@@ -7701,6 +7718,27 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     return formatMilliseconds(diff);
   };
 
+  const formatTableDateTime = (value) => {
+    if (!value) return 'N/A';
+    let ms = null;
+    if (typeof value === 'number') {
+      ms = value;
+    } else if (typeof value === 'object') {
+      if (typeof value.toDate === 'function') {
+        ms = value.toDate().getTime();
+      } else if (typeof value.seconds === 'number') {
+        ms = value.seconds * 1000;
+      } else if (typeof value._seconds === 'number') {
+        ms = value._seconds * 1000;
+      }
+    } else {
+      const d = new Date(value);
+      if (!Number.isNaN(d.getTime())) ms = d.getTime();
+    }
+    if (!ms || !Number.isFinite(ms)) return 'N/A';
+    return new Date(ms).toLocaleString('pt-BR');
+  };
+
   const playAlertSound = () => {
     if (!soundEnabled || !audioContext) return;
     const oscillator = audioContext.createOscillator();
@@ -8940,7 +8978,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
     const headers = {
       patio: 'DT,Status,Agenda,Tipo,Tempo no Pátio,Motorista,Transportadora,Placa Cavalo,Placa Carreta,Ações',
-      historico: 'DT,Status Final,Agenda,Tipo,Motorista,Transportadora,Placa Cavalo,Placa Carreta,Finalizado Em,Ações',
+      historico: 'DT,Status Final,Agenda,Tipo,Motorista,Transportadora,Placa Cavalo,Placa Carreta,Marcado Em,Finalizado Em,Ações',
       ocorrencias: 'Data,DT,Canal,Prioridade,Problema Identificado,Descrição,Cavalo,Carreta,Evidências,Status,Ações'
     };
 
@@ -9025,6 +9063,16 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           </button>`;
       }
 
+      const reprintButtonHTML = activeTab !== 'ocorrencias' ? `
+        <button type="button" data-action="reprint-sheet" data-id="${op.id}" title="Reimprimir folha de marcação" class="table-action-btn">
+          <svg class="w-5 h-5 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 6 2 18 2 18 9"/>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+            <rect x="6" y="14" width="12" height="8"/>
+          </svg>
+          <span class="table-action-label">Reimprimir</span>
+        </button>` : '';
+
       let specificActions = '';
       if (activeTab === 'patio') {
         specificActions = `
@@ -9063,6 +9111,20 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
             </svg>
           </button>
         `;
+      } else if (activeTab === 'historico') {
+        specificActions = `
+          <button type="button" data-action="occurrence" data-id="${op.id}" title="Abrir ocorrência" class="table-action-btn">
+            <svg class="w-5 h-5 pointer-events-none"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19.3 14.8C20.1 14 21 12.6 21 11c0-4.4-3.6-8-8-8s-8 3.6-8 8c0 1.6.9 3 1.7 3.8"/>
+              <path d="M12 21c-1.7 0-3-1.3-3-3h6c0 1.7-1.3 3-3 3Z"/>
+              <path d="M12 6v6"/>
+              <path d="M9 9h6"/>
+            </svg>
+            <span class="table-action-label">Ocorr.</span>
+          </button>
+        `;
       } else if (activeTab === 'ocorrencias') {
         const hasImages = getOccurrenceImages(op).length > 0;
         specificActions = `
@@ -9084,7 +9146,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           </button>`;
       }
 
-      const actionButtonsHTML = `<td class="p-4 action-cell">${whatsappButtonHTML}${specificActions}</td>`;
+      const actionButtonsHTML = `<td class="p-4 action-cell">${whatsappButtonHTML}${reprintButtonHTML}${specificActions}</td>`;
 
       let rowCells = '';
       if (activeTab === 'ocorrencias') {
@@ -9123,7 +9185,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           <td class="p-4 font-mono text-sm">${truckPlate}</td>
           <td class="p-4 font-mono text-sm">${trailerPlate}</td>
           ${activeTab === 'historico'
-            ? `<td class="p-4 text-sm">${op.finishedTime ? new Date(op.finishedTime).toLocaleString('pt-BR') : 'N/A'}</td>`
+            ? `<td class="p-4 text-sm font-mono">${formatTableDateTime(op.registrationTime || op.createdAtMs || op.createdAt || op.timestamp)}</td>
+               <td class="p-4 text-sm">${formatTableDateTime(op.finishedTime)}</td>`
             : ''
           }
           ${actionButtonsHTML}
@@ -9624,6 +9687,1708 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     setMultiSelectValues(dashboardSelect, curDash);
   };
 
+
+
+  // ==============================
+  // REIMPRESSÃO DA FOLHA DE MARCAÇÃO + CHECKLIST NO MODELO OFICIAL
+  // ==============================
+  const REPRINT_HEADER_MAP = {
+    dts: 'DTS',
+    canal: 'CANAL',
+    cliente: 'CLIENTE',
+    produto: 'PRODUTO',
+    descricao: 'DESCRICAO',
+    plt: 'PLT',
+    deposito: 'DEPOSITO',
+    transportadora: 'TRANSPORTADORA',
+    data: 'DATA',
+    agenda: 'AGENDA',
+    xtAdicional: 'XT_ADICIONAL'
+  };
+
+  const REPRINT_OFFICIAL_PRINT_CSS = `    /* Checklist impresso após a marcação */
+    .print-page-break {
+      break-before: page;
+      page-break-before: always;
+      height: 0;
+    }
+
+    .checklist-page {
+      background: #fff;
+      color: #000;
+      padding: 8px;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      line-height: 1.15;
+    }
+
+    .checklist-title {
+      text-align: center;
+      font-weight: 900;
+      font-size: 18px;
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    .checklist-subtitle {
+      text-align: center;
+      font-size: 10px;
+      margin-bottom: 8px;
+    }
+
+    .checklist-meta {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 8px;
+      table-layout: fixed;
+    }
+
+    .checklist-meta td {
+      border: 1px solid #000;
+      padding: 4px 5px;
+      vertical-align: top;
+      word-wrap: break-word;
+    }
+
+    .checklist-section-title {
+      background: #e5e7eb;
+      border: 1px solid #000;
+      font-weight: 900;
+      padding: 4px 6px;
+      margin-top: 6px;
+      margin-bottom: 0;
+      text-transform: uppercase;
+    }
+
+    .checklist-hint {
+      border: 1px solid #000;
+      border-top: 0;
+      padding: 4px 6px;
+      font-size: 9px;
+      background: #fafafa;
+    }
+
+    .checklist-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin-bottom: 6px;
+    }
+
+    .checklist-table th,
+    .checklist-table td {
+      border: 1px solid #000;
+      padding: 3px 4px;
+      vertical-align: middle;
+    }
+
+    .checklist-table th {
+      background: #f3f4f6;
+      font-weight: 900;
+    }
+
+    .checklist-table .n-col {
+      width: 26px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .checklist-table .check-col {
+      width: 34px;
+      text-align: center;
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    .checklist-table .obs-col {
+      width: 86px;
+    }
+
+    .check-inline {
+      display: inline-block;
+      margin-right: 14px;
+      margin-bottom: 3px;
+      font-weight: 700;
+    }
+
+    .checklist-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .checklist-signature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 6px;
+    }
+
+    .checklist-signature-box {
+      border: 1px solid #000;
+      min-height: 46px;
+      padding: 4px 6px;
+    }
+
+    .checklist-signature-box .sig-label {
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .checklist-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .checklist-priority-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 9px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .checklist-priority-row div {
+      border: 1px solid #000;
+      padding: 4px;
+      background: #f9fafb;
+    }
+
+
+    /* Checklist impresso - modelo espelhado do XLSM */
+    .xl-check-page {
+      background: #fff;
+      color: #000;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 9.6px;
+      line-height: 1.1;
+      padding: 0;
+    }
+
+    .xl-check-wrap {
+      border: 1px solid #000;
+      width: 100%;
+    }
+
+    .xl-check-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .xl-check-table td,
+    .xl-check-table th {
+      border: 1px solid #000;
+      padding: 2px 3px;
+      vertical-align: middle;
+      word-wrap: break-word;
+    }
+
+    .xl-center { text-align: center; }
+    .xl-right { text-align: right; }
+    .xl-bold { font-weight: 700; }
+    .xl-heavy { font-weight: 900; }
+    .xl-small { font-size: 9.4px; }
+    .xl-xsmall { font-size: 8.1px; }
+    .xl-red { color: #d90000; font-weight: 700; }
+    .xl-green-header { background: #d8e4bc; font-weight: 700; text-align: center; }
+    .xl-gray-header { background: #efefef; font-weight: 900; text-align: center; }
+    .xl-section-title {
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      background: #efefef;
+      text-align: center;
+      font-weight: 900;
+      font-size: 10.8px;
+      padding: 2px 4px;
+      text-transform: uppercase;
+    }
+
+    .xl-header-grid {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .xl-header-grid td {
+      border: 1px solid #000;
+      padding: 0;
+      vertical-align: middle;
+    }
+
+    .xl-header-brand {
+      padding: 4px 10px !important;
+      height: 58px;
+      background: #fff;
+    }
+
+    .xl-brand-flex {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .xl-brand-logo {
+      display: block;
+      width: 100%;
+      max-width: 390px;
+      height: 50px;
+      background-repeat: no-repeat;
+      background-position: left center;
+      background-size: contain;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    .xl-header-title {
+      text-align: center;
+      font-weight: 900;
+      font-size: 14.5px;
+      letter-spacing: 0.01em;
+      padding: 0 6px !important;
+    }
+
+    .xl-header-datetime {
+      font-size: 9.2px;
+      font-weight: 700;
+      width: 138px;
+    }
+
+    .xl-under-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      white-space: nowrap;
+    }
+
+    .xl-line {
+      display: inline-block;
+      border-bottom: 1px solid #000;
+      min-width: 76px;
+      height: 10px;
+      padding: 0 2px;
+      vertical-align: bottom;
+      font-weight: 700;
+    }
+
+    .xl-line.sm { min-width: 60px; }
+    .xl-line.md { min-width: 92px; }
+    .xl-line.lg { min-width: 120px; }
+    .xl-line.xl { min-width: 180px; }
+
+    .xl-check-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      margin: 0 6px 0 0;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .xl-box {
+      display: inline-block;
+      width: 16px;
+      height: 11px;
+      border: 1px solid #000;
+      line-height: 11px;
+      text-align: center;
+      font-weight: 900;
+      font-size: 8px;
+    }
+
+    .xl-box.big {
+      width: 12px;
+      height: 12px;
+      line-height: 12px;
+    }
+
+    .xl-transport {
+      padding: 5px 8px 4px;
+    }
+
+    .xl-transport-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .xl-transport-row.center-tight { gap: 12px; }
+    .xl-check-groups {
+      text-align: center;
+      padding: 5px 8px 4px;
+    }
+
+    .xl-group-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .xl-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 3px 5px 4px;
+    }
+
+    .xl-question-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 7px;
+    }
+
+    .xl-question-table td,
+    .xl-question-table th {
+      border: 1px solid #000;
+      padding: 1px 2px;
+      vertical-align: middle;
+    }
+
+    .xl-qtext { width: auto; font-weight: 700; }
+    .xl-yn { width: 28px; text-align: center; }
+    .xl-yncell { height: 17px; text-align: center; }
+
+    .xl-comments-box {
+      border: 1px solid #000;
+      min-height: 52px;
+      margin-top: 6px;
+      padding: 3px 5px;
+    }
+
+    .xl-comments-title {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .xl-decision-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px;
+      align-items: center;
+    }
+
+    .xl-decision-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+    }
+
+    .xl-sign-stack {
+      padding: 16px 14px 0;
+      font-size: 9px;
+    }
+
+    .xl-sign-line {
+      margin-bottom: 10px;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .xl-sign-line .xl-line {
+      min-width: 120px;
+    }
+
+    .xl-sign-line.small-gap { margin-bottom: 6px; }
+
+    .xl-important-red {
+      color: #d90000;
+      font-weight: 700;
+      text-align: left;
+      padding: 3px 6px 1px;
+      font-size: 6px;
+      line-height: 1.1;
+    }
+
+    .xl-split-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 3px 5px 4px;
+    }
+
+    .xl-subhead {
+      border: 1px solid #000;
+      border-bottom: 0;
+      background: #d8e4bc;
+      text-align: center;
+      font-weight: 900;
+      font-size: 8px;
+      padding: 2px 3px;
+    }
+
+    .xl-subhead.red {
+      color: #d90000;
+    }
+
+    .xl-bottom-area {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 6px;
+      padding: 4px 3px 1px;
+    }
+
+    .xl-doc-meta {
+      text-align: right;
+      font-size: 6px;
+      line-height: 1.1;
+      min-width: 100px;
+    }
+
+    .xl-priorities {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
+      padding: 6px 2px 1px;
+      font-size: 9px;
+      font-weight: 900;
+    }
+
+    .xl-priority-item {
+      display: flex;
+      align-items: flex-end;
+      gap: 0;
+      flex: 1 1 0;
+      white-space: nowrap;
+      font-size: 9px;
+    }
+
+    .xl-priority-item .xl-line {
+      flex: 1 1 auto;
+      min-width: 140px;
+      margin-left: 2px;
+      height: 11px;
+    }
+
+    .xl-check-page,
+    .xl-check-wrap {
+      page-break-inside: avoid;
+      break-inside: avoid-page;
+    }
+
+    @media print {
+      .xl-check-page {
+        font-size: 7.8px;
+        zoom: 0.89;
+      }
+      .xl-header-title { font-size: 13px; }
+      .xl-section-title { font-size: 9.6px; }
+      .xl-priorities { gap: 24px; }
+      .xl-brand-logo { height: 44px; }
+    }
+
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 6mm;
+      }
+
+      .checklist-page {
+        padding: 0;
+        font-size: 8px;
+      }
+
+      .checklist-table th,
+      .checklist-table td,
+      .checklist-meta td,
+      .checklist-signature-box,
+      .checklist-section-title,
+      .checklist-hint {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+`;
+
+  const reprintSheetPick = (op = {}, fields = []) => {
+    for (const field of fields) {
+      const value = field.split('.').reduce((obj, key) => obj?.[key], op);
+      if (value !== undefined && value !== null && String(value).trim() !== '') return String(value).trim();
+    }
+    return '';
+  };
+
+  const reprintSheetDateTime = (value) => {
+    const ms = typeof toMs === 'function' ? toMs(value) : Number(value || 0);
+    if (!ms) return '';
+    try { return new Date(ms).toLocaleString('pt-BR'); } catch (_) { return ''; }
+  };
+
+  const reprintNormalizeDigits = (value = '') => String(value || '').replace(/\D/g, '');
+  const reprintFormatCpf = (value = '') => {
+    const digits = reprintNormalizeDigits(value);
+    return digits.length === 11 ? digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : String(value || '');
+  };
+  const reprintCleanPlate = (value = '') => {
+    const raw = String(value || '').trim().toUpperCase();
+    try { return typeof sanitizePlate === 'function' ? sanitizePlate(raw) : raw; } catch (_) { return raw; }
+  };
+
+  const getReprintSheetDt = (op = {}) => reprintSheetPick(op, ['dt', 'dts', 'printableDt', 'printableDtCarga', 'dropHook.dt', 'dropHook.dts', 'dropDt', 'id']) || '';
+  const getReprintSheetMotorista = (op = {}) => reprintSheetPick(op, ['motorista', 'name', 'driverName', 'nomeMotorista', 'motoristaNome', 'motoristaViagemNome', 'dropMotoristaViagemNome', 'dropHookMotoristaViagem', 'dropHook.motoristaViagemNome', 'motoristaViagem.nome', 'dropHook.motoristaViagem.nome']) || (typeof getHistoricoMotoristaNome === 'function' ? getHistoricoMotoristaNome(op) : '') || '';
+  const getReprintSheetCpf = (op = {}) => reprintFormatCpf(reprintSheetPick(op, ['cpf', 'cpfMotorista', 'driverCpf', 'document', 'documento', 'motoristaViagemCpf', 'dropMotoristaViagemCpf', 'motoristaViagem.cpf', 'dropHook.motoristaViagem.cpf']));
+  const getReprintSheetProduto = (op = {}) => reprintSheetPick(op, ['produto', 'product', 'productName', 'produtoNome', 'operation', 'operacao', 'tipoOperacao', 'tipo', 'segmentacao', 'canal', 'flowLabel']) || '';
+  const getReprintSheetQuantidade = (op = {}) => reprintSheetPick(op, ['quantidade', 'qtd', 'quantity', 'pallets', 'paletes', 'qtde', 'qtdPaletes', 'plt']) || '';
+  const getReprintSheetAgenda = (op = {}) => reprintSheetPick(op, ['agenda', 'dataAgenda', 'horaAgenda', 'schedule', 'scheduledAt', 'agendaRaw']) || '';
+  const getReprintSheetStatus = (op = {}) => reprintSheetPick(op, ['status', 'prioridade', 'statusPrioridade', 'dropPainelStatus', 'dropCargaStatus', 'dropDescargaStatus']) || '';
+
+  const reprintSplitAgenda = (op = {}) => {
+    const agendaRaw = getReprintSheetAgenda(op);
+    const dataRaw = reprintSheetPick(op, ['data', 'date', 'agendaData', 'dataProgramada', 'dataAgenda']);
+    const horaRaw = reprintSheetPick(op, ['hora', 'time', 'agendaHora', 'horaProgramada', 'horaAgenda']);
+    let data = dataRaw || '';
+    let hora = horaRaw || '';
+    if (agendaRaw && (!data || !hora)) {
+      const text = String(agendaRaw).trim();
+      const dateMatch = text.match(/\b\d{1,2}[\/\-]\d{1,2}(?:[\/\-]\d{2,4})?\b/);
+      const timeMatch = text.match(/\b\d{1,2}:\d{2}\b/);
+      if (!data && dateMatch) data = dateMatch[0];
+      if (!hora && timeMatch) hora = timeMatch[0];
+      if (!hora && !dateMatch && text.length <= 8) hora = text;
+      if (!data && !timeMatch && text.length > 8) data = text;
+    }
+    return { data, hora };
+  };
+
+  const reprintBool = (value) => {
+    if (value === true || value === 1) return true;
+    const text = String(value || '').trim().toUpperCase();
+    return ['1', 'SIM', 'S', 'TRUE', 'YES', 'X'].includes(text);
+  };
+
+  const reprintIsMeaningfulValue = (value) => {
+    if (value === undefined || value === null) return false;
+    if (typeof value === 'boolean') return value === true;
+    if (typeof value === 'number') return Number.isFinite(value) && value !== 0;
+    const text = String(value).trim();
+    return !!text && text !== '—' && text !== '-' && text.toUpperCase() !== 'N/A';
+  };
+
+  const reprintIsExplicitDropText = (value) => {
+    if (!reprintIsMeaningfulValue(value)) return false;
+    const text = String(value).trim().toUpperCase();
+    if (text.includes('NÃO DROP') || text.includes('NAO DROP') || text.includes('NOT DROP')) return false;
+    return /\bDROP\b/.test(text) || text.includes('DROP_HOOK') || text.includes('DROP & HOOK') || text.includes('HOOK');
+  };
+
+  const reprintHasFilledDropObject = (value) => {
+    if (!value || typeof value !== 'object') return false;
+    const keysToCheck = [
+      'nome', 'name', 'motorista', 'motoristaNome', 'cpf', 'documento',
+      'telefone', 'phone', 'truckPlate', 'trailerPlate', 'placaManobra',
+      'motoristaManobra', 'motoristaViagem', 'motoristaManobraNome', 'motoristaViagemNome'
+    ];
+    return keysToCheck.some((key) => reprintIsMeaningfulValue(value[key]));
+  };
+
+  const reprintIsDrop = (op = {}) => {
+    // Detecção bem restrita para a REIMPRESSÃO.
+    // Não usa mais contagem de carga/descarga nem "motorista viagem", porque esses campos
+    // existem em marcações normais e faziam tudo sair como Drop & Hook.
+    if (!op || typeof op !== 'object') return false;
+    if (op.isDropHook === true || op.isDrop === true || op.dropHook === true) return true;
+
+    const strongDropTextFields = [
+      op.tipoMarcacao,
+      op.flowKey,
+      op.flowLabel,
+      op.statusDrop,
+      op.controleIdaRetorno,
+      op.dropClassificacao
+    ];
+
+    const genericDropTextFields = [
+      op.tipoOperacao,
+      op.tipo_operacao,
+      op.tipo,
+      op.segmentacao,
+      op.segmentação,
+      op.operacao,
+      op.operation
+    ];
+
+    const dropSpecificData = [
+      op.dropMotoristaManobraNome,
+      op.motoristaManobraNome,
+      op.dropHookMotoristaManobra,
+      op.dropCycleMotoristaManobra,
+      op.placaManobra,
+      op.dropPlacaManobra,
+      op.dropHookManeuverPlate,
+      op.dropHookManeuverCpf,
+      op.motoristaManobraCpf,
+      op.dropMotoristaManobraCpf
+    ];
+
+    const hasStrongDropText = strongDropTextFields.some(reprintIsExplicitDropText);
+    const hasGenericDropText = genericDropTextFields.some(reprintIsExplicitDropText);
+    const hasDropSpecificData = dropSpecificData.some(reprintIsMeaningfulValue)
+      || reprintHasFilledDropObject(op.motoristaManobra)
+      || reprintHasFilledDropObject(op.dropHook?.motoristaManobra)
+      || reprintIsMeaningfulValue(op.dropHook?.placaManobra)
+      || reprintIsMeaningfulValue(op.dropHook?.dropHookManeuverPlate);
+
+    // A partir daqui só vira Drop se existir dado específico de MANOBRA
+    // ou um objeto dropHook preenchido com dados de manobra. Texto sozinho não basta,
+    // porque registros antigos podem ter herdado "Drop" em campos genéricos.
+    const hasDropHookObject = reprintHasFilledDropObject(op.dropHook);
+    return hasDropSpecificData && (hasStrongDropText || hasGenericDropText || hasDropHookObject);
+  };
+
+  const reprintGetTruckPlate = (op = {}) => {
+    try { const value = typeof getTruckPlate === 'function' ? getTruckPlate(op) : ''; if (value) return reprintCleanPlate(value); } catch (_) {}
+    return reprintCleanPlate(reprintSheetPick(op, ['placaCavalo', 'truckPlate', 'cavaloPlate', 'placa1', 'cavalo', 'motoristaViagem.truckPlate', 'dropHook.motoristaViagem.truckPlate']));
+  };
+
+  const reprintGetTrailerPlate = (op = {}) => {
+    try { const value = typeof getTrailerPlate === 'function' ? getTrailerPlate(op) : ''; if (value) return reprintCleanPlate(value); } catch (_) {}
+    return reprintCleanPlate(reprintSheetPick(op, ['placaCarreta', 'trailerPlate', 'carretaPlate', 'placa2', 'carreta', 'motoristaViagem.trailerPlate', 'dropHook.motoristaViagem.trailerPlate']));
+  };
+
+  const reprintGetDropManobra = (op = {}) => {
+    try { const value = typeof getDropManobra === 'function' ? getDropManobra(op) : ''; if (value && value !== '—') return value; } catch (_) {}
+    return reprintSheetPick(op, ['dropCycleMotoristaManobra', 'dropMotoristaManobraNome', 'motoristaManobraNome', 'dropHookMotoristaManobra', 'dropHook.motoristaManobraNome', 'motoristaManobra.nome', 'dropHook.motoristaManobra.nome']) || '';
+  };
+
+  const reprintGetDropViagem = (op = {}) => {
+    try { const value = typeof getDropViagem === 'function' ? getDropViagem(op) : ''; if (value && value !== '—') return value; } catch (_) {}
+    return reprintSheetPick(op, ['dropCycleMotoristaViagem', 'dropMotoristaViagemNome', 'motoristaViagemNome', 'dropHookMotoristaViagem', 'dropHook.motoristaViagemNome', 'motoristaViagem.nome', 'dropHook.motoristaViagem.nome', 'dropHookTripDriver.name']) || getReprintSheetMotorista(op);
+  };
+
+
+    function buildReprintChecklistYNTableRows(items) {
+      return items.map(item => `
+        <tr>
+          <td class="xl-qtext">${escapeHtml(item)}</td>
+          <td class="xl-yncell"></td>
+          <td class="xl-yncell"></td>
+          <td class="xl-yncell"></td>
+        </tr>
+      `).join('');
+    }
+
+    function buildReprintChecklistPrintPage(driverData, sheetDataArray, operationTag, printDate, printTime) {
+      const firstResult = sheetDataArray[0] || {};
+      const transportadora = (driverData.transportadora || '').toString().trim();
+      const dtPrint = (driverData.printableDt || '').toString().trim();
+      const motorista = (driverData.name || '').toString().trim();
+      const cavalo = (driverData.truckPlate || '').toString().trim().toUpperCase();
+      const carreta = (driverData.trailerPlate || '').toString().trim().toUpperCase();
+      const operacao = ((driverData.operacao || operationTag || '') + '').toString().toUpperCase();
+      const selectedVehicleType = ((driverData.vehicleType || '') + '').toString().trim().toUpperCase();
+      const motoristaManobra = driverData.motoristaManobra?.nome || motorista;
+      const motoristaViagem = driverData.motoristaViagem?.nome || driverData.dropHookTripDriver?.name || '';
+      const cpfViagem = driverData.motoristaViagem?.cpf || driverData.dropHookTripCpf || '';
+
+      const isCargaDescarga = operacao.includes('CARGA E DESCARGA') || operacao.includes('CARGA + DESCARGA');
+      const isCarga = isCargaDescarga || operacao.includes('CARREG') || operacao.includes('CARGA');
+      const isDescarga = isCargaDescarga || operacao.includes('DESCARG');
+
+      const vehicleTypes = ['BAÚ','CARGA SECA','SIDER OCO','ASA DELTA','CONTAINER'];
+
+      const veiculoLeft = [
+        "Motorista possui os EPI's necessários? (Capacete branco, óculos, bota de segurança e colete laranja refletivo)",
+        "Os pneus estão em boas condições e não oferecem risco de segurança?",
+        "A sirene de ré está conforme?",
+        "O veículo tem calço?",
+        "Há vazamento de óleo?",
+        "A carroceria encontra-se limpa e seca?",
+        "O baú/container está sem odor?",
+        "A carroceria encontra-se livre de praga?",
+        "As lonas estão em boas condições de uso? (Sem rasgos, furos e possui tamanho adequado?)"
+      ];
+
+      const veiculoRight = [
+        "As catracas estão em boas condições de uso?",
+        "As cantoneiras / asa deltas estão revestidas e em boas condições de uso?",
+        "As colunas do veículo são forradas?",
+        "Os cabos de aço da coluna estão presentes?",
+        "A alça de segurança está conforme?",
+        "A trava e articulação da coluna está conforme?",
+        "O trilho da coluna está conforme?",
+        "As cordas e cintas estão em boas condições de uso?",
+        "As tampas, portas ou grades estão conforme?"
+      ];
+
+      const desamarracao = [
+        "Foram utilizadas cantoneiras forradas?",
+        "Foram utilizadas duas cintas por palete na amarração?",
+        "As Cordas/Cintas foram apertadas corretamente (não estão muito apertadas ou muito frouxas)?",
+        "As cantoneiras foram bem acondicionadas sobre o produto?",
+        "Os lacres estão sem sinal de violação?",
+        "O nº do container e os nºs dos lacres fisicamente estão iguais aos nºs informados no campo de texto adicional da nota?"
+      ];
+
+      const descargaPA = [
+        "Os produtos estão em boas condições e sem indícios de avarias?",
+        "A carga está bem acondicionada na carroceria?",
+        "Os paletes estão bem formados?",
+        "O stretch/fitilho está em boas condições?",
+        "Existem paletes quebrados na carga?",
+        "O shelf do produto recebido está dentro da política de shelf life?"
+      ];
+
+      const cargaPA = [
+        "Todos os paletes possuem embalagens limpas, secas e sem sinais de manuseio indevido?",
+        "A carga está livre de embalagem amassada, furada, molhada ou com vazamento?",
+        "Os paletes estão completos, sem caixas faltantes?",
+        "Os paletes de latas estão distantes de divisórias que possam causar danos à embalagem das mesmas?",
+        "A carga foi acomodada de forma a evitar tombamento ou deslizamento durante o transporte?"
+      ];
+
+      const amarracao = [
+        "As catracas foram apertadas adequadamente na amarração?",
+        "Foi realizado o X na carga?",
+        "A carga foi bem amarrada e não há focos de avarias?",
+        "O motorista solicitou o uso de duas cintas por paletes?",
+        "A carga está lacrada corretamente e com os nºs dos lacres escritos no verso da nota fiscal?",
+        "Foi necessário acionar a transportadora para que trouxesse mais cantoneiras/cintas a fim de finalizar a amarração?",
+        "As cantoneiras / asa delta estão bem encaixadas nos paletes de produto acabado?"
+      ];
+
+      const checkInline = (checked, label) => `
+        <span class="xl-check-inline">
+          <span class="xl-box">${checked ? 'X' : ''}</span>
+          <span>${escapeHtml(label)}</span>
+        </span>
+      `;
+
+      return `
+        <div class="print-page-break"></div>
+        <div class="xl-check-page">
+          <div class="xl-check-wrap">
+            <table class="xl-header-grid">
+              <tr>
+                <td class="xl-header-brand" style="width:33%;">
+                  <div class="xl-brand-flex">
+                    <div class="xl-brand-logo" style="background-image:url(data:image/png;base64,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);" aria-label="Heineken WOW"></div>
+                  </div>
+                </td>
+                <td class="xl-header-title" style="width:45%;">CHECKLIST (DES) CARREGAMENTO</td>
+                <td class="xl-header-datetime" style="width:22%;">
+                  <div style="padding:6px 8px;">${escapeHtml(printDate)}</div>
+                  <div style="padding:6px 8px; border-top:1px solid #000;">Hora</div>
+                </td>
+              </tr>
+            </table>
+
+            <div class="xl-section-title">1 - DADOS DO TRANSPORTE</div>
+
+            <div class="xl-transport">
+              <div class="xl-transport-row">
+                <span class="xl-under-row"><span class="xl-bold">TRANSPORTADORA:</span> <span class="xl-line lg">${escapeHtml(transportadora)}</span></span>
+                <span class="xl-under-row"><span class="xl-bold">PLACA CAVALO:</span> <span class="xl-line sm">${escapeHtml(cavalo)}</span></span>
+                <span class="xl-under-row"><span class="xl-bold">PLACA CARRETA:</span> <span class="xl-line sm">${escapeHtml(carreta)}</span></span>
+              </div>
+              <div class="xl-transport-row center-tight">
+                <span class="xl-under-row"><span class="xl-bold">DT:</span> <span class="xl-line md">${escapeHtml(dtPrint)}</span></span>
+                <span class="xl-under-row"><span class="xl-bold">NOME DO MOTORISTA :</span> <span class="xl-line xl">${escapeHtml(motorista)}</span></span>
+              </div>
+              ${driverData.isDropHook ? `
+                <div class="xl-transport-row center-tight">
+                  <span class="xl-under-row"><span class="xl-bold">MOTORISTA:</span> <span class="xl-line xl">${escapeHtml(motoristaManobra)}</span></span>
+                  <span class="xl-under-row"><span class="xl-bold">MOTORISTA:</span> <span class="xl-line xl">${escapeHtml(motoristaViagem)}</span></span>
+                </div>
+                <div class="xl-transport-row center-tight">
+                  <span class="xl-under-row"><span class="xl-bold">CPF:</span> <span class="xl-line md">${escapeHtml(cpfViagem)}</span></span>
+                  <span class="xl-under-row"><span class="xl-bold">TIPO:</span> <span class="xl-line md">DROP & HOOK</span></span>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="xl-check-groups">
+              <div class="xl-group-row">
+                ${vehicleTypes.map(label => checkInline(label === selectedVehicleType, label)).join('')}
+              </div>
+              <div class="xl-group-row" style="gap:42px;">
+                ${checkInline(isCarga, 'CARGA')}
+                ${checkInline(isDescarga, 'DESCARGA')}
+                ${checkInline(isCargaDescarga, 'CARGA + DESCARGA')}
+              </div>
+            </div>
+
+            <div class="xl-section-title">2- CHECKLIST DO VEÍCULO</div>
+            <div class="xl-two-col">
+              <div>
+                <table class="xl-question-table">
+                  <tr>
+                    <th class="xl-qtext"></th>
+                    <th class="xl-yn xl-green-header">SIM</th>
+                    <th class="xl-yn xl-green-header">NÃO</th>
+                    <th class="xl-yn xl-green-header">N/A</th>
+                  </tr>
+                  <tbody>
+                    ${buildReprintChecklistYNTableRows(veiculoLeft)}
+                  </tbody>
+                </table>
+
+                <div class="xl-comments-box">
+                  <div class="xl-comments-title">Comentários:</div>
+                </div>
+
+                <div class="xl-decision-row">
+                  <span class="xl-decision-item">LIBERADO <span class="xl-box big"></span></span>
+                  <span class="xl-decision-item">REPROVADO <span class="xl-box big"></span></span>
+                </div>
+              </div>
+
+              <div>
+                <table class="xl-question-table">
+                  <tr>
+                    <th class="xl-qtext"></th>
+                    <th class="xl-yn xl-green-header">SIM</th>
+                    <th class="xl-yn xl-green-header">NÃO</th>
+                    <th class="xl-yn xl-green-header">N/A</th>
+                  </tr>
+                  <tbody>
+                    ${buildReprintChecklistYNTableRows(veiculoRight)}
+                  </tbody>
+                </table>
+
+                <div class="xl-important-red" style="padding-top:22px; text-align:center;">
+                  Para rotas longas (&gt; 500 KM), recomendável a utilização de cantoneiras forradas, duas cintas por palete na amarração, chapatex na camada superior do palete e carregamento da carga com paletes invertidos.
+                </div>
+
+                <div class="xl-sign-stack">
+                  <div class="xl-sign-line">Nome Auxiliar Logístico: <span class="xl-line lg"></span></div>
+                  <div class="xl-sign-line">Assinatura: <span class="xl-line lg"></span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="xl-section-title">3- CHECKLIST DE DESAMARRAÇÃO DA CARGA</div>
+            <div class="xl-important-red">IMPORTANTE: Se não houver DESAMARRAÇÃO prosseguir para o checklist da (DES)CARGA de Produto acabado.</div>
+            <div class="xl-two-col" style="padding-top:4px;">
+              <div>
+                <table class="xl-question-table">
+                  <tr>
+                    <th class="xl-qtext"></th>
+                    <th class="xl-yn xl-green-header">SIM</th>
+                    <th class="xl-yn xl-green-header">NÃO</th>
+                    <th class="xl-yn xl-green-header">N/A</th>
+                  </tr>
+                  <tbody>
+                    ${buildReprintChecklistYNTableRows(desamarracao)}
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <div class="xl-sign-stack" style="padding-top:20px;">
+                  <div class="xl-sign-line">Nome do Amarrador: <span class="xl-line lg"></span></div>
+                  <div class="xl-sign-line">Assinatura: <span class="xl-line lg"></span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="xl-section-title">4 - CHECKLIST DA (DES)CARGA DE PRODUTO ACABADO</div>
+            <div class="xl-important-red">
+              IMPORTANTE:Se em dados do transporte, você assinalou CARGA, em checklist de (DES)CARGA de PA, responder somente as perguntas sobre carga de PA. Se assinalou DESCARGA, responder somente as perguntas de Descarga de PA. Se CARGA + DESCARGA, preencher ambos.
+            </div>
+            <div class="xl-split-section">
+              <div>
+                <div class="xl-subhead red">DESCARGA DE PRODUTO ACABADO</div>
+                <table class="xl-question-table">
+                  <tr>
+                    <th class="xl-qtext"></th>
+                    <th class="xl-yn xl-green-header">SIM</th>
+                    <th class="xl-yn xl-green-header">NÃO</th>
+                    <th class="xl-yn xl-green-header">N/A</th>
+                  </tr>
+                  <tbody>
+                    ${buildReprintChecklistYNTableRows(descargaPA)}
+                  </tbody>
+                </table>
+
+                <div class="xl-comments-box" style="margin-top:16px;">
+                  <div class="xl-comments-title">Comentários:</div>
+                </div>
+              </div>
+              <div>
+                <div class="xl-subhead">CARGA DE PRODUTO ACABADO</div>
+                <table class="xl-question-table">
+                  <tr>
+                    <th class="xl-qtext"></th>
+                    <th class="xl-yn xl-green-header">SIM</th>
+                    <th class="xl-yn xl-green-header">NÃO</th>
+                    <th class="xl-yn xl-green-header">N/A</th>
+                  </tr>
+                  <tbody>
+                    ${buildReprintChecklistYNTableRows(cargaPA)}
+                  </tbody>
+                </table>
+
+                <div class="xl-sign-stack" style="padding-top:16px;">
+                  <div class="xl-sign-line small-gap">Nome Auxiliar Logístico: <span class="xl-line lg"></span></div>
+                  <div class="xl-sign-line small-gap">Assinatura: <span class="xl-line lg"></span></div>
+                  <div class="xl-sign-line small-gap" style="margin-top:10px;">Nome do Motorista: <span class="xl-line lg">${escapeHtml(motorista)}</span></div>
+                  <div class="xl-sign-line small-gap">Assinatura: <span class="xl-line lg"></span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="xl-section-title">5- CHECKLIST DE AMARRAÇÃO</div>
+            <div class="xl-two-col" style="padding-top:6px;">
+              <div>
+                <table class="xl-question-table">
+                  <tr>
+                    <th class="xl-qtext"></th>
+                    <th class="xl-yn xl-green-header">SIM</th>
+                    <th class="xl-yn xl-green-header">NÃO</th>
+                    <th class="xl-yn xl-green-header">N/A</th>
+                  </tr>
+                  <tbody>
+                    ${buildReprintChecklistYNTableRows(amarracao)}
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <div class="xl-sign-stack" style="padding-top:16px;">
+                  <div class="xl-sign-line">Nome do Amarrador: <span class="xl-line lg"></span></div>
+                  <div class="xl-sign-line">Assinatura: <span class="xl-line lg"></span></div>
+                  <div class="xl-sign-line" style="margin-top:14px;">Nome do Motorista: <span class="xl-line lg">${escapeHtml(motorista)}</span></div>
+                  <div class="xl-sign-line">Assinatura: <span class="xl-line lg"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="xl-bottom-area">
+            <div></div>
+            <div class="xl-doc-meta">
+              <div>PO-JAC-CDD-012</div>
+              <div>Revisão 5</div>
+              <div>Data: 03/07/2025</div>
+            </div>
+          </div>
+
+          <div class="xl-priorities">
+            <span class="xl-priority-item">HORÁRIO DE ENTRADA NA DOCA <span class="xl-line"></span></span>
+            <span class="xl-priority-item">HORÁRIO DE SAIDA DA DOCA <span class="xl-line"></span></span>
+          </div>
+        </div>
+      `;
+    }
+
+
+    function buildReprintOfficialPrintableSheet(driverData, sheetDataArray, isPriority, isOtif, isTop18, isAntecipacao, isGradeQueimada, isAtrasado, isManual) {
+      const headerMap = REPRINT_HEADER_MAP;
+      const manualPresetType = '';
+      const currentMode = '';
+      const now = new Date();
+      const printDate = now.toLocaleDateString('pt-BR');
+      const printTime = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+      const firstResult = sheetDataArray[0] || {};
+      // Na reimpressão, o layout Drop & Hook só pode ser ativado pelo flag já
+      // calculado em buildReprintDriverData/reprintIsDrop. Não detectar por texto
+      // solto aqui, pois registros antigos podem trazer "Drop" em campos genéricos.
+      const isDropHookPrint = !!driverData?.isDropHook;
+      if (isDropHookPrint) driverData.isDropHook = true;
+
+      const productRaw = (isDropHookPrint ? '' : (firstResult[headerMap.produto] || '')).toString().toUpperCase();
+      let operationTag = '';
+      const transpUpper = ((driverData.transportadora || '') + '').toString().trim().toUpperCase();
+      if (isDropHookPrint) operationTag = driverData.dropHookAlsoUnload ? 'DROP & HOOK - CARGA E DESCARGA' : 'DROP & HOOK - CARGA';
+      else if (transpUpper === 'HIDROMAN') operationTag = 'HIDROMAN';
+      else if (productRaw.includes('HIDROMAN')) operationTag = 'HIDROMAN';
+      else if (productRaw.includes('BALDEIO') || productRaw.includes('RITMO')) operationTag = 'BALDEIO';
+      else if (productRaw.includes('INSUMO')) operationTag = 'INSUMO';
+      else if (productRaw.includes('BULK')) operationTag = 'BULK';
+      else if (productRaw.includes('PRODUTO ACABADO')) operationTag = 'PRODUTO ACABADO';
+      else if (productRaw.includes('PALETE')) operationTag = 'PALETES VAZIO';
+      else if (productRaw.includes('VASILH')) operationTag = 'VASILHAMES';
+      else if (productRaw.includes('LATA')) operationTag = 'LATAS VAZIAS';
+
+      if (!operationTag) {
+        const t2 = ((driverData.transportadora || '') + '').toString().trim().toUpperCase();
+        if (t2.includes('HIDROMAN')) operationTag = 'HIDROMAN';
+      }
+
+      const companyPrint = ((driverData.transportadora || '') + '').toString().trim();
+      const vehicleTypePrint = ((driverData.vehicleType || '') + '').toString().trim();
+      const mainDriverPrint = isDropHookPrint ? (driverData.motoristaViagem || {}) : {};
+      const manobraDriverPrint = isDropHookPrint ? (driverData.motoristaManobra || {}) : {};
+      const mainDriverNamePrint = isDropHookPrint ? (mainDriverPrint.nome || driverData.name || '') : (driverData.name || '');
+      const mainDriverCpfPrint = isDropHookPrint ? (mainDriverPrint.cpf || driverData.cpf || '') : (driverData.cpf || '');
+      const mainDriverPhonePrint = isDropHookPrint ? (mainDriverPrint.telefone || driverData.phone || '') : (driverData.phone || '');
+      const mainDriverCnhPrint = isDropHookPrint ? (mainDriverPrint.cnh || driverData.cnh || '') : (driverData.cnh || '');
+      const mainTruckPlatePrint = isDropHookPrint ? (mainDriverPrint.truckPlate || driverData.truckPlate || '') : (driverData.truckPlate || '');
+      const mainTrailerPlatePrint = isDropHookPrint ? (mainDriverPrint.trailerPlate || driverData.trailerPlate || '') : (driverData.trailerPlate || '');
+      const mainVehicleTypePrint = isDropHookPrint ? (mainDriverPrint.vehicleType || vehicleTypePrint || '') : vehicleTypePrint;
+      const manobraPlatePrint = reprintCleanPlate(driverData.maneuverPlate || driverData.dropHookManeuverPlate || manobraDriverPrint.truckPlate || '');
+      const rawTransport = (driverData.printableDt || '').toString().trim();
+
+      // Quando a DT foi gerada pelo sistema/local como data+hora, exemplo 20260613151040,
+      // não é uma DT/transporte real. Na reimpressão, deixa Nº Transporte em branco.
+      const isSystemGeneratedTransportNumber = (value = '') => {
+        const digits = String(value || '').replace(/\D/g, '');
+        if (!/^20\d{12}$/.test(digits)) return false;
+
+        const year = Number(digits.slice(0, 4));
+        const month = Number(digits.slice(4, 6));
+        const day = Number(digits.slice(6, 8));
+        const hour = Number(digits.slice(8, 10));
+        const minute = Number(digits.slice(10, 12));
+        const second = Number(digits.slice(12, 14));
+
+        return (
+          year >= 2020 && year <= 2099 &&
+          month >= 1 && month <= 12 &&
+          day >= 1 && day <= 31 &&
+          hour >= 0 && hour <= 23 &&
+          minute >= 0 && minute <= 59 &&
+          second >= 0 && second <= 59
+        );
+      };
+
+      // Drop & Hook: manter o campo Nº Transporte em branco para preencher na caneta.
+      const transportNumberPrint = (isDropHookPrint || isSystemGeneratedTransportNumber(rawTransport)) ? '' : rawTransport;
+
+      const unloadDtRaw = (driverData.printableUnloadDt || '').toString().trim();
+      const unloadDtPrint = unloadDtRaw ? unloadDtRaw : '';
+
+      const dropHookSimpleTermHtml = isDropHookPrint ? `
+          <section style="border:2px solid #111; margin-bottom:6px; background:#fffdf5; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+            <div style="
+              background:#fde68a !important;
+              color:#111 !important;
+              border-bottom:2px solid #111;
+              padding:6px 9px;
+              font-size:12px;
+              font-weight:900;
+              text-align:center;
+              letter-spacing:.08em;
+              text-transform:uppercase;
+              -webkit-print-color-adjust:exact;
+              print-color-adjust:exact;
+            ">TERMO SIMPLIFICADO DROP &amp; HOOK</div>
+            <div style="padding:7px 10px; font-size:10.6px; line-height:1.28; text-align:justify;">
+              Declaro ciência de que esta marcação pertence a uma operação <strong>Drop &amp; Hook</strong>. O <strong>Motorista Manobra</strong> está autorizado a realizar a entrada, posicionamento, manobra e acompanhamento operacional. O <strong>Motorista Viagem</strong> será o responsável pela retirada, condução e transporte do conjunto após liberação. As placas, DT e dados dos motoristas devem ser conferidos antes da continuidade do processo.
+            </div>
+          </section>
+      ` : '';
+
+      // Somente para impressão da folha:
+      // se o motorista clicou em Carregar e a folha foi criada manualmente por DT não encontrada,
+      // o status exibido na folha será Vendas.
+      const sheetStatusPrint = (isManual && (currentMode || '').toString().toUpperCase() === 'LOAD')
+        ? 'Vendas'
+        : (operationTag || 'Normal');
+
+      // Agenda: quando a operação usa a planilha, usa Data/Hora da planilha.
+      // Em operações que não usam a planilha (manuais), preenche sempre com data e hora atual.
+      const rawAgendaDate = (firstResult[headerMap.data] || '').toString().trim();
+      const rawAgendaTime = (firstResult[headerMap.agenda] || '').toString().trim();
+      const agendaDatePrint = isManual ? printDate : (rawAgendaDate || printDate);
+      const agendaTimePrint = isManual ? printTime : (rawAgendaTime || printTime);
+      const operationPanelTitle = isDropHookPrint ? 'DADOS DO MOTORISTA MANOBRA' : 'DADOS DA OPERAÇÃO';
+      const operationPanelHtml = isDropHookPrint ? `
+                <p><strong>MOTORISTA MANOBRA:</strong> ${escapeHtml(manobraDriverPrint.nome || '')}</p>
+                <p><strong>CPF:</strong> ${escapeHtml(manobraDriverPrint.cpf || '')}</p>
+                <p><strong>CELULAR:</strong> ${escapeHtml(manobraDriverPrint.telefone || '')}</p>
+                <p><strong>CNH:</strong> ${escapeHtml(manobraDriverPrint.cnh || '')}</p>
+                <p><strong>PLACA DO MANOBRA:</strong> ${escapeHtml(manobraPlatePrint || '')}</p>
+                <p><strong>OPERAÇÃO:</strong> ${escapeHtml(operationTag || '---')}</p>
+              ` : `
+                <p><strong>DATA AGENDA:</strong> ${escapeHtml(agendaDatePrint)}</p>
+                <p><strong>HORA AGENDA:</strong> ${escapeHtml(agendaTimePrint)}</p>
+                <p><strong>OPERAÇÃO:</strong> ${escapeHtml(operationTag || '---')}</p>
+                <p><strong>CLIENTE:</strong> ${escapeHtml(firstResult[headerMap.cliente] || 'N/A')}</p>
+                <p><strong>TRANSPORTADORA:</strong> ${escapeHtml(companyPrint || '---')}</p>
+              `;
+      let priorityHtml = '';
+      if (isGradeQueimada) {
+        priorityHtml = `<div style="width:100%; border:1.8px solid #1a1a1a; text-align:center; padding:6px 9px; background:#FBBF24; border-radius:0;">
+                          <div style="font-size:11px; font-weight:900; letter-spacing:.06em; margin-bottom:3px;">STATUS</div>
+                          <div style="font-size:18px; font-weight:900; letter-spacing:.03em;">GRADE QUEIMADA</div>
+                        </div>`;
+      } else if (isAtrasado) {
+        priorityHtml = `<div style="width:100%; border:1.8px solid #1a1a1a; text-align:center; padding:6px 9px; background:#FACC15; border-radius:0;">
+                          <div style="font-size:11px; font-weight:900; letter-spacing:.06em; margin-bottom:3px;">STATUS</div>
+                          <div style="font-size:18px; font-weight:900; letter-spacing:.03em;">PERDA DE AGENDA</div>
+                        </div>`;
+      } else if (isAntecipacao) {
+        priorityHtml = `<div style="width:100%; border:1.8px solid #1a1a1a; text-align:center; padding:6px 9px; background:#F87171; border-radius:0; color:#111;">
+                          <div style="font-size:11px; font-weight:900; letter-spacing:.06em; margin-bottom:3px;">STATUS</div>
+                          <div style="font-size:18px; font-weight:900; letter-spacing:.03em;">ANTECIPAÇÃO</div>
+                        </div>`;
+      } else if (isOtif && isTop18) {
+        priorityHtml = `<div style="width:100%; border:1.8px solid #1a1a1a; text-align:center; padding:6px 9px; background:#F87171; border-radius:0; color:#111;">
+                          <div style="font-size:11px; font-weight:900; letter-spacing:.06em; margin-bottom:3px;">STATUS</div>
+                          <div style="font-size:18px; font-weight:900; letter-spacing:.03em;">OTIF / TOP 18</div>
+                        </div>`;
+      } else if (isOtif) {
+        priorityHtml = `<div style="width:100%; border:1.8px solid #1a1a1a; text-align:center; padding:6px 9px; background:#F87171; border-radius:0; color:#111;">
+                          <div style="font-size:11px; font-weight:900; letter-spacing:.06em; margin-bottom:3px;">STATUS</div>
+                          <div style="font-size:18px; font-weight:900; letter-spacing:.03em;">OTIF</div>
+                        </div>`;
+      } else if (isPriority) {
+        priorityHtml = `<div style="width:100%; border:1.8px solid #1a1a1a; text-align:center; padding:6px 9px; background:#BBF7D0; border-radius:0; color:#111;">
+                          <div style="font-size:11px; font-weight:900; letter-spacing:.06em; margin-bottom:3px;">STATUS</div>
+                          <div style="font-size:18px; font-weight:900; letter-spacing:.03em;">ADERENTE</div>
+                        </div>`;
+      } else {
+        priorityHtml = `<div style="width:100%; border:1.8px solid #1a1a1a; text-align:center; padding:10px 10px; background:#fff; border-radius:0;">
+                          <div style="font-size:11px; font-weight:900; letter-spacing:.06em; margin-bottom:4px;">STATUS</div>
+                          <div style="font-size:16px;">(${sheetStatusPrint})</div>
+                        </div>`;
+      }
+
+      const allCanais = ['Y001', 'Y002', 'Y004', 'Y006', 'Y055'];
+      const canalPrint = (firstResult[headerMap.canal] || '').toString().trim().toUpperCase();
+      const canaisHtml = allCanais.map(c => `${c === canalPrint ? '[X]' : '[ ]'} ${c}`).join(' ');
+
+      const isBaldeio = !!isManual && (productRaw.includes('BALDEIO') || transpUpper === 'RITMO' || transpUpper === 'JSL');
+      const isInsumoManual = !!isManual && !isBaldeio && productRaw.includes('INSUMO');
+
+      const productHeader = isManual
+        ? (isBaldeio ? 'Produto' : (isInsumoManual ? 'Tipo de Produto' : 'Produto'))
+        : 'Produto';
+
+      const safeRows = sheetDataArray.length ? sheetDataArray : [{}];
+      const rowsHtml = safeRows.map(item => {
+        const prod = isDropHookPrint
+          ? ''
+          : (isManual
+            ? (isBaldeio ? '' : ((item[headerMap.produto] || '') || (operationTag || '')))
+            : (item[headerMap.produto] || ''));
+
+        const qtd = isDropHookPrint
+          ? ''
+          : (isManual
+            ? (item[headerMap.plt] || '')
+            : (item[headerMap.plt] || ''));
+
+        return `
+          <tr>
+            <td style="border:1px solid #cfcfcf; padding:5px 7px; height:38px; font-weight:700;">${prod}</td>
+            <td style="border:1px solid #cfcfcf; padding:5px 7px; height:38px; text-align:center; font-weight:700;">${qtd}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const buildDropHookChecklistDriver = (base, tipo) => {
+        const fonte = tipo === 'VIAGEM'
+          ? (base.motoristaViagem || {})
+          : (base.motoristaManobra || {});
+
+        const fallback = tipo === 'VIAGEM'
+          ? {
+              nome: base.name || '',
+              cpf: base.cpf || '',
+              telefone: base.phone || '',
+              cnh: base.cnh || '',
+              transportadora: base.transportadora || '',
+              truckPlate: base.truckPlate || '',
+              trailerPlate: base.trailerPlate || '',
+              vehicleType: base.vehicleType || ''
+            }
+          : {
+              nome: base.motoristaManobra?.nome || base.name || '',
+              cpf: base.motoristaManobra?.cpf || base.cpf || '',
+              telefone: base.motoristaManobra?.telefone || base.phone || '',
+              cnh: base.motoristaManobra?.cnh || base.cnh || '',
+              transportadora: base.motoristaManobra?.transportadora || base.transportadora || '',
+              truckPlate: base.truckPlate || '',
+              trailerPlate: base.trailerPlate || '',
+              vehicleType: base.vehicleType || ''
+            };
+
+        return {
+          ...base,
+          // No checklist precisa aparecer apenas "Motorista", sem Manobra/Viagem.
+          isDropHook: false,
+          checklistDropHookTipo: tipo,
+          // Checklist do Drop & Hook: deixar o campo DT em branco para preencher na caneta.
+          printableDt: '',
+          dts: '',
+          unloadDt: '',
+          printableUnloadDt: '',
+          name: fonte.nome || fonte.name || fallback.nome || '',
+          cpf: fonte.cpf || fallback.cpf || '',
+          phone: fonte.telefone || fonte.phone || fallback.telefone || '',
+          cnh: fonte.cnh || fallback.cnh || '',
+          cnhExpiry: fonte.cnhExpiry || fallback.cnhExpiry || '',
+          transportadora: fonte.transportadora || fallback.transportadora || '',
+          truckPlate: reprintCleanPlate(fonte.truckPlate || fallback.truckPlate || base.truckPlate || ''),
+          trailerPlate: reprintCleanPlate(fonte.trailerPlate || fallback.trailerPlate || base.trailerPlate || ''),
+          vehicleType: fonte.vehicleType || fallback.vehicleType || base.vehicleType || ''
+        };
+      };
+
+      const checklistHtml = isDropHookPrint
+        ? buildReprintChecklistPrintPage(buildDropHookChecklistDriver(driverData, 'MANOBRA'), sheetDataArray, operationTag, printDate, printTime)
+        : buildReprintChecklistPrintPage(driverData, sheetDataArray, operationTag, printDate, printTime);
+
+      // O termo Drop & Hook agora fica simplificado dentro da própria folha de marcação.
+      const dropHookHtml = '';
+
+      return `
+        <style>
+          .hm-sheet p { margin: 0 0 2px 0; }
+          .hm-sheet strong { font-weight: 900; }
+          @media print {
+            @page { size: A4 portrait; margin: 3mm; }
+            .hm-sheet {
+              zoom: 0.97;
+              page-break-inside: avoid;
+              break-inside: avoid;
+            }
+
+            /* Ajuste solicitado: manter o modelo antigo, mas compactar SOMENTE a primeira folha de marcação
+               para não quebrar o bloco final da HEINEKEN em uma segunda página. */
+            .hm-main-sheet {
+              zoom: 0.98 !important;
+              page-break-inside: avoid !important;
+              break-inside: avoid-page !important;
+              page-break-after: always !important;
+              break-after: page !important;
+              padding: 7px !important;
+              font-size: 12.2px !important;
+            }
+            .hm-main-sheet header {
+              gap: 8px !important;
+              padding-bottom: 5px !important;
+              margin-bottom: 6px !important;
+            }
+            .hm-main-sheet section,
+            .hm-main-sheet table {
+              margin-bottom: 5px !important;
+            }
+            .hm-main-sheet td,
+            .hm-main-sheet th {
+              padding: 4px 5px !important;
+            }
+            .hm-main-sheet p {
+              margin: 0 0 1px 0 !important;
+            }
+            .hm-main-sheet ul {
+              font-size: 10.4px !important;
+              line-height: 1.18 !important;
+              padding: 4px 10px 4px 18px !important;
+            }
+            .hm-main-sheet [style*="min-height:66px"] { min-height: 52px !important; }
+            .hm-main-sheet [style*="min-height:72px"] { min-height: 56px !important; }
+            .hm-main-sheet [style*="font-size:28px"] { font-size: 24px !important; }
+            .hm-main-sheet [style*="font-size:18px"] { font-size: 15.5px !important; }
+            .hm-main-sheet [style*="font-size:15px"] { font-size: 12.5px !important; }
+          }
+        </style>
+        <div class="bg-white text-black font-sans print-main-container hm-sheet hm-main-sheet" style="padding:12px; font-size:14px; color:#111; border:2.5px solid #111; background:#fff;">
+          <header style="display:grid; grid-template-columns: 1.12fr 1.08fr .78fr; gap:8px; align-items:center; border-bottom:2px solid #111; padding-bottom:7px; margin-bottom:6px;">
+            <div style="display:flex; align-items:center; min-height:66px; padding:5px 3px;">
+              <div style="display:flex; align-items:center; gap:8px; min-height:58px; white-space:nowrap;">
+                <span style="font-size:10px; font-weight:900; letter-spacing:.02em;">EST.</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="#4b5563" style="flex:0 0 auto;">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z"/>
+                </svg>
+                <span style="font-size:10px; font-weight:900;">1873</span>
+                <div style="margin-left:5px;">
+                  <div style="font-size:28px; font-weight:900; letter-spacing:.06em; line-height:.9;">HEINEKEN</div>
+                  <div style="font-size:8.5px; font-weight:900; letter-spacing:.08em; margin-top:4px;">UNIDADE JACAREÍ</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="border:2px solid #111; min-height:66px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:7px 9px; text-align:center;">
+              <div style="font-size:11px; font-weight:900; margin-bottom:8px;">Gerada em ${printDate} às ${printTime}</div>
+              <div style="border:1.5px solid #555; border-radius:22px; padding:6px 14px; font-size:11px; line-height:1.15;">
+                CANAL: <strong>${canaisHtml}</strong>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; justify-content:center; min-height:72px;">
+              ${priorityHtml}
+            </div>
+          </header>
+
+          <div style="display:grid; grid-template-columns: 1fr .74fr; gap:7px; margin-bottom:5px;">
+            <section style="border:2px solid #111;">
+              <div style="background:#f3f4f6; border-bottom:1px solid #111; padding:6px 9px; font-size:11.5px; font-weight:900; letter-spacing:.03em;">${isDropHookPrint ? 'DADOS DO MOTORISTA VIAGEM E VEÍCULO' : 'DADOS DO MOTORISTA E VEÍCULO'}</div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0; padding:0;">
+                <div style="padding:7px 9px; line-height:1.34; border-right:1px solid #d4d4d4;">
+                  <p><strong>DATA/HORA:</strong> ${printDate} ${printTime}</p>
+                  <p><strong>MOTORISTA:</strong> ${escapeHtml(mainDriverNamePrint)}</p>
+                  <p><strong>CPF:</strong> ${escapeHtml(mainDriverCpfPrint)}</p>
+                  <p><strong>CELULAR:</strong> ${escapeHtml(mainDriverPhonePrint)}</p>
+                  <p><strong>CNH:</strong> ${escapeHtml(mainDriverCnhPrint || '')}</p>
+                </div>
+                <div style="padding:7px 9px; line-height:1.34;">
+                  <p><strong>CAVALO:</strong> ${escapeHtml(mainTruckPlatePrint)}</p>
+                  <p><strong>CARRETA:</strong> ${escapeHtml(mainTrailerPlatePrint)}</p>
+                  <p><strong>TIPO DE VEÍCULO:</strong> ${escapeHtml(mainVehicleTypePrint || '---')}</p>
+                  <p><strong>EIXOS:</strong> ${driverData.axles || ''}</p>
+                  <p><strong>RENAVAM:</strong> ${driverData.renavam || ''}</p>
+                </div>
+              </div>
+            </section>
+
+            <section style="border:2px solid #111;">
+              <div style="background:#f3f4f6; border-bottom:1px solid #111; padding:6px 9px; font-size:11.5px; font-weight:900; letter-spacing:.03em;">${operationPanelTitle}</div>
+              <div style="padding:7px 9px; line-height:1.38;">
+                ${operationPanelHtml}
+              </div>
+            </section>
+          </div>
+
+          <section style="border:2px solid #111; margin-bottom:6px;">
+            <div style="background:#f3f4f6; border-bottom:1px solid #111; padding:6px 9px; font-size:11.5px; font-weight:900; letter-spacing:.03em;">PRODUTOS / VOLUMES</div>
+            <div style="padding:8px 9px 7px;">
+              <table style="width:100%; border-collapse:collapse; font-size:11px; text-align:left; border:1px solid #cfcfcf;">
+                <thead>
+                  <tr style="background:#fafafa;">
+                    <th style="border:1px solid #cfcfcf; padding:7px 7px; text-align:center; font-size:11.5px;">${productHeader}</th>
+                    <th style="border:1px solid #cfcfcf; padding:7px 7px; text-align:center; font-size:11.5px;">Quantidade (PLT)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml}
+
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <table style="width:100%; border-collapse:collapse; border:2px solid #111; margin-bottom:6px; font-size:10.8px;">
+            <thead>
+              <tr style="background:#f3f4f6;">
+                <th style="border:1px solid #cfcfcf; padding:7px 6px;">TIPO</th>
+                <th style="border:1px solid #cfcfcf; padding:7px 6px;">Nº NOTA FISCAL</th>
+                <th style="border:1px solid #cfcfcf; padding:7px 6px;">Nº TRANSPORTE</th>
+                <th style="border:1px solid #cfcfcf; padding:7px 6px;">DT DESCARGA</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="border:1px solid #cfcfcf; padding:6px 9px; line-height:1.6; width:25%;">
+                  <div>${isDropHookPrint ? '[X]' : '[ ]'} Drop & Hook</div>
+                  <div>${isDropHookPrint ? '[X]' : '[ ]'} Carregamento</div>
+                  <div>${isDropHookPrint && driverData.dropHookAlsoUnload ? '[X]' : '[ ]'} Descarregamento</div>
+                </td>
+                <td style="border:1px solid #cfcfcf; padding:7px 9px; text-align:center; font-size:13px; font-weight:900;">${driverData.invoice || '---'}</td>
+                <td style="border:1px solid #cfcfcf; padding:7px 9px; text-align:center; font-size:13px; font-weight:900;">${transportNumberPrint || ''}</td>
+                <td style="border:1px solid #cfcfcf; padding:7px 9px; text-align:center; font-size:13px; font-weight:900;">${unloadDtPrint || ''}</td>
+              </tr>
+              <tr>
+                <td colspan="4" style="border:1px solid #cfcfcf; padding:6px 10px; font-size:10px;">[X] Eu, motorista, estou ciente das regras de segurança vigentes no armazém da HEINEKEN de Jacareí.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          ${isDropHookPrint ? '' : `
+          <section style="border:2px solid #111; margin-bottom:6px;">
+            <div style="background:#f3f4f6; border-bottom:1px solid #111; padding:6px 9px; font-size:11.5px; font-weight:900; letter-spacing:.03em;">CHAMADO</div>
+            <div style="padding:6px 11px; min-height:28px;">
+              <div style="border-bottom:1px solid #888; height:20px;"></div>
+            </div>
+          </section>
+
+          <section style="border:2px solid #111; margin-bottom:6px;">
+            <div style="background:#f3f4f6; border-bottom:1px solid #111; padding:6px 9px; font-size:11.5px; font-weight:900; letter-spacing:.03em;">RESPONSÁVEIS / ASSINATURAS</div>
+            <table style="width:100%; border-collapse:collapse; font-size:11px;">
+              <thead style="background:#fafafa;">
+                <tr>
+                  <th style="border:1px solid #cfcfcf; padding:5px 7px;">PROCESSO</th>
+                  <th style="border:1px solid #cfcfcf; padding:5px 7px;">RESPONSÁVEL</th>
+                  <th style="border:1px solid #cfcfcf; padding:5px 7px;">NOME</th>
+                  <th style="border:1px solid #cfcfcf; padding:5px 7px;">ASSINATURA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="border:1px solid #cfcfcf; padding:7px 7px;">Confirmação</td>
+                  <td style="border:1px solid #cfcfcf; padding:7px 7px; text-align:center;">Motorista Manobra</td>
+                  <td style="border:1px solid #cfcfcf; padding:6px 7px;">${driverData.name}</td>
+                  <td style="border:1px solid #cfcfcf; padding:7px 7px;"></td>
+                </tr>
+                ${isDropHookPrint ? `
+                  <tr>
+                    <td style="border:1px solid #cfcfcf; padding:7px 7px;">Confirmação Drop & Hook</td>
+                    <td style="border:1px solid #cfcfcf; padding:7px 7px; text-align:center;">Motorista Viagem</td>
+                    <td style="border:1px solid #cfcfcf; padding:6px 7px;">${driverData.motoristaViagem?.nome || ''}</td>
+                    <td style="border:1px solid #cfcfcf; padding:7px 7px;"></td>
+                  </tr>
+                ` : ''}
+                <tr>
+                  <td style="border:1px solid #cfcfcf; padding:7px 7px;">Analista</td>
+                  <td style="border:1px solid #cfcfcf; padding:7px 7px; text-align:center;">Analista</td>
+                  <td style="border:1px solid #cfcfcf; padding:7px 7px;"></td>
+                  <td style="border:1px solid #cfcfcf; padding:7px 7px;"></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          `}
+
+          <section style="border:2px solid #111; margin-bottom:6px;">
+            <div style="
+  background:#e5e5e5 !important;
+  color:#000 !important;
+  border-top:2px solid #111;
+  border-bottom:2px solid #111;
+  padding:8px 10px;
+  font-size:15px;
+  font-weight:900;
+  text-align:center;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+">
+  REGRAS DE SEGURANÇA
+</div>
+            <ul style="font-size:12px; line-height:1.32; padding:7px 12px 7px 20px; margin:0;">
+              <li>- Proibido o uso de adornos.</li>
+              <li>- Obrigatório o uso de todos os EPIs: capacete com jugular, bota de segurança, colete refletivo, óculos de segurança, luvas e máscara quando aplicável.</li>
+              <li>- Obrigatório o uso das faixas de pedestres.</li>
+              <li>- Obrigatória distância de 5m entre pessoas e empilhadeiras.</li>
+              <li>- Respeitar os procedimentos HEINEKEN, colaboradores e Segurança Patrimonial.</li>
+            </ul>
+          </section>
+
+          ${dropHookSimpleTermHtml}
+
+          <section style="border:2px solid #111; padding:5px 9px;">
+            <div style="font-size:12px; font-weight:900; margin-bottom:6px;">★ HEINEKEN UNIDADE JACAREÍ</div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; column-gap:22px; font-size:10.8px; line-height:1.34;">
+              <div>
+                <p><strong>DATA:</strong> ${printDate}</p>
+                <p><strong>${isDropHookPrint ? 'MOTORISTA VIAGEM' : 'MOTORISTA'}:</strong> ${isDropHookPrint ? (driverData.motoristaViagem?.nome || driverData.name || '') : (driverData.name || '')}</p>
+                ${isDropHookPrint ? `<p><strong>MOTORISTA MANOBRA:</strong> ${driverData.motoristaManobra?.nome || ''}</p>` : ''}
+                <p><strong>TELEFONE:</strong> ${driverData.phone}</p>
+                <p><strong>PLACA 1:</strong> ${driverData.truckPlate}</p>
+                <p><strong>NOTA FISCAL:</strong> ${driverData.invoice || ''}</p>
+              </div>
+              <div>
+                <p><strong>HORA CHEGADA:</strong> ${printTime}</p>
+                <p><strong>CPF:</strong> ${driverData.cpf}</p>
+                <p><strong>EMPRESA:</strong> ${companyPrint}</p>
+                <p><strong>OPERAÇÃO:</strong> ${operationTag || ''}</p>
+                <p><strong>PLACA 2:</strong> ${driverData.trailerPlate || ''}</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        ${dropHookHtml}
+        ${checklistHtml}
+      `;
+    }
+
+
+  function buildReprintDriverData(op = {}) {
+    const isDrop = reprintIsDrop(op);
+    const telefoneViagem = (typeof getTelefoneFromOperacao === 'function' ? (getTelefoneFromOperacao(op) || '') : '') || reprintSheetPick(op, ['telefone', 'telefoneMotorista', 'celular', 'celularMotorista', 'phone', 'motoristaViagem.telefone', 'motoristaViagem.phone', 'dropHook.motoristaViagem.telefone']);
+    const telefoneManobra = reprintSheetPick(op, ['motoristaManobraTelefone', 'dropMotoristaManobraTelefone', 'motoristaManobra.telefone', 'motoristaManobra.phone', 'dropHook.motoristaManobra.telefone']);
+    const tripName = isDrop ? reprintGetDropViagem(op) : getReprintSheetMotorista(op);
+    const manobraName = isDrop ? reprintGetDropManobra(op) : '';
+    const tripCpf = isDrop ? reprintFormatCpf(reprintSheetPick(op, ['motoristaViagemCpf', 'dropMotoristaViagemCpf', 'motoristaViagem.cpf', 'dropHook.motoristaViagem.cpf', 'dropHookTripCpf', 'cpf'])) : getReprintSheetCpf(op);
+    const manobraCpf = reprintFormatCpf(reprintSheetPick(op, ['motoristaManobraCpf', 'dropMotoristaManobraCpf', 'motoristaManobra.cpf', 'dropHook.motoristaManobra.cpf', 'dropHookManeuverCpf']));
+    const truckPlate = reprintGetTruckPlate(op);
+    const trailerPlate = reprintGetTrailerPlate(op);
+    const maneuverPlate = reprintCleanPlate(reprintSheetPick(op, ['placaManobra', 'dropPlacaManobra', 'dropHook.placaManobra', 'maneuverPlate', 'dropHookManeuverPlate', 'motoristaManobra.truckPlate', 'dropHook.motoristaManobra.truckPlate']));
+    const transportadora = reprintSheetPick(op, ['transportadora', 'carrier', 'carrierName', 'motoristaViagem.transportadora', 'dropHook.motoristaViagem.transportadora', 'motoristaManobra.transportadora']) || '';
+    const vehicleType = reprintSheetPick(op, ['tipoVeiculo', 'vehicleType', 'vehicle', 'motoristaViagem.vehicleType', 'dropHook.motoristaViagem.vehicleType']) || '';
+    const dropAlsoUnload = reprintBool(op.dropHookAlsoUnload ?? op.dropHook?.dropHookAlsoUnload ?? op.contabilizarDescarga ?? op.dropHook?.contabilizarDescarga);
+
+    return {
+      isDropHook: isDrop,
+      name: isDrop ? (manobraName || tripName) : tripName,
+      cpf: isDrop ? (manobraCpf || tripCpf) : tripCpf,
+      phone: isDrop ? (telefoneManobra || telefoneViagem) : telefoneViagem,
+      cnh: reprintSheetPick(op, ['cnh', 'cnhMotorista', 'motoristaViagem.cnh', 'motoristaManobra.cnh', 'dropHook.motoristaViagem.cnh', 'dropHook.motoristaManobra.cnh']),
+      transportadora,
+      truckPlate,
+      trailerPlate,
+      vehicleType,
+      axles: reprintSheetPick(op, ['eixos', 'axles']),
+      renavam: reprintSheetPick(op, ['renavam']),
+      invoice: reprintSheetPick(op, ['invoice', 'notaFiscal', 'nf', 'numeroNotaFiscal']),
+      printableDt: getReprintSheetDt(op),
+      printableUnloadDt: reprintSheetPick(op, ['unloadDt', 'dtDescarga', 'printableUnloadDt', 'dropHook.dtDescarga']),
+      operacao: isDrop ? (dropAlsoUnload ? 'DROP & HOOK - CARGA E DESCARGA' : 'DROP & HOOK - CARGA') : getReprintSheetProduto(op),
+      flowKey: reprintSheetPick(op, ['flowKey']),
+      flowLabel: reprintSheetPick(op, ['flowLabel']),
+      dropHookAlsoUnload: dropAlsoUnload,
+      maneuverPlate,
+      dropHookManeuverPlate: maneuverPlate,
+      motoristaViagem: {
+        nome: tripName,
+        cpf: tripCpf,
+        telefone: telefoneViagem,
+        cnh: reprintSheetPick(op, ['motoristaViagemCnh', 'motoristaViagem.cnh', 'dropHook.motoristaViagem.cnh', 'cnh']),
+        transportadora,
+        truckPlate,
+        trailerPlate,
+        vehicleType
+      },
+      motoristaManobra: {
+        nome: manobraName || (isDrop ? getReprintSheetMotorista(op) : ''),
+        cpf: manobraCpf,
+        telefone: telefoneManobra,
+        cnh: reprintSheetPick(op, ['motoristaManobraCnh', 'motoristaManobra.cnh', 'dropHook.motoristaManobra.cnh']),
+        transportadora: reprintSheetPick(op, ['motoristaManobra.transportadora', 'dropHook.motoristaManobra.transportadora']) || transportadora,
+        truckPlate: maneuverPlate || truckPlate,
+        trailerPlate,
+        vehicleType
+      }
+    };
+  }
+
+  function buildReprintSheetDataArray(op = {}) {
+    const agenda = reprintSplitAgenda(op);
+    const isDrop = reprintIsDrop(op);
+    const produto = isDrop ? '' : getReprintSheetProduto(op);
+    const quantidade = isDrop ? '' : getReprintSheetQuantidade(op);
+    return [{
+      [REPRINT_HEADER_MAP.dts]: getReprintSheetDt(op),
+      [REPRINT_HEADER_MAP.canal]: reprintSheetPick(op, ['canal', 'canalSap', 'codigoCanal']) || '',
+      [REPRINT_HEADER_MAP.cliente]: reprintSheetPick(op, ['cliente', 'destino', 'client', 'customer']) || '',
+      [REPRINT_HEADER_MAP.produto]: produto,
+      [REPRINT_HEADER_MAP.descricao]: reprintSheetPick(op, ['descricao', 'description']) || produto,
+      [REPRINT_HEADER_MAP.plt]: quantidade,
+      [REPRINT_HEADER_MAP.deposito]: reprintSheetPick(op, ['deposito', 'deposit', 'warehouse']) || '',
+      [REPRINT_HEADER_MAP.transportadora]: reprintSheetPick(op, ['transportadora', 'carrier', 'carrierName']) || '',
+      [REPRINT_HEADER_MAP.data]: agenda.data,
+      [REPRINT_HEADER_MAP.agenda]: agenda.hora,
+      [REPRINT_HEADER_MAP.xtAdicional]: reprintSheetPick(op, ['xtAdicional', 'textoAdicional', 'observacao']) || ''
+    }];
+  }
+
+  function getReprintStatusFlags(op = {}) {
+    const status = `${getReprintSheetStatus(op)} ${reprintSheetPick(op, ['priority', 'prioridade', 'statusPrioridade', 'classificacao', 'tipoPrioridade'])}`.toUpperCase();
+    return {
+      isPriority: status.includes('ADERENTE') || status.includes('PRIORIDADE'),
+      isOtif: status.includes('OTIF'),
+      isTop18: status.includes('TOP18') || status.includes('TOP 18'),
+      isAntecipacao: status.includes('ANTECIPA'),
+      isGradeQueimada: status.includes('GRADE QUEIMADA') || status.includes('QUEIMADA'),
+      isAtrasado: status.includes('PERDA DE AGENDA') || status.includes('ATRAS')
+    };
+  }
+
+  function buildReprintMarkingSheetHtml(op = {}) {
+    const driverData = buildReprintDriverData(op);
+    const sheetDataArray = buildReprintSheetDataArray(op);
+    const flags = getReprintStatusFlags(op);
+    const operationTag = driverData.operacao || getReprintSheetProduto(op) || getReprintSheetStatus(op) || '';
+    const isManual = reprintBool(op.isManual ?? op.manual ?? op.manualOverride);
+    const officialContent = buildReprintOfficialPrintableSheet(
+      driverData,
+      sheetDataArray,
+      flags.isPriority,
+      flags.isOtif,
+      flags.isTop18,
+      flags.isAntecipacao,
+      flags.isGradeQueimada,
+      flags.isAtrasado,
+      isManual
+    );
+    const dt = escapeHtml(getReprintSheetDt(op) || 'sem DT');
+    const generatedAt = escapeHtml(new Date().toLocaleString('pt-BR'));
+    return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reimpressão - Folha de Marcação ${dt}</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; color: #000; font-family: Arial, Helvetica, sans-serif; }
+    #printable-area { width: 100%; }
+    .reprint-badge { position: fixed; left: 50%; bottom: 4mm; transform: translateX(-50%); z-index: 9999; border: 1px solid #111; background: rgba(255,255,255,.96); color: #111; padding: 3px 9px; font-size: 8px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+    @media print { .reprint-badge { position: fixed; left: 50%; bottom: 3mm; transform: translateX(-50%); } body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+    ${REPRINT_OFFICIAL_PRINT_CSS}
+  </style>
+</head>
+<body>
+  <div class="reprint-badge">2ª via / reimpressão • ${generatedAt}</div>
+  <div id="printable-area">${officialContent}</div>
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(function() { window.print(); }, 300);
+    });
+  <\/script>
+</body>
+</html>`;
+  }
+
+  function reprintMarkingSheet(op = {}) {
+    if (!op || !op.id) {
+      showToast('Não encontrei os dados salvos para reimprimir.', 'error');
+      return;
+    }
+
+    let printHtml = '';
+    try {
+      // Gera tudo antes de abrir/imprimir. Assim, se houver algum dado faltando,
+      // não fica uma janela about:blank vazia aberta no navegador.
+      printHtml = buildReprintMarkingSheetHtml(op);
+    } catch (error) {
+      console.error('Erro ao montar a reimpressão da folha/checklist:', error);
+      showToast('Não consegui montar a reimpressão. Veja o console para detalhes.', 'error');
+      return;
+    }
+
+    // Impressão via iframe: funciona melhor quando o arquivo é aberto localmente (file://),
+    // evitando bloqueio de pop-up/about:blank no Edge/Chrome.
+    try {
+      const oldFrame = document.getElementById('heilog-reprint-print-frame');
+      if (oldFrame) oldFrame.remove();
+
+      const frame = document.createElement('iframe');
+      frame.id = 'heilog-reprint-print-frame';
+      frame.title = 'Reimpressão da folha de marcação';
+      frame.style.position = 'fixed';
+      frame.style.right = '0';
+      frame.style.bottom = '0';
+      frame.style.width = '0';
+      frame.style.height = '0';
+      frame.style.border = '0';
+      frame.style.opacity = '0';
+      frame.style.pointerEvents = 'none';
+      document.body.appendChild(frame);
+
+      const frameDoc = frame.contentWindow.document;
+      frameDoc.open();
+      frameDoc.write(printHtml);
+      frameDoc.close();
+
+      setTimeout(() => {
+        try {
+          frame.contentWindow.focus();
+          frame.contentWindow.print();
+          showToast('Reimpressão da folha de marcação e checklist aberta.', 'success');
+        } catch (printError) {
+          console.error('Erro ao abrir impressão pelo iframe:', printError);
+          showToast('Não consegui abrir a impressão automática. Tente novamente ou use Ctrl+P.', 'error');
+        }
+      }, 450);
+    } catch (error) {
+      console.error('Erro ao preparar a reimpressão:', error);
+      showToast('Não consegui abrir a reimpressão. Veja o console para detalhes.', 'error');
+    }
+  }
+
   // ==============================
   // CLICK TABELA + CONFIRM
   // ==============================
@@ -9654,6 +11419,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
     switch (action) {
       case 'details': window.showDetailsModal(); break;
+      case 'reprint-sheet': reprintMarkingSheet(selectedOperacao); break;
       case 'occurrence': window.showOccurrenceModal(); break;
       case 'finish': {
         if (requireSapUnlockForOperation(selectedOperacao, () => showConfirmModal('Tem certeza que deseja finalizar esta operação?', finalizarOperacao))) break;
