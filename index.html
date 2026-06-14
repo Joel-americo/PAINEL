@@ -5145,6 +5145,2104 @@ select.hl-native-multi-hidden {
   color: #ffffff !important;
 }
 
+
+
+/* ===== Pátio: motorista chamado via WhatsApp ===== */
+.driver-called-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 5px 9px;
+  width: fit-content;
+  border-radius: 999px;
+  background: rgba(0, 122, 61, 0.10);
+  border: 1px solid rgba(0, 122, 61, 0.18);
+  color: #04723a !important;
+  font-size: 0.76rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.driver-called-badge svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+}
+.driver-called-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 160px;
+}
+#table-body .table-action-whatsapp.already-called {
+  background: #ecfdf5 !important;
+  color: #047857 !important;
+  border-color: rgba(4, 120, 87, 0.22) !important;
+}
+#table-body .table-action-whatsapp.already-called:hover {
+  background: #d1fae5 !important;
+}
+
+
+/* ===== Correção: mantém o ícone do WhatsApp verde, mesmo após marcar como chamado ===== */
+#table-body button.table-action-whatsapp,
+#table-body a.table-action-whatsapp,
+#table-body button.table-action-btn[title^="WhatsApp"],
+#table-body button.table-action-btn[title*="WhatsApp"],
+#table-body button.table-action-btn[title*="Telefone indisponível"] {
+  background: #e9fbf1 !important;
+  color: #047857 !important;
+  -webkit-text-fill-color: #047857 !important;
+  border-color: rgba(5, 150, 105, 0.22) !important;
+}
+#table-body button.table-action-whatsapp svg,
+#table-body a.table-action-whatsapp svg,
+#table-body button.table-action-btn[title^="WhatsApp"] svg,
+#table-body button.table-action-btn[title*="WhatsApp"] svg,
+#table-body button.table-action-btn[title*="Telefone indisponível"] svg {
+  color: #047857 !important;
+  fill: #047857 !important;
+  stroke: #047857 !important;
+  -webkit-text-fill-color: #047857 !important;
+}
+#table-body button.table-action-whatsapp.already-called svg,
+#table-body a.table-action-whatsapp.already-called svg {
+  color: #047857 !important;
+  fill: #047857 !important;
+  stroke: #047857 !important;
+}
+
+
+/* ===== Pátio/Histórico: linha do tempo operacional ===== */
+.timeline-cell {
+  min-width: 260px;
+  max-width: 360px;
+}
+.operation-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 240px;
+  padding: 2px 0 2px 2px;
+}
+.operation-timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(0,122,61,0.18), rgba(15,23,42,0.08));
+  border-radius: 999px;
+}
+.timeline-event {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+.timeline-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  margin-top: 4px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 3px 8px rgba(15,23,42,0.12);
+  background: #94a3b8;
+  z-index: 1;
+}
+.timeline-event.marking .timeline-dot { background: #0ea5e9; }
+.timeline-event.whatsapp .timeline-dot { background: #059669; }
+.timeline-event.occurrence .timeline-dot { background: #f59e0b; }
+.timeline-event.resolution .timeline-dot { background: #6366f1; }
+.timeline-event.finish .timeline-dot { background: #16a34a; }
+.timeline-event.cancel .timeline-dot { background: #e11d48; }
+.timeline-content {
+  min-width: 0;
+  padding: 6px 9px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid rgba(15,23,42,0.08);
+  box-shadow: 0 4px 12px rgba(15,23,42,0.035);
+}
+.timeline-topline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.timeline-time {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #007a3d !important;
+  letter-spacing: -0.02em;
+}
+.timeline-label {
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #102018 !important;
+}
+.timeline-desc {
+  margin-top: 2px;
+  font-size: 0.72rem;
+  line-height: 1.25;
+  color: #5f7067 !important;
+  white-space: normal;
+}
+.timeline-more,
+.timeline-empty {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: rgba(15,23,42,0.06);
+  color: #64748b !important;
+  border: 1px solid rgba(15,23,42,0.08);
+}
+.details-timeline-shell {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(15,23,42,0.08);
+}
+.details-timeline-title {
+  font-weight: 900;
+  color: #102018 !important;
+  margin-bottom: 8px;
+}
+.details-timeline-shell .operation-timeline {
+  max-width: 100%;
+}
+.details-timeline-shell .timeline-content {
+  background: #ffffff;
+}
+@media (max-width: 768px) {
+  .timeline-cell { min-width: 240px; }
+  .operation-timeline { min-width: 220px; }
+}
+
+
+
+/* ===== Pátio/Histórico: tabela compacta sem rolagem lateral ===== */
+#table-main-content .table-responsive-shell {
+  overflow-x: visible !important;
+  width: 100% !important;
+}
+#operations-table[data-active-tab="patio"],
+#operations-table[data-active-tab="historico"] {
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+  border-collapse: separate !important;
+  border-spacing: 0 8px !important;
+}
+#operations-table[data-active-tab="patio"] thead tr,
+#operations-table[data-active-tab="historico"] thead tr {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+#operations-table[data-active-tab="patio"] th,
+#operations-table[data-active-tab="historico"] th {
+  padding: 10px 12px !important;
+  white-space: normal !important;
+  vertical-align: middle !important;
+}
+#operations-table[data-active-tab="patio"] td,
+#operations-table[data-active-tab="historico"] td {
+  padding: 12px !important;
+  vertical-align: middle !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  border-bottom: 0 !important;
+  background: rgba(255,255,255,0.78) !important;
+  border-top: 1px solid rgba(15,23,42,0.055) !important;
+  border-bottom: 1px solid rgba(15,23,42,0.055) !important;
+}
+#operations-table[data-active-tab="patio"] tbody tr,
+#operations-table[data-active-tab="historico"] tbody tr {
+  border: 0 !important;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.045) !important;
+  border-radius: 18px !important;
+}
+#operations-table[data-active-tab="patio"] tbody td:first-child,
+#operations-table[data-active-tab="historico"] tbody td:first-child {
+  border-left: 1px solid rgba(15,23,42,0.055) !important;
+  border-radius: 18px 0 0 18px !important;
+}
+#operations-table[data-active-tab="patio"] tbody td:last-child,
+#operations-table[data-active-tab="historico"] tbody td:last-child {
+  border-right: 1px solid rgba(15,23,42,0.055) !important;
+  border-radius: 0 18px 18px 0 !important;
+}
+#operations-table[data-active-tab="patio"] th:nth-child(1),
+#operations-table[data-active-tab="patio"] td:nth-child(1) { width: 9%; }
+#operations-table[data-active-tab="patio"] th:nth-child(2),
+#operations-table[data-active-tab="patio"] td:nth-child(2) { width: 11%; }
+#operations-table[data-active-tab="patio"] th:nth-child(3),
+#operations-table[data-active-tab="patio"] td:nth-child(3) { width: 9%; }
+#operations-table[data-active-tab="patio"] th:nth-child(4),
+#operations-table[data-active-tab="patio"] td:nth-child(4) { width: 18%; }
+#operations-table[data-active-tab="patio"] th:nth-child(5),
+#operations-table[data-active-tab="patio"] td:nth-child(5) { width: 13%; }
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 27%; }
+#operations-table[data-active-tab="patio"] th:nth-child(7),
+#operations-table[data-active-tab="patio"] td:nth-child(7) { width: 13%; }
+
+#operations-table[data-active-tab="historico"] th:nth-child(1),
+#operations-table[data-active-tab="historico"] td:nth-child(1) { width: 10%; }
+#operations-table[data-active-tab="historico"] th:nth-child(2),
+#operations-table[data-active-tab="historico"] td:nth-child(2) { width: 13%; }
+#operations-table[data-active-tab="historico"] th:nth-child(3),
+#operations-table[data-active-tab="historico"] td:nth-child(3) { width: 20%; }
+#operations-table[data-active-tab="historico"] th:nth-child(4),
+#operations-table[data-active-tab="historico"] td:nth-child(4) { width: 14%; }
+#operations-table[data-active-tab="historico"] th:nth-child(5),
+#operations-table[data-active-tab="historico"] td:nth-child(5) { width: 15%; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 20%; }
+#operations-table[data-active-tab="historico"] th:nth-child(7),
+#operations-table[data-active-tab="historico"] td:nth-child(7) { width: 8%; }
+
+.op-dt-main {
+  color: #007a3d !important;
+  font-weight: 950 !important;
+  font-size: 0.78rem !important;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+.op-driver-name {
+  color: #102018 !important;
+  font-weight: 800 !important;
+  line-height: 1.25;
+  text-transform: none;
+}
+.op-subline {
+  margin-top: 4px;
+  color: #64748b !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  line-height: 1.25;
+}
+.op-subline strong {
+  color: #334155 !important;
+  font-weight: 900 !important;
+}
+.op-time-cell {
+  color: #007a3d !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.02em;
+}
+.op-plates-cell {
+  display: flex !important;
+  flex-direction: column;
+  gap: 6px;
+}
+.op-plate-chip {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #f0fdf4;
+  border: 1px solid rgba(5,150,105,0.14);
+  color: #007a3d !important;
+  font-size: 0.72rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-weight: 900;
+  line-height: 1;
+}
+.op-plate-chip b {
+  color: #475569 !important;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.op-hours-cell {
+  color: #334155 !important;
+  font-size: 0.74rem !important;
+  line-height: 1.35;
+}
+.op-hours-cell b {
+  color: #102018 !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell {
+  min-width: 0 !important;
+  max-width: none !important;
+}
+#operations-table[data-active-tab="patio"] .operation-timeline,
+#operations-table[data-active-tab="historico"] .operation-timeline {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  gap: 5px !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-content,
+#operations-table[data-active-tab="historico"] .timeline-content {
+  padding: 6px 8px !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-desc,
+#operations-table[data-active-tab="historico"] .timeline-desc {
+  font-size: 0.68rem !important;
+  line-height: 1.18 !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-time,
+#operations-table[data-active-tab="patio"] .timeline-label,
+#operations-table[data-active-tab="historico"] .timeline-time,
+#operations-table[data-active-tab="historico"] .timeline-label {
+  font-size: 0.68rem !important;
+}
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  min-width: 0 !important;
+  max-width: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+  white-space: normal !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn,
+#operations-table[data-active-tab="patio"] a.table-action-btn,
+#operations-table[data-active-tab="historico"] .table-action-btn,
+#operations-table[data-active-tab="historico"] a.table-action-btn {
+  width: 36px !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  border-radius: 14px !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-label,
+#operations-table[data-active-tab="historico"] .table-action-label {
+  display: none !important;
+}
+#operations-table[data-active-tab="patio"] button[data-action="occurrence"].table-action-btn,
+#operations-table[data-active-tab="historico"] button[data-action="occurrence"].table-action-btn,
+#operations-table[data-active-tab="patio"] button[data-action="edit-occurrence"].table-action-btn,
+#operations-table[data-active-tab="historico"] button[data-action="edit-occurrence"].table-action-btn {
+  min-width: 36px !important;
+  width: 36px !important;
+  height: 36px !important;
+}
+#operations-table[data-active-tab="patio"] .driver-called-badge,
+#operations-table[data-active-tab="historico"] .driver-called-badge {
+  display: none !important;
+}
+
+@media (max-width: 1180px) {
+  #operations-table[data-active-tab="patio"] thead,
+  #operations-table[data-active-tab="historico"] thead { display: none !important; }
+  #operations-table[data-active-tab="patio"],
+  #operations-table[data-active-tab="historico"],
+  #operations-table[data-active-tab="patio"] tbody,
+  #operations-table[data-active-tab="historico"] tbody,
+  #operations-table[data-active-tab="patio"] tr,
+  #operations-table[data-active-tab="historico"] tr,
+  #operations-table[data-active-tab="patio"] td,
+  #operations-table[data-active-tab="historico"] td {
+    display: block !important;
+    width: 100% !important;
+  }
+  #operations-table[data-active-tab="patio"] tbody tr,
+  #operations-table[data-active-tab="historico"] tbody tr {
+    margin-bottom: 12px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(15,23,42,0.08) !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+  }
+  #operations-table[data-active-tab="patio"] td,
+  #operations-table[data-active-tab="historico"] td {
+    border: 0 !important;
+    border-radius: 0 !important;
+    padding: 10px 12px !important;
+  }
+  #operations-table[data-active-tab="patio"] td:nth-child(1)::before,
+  #operations-table[data-active-tab="historico"] td:nth-child(1)::before { content: 'DT'; }
+  #operations-table[data-active-tab="patio"] td:nth-child(2)::before { content: 'Operação'; }
+  #operations-table[data-active-tab="patio"] td:nth-child(3)::before { content: 'Tempo'; }
+  #operations-table[data-active-tab="patio"] td:nth-child(4)::before { content: 'Motorista'; }
+  #operations-table[data-active-tab="patio"] td:nth-child(5)::before { content: 'Placas'; }
+  #operations-table[data-active-tab="patio"] td:nth-child(6)::before,
+  #operations-table[data-active-tab="historico"] td:nth-child(6)::before { content: 'Linha do tempo'; }
+  #operations-table[data-active-tab="patio"] td:nth-child(7)::before,
+  #operations-table[data-active-tab="historico"] td:nth-child(7)::before { content: 'Ações'; }
+  #operations-table[data-active-tab="historico"] td:nth-child(2)::before { content: 'Status'; }
+  #operations-table[data-active-tab="historico"] td:nth-child(3)::before { content: 'Motorista'; }
+  #operations-table[data-active-tab="historico"] td:nth-child(4)::before { content: 'Placas'; }
+  #operations-table[data-active-tab="historico"] td:nth-child(5)::before { content: 'Horários'; }
+  #operations-table[data-active-tab="patio"] td::before,
+  #operations-table[data-active-tab="historico"] td::before {
+    display: block;
+    margin-bottom: 4px;
+    color: #64748b !important;
+    font-size: 0.66rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+}
+
+
+
+/* =========================================================
+   PATCH FINAL — Pátio/Histórico refinado
+   Mantém a linha do tempo, remove o chamado duplicado do motorista
+   e deixa a tabela funcional sem ficar estranha no desktop.
+   ========================================================= */
+#operations-table[data-active-tab="patio"],
+#operations-table[data-active-tab="historico"] {
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+  border-spacing: 0 10px !important;
+}
+#operations-table[data-active-tab="patio"] th,
+#operations-table[data-active-tab="historico"] th {
+  padding: 12px 14px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+#operations-table[data-active-tab="patio"] td,
+#operations-table[data-active-tab="historico"] td {
+  padding: 13px 14px !important;
+  vertical-align: middle !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+/* Pátio: agora são 6 colunas */
+#operations-table[data-active-tab="patio"] th:nth-child(1),
+#operations-table[data-active-tab="patio"] td:nth-child(1) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(2),
+#operations-table[data-active-tab="patio"] td:nth-child(2) { width: 12% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(3),
+#operations-table[data-active-tab="patio"] td:nth-child(3) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(4),
+#operations-table[data-active-tab="patio"] td:nth-child(4) { width: 27% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(5),
+#operations-table[data-active-tab="patio"] td:nth-child(5) { width: 30% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 11% !important; }
+
+/* Histórico: agora são 6 colunas */
+#operations-table[data-active-tab="historico"] th:nth-child(1),
+#operations-table[data-active-tab="historico"] td:nth-child(1) { width: 10% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(2),
+#operations-table[data-active-tab="historico"] td:nth-child(2) { width: 13% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(3),
+#operations-table[data-active-tab="historico"] td:nth-child(3) { width: 30% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(4),
+#operations-table[data-active-tab="historico"] td:nth-child(4) { width: 15% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(5),
+#operations-table[data-active-tab="historico"] td:nth-child(5) { width: 24% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 8% !important; }
+
+.op-person-cell { min-width: 0 !important; }
+.op-driver-name {
+  font-size: 0.92rem !important;
+  line-height: 1.25 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden !important;
+}
+.op-transport-line {
+  margin-top: 5px !important;
+  font-size: 0.74rem !important;
+  color: #334155 !important;
+  text-transform: uppercase;
+}
+.op-plates-inline {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  margin-top: 8px !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip,
+#operations-table[data-active-tab="historico"] .op-plate-chip {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  gap: 6px !important;
+  padding: 5px 8px !important;
+  line-height: 1 !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip b,
+#operations-table[data-active-tab="historico"] .op-plate-chip b {
+  white-space: nowrap !important;
+  writing-mode: horizontal-tb !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* Linha do tempo mais compacta */
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+#operations-table[data-active-tab="patio"] .operation-timeline,
+#operations-table[data-active-tab="historico"] .operation-timeline {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  gap: 6px !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-content,
+#operations-table[data-active-tab="historico"] .timeline-content {
+  min-width: 0 !important;
+  padding: 6px 10px !important;
+  border-radius: 12px !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-desc,
+#operations-table[data-active-tab="historico"] .timeline-desc {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Ações em grade compacta, sem formar uma coluna enorme */
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 34px) !important;
+  justify-content: end !important;
+  align-items: center !important;
+  gap: 7px !important;
+  white-space: normal !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn,
+#operations-table[data-active-tab="patio"] a.table-action-btn,
+#operations-table[data-active-tab="historico"] .table-action-btn,
+#operations-table[data-active-tab="historico"] a.table-action-btn {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn svg,
+#operations-table[data-active-tab="patio"] a.table-action-btn svg,
+#operations-table[data-active-tab="historico"] .table-action-btn svg,
+#operations-table[data-active-tab="historico"] a.table-action-btn svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-label,
+#operations-table[data-active-tab="historico"] .table-action-label,
+#operations-table[data-active-tab="patio"] .driver-called-badge,
+#operations-table[data-active-tab="historico"] .driver-called-badge {
+  display: none !important;
+}
+
+@media (max-width: 1360px) {
+  #operations-table[data-active-tab="patio"] .action-cell,
+  #operations-table[data-active-tab="historico"] .action-cell {
+    grid-template-columns: repeat(2, 34px) !important;
+  }
+  #operations-table[data-active-tab="patio"] th:nth-child(4),
+  #operations-table[data-active-tab="patio"] td:nth-child(4) { width: 29% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(5),
+  #operations-table[data-active-tab="patio"] td:nth-child(5) { width: 28% !important; }
+}
+
+@media (max-width: 1180px) {
+  #operations-table[data-active-tab="patio"] td:nth-child(1)::before,
+  #operations-table[data-active-tab="historico"] td:nth-child(1)::before { content: 'DT' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(2)::before { content: 'Operação' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(3)::before { content: 'Tempo' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(4)::before { content: 'Motorista / Placas' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(5)::before { content: 'Linha do tempo' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(6)::before { content: 'Ações' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(7)::before { content: none !important; }
+
+  #operations-table[data-active-tab="historico"] td:nth-child(2)::before { content: 'Status' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(3)::before { content: 'Motorista / Placas' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(4)::before { content: 'Horários' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(5)::before { content: 'Linha do tempo' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(6)::before { content: 'Ações' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(7)::before { content: none !important; }
+
+  #operations-table[data-active-tab="patio"] .action-cell,
+  #operations-table[data-active-tab="historico"] .action-cell {
+    display: flex !important;
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+  }
+  #operations-table[data-active-tab="patio"] .timeline-desc,
+  #operations-table[data-active-tab="historico"] .timeline-desc {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+}
+
+
+/* =========================================================
+   PATCH EXTRA — Timeline + ações + visual motorista/placas
+   ========================================================= */
+#operations-table[data-active-tab="patio"] th:nth-child(1),
+#operations-table[data-active-tab="patio"] td:nth-child(1) { width: 9% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(2),
+#operations-table[data-active-tab="patio"] td:nth-child(2) { width: 11% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(3),
+#operations-table[data-active-tab="patio"] td:nth-child(3) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(4),
+#operations-table[data-active-tab="patio"] td:nth-child(4) { width: 26% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(5),
+#operations-table[data-active-tab="patio"] td:nth-child(5) { width: 26% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 18% !important; }
+
+#operations-table[data-active-tab="historico"] th:nth-child(1),
+#operations-table[data-active-tab="historico"] td:nth-child(1) { width: 9% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(2),
+#operations-table[data-active-tab="historico"] td:nth-child(2) { width: 12% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(3),
+#operations-table[data-active-tab="historico"] td:nth-child(3) { width: 27% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(4),
+#operations-table[data-active-tab="historico"] td:nth-child(4) { width: 14% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(5),
+#operations-table[data-active-tab="historico"] td:nth-child(5) { width: 22% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 16% !important; }
+
+#operations-table[data-active-tab="patio"] td,
+#operations-table[data-active-tab="historico"] td {
+  overflow: hidden !important;
+}
+
+.op-person-cell {
+  min-width: 0 !important;
+}
+.op-person-topline {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+.op-driver-name {
+  color: #123222 !important;
+  font-weight: 900 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.22 !important;
+  letter-spacing: -0.01em !important;
+  flex: 1 1 220px !important;
+}
+.op-transport-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, rgba(29,78,216,0.10), rgba(14,165,233,0.10)) !important;
+  border: 1px solid rgba(37,99,235,0.14) !important;
+  color: #1d4ed8 !important;
+  font-size: 0.72rem !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  white-space: nowrap !important;
+}
+.op-plates-inline {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip,
+#operations-table[data-active-tab="historico"] .op-plate-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 10px !important;
+  border-radius: 14px !important;
+  white-space: nowrap !important;
+  font-size: 0.74rem !important;
+  font-weight: 900 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.65) !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip.cavalo,
+#operations-table[data-active-tab="historico"] .op-plate-chip.cavalo {
+  background: linear-gradient(135deg, rgba(13,148,136,0.10), rgba(16,185,129,0.10)) !important;
+  border: 1px solid rgba(13,148,136,0.18) !important;
+  color: #0f766e !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip.carreta,
+#operations-table[data-active-tab="historico"] .op-plate-chip.carreta {
+  background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(251,191,36,0.10)) !important;
+  border: 1px solid rgba(245,158,11,0.18) !important;
+  color: #b45309 !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip .plate-label,
+#operations-table[data-active-tab="historico"] .op-plate-chip .plate-label {
+  font-size: 0.64rem !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  opacity: 0.85;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip .plate-value,
+#operations-table[data-active-tab="historico"] .op-plate-chip .plate-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+  font-size: 0.76rem !important;
+  letter-spacing: 0.01em !important;
+}
+
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell {
+  overflow: hidden !important;
+}
+#operations-table[data-active-tab="patio"] .operation-timeline,
+#operations-table[data-active-tab="historico"] .operation-timeline {
+  max-width: 100% !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-content,
+#operations-table[data-active-tab="historico"] .timeline-content {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  background: #fcfffd !important;
+  border: 1px solid rgba(15,23,42,0.08) !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-topline,
+#operations-table[data-active-tab="historico"] .timeline-topline {
+  gap: 6px !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-time,
+#operations-table[data-active-tab="historico"] .timeline-time {
+  color: #0f172a !important;
+  font-weight: 900 !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-label,
+#operations-table[data-active-tab="historico"] .timeline-label {
+  color: #1f2937 !important;
+  font-weight: 900 !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-desc,
+#operations-table[data-active-tab="historico"] .timeline-desc {
+  color: #475569 !important;
+}
+
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+#operations-table[data-active-tab="patio"] .action-cell-inner,
+#operations-table[data-active-tab="historico"] .action-cell-inner {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 7px !important;
+  min-width: 150px !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn,
+#operations-table[data-active-tab="patio"] a.table-action-btn,
+#operations-table[data-active-tab="historico"] .table-action-btn,
+#operations-table[data-active-tab="historico"] a.table-action-btn {
+  flex: 0 0 auto !important;
+}
+
+@media (max-width: 1440px) {
+  #operations-table[data-active-tab="patio"] th:nth-child(4),
+  #operations-table[data-active-tab="patio"] td:nth-child(4) { width: 24% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(5),
+  #operations-table[data-active-tab="patio"] td:nth-child(5) { width: 24% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(6),
+  #operations-table[data-active-tab="patio"] td:nth-child(6) { width: 22% !important; }
+}
+
+@media (max-width: 1180px) {
+  #operations-table[data-active-tab="patio"] .action-cell-inner,
+  #operations-table[data-active-tab="historico"] .action-cell-inner {
+    justify-content: flex-start !important;
+    min-width: 0 !important;
+  }
+  .op-driver-name { flex-basis: 100% !important; }
+}
+
+
+/* =========================================================
+   PATCH EXTRA 2 — Ações dentro da coluna + timeline visual
+   ========================================================= */
+#operations-table[data-active-tab="patio"] th:nth-child(1),
+#operations-table[data-active-tab="patio"] td:nth-child(1) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(2),
+#operations-table[data-active-tab="patio"] td:nth-child(2) { width: 11% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(3),
+#operations-table[data-active-tab="patio"] td:nth-child(3) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(4),
+#operations-table[data-active-tab="patio"] td:nth-child(4) { width: 24% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(5),
+#operations-table[data-active-tab="patio"] td:nth-child(5) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 22% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(7),
+#operations-table[data-active-tab="patio"] td:nth-child(7) { width: 15% !important; }
+
+#operations-table[data-active-tab="historico"] th:nth-child(1),
+#operations-table[data-active-tab="historico"] td:nth-child(1) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(2),
+#operations-table[data-active-tab="historico"] td:nth-child(2) { width: 12% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(3),
+#operations-table[data-active-tab="historico"] td:nth-child(3) { width: 23% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(4),
+#operations-table[data-active-tab="historico"] td:nth-child(4) { width: 10% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(5),
+#operations-table[data-active-tab="historico"] td:nth-child(5) { width: 14% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 19% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(7),
+#operations-table[data-active-tab="historico"] td:nth-child(7) { width: 14% !important; }
+
+.op-transport-cell {
+  min-width: 0 !important;
+}
+.op-transport-block {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 88px !important;
+  max-width: 100% !important;
+  padding: 10px 12px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, rgba(37,99,235,0.09), rgba(14,165,233,0.10)) !important;
+  border: 1px solid rgba(37,99,235,0.16) !important;
+  color: #1e3a8a !important;
+  font-size: 0.77rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.65) !important;
+}
+
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  padding-left: 8px !important;
+}
+#operations-table[data-active-tab="patio"] .action-cell-inner,
+#operations-table[data-active-tab="historico"] .action-cell-inner {
+  display: grid !important;
+  grid-template-columns: repeat(3, 32px) !important;
+  justify-content: end !important;
+  gap: 8px !important;
+  min-width: 112px !important;
+  max-width: 112px !important;
+  margin-left: auto !important;
+  padding: 10px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(180deg, rgba(248,250,252,0.95), rgba(241,245,249,0.92)) !important;
+  border: 1px solid rgba(15,23,42,0.08) !important;
+  box-shadow: 0 8px 22px rgba(15,23,42,0.06) !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn,
+#operations-table[data-active-tab="patio"] a.table-action-btn,
+#operations-table[data-active-tab="historico"] .table-action-btn,
+#operations-table[data-active-tab="historico"] a.table-action-btn {
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  border-radius: 11px !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn svg,
+#operations-table[data-active-tab="patio"] a.table-action-btn svg,
+#operations-table[data-active-tab="historico"] .table-action-btn svg,
+#operations-table[data-active-tab="historico"] a.table-action-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell {
+  padding-right: 10px !important;
+}
+#operations-table[data-active-tab="patio"] .operation-timeline,
+#operations-table[data-active-tab="historico"] .operation-timeline {
+  gap: 8px !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-content,
+#operations-table[data-active-tab="historico"] .timeline-content {
+  padding: 8px 10px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 6px 14px rgba(15,23,42,0.045) !important;
+}
+.timeline-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 0.8rem !important;
+  line-height: 1 !important;
+}
+.timeline-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 2px 7px !important;
+  border-radius: 999px !important;
+  background: rgba(15,23,42,0.06) !important;
+  border: 1px solid rgba(15,23,42,0.06) !important;
+}
+.timeline-event.marking .timeline-content {
+  background: linear-gradient(135deg, rgba(14,165,233,0.06), rgba(255,255,255,0.98)) !important;
+}
+.timeline-event.marking .timeline-badge {
+  background: rgba(14,165,233,0.10) !important;
+  color: #0369a1 !important;
+}
+.timeline-event.whatsapp .timeline-content {
+  background: linear-gradient(135deg, rgba(5,150,105,0.07), rgba(255,255,255,0.98)) !important;
+}
+.timeline-event.whatsapp .timeline-badge {
+  background: rgba(5,150,105,0.10) !important;
+  color: #047857 !important;
+}
+.timeline-event.occurrence .timeline-content {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(255,255,255,0.98)) !important;
+}
+.timeline-event.occurrence .timeline-badge {
+  background: rgba(245,158,11,0.12) !important;
+  color: #b45309 !important;
+}
+.timeline-event.resolution .timeline-content {
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(255,255,255,0.98)) !important;
+}
+.timeline-event.resolution .timeline-badge {
+  background: rgba(99,102,241,0.10) !important;
+  color: #4338ca !important;
+}
+.timeline-event.finish .timeline-content {
+  background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(255,255,255,0.98)) !important;
+}
+.timeline-event.finish .timeline-badge {
+  background: rgba(34,197,94,0.11) !important;
+  color: #15803d !important;
+}
+.timeline-event.cancel .timeline-content {
+  background: linear-gradient(135deg, rgba(225,29,72,0.07), rgba(255,255,255,0.98)) !important;
+}
+.timeline-event.cancel .timeline-badge {
+  background: rgba(225,29,72,0.10) !important;
+  color: #be123c !important;
+}
+
+@media (max-width: 1460px) {
+  #operations-table[data-active-tab="patio"] th:nth-child(4),
+  #operations-table[data-active-tab="patio"] td:nth-child(4) { width: 22% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(6),
+  #operations-table[data-active-tab="patio"] td:nth-child(6) { width: 21% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(7),
+  #operations-table[data-active-tab="patio"] td:nth-child(7) { width: 18% !important; }
+}
+
+@media (max-width: 1180px) {
+  #operations-table[data-active-tab="patio"] td:nth-child(4)::before { content: 'Motorista e placas' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(5)::before { content: 'Transportadora' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(6)::before { content: 'Linha do tempo' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(7)::before { content: 'Ações' !important; }
+
+  #operations-table[data-active-tab="historico"] td:nth-child(3)::before { content: 'Motorista e placas' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(4)::before { content: 'Transportadora' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(5)::before { content: 'Horários' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(6)::before { content: 'Linha do tempo' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(7)::before { content: 'Ações' !important; }
+
+  #operations-table[data-active-tab="patio"] .action-cell-inner,
+  #operations-table[data-active-tab="historico"] .action-cell-inner {
+    grid-template-columns: repeat(3, 32px) !important;
+    justify-content: start !important;
+    margin-left: 0 !important;
+  }
+}
+
+
+/* =========================================================
+   PATCH EXTRA 3 — Cabeçalho centralizado + ações sem invadir timeline
+   ========================================================= */
+#operations-table[data-active-tab="patio"] thead th,
+#operations-table[data-active-tab="historico"] thead th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+#operations-table[data-active-tab="patio"] th:nth-child(1),
+#operations-table[data-active-tab="patio"] td:nth-child(1) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(2),
+#operations-table[data-active-tab="patio"] td:nth-child(2) { width: 11% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(3),
+#operations-table[data-active-tab="patio"] td:nth-child(3) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(4),
+#operations-table[data-active-tab="patio"] td:nth-child(4) { width: 24% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(5),
+#operations-table[data-active-tab="patio"] td:nth-child(5) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 24% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(7),
+#operations-table[data-active-tab="patio"] td:nth-child(7) { width: 13% !important; }
+
+#operations-table[data-active-tab="historico"] th:nth-child(1),
+#operations-table[data-active-tab="historico"] td:nth-child(1) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(2),
+#operations-table[data-active-tab="historico"] td:nth-child(2) { width: 12% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(3),
+#operations-table[data-active-tab="historico"] td:nth-child(3) { width: 23% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(4),
+#operations-table[data-active-tab="historico"] td:nth-child(4) { width: 10% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(5),
+#operations-table[data-active-tab="historico"] td:nth-child(5) { width: 14% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 20% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(7),
+#operations-table[data-active-tab="historico"] td:nth-child(7) { width: 13% !important; }
+
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell {
+  padding-right: 18px !important;
+}
+#operations-table[data-active-tab="patio"] .operation-timeline,
+#operations-table[data-active-tab="historico"] .operation-timeline {
+  max-width: 100% !important;
+}
+
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  overflow: hidden !important;
+  z-index: 1 !important;
+}
+#operations-table[data-active-tab="patio"] .action-cell-inner,
+#operations-table[data-active-tab="historico"] .action-cell-inner {
+  display: grid !important;
+  grid-template-columns: repeat(2, 32px) !important;
+  justify-content: end !important;
+  gap: 8px !important;
+  min-width: 92px !important;
+  max-width: 92px !important;
+  margin-left: auto !important;
+  padding: 8px !important;
+  border-radius: 18px !important;
+}
+
+@media (max-width: 1400px) {
+  #operations-table[data-active-tab="patio"] th:nth-child(6),
+  #operations-table[data-active-tab="patio"] td:nth-child(6) { width: 23% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(7),
+  #operations-table[data-active-tab="patio"] td:nth-child(7) { width: 14% !important; }
+}
+
+@media (max-width: 1180px) {
+  #operations-table[data-active-tab="patio"] .action-cell-inner,
+  #operations-table[data-active-tab="historico"] .action-cell-inner {
+    justify-content: start !important;
+    margin-left: 0 !important;
+  }
+}
+
+
+/* =========================================================
+   PATCH FINAL — Layout alinhado como tabela clássica + timeline premium
+   ========================================================= */
+#table-main-content .table-responsive-shell,
+#table-main-content .overflow-x-auto {
+  overflow-x: auto !important;
+  padding-bottom: 8px !important;
+}
+
+#operations-table[data-active-tab="patio"],
+#operations-table[data-active-tab="historico"] {
+  width: 100% !important;
+  min-width: 1540px !important;
+  table-layout: fixed !important;
+  border-spacing: 0 10px !important;
+}
+
+#operations-table[data-active-tab="patio"] thead th,
+#operations-table[data-active-tab="historico"] thead th,
+#operations-table[data-active-tab="patio"] tbody td,
+#operations-table[data-active-tab="historico"] tbody td {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+#operations-table[data-active-tab="patio"] th,
+#operations-table[data-active-tab="historico"] th {
+  padding: 12px 8px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+#operations-table[data-active-tab="patio"] td,
+#operations-table[data-active-tab="historico"] td {
+  padding: 12px 8px !important;
+  overflow: hidden !important;
+}
+
+/* Pátio: colunas alinhadas com o cabeçalho */
+#operations-table[data-active-tab="patio"] th:nth-child(1),
+#operations-table[data-active-tab="patio"] td:nth-child(1) { width: 7% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(2),
+#operations-table[data-active-tab="patio"] td:nth-child(2) { width: 7% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(3),
+#operations-table[data-active-tab="patio"] td:nth-child(3) { width: 6% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(4),
+#operations-table[data-active-tab="patio"] td:nth-child(4) { width: 5% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(5),
+#operations-table[data-active-tab="patio"] td:nth-child(5) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 15% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(7),
+#operations-table[data-active-tab="patio"] td:nth-child(7) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(8),
+#operations-table[data-active-tab="patio"] td:nth-child(8) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(9),
+#operations-table[data-active-tab="patio"] td:nth-child(9) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(10),
+#operations-table[data-active-tab="patio"] td:nth-child(10) { width: 18% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(11),
+#operations-table[data-active-tab="patio"] td:nth-child(11) { width: 10% !important; }
+
+/* Histórico */
+#operations-table[data-active-tab="historico"] th:nth-child(1),
+#operations-table[data-active-tab="historico"] td:nth-child(1) { width: 7% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(2),
+#operations-table[data-active-tab="historico"] td:nth-child(2) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(3),
+#operations-table[data-active-tab="historico"] td:nth-child(3) { width: 6% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(4),
+#operations-table[data-active-tab="historico"] td:nth-child(4) { width: 5% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(5),
+#operations-table[data-active-tab="historico"] td:nth-child(5) { width: 14% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(7),
+#operations-table[data-active-tab="historico"] td:nth-child(7) { width: 7% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(8),
+#operations-table[data-active-tab="historico"] td:nth-child(8) { width: 7% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(9),
+#operations-table[data-active-tab="historico"] td:nth-child(9) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(10),
+#operations-table[data-active-tab="historico"] td:nth-child(10) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(11),
+#operations-table[data-active-tab="historico"] td:nth-child(11) { width: 14% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(12),
+#operations-table[data-active-tab="historico"] td:nth-child(12) { width: 8% !important; }
+
+.op-simple-cell {
+  color: #111827 !important;
+  font-weight: 800 !important;
+  font-size: 0.88rem !important;
+}
+.op-driver-name {
+  display: block !important;
+  color: #123222 !important;
+  font-weight: 850 !important;
+  font-size: 0.9rem !important;
+  line-height: 1.25 !important;
+  text-align: center !important;
+  max-width: 100% !important;
+}
+.op-transport-block {
+  margin: 0 auto !important;
+  min-width: 72px !important;
+  max-width: 100% !important;
+  padding: 9px 11px !important;
+  border-radius: 16px !important;
+  font-size: 0.77rem !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip,
+#operations-table[data-active-tab="historico"] .op-plate-chip {
+  margin: 0 auto !important;
+  max-width: 100% !important;
+  justify-content: center !important;
+  padding: 6px 8px !important;
+  gap: 6px !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip .plate-label,
+#operations-table[data-active-tab="historico"] .op-plate-chip .plate-label {
+  font-size: 0.6rem !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip .plate-value,
+#operations-table[data-active-tab="historico"] .op-plate-chip .plate-value {
+  font-size: 0.72rem !important;
+}
+
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell {
+  overflow: hidden !important;
+  padding-left: 10px !important;
+  padding-right: 14px !important;
+}
+#operations-table[data-active-tab="patio"] .operation-timeline,
+#operations-table[data-active-tab="historico"] .operation-timeline {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  gap: 7px !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-content,
+#operations-table[data-active-tab="historico"] .timeline-content {
+  max-width: 100% !important;
+  padding: 7px 9px !important;
+  text-align: left !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-desc,
+#operations-table[data-active-tab="historico"] .timeline-desc {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Ações sempre visíveis e presas à coluna, sem invadir a timeline */
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 3 !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+}
+#operations-table[data-active-tab="patio"] .action-cell-inner,
+#operations-table[data-active-tab="historico"] .action-cell-inner {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn,
+#operations-table[data-active-tab="patio"] a.table-action-btn,
+#operations-table[data-active-tab="historico"] .table-action-btn,
+#operations-table[data-active-tab="historico"] a.table-action-btn {
+  flex: 0 0 32px !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn svg,
+#operations-table[data-active-tab="patio"] a.table-action-btn svg,
+#operations-table[data-active-tab="historico"] .table-action-btn svg,
+#operations-table[data-active-tab="historico"] a.table-action-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-label,
+#operations-table[data-active-tab="historico"] .table-action-label {
+  display: none !important;
+}
+
+@media (max-width: 1180px) {
+  #operations-table[data-active-tab="patio"],
+  #operations-table[data-active-tab="historico"] {
+    min-width: 0 !important;
+  }
+  #operations-table[data-active-tab="patio"] td:nth-child(1)::before,
+  #operations-table[data-active-tab="historico"] td:nth-child(1)::before { content: 'DT' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(2)::before,
+  #operations-table[data-active-tab="historico"] td:nth-child(2)::before { content: 'Status' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(3)::before,
+  #operations-table[data-active-tab="historico"] td:nth-child(3)::before { content: 'Agenda' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(4)::before,
+  #operations-table[data-active-tab="historico"] td:nth-child(4)::before { content: 'Tipo' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(5)::before { content: 'Tempo' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(6)::before { content: 'Motorista' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(7)::before { content: 'Transportadora' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(8)::before { content: 'Cavalo' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(9)::before { content: 'Carreta' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(10)::before { content: 'Linha do tempo' !important; }
+  #operations-table[data-active-tab="patio"] td:nth-child(11)::before { content: 'Ações' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(5)::before { content: 'Motorista' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(6)::before { content: 'Transportadora' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(7)::before { content: 'Cavalo' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(8)::before { content: 'Carreta' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(9)::before { content: 'Marcado em' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(10)::before { content: 'Finalizado em' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(11)::before { content: 'Linha do tempo' !important; }
+  #operations-table[data-active-tab="historico"] td:nth-child(12)::before { content: 'Ações' !important; }
+  #operations-table[data-active-tab="patio"] .action-cell-inner,
+  #operations-table[data-active-tab="historico"] .action-cell-inner {
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+
+/* Ajuste fino: mantém todos os botões visíveis sem entrar na linha do tempo */
+#operations-table[data-active-tab="patio"],
+#operations-table[data-active-tab="historico"] {
+  min-width: 1700px !important;
+}
+#operations-table[data-active-tab="patio"] th:nth-child(1),
+#operations-table[data-active-tab="patio"] td:nth-child(1) { width: 7% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(2),
+#operations-table[data-active-tab="patio"] td:nth-child(2) { width: 7% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(3),
+#operations-table[data-active-tab="patio"] td:nth-child(3) { width: 6% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(4),
+#operations-table[data-active-tab="patio"] td:nth-child(4) { width: 5% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(5),
+#operations-table[data-active-tab="patio"] td:nth-child(5) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 14% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(7),
+#operations-table[data-active-tab="patio"] td:nth-child(7) { width: 7% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(8),
+#operations-table[data-active-tab="patio"] td:nth-child(8) { width: 7% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(9),
+#operations-table[data-active-tab="patio"] td:nth-child(9) { width: 7% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(10),
+#operations-table[data-active-tab="patio"] td:nth-child(10) { width: 17% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(11),
+#operations-table[data-active-tab="patio"] td:nth-child(11) { width: 15% !important; }
+
+#operations-table[data-active-tab="historico"] th:nth-child(1),
+#operations-table[data-active-tab="historico"] td:nth-child(1) { width: 7% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(2),
+#operations-table[data-active-tab="historico"] td:nth-child(2) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(3),
+#operations-table[data-active-tab="historico"] td:nth-child(3) { width: 5% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(4),
+#operations-table[data-active-tab="historico"] td:nth-child(4) { width: 4% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(5),
+#operations-table[data-active-tab="historico"] td:nth-child(5) { width: 13% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 7% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(7),
+#operations-table[data-active-tab="historico"] td:nth-child(7) { width: 6% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(8),
+#operations-table[data-active-tab="historico"] td:nth-child(8) { width: 6% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(9),
+#operations-table[data-active-tab="historico"] td:nth-child(9) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(10),
+#operations-table[data-active-tab="historico"] td:nth-child(10) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(11),
+#operations-table[data-active-tab="historico"] td:nth-child(11) { width: 13% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(12),
+#operations-table[data-active-tab="historico"] td:nth-child(12) { width: 15% !important; }
+
+#operations-table[data-active-tab="patio"] .action-cell-inner,
+#operations-table[data-active-tab="historico"] .action-cell-inner {
+  max-width: 240px !important;
+  width: 240px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+
+/* =========================================================
+   PATCH FINAL — Centralização real sem invadir colunas
+   ========================================================= */
+#operations-table[data-active-tab="patio"],
+#operations-table[data-active-tab="historico"] {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: separate !important;
+  border-spacing: 0 10px !important;
+}
+
+#operations-table[data-active-tab="patio"] thead th,
+#operations-table[data-active-tab="historico"] thead th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+#operations-table[data-active-tab="patio"] tbody td,
+#operations-table[data-active-tab="historico"] tbody td {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+/* larguras do Pátio */
+#operations-table[data-active-tab="patio"] th:nth-child(1),
+#operations-table[data-active-tab="patio"] td:nth-child(1) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(2),
+#operations-table[data-active-tab="patio"] td:nth-child(2) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(3),
+#operations-table[data-active-tab="patio"] td:nth-child(3) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(4),
+#operations-table[data-active-tab="patio"] td:nth-child(4) { width: 6% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(5),
+#operations-table[data-active-tab="patio"] td:nth-child(5) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 14% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(7),
+#operations-table[data-active-tab="patio"] td:nth-child(7) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(8),
+#operations-table[data-active-tab="patio"] td:nth-child(8) { width: 9% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(9),
+#operations-table[data-active-tab="patio"] td:nth-child(9) { width: 9% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(10),
+#operations-table[data-active-tab="patio"] td:nth-child(10) { width: 11% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(11),
+#operations-table[data-active-tab="patio"] td:nth-child(11) { width: 7% !important; }
+
+/* larguras do Histórico */
+#operations-table[data-active-tab="historico"] th:nth-child(1),
+#operations-table[data-active-tab="historico"] td:nth-child(1) { width: 7% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(2),
+#operations-table[data-active-tab="historico"] td:nth-child(2) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(3),
+#operations-table[data-active-tab="historico"] td:nth-child(3) { width: 7% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(4),
+#operations-table[data-active-tab="historico"] td:nth-child(4) { width: 6% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(5),
+#operations-table[data-active-tab="historico"] td:nth-child(5) { width: 12% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 10% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(7),
+#operations-table[data-active-tab="historico"] td:nth-child(7) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(8),
+#operations-table[data-active-tab="historico"] td:nth-child(8) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(9),
+#operations-table[data-active-tab="historico"] td:nth-child(9) { width: 10% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(10),
+#operations-table[data-active-tab="historico"] td:nth-child(10) { width: 10% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(11),
+#operations-table[data-active-tab="historico"] td:nth-child(11) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(12),
+#operations-table[data-active-tab="historico"] td:nth-child(12) { width: 6% !important; }
+
+#operations-table[data-active-tab="patio"] .op-dt-cell,
+#operations-table[data-active-tab="patio"] .op-status-cell,
+#operations-table[data-active-tab="patio"] .op-simple-cell,
+#operations-table[data-active-tab="patio"] .op-time-cell,
+#operations-table[data-active-tab="patio"] .op-person-cell,
+#operations-table[data-active-tab="patio"] .op-transport-cell,
+#operations-table[data-active-tab="patio"] .op-plate-only-cell,
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .op-dt-cell,
+#operations-table[data-active-tab="historico"] .op-status-cell,
+#operations-table[data-active-tab="historico"] .op-simple-cell,
+#operations-table[data-active-tab="historico"] .op-time-cell,
+#operations-table[data-active-tab="historico"] .op-person-cell,
+#operations-table[data-active-tab="historico"] .op-transport-cell,
+#operations-table[data-active-tab="historico"] .op-plate-only-cell,
+#operations-table[data-active-tab="historico"] .op-hours-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  text-align: center !important;
+}
+
+.op-driver-name {
+  text-align: center !important;
+  margin: 0 auto !important;
+  max-width: 180px !important;
+  line-height: 1.28 !important;
+}
+
+.op-transport-block,
+.op-plate-only-cell .op-plate-chip,
+.op-status-cell .px-3,
+.op-dt-main,
+.op-time-cell,
+.op-simple-cell,
+.op-hours-cell {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.op-plate-only-cell .op-plate-chip {
+  display: inline-flex !important;
+}
+
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+#operations-table[data-active-tab="patio"] .operation-timeline,
+#operations-table[data-active-tab="historico"] .operation-timeline {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: 100% !important;
+}
+
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  overflow: hidden !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+}
+#operations-table[data-active-tab="patio"] .action-cell-inner,
+#operations-table[data-active-tab="historico"] .action-cell-inner {
+  display: grid !important;
+  grid-template-columns: repeat(3, 34px) !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  width: fit-content !important;
+  min-width: 0 !important;
+  max-width: 116px !important;
+  margin: 0 auto !important;
+  padding: 8px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(180deg, rgba(248,250,252,0.95), rgba(241,245,249,0.90)) !important;
+  border: 1px solid rgba(15,23,42,0.08) !important;
+  box-shadow: 0 6px 16px rgba(15,23,42,0.05) !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn,
+#operations-table[data-active-tab="patio"] a.table-action-btn,
+#operations-table[data-active-tab="historico"] .table-action-btn,
+#operations-table[data-active-tab="historico"] a.table-action-btn {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  border-radius: 12px !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn svg,
+#operations-table[data-active-tab="patio"] a.table-action-btn svg,
+#operations-table[data-active-tab="historico"] .table-action-btn svg,
+#operations-table[data-active-tab="historico"] a.table-action-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+@media (max-width: 1450px) {
+  #operations-table[data-active-tab="patio"] th:nth-child(10),
+  #operations-table[data-active-tab="patio"] td:nth-child(10) { width: 10% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(11),
+  #operations-table[data-active-tab="patio"] td:nth-child(11) { width: 8% !important; }
+}
+
+@media (max-width: 1180px) {
+  #operations-table[data-active-tab="patio"] .action-cell-inner,
+  #operations-table[data-active-tab="historico"] .action-cell-inner {
+    justify-content: start !important;
+    margin-left: 0 !important;
+    max-width: none !important;
+  }
+  .op-driver-name {
+    max-width: none !important;
+  }
+}
+
+
+/* =========================================================
+   PATCH AGRUPADO — status/agenda/tipo e motorista/placas juntos
+   ========================================================= */
+#operations-table[data-active-tab="patio"] th:nth-child(1),
+#operations-table[data-active-tab="patio"] td:nth-child(1) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(2),
+#operations-table[data-active-tab="patio"] td:nth-child(2) { width: 15% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(3),
+#operations-table[data-active-tab="patio"] td:nth-child(3) { width: 11% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(4),
+#operations-table[data-active-tab="patio"] td:nth-child(4) { width: 21% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(5),
+#operations-table[data-active-tab="patio"] td:nth-child(5) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 22% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(7),
+#operations-table[data-active-tab="patio"] td:nth-child(7) { width: 13% !important; }
+
+#operations-table[data-active-tab="historico"] th:nth-child(1),
+#operations-table[data-active-tab="historico"] td:nth-child(1) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(2),
+#operations-table[data-active-tab="historico"] td:nth-child(2) { width: 15% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(3),
+#operations-table[data-active-tab="historico"] td:nth-child(3) { width: 21% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(4),
+#operations-table[data-active-tab="historico"] td:nth-child(4) { width: 10% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(5),
+#operations-table[data-active-tab="historico"] td:nth-child(5) { width: 16% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 18% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(7),
+#operations-table[data-active-tab="historico"] td:nth-child(7) { width: 12% !important; }
+
+.op-combined-cell {
+  text-align: center !important;
+}
+.op-status-wrap {
+  display: flex !important;
+  justify-content: center !important;
+  margin-bottom: 7px !important;
+}
+.op-stack-sub {
+  margin-top: 4px !important;
+  color: #64748b !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  text-align: center !important;
+}
+.op-stack-sub strong {
+  color: #334155 !important;
+  font-weight: 900 !important;
+}
+
+.op-person-cell {
+  text-align: center !important;
+}
+.op-plates-inline.compact-inline {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+}
+.op-driver-name {
+  max-width: 220px !important;
+}
+
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+#operations-table[data-active-tab="patio"] .operation-timeline,
+#operations-table[data-active-tab="historico"] .operation-timeline {
+  max-width: 100% !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-content,
+#operations-table[data-active-tab="historico"] .timeline-content {
+  max-width: 100% !important;
+}
+
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  overflow: hidden !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+#operations-table[data-active-tab="patio"] .action-cell-inner,
+#operations-table[data-active-tab="historico"] .action-cell-inner {
+  display: grid !important;
+  grid-template-columns: repeat(3, 34px) !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  width: fit-content !important;
+  min-width: 0 !important;
+  max-width: 116px !important;
+  margin: 0 auto !important;
+  padding: 8px !important;
+  border-radius: 18px !important;
+}
+
+@media (max-width: 1450px) {
+  #operations-table[data-active-tab="patio"] th:nth-child(6),
+  #operations-table[data-active-tab="patio"] td:nth-child(6) { width: 20% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(7),
+  #operations-table[data-active-tab="patio"] td:nth-child(7) { width: 14% !important; }
+}
+
+
+/* =========================================================
+   PATCH FINALÍSSIMO — Ações dentro da coluna, sem ficar atrás da timeline
+   ========================================================= */
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 19% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(7),
+#operations-table[data-active-tab="patio"] td:nth-child(7) { width: 16% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 17% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(7),
+#operations-table[data-active-tab="historico"] td:nth-child(7) { width: 15% !important; }
+
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell {
+  overflow: hidden !important;
+  padding-right: 10px !important;
+  z-index: 1 !important;
+}
+#operations-table[data-active-tab="patio"] .operation-timeline,
+#operations-table[data-active-tab="historico"] .operation-timeline {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 auto !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-content,
+#operations-table[data-active-tab="historico"] .timeline-content {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-desc,
+#operations-table[data-active-tab="historico"] .timeline-desc {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  position: relative !important;
+  z-index: 5 !important;
+  overflow: visible !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  background: transparent !important;
+}
+#operations-table[data-active-tab="patio"] .action-cell-inner,
+#operations-table[data-active-tab="historico"] .action-cell-inner {
+  position: relative !important;
+  z-index: 10 !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 34px) !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: max-content !important;
+  min-width: 122px !important;
+  max-width: 122px !important;
+  margin: 0 auto !important;
+  padding: 9px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 1px solid rgba(15,23,42,0.09) !important;
+  box-shadow: 0 10px 26px rgba(15,23,42,0.08) !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn,
+#operations-table[data-active-tab="patio"] a.table-action-btn,
+#operations-table[data-active-tab="historico"] .table-action-btn,
+#operations-table[data-active-tab="historico"] a.table-action-btn {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+}
+
+@media (max-width: 1450px) {
+  #operations-table[data-active-tab="patio"] th:nth-child(6),
+  #operations-table[data-active-tab="patio"] td:nth-child(6) { width: 18% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(7),
+  #operations-table[data-active-tab="patio"] td:nth-child(7) { width: 17% !important; }
+  #operations-table[data-active-tab="patio"] .action-cell-inner,
+  #operations-table[data-active-tab="historico"] .action-cell-inner {
+    grid-template-columns: repeat(2, 34px) !important;
+    min-width: 84px !important;
+    max-width: 84px !important;
+  }
+}
+
+
+
+/* =========================================================
+   PATCH DOWNLOAD — Pátio/Histórico sem sobreposição
+   Ajusta: informações agrupadas, timeline presa na coluna e ações dentro do limite
+   ========================================================= */
+#table-main-content .table-responsive-shell,
+#table-main-content .overflow-x-auto {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  padding-bottom: 8px !important;
+}
+
+#operations-table[data-active-tab="patio"],
+#operations-table[data-active-tab="historico"] {
+  width: 100% !important;
+  min-width: 1280px !important;
+  table-layout: fixed !important;
+  border-collapse: separate !important;
+  border-spacing: 0 10px !important;
+}
+
+#operations-table[data-active-tab="patio"] thead th,
+#operations-table[data-active-tab="historico"] thead th,
+#operations-table[data-active-tab="patio"] tbody td,
+#operations-table[data-active-tab="historico"] tbody td {
+  text-align: center !important;
+  vertical-align: middle !important;
+  box-sizing: border-box !important;
+}
+
+#operations-table[data-active-tab="patio"] th,
+#operations-table[data-active-tab="historico"] th {
+  padding: 12px 8px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+#operations-table[data-active-tab="patio"] td,
+#operations-table[data-active-tab="historico"] td {
+  padding: 12px 8px !important;
+  overflow: hidden !important;
+}
+
+/* PÁTIO — 7 colunas reais */
+#operations-table[data-active-tab="patio"] th:nth-child(1),
+#operations-table[data-active-tab="patio"] td:nth-child(1) { width: 8% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(2),
+#operations-table[data-active-tab="patio"] td:nth-child(2) { width: 15% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(3),
+#operations-table[data-active-tab="patio"] td:nth-child(3) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(4),
+#operations-table[data-active-tab="patio"] td:nth-child(4) { width: 24% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(5),
+#operations-table[data-active-tab="patio"] td:nth-child(5) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 18% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(7),
+#operations-table[data-active-tab="patio"] td:nth-child(7) { width: 15% !important; }
+
+/* HISTÓRICO — 7 colunas reais */
+#operations-table[data-active-tab="historico"] th:nth-child(1),
+#operations-table[data-active-tab="historico"] td:nth-child(1) { width: 8% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(2),
+#operations-table[data-active-tab="historico"] td:nth-child(2) { width: 15% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(3),
+#operations-table[data-active-tab="historico"] td:nth-child(3) { width: 23% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(4),
+#operations-table[data-active-tab="historico"] td:nth-child(4) { width: 10% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(5),
+#operations-table[data-active-tab="historico"] td:nth-child(5) { width: 15% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 16% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(7),
+#operations-table[data-active-tab="historico"] td:nth-child(7) { width: 13% !important; }
+
+/* Status/Agenda/Tipo ficam juntos e centralizados */
+#operations-table[data-active-tab="patio"] .op-combined-cell,
+#operations-table[data-active-tab="historico"] .op-combined-cell {
+  text-align: center !important;
+  overflow: hidden !important;
+}
+#operations-table[data-active-tab="patio"] .op-status-wrap,
+#operations-table[data-active-tab="historico"] .op-status-wrap {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin-bottom: 7px !important;
+}
+#operations-table[data-active-tab="patio"] .op-stack-sub,
+#operations-table[data-active-tab="historico"] .op-stack-sub {
+  text-align: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Motorista + placas ficam em um bloco só */
+#operations-table[data-active-tab="patio"] .op-person-cell,
+#operations-table[data-active-tab="historico"] .op-person-cell {
+  text-align: center !important;
+  overflow: hidden !important;
+  min-width: 0 !important;
+}
+#operations-table[data-active-tab="patio"] .op-driver-name,
+#operations-table[data-active-tab="historico"] .op-driver-name {
+  display: block !important;
+  max-width: 280px !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  line-height: 1.25 !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+}
+#operations-table[data-active-tab="patio"] .op-plates-inline.compact-inline,
+#operations-table[data-active-tab="historico"] .op-plates-inline.compact-inline {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip,
+#operations-table[data-active-tab="historico"] .op-plate-chip {
+  max-width: 132px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Timeline presa na própria coluna */
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell {
+  display: table-cell !important;
+  position: relative !important;
+  z-index: 1 !important;
+  overflow: hidden !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+#operations-table[data-active-tab="patio"] .operation-timeline,
+#operations-table[data-active-tab="historico"] .operation-timeline {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-event,
+#operations-table[data-active-tab="historico"] .timeline-event {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-content,
+#operations-table[data-active-tab="historico"] .timeline-content {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-align: left !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-topline,
+#operations-table[data-active-tab="historico"] .timeline-topline {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-desc,
+#operations-table[data-active-tab="historico"] .timeline-desc {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Ações: volta a ser célula de tabela e o card não passa da coluna */
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  display: table-cell !important;
+  position: relative !important;
+  z-index: 2 !important;
+  overflow: hidden !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  background: rgba(255,255,255,0.78) !important;
+}
+#operations-table[data-active-tab="patio"] .action-cell-inner,
+#operations-table[data-active-tab="historico"] .action-cell-inner {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 34px) !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 136px !important;
+  max-width: calc(100% - 2px) !important;
+  min-width: 0 !important;
+  margin: 0 auto !important;
+  padding: 9px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 1px solid rgba(15,23,42,0.09) !important;
+  box-shadow: 0 10px 26px rgba(15,23,42,0.08) !important;
+  box-sizing: border-box !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn,
+#operations-table[data-active-tab="patio"] a.table-action-btn,
+#operations-table[data-active-tab="historico"] .table-action-btn,
+#operations-table[data-active-tab="historico"] a.table-action-btn {
+  width: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  flex: 0 0 34px !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn svg,
+#operations-table[data-active-tab="patio"] a.table-action-btn svg,
+#operations-table[data-active-tab="historico"] .table-action-btn svg,
+#operations-table[data-active-tab="historico"] a.table-action-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-label,
+#operations-table[data-active-tab="historico"] .table-action-label,
+#operations-table[data-active-tab="patio"] .driver-called-badge,
+#operations-table[data-active-tab="historico"] .driver-called-badge {
+  display: none !important;
+}
+
+@media (max-width: 1450px) {
+  #operations-table[data-active-tab="patio"],
+  #operations-table[data-active-tab="historico"] {
+    min-width: 1320px !important;
+  }
+  #operations-table[data-active-tab="patio"] th:nth-child(6),
+  #operations-table[data-active-tab="patio"] td:nth-child(6) { width: 17% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(7),
+  #operations-table[data-active-tab="patio"] td:nth-child(7) { width: 16% !important; }
+  #operations-table[data-active-tab="historico"] th:nth-child(6),
+  #operations-table[data-active-tab="historico"] td:nth-child(6) { width: 15% !important; }
+  #operations-table[data-active-tab="historico"] th:nth-child(7),
+  #operations-table[data-active-tab="historico"] td:nth-child(7) { width: 14% !important; }
+  #operations-table[data-active-tab="patio"] .action-cell-inner,
+  #operations-table[data-active-tab="historico"] .action-cell-inner {
+    grid-template-columns: repeat(2, 34px) !important;
+    width: 94px !important;
+  }
+}
+
+@media (max-width: 1180px) {
+  #operations-table[data-active-tab="patio"],
+  #operations-table[data-active-tab="historico"] {
+    min-width: 0 !important;
+  }
+  #operations-table[data-active-tab="patio"] .action-cell,
+  #operations-table[data-active-tab="historico"] .action-cell,
+  #operations-table[data-active-tab="patio"] .timeline-cell,
+  #operations-table[data-active-tab="historico"] .timeline-cell {
+    display: block !important;
+  }
+  #operations-table[data-active-tab="patio"] .action-cell-inner,
+  #operations-table[data-active-tab="historico"] .action-cell-inner {
+    grid-template-columns: repeat(3, 34px) !important;
+    justify-content: flex-start !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+  }
+  #operations-table[data-active-tab="patio"] .timeline-desc,
+  #operations-table[data-active-tab="historico"] .timeline-desc {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+}
+
 </style>
 </head>
 
@@ -5327,10 +7425,7 @@ select.hl-native-multi-hidden {
               <option value="2">2º Turno (14-22h)</option>
               <option value="3">3º Turno (22-06h)</option>
             </select>
-            <button id="clear-date-filter-btn"
-                    class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2">
-              Limpar
-            </button>
+            <!-- Botão Limpar removido a pedido: filtros de data/turno continuam disponíveis -->
           </div>
 
           <!-- Filtro Tempo no Pátio (somente Pátio) -->
@@ -5381,8 +7476,8 @@ select.hl-native-multi-hidden {
         </div>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-left">
+      <div class="overflow-x-auto table-responsive-shell">
+        <table id="operations-table" class="w-full text-left operations-table">
           <thead id="table-head"></thead>
           <tbody id="table-body"></tbody>
         </table>
@@ -7410,6 +9505,359 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     return true;
   };
 
+  const getWhatsAppMsFromCandidates = (candidates = []) => {
+    for (const value of candidates) {
+      if (!value) continue;
+      if (typeof value === 'number' && Number.isFinite(value)) return value;
+      if (typeof value === 'object') {
+        if (typeof value.toDate === 'function') return value.toDate().getTime();
+        if (typeof value.seconds === 'number') return value.seconds * 1000;
+        if (typeof value._seconds === 'number') return value._seconds * 1000;
+      }
+      const parsed = new Date(value).getTime();
+      if (Number.isFinite(parsed)) return parsed;
+    }
+    return 0;
+  };
+
+  const getWhatsAppFirstCalledMs = (op = {}) => getWhatsAppMsFromCandidates([
+    op.whatsappFirstCalledAtMs,
+    op.motoristaPrimeiroChamadoAtMs,
+    op.whatsappCalledAtMs,
+    op.motoristaChamadoAtMs,
+    op.calledAtMs,
+    op.whatsappFirstCalledAt,
+    op.motoristaPrimeiroChamadoAt,
+    op.whatsappCalledAt,
+    op.motoristaChamadoAt,
+    op.calledAt
+  ]);
+
+  const getWhatsAppLastCalledMs = (op = {}) => getWhatsAppMsFromCandidates([
+    op.whatsappLastCalledAtMs,
+    op.motoristaUltimoChamadoAtMs,
+    op.whatsappCalledAtMs,
+    op.motoristaChamadoAtMs,
+    op.calledAtMs,
+    op.whatsappLastCalledAt,
+    op.motoristaUltimoChamadoAt,
+    op.whatsappCalledAt,
+    op.motoristaChamadoAt,
+    op.calledAt
+  ]);
+
+  const getWhatsAppCalledMs = (op = {}) => getWhatsAppLastCalledMs(op) || getWhatsAppFirstCalledMs(op);
+
+  const formatWhatsAppCalledAt = (value) => {
+    const ms = typeof value === 'number' ? value : getWhatsAppCalledMs({ whatsappCalledAtMs: value });
+    if (!ms) return '';
+    return new Date(ms).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const renderWhatsAppCalledBadge = (op = {}) => {
+    const calledMs = getWhatsAppCalledMs(op);
+    if (!calledMs) return '';
+    const time = formatWhatsAppCalledAt(calledMs);
+    return `
+      <span class="driver-called-badge" title="Motorista já chamado pelo WhatsApp às ${time}">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        Chamado às ${time}
+      </span>`;
+  };
+
+
+
+  // ==============================
+  // LINHA DO TEMPO OPERACIONAL
+  // ==============================
+  const getTimelineMs = (value) => {
+    if (!value) return 0;
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+    if (typeof value === 'object') {
+      if (typeof value.toMillis === 'function') return value.toMillis();
+      if (typeof value.toDate === 'function') return value.toDate().getTime();
+      if (typeof value.seconds === 'number') return value.seconds * 1000;
+      if (typeof value._seconds === 'number') return value._seconds * 1000;
+      if (typeof value.timestampMs === 'number') return value.timestampMs;
+      if (typeof value.ms === 'number') return value.ms;
+    }
+    const parsed = new Date(value).getTime();
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+
+  const formatTimelineTime = (ms) => {
+    if (!ms) return '—';
+    const date = new Date(ms);
+    const today = new Date();
+    const sameDay = date.toDateString() === today.toDateString();
+    const time = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    return sameDay ? time : `${date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} ${time}`;
+  };
+
+  const createTimelineEvent = (type, label, text, ms = Date.now(), extra = {}) => ({
+    type,
+    label,
+    text,
+    timestampMs: ms,
+    timestampIso: new Date(ms).toISOString(),
+    ...extra
+  });
+
+  const getStoredTimeline = (op = {}) => {
+    const raw = Array.isArray(op.linhaDoTempo) ? op.linhaDoTempo
+      : Array.isArray(op.timeline) ? op.timeline
+      : Array.isArray(op.operationTimeline) ? op.operationTimeline
+      : [];
+
+    return raw.map((event, index) => {
+      if (typeof event === 'string') {
+        return {
+          key: `stored-string-${index}-${event}`,
+          type: 'info',
+          label: 'Registro',
+          text: event,
+          ms: 0
+        };
+      }
+      const ms = getTimelineMs(event.timestampMs || event.ms || event.timestamp || event.timestampIso || event.createdAt || event.date);
+      return {
+        key: event.key || `stored-${index}-${ms}-${event.type || event.tipo || ''}`,
+        type: event.type || event.tipo || event.kind || 'info',
+        label: event.label || event.titulo || event.title || 'Registro',
+        text: event.text || event.descricao || event.description || '',
+        ms
+      };
+    });
+  };
+
+  const getOccurrenceTimelineEventsForOperation = (op = {}) => {
+    const opId = op.id || op.operacaoId || '';
+    const dt = String(op.dt || '').trim();
+    const list = (ocorrenciasData || []).filter(occ => {
+      const occOpId = occ.operacaoId || occ.operationId || '';
+      const occDt = String(occ.dt || '').trim();
+      return (opId && occOpId && occOpId === opId) || (dt && occDt && occDt === dt);
+    });
+
+    const events = [];
+    list.forEach((occ, index) => {
+      const createdMs = getTimelineMs(occ.createdAtMs || occ.ocorrenciaAbertaAtMs || occ.timestampMs || occ.timestamp || occ.createdAt);
+      if (createdMs) {
+        events.push({
+          key: `occ-open-${occ.id || index}-${createdMs}`,
+          type: 'occurrence',
+          label: 'Ocorrência',
+          text: occ.type || occ.canal || 'Ocorrência aberta',
+          ms: createdMs
+        });
+      }
+
+      const resolvedMs = getTimelineMs(occ.resolvidoEm || occ.resolutionAtMs || occ.updatedAtMs || occ.updatedAt);
+      if (resolvedMs && String(occ.statusOcorrencia || '').toLowerCase().includes('conclu')) {
+        events.push({
+          key: `occ-resolution-${occ.id || index}-${resolvedMs}`,
+          type: 'resolution',
+          label: 'Resolvida',
+          text: occ.resolucao ? `Ocorrência resolvida: ${occ.resolucao}` : 'Ocorrência resolvida',
+          ms: resolvedMs
+        });
+      }
+    });
+    return events;
+  };
+
+  const getOperationTimelineEvents = (op = {}) => {
+    const events = [];
+    const registrationMs = getTimelineMs(op.registrationTime || op.marcadoEm || op.createdAtMs || op.createdAt || op.timestamp);
+    if (registrationMs) {
+      events.push({
+        key: `marking-${registrationMs}`,
+        type: 'marking',
+        label: 'Marcação',
+        text: 'Motorista marcou no pátio',
+        ms: registrationMs
+      });
+    }
+
+    const storedTimeline = getStoredTimeline(op);
+    const hasStoredWhatsappEvent = storedTimeline.some(event => ['whatsapp', 'call', 'rechamado', 'recall'].includes(String(event.type || '').toLowerCase()) || ['Chamado', 'Rechamado'].includes(String(event.label || '')));
+    const firstCalledMs = getWhatsAppFirstCalledMs(op);
+    if (firstCalledMs && !hasStoredWhatsappEvent) {
+      events.push({
+        key: `whatsapp-first-${firstCalledMs}`,
+        type: 'whatsapp',
+        label: 'Chamado',
+        text: 'Motorista chamado via WhatsApp',
+        ms: firstCalledMs
+      });
+    }
+
+    events.push(...storedTimeline);
+    events.push(...getOccurrenceTimelineEventsForOperation(op));
+
+    const finishedMs = getTimelineMs(op.finishedTime || op.finalizadoEm || op.cancelledAtMs || op.canceledAtMs);
+    if (finishedMs) {
+      const isCanceled = String(op.status || op.statusFinal || '').toLowerCase().includes('cancel');
+      events.push({
+        key: `${isCanceled ? 'cancel' : 'finish'}-${finishedMs}`,
+        type: isCanceled ? 'cancel' : 'finish',
+        label: isCanceled ? 'Cancelado' : 'Finalizado',
+        text: isCanceled ? 'Operação cancelada no painel' : 'Operação finalizada no painel',
+        ms: finishedMs
+      });
+    }
+
+    const seen = new Set();
+    return events
+      .filter(event => event && (event.ms || event.text || event.label))
+      .map((event, index) => ({
+        ...event,
+        type: String(event.type || 'info').toLowerCase(),
+        label: String(event.label || 'Registro'),
+        text: String(event.text || ''),
+        ms: Number(event.ms || 0),
+        _index: index
+      }))
+      .sort((a, b) => (a.ms || 0) - (b.ms || 0) || a._index - b._index)
+      .filter(event => {
+        const key = `${event.type}|${event.label}|${event.ms ? Math.floor(event.ms / 60000) : 0}|${event.text.slice(0, 60)}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+  };
+
+  const getTimelineIcon = (type = '') => {
+    const map = {
+      marking: '🕘',
+      whatsapp: '💬',
+      occurrence: '⚠️',
+      resolution: '🛠️',
+      finish: '✅',
+      cancel: '🗑️',
+      info: '•'
+    };
+    return map[String(type || '').toLowerCase()] || '•';
+  };
+
+  const renderOperationTimeline = (op = {}, mode = 'table') => {
+    const events = getOperationTimelineEvents(op);
+    if (!events.length) {
+      return `<span class="timeline-empty">Sem eventos</span>`;
+    }
+
+    const limit = mode === 'details' ? 12 : 3;
+    const visible = mode === 'details' ? events : events.slice(-limit);
+    const hiddenCount = Math.max(0, events.length - visible.length);
+
+    return `
+      <div class="operation-timeline ${mode === 'details' ? 'timeline-details' : ''}" title="Linha do tempo automática da DT">
+        ${visible.map(event => `
+          <div class="timeline-event ${escapeHtml(event.type)}">
+            <span class="timeline-dot"></span>
+            <div class="timeline-content">
+              <div class="timeline-topline">
+                <span class="timeline-icon" aria-hidden="true">${escapeHtml(getTimelineIcon(event.type))}</span>
+                <span class="timeline-time">${escapeHtml(formatTimelineTime(event.ms))}</span>
+                <span class="timeline-label timeline-badge">${escapeHtml(event.label)}</span>
+              </div>
+              ${event.text ? `<div class="timeline-desc">${escapeHtml(event.text)}</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+        ${hiddenCount ? `<span class="timeline-more">+${hiddenCount} evento(s) anterior(es)</span>` : ''}
+      </div>`;
+  };
+
+  const appendTimelineEventToRecord = (op = {}, event = {}) => {
+    const current = Array.isArray(op.linhaDoTempo) ? op.linhaDoTempo
+      : Array.isArray(op.timeline) ? op.timeline
+      : Array.isArray(op.operationTimeline) ? op.operationTimeline
+      : [];
+    return [...current, event].slice(-80);
+  };
+
+  const appendTimelineEventToOperationDoc = async (op = {}, event = {}) => {
+    if (!db || !event) return false;
+    const opId = op.operacaoId || op.id;
+    if (!opId) return false;
+
+    const sources = [
+      { collectionName: 'patio', item: (patioData || []).find(p => p.id === opId || (p.dt && p.dt === op.dt)) },
+      { collectionName: 'historico', item: (historicoData || []).find(h => h.id === opId || (h.dt && h.dt === op.dt)) }
+    ];
+    const source = sources.find(s => s.item?.id) || (op.id ? { collectionName: activeTab === 'historico' ? 'historico' : 'patio', item: op } : null);
+    if (!source?.item?.id) return false;
+
+    const linhaDoTempo = appendTimelineEventToRecord(source.item, event);
+    Object.assign(source.item, { linhaDoTempo });
+    if (selectedOperacao?.id === source.item.id) selectedOperacao.linhaDoTempo = linhaDoTempo;
+
+    try {
+      await updateDoc(doc(db, `artifacts/${appId}/public/data/${source.collectionName}`, source.item.id), {
+        linhaDoTempo,
+        linhaDoTempoUpdatedAt: serverTimestamp()
+      });
+      return true;
+    } catch (error) {
+      console.warn('Falha ao atualizar linha do tempo da operação:', error);
+      return false;
+    }
+  };
+
+  const findPatioOperationForCall = (op = {}) => {
+    const actionOp = getActionSourceOperation(op);
+    return patioData.find(p =>
+      p.id === op.id ||
+      p.id === actionOp.id ||
+      (p.dt && (p.dt === op.dt || p.dt === actionOp.dt))
+    ) || null;
+  };
+
+  const markWhatsAppCalledForOperation = async (op = {}) => {
+    const patioOp = findPatioOperationForCall(op);
+    if (!patioOp?.id) return 0;
+
+    const calledAtMs = Date.now();
+    const calledAtIso = new Date(calledAtMs).toISOString();
+    const firstCalledMs = getWhatsAppFirstCalledMs(patioOp);
+    const alreadyCalled = !!firstCalledMs;
+    const timelineEvent = createTimelineEvent(
+      'whatsapp',
+      alreadyCalled ? 'Rechamado' : 'Chamado',
+      alreadyCalled ? 'Motorista rechamado via WhatsApp' : 'Motorista chamado via WhatsApp',
+      calledAtMs
+    );
+    const payload = {
+      whatsappCalled: true,
+      whatsappFirstCalledAtMs: firstCalledMs || calledAtMs,
+      whatsappFirstCalledAt: firstCalledMs ? (patioOp.whatsappFirstCalledAt || patioOp.whatsappCalledAt || patioOp.motoristaPrimeiroChamadoAt || patioOp.motoristaChamadoAt || calledAtIso) : calledAtIso,
+      whatsappLastCalledAtMs: calledAtMs,
+      whatsappLastCalledAt: calledAtIso,
+      whatsappCalledAtMs: firstCalledMs || calledAtMs,
+      whatsappCalledAt: firstCalledMs ? (patioOp.whatsappFirstCalledAt || patioOp.whatsappCalledAt || patioOp.motoristaPrimeiroChamadoAt || patioOp.motoristaChamadoAt || calledAtIso) : calledAtIso,
+      motoristaChamado: true,
+      motoristaPrimeiroChamadoAtMs: firstCalledMs || calledAtMs,
+      motoristaPrimeiroChamadoAt: firstCalledMs ? (patioOp.motoristaPrimeiroChamadoAt || patioOp.motoristaChamadoAt || patioOp.whatsappFirstCalledAt || patioOp.whatsappCalledAt || calledAtIso) : calledAtIso,
+      motoristaUltimoChamadoAtMs: calledAtMs,
+      motoristaUltimoChamadoAt: calledAtIso,
+      motoristaChamadoAtMs: firstCalledMs || calledAtMs,
+      motoristaChamadoAt: firstCalledMs ? (patioOp.motoristaPrimeiroChamadoAt || patioOp.motoristaChamadoAt || patioOp.whatsappFirstCalledAt || patioOp.whatsappCalledAt || calledAtIso) : calledAtIso,
+      whatsappCallCount: (Number(patioOp.whatsappCallCount) || 0) + 1,
+      linhaDoTempo: appendTimelineEventToRecord(patioOp, timelineEvent)
+    };
+
+    Object.assign(patioOp, payload);
+    if (op?.id === patioOp.id) Object.assign(op, payload);
+    debouncedRender();
+
+    await updateDoc(doc(db, `artifacts/${appId}/public/data/patio`, patioOp.id), payload);
+    return calledAtMs;
+  };
+
   const buildWhatsAppUrlForOperation = (op = {}) => {
     const actionOp = getActionSourceOperation(op);
     const telefoneDigits = getTelefoneFromOperacao(actionOp);
@@ -7420,13 +9868,25 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     return `https://wa.me/55${telefoneDigits}?text=${encodeURIComponent(message)}`;
   };
 
-  const openWhatsAppForOperation = (op = {}) => {
+  const openWhatsAppForOperation = async (op = {}) => {
     const url = buildWhatsAppUrlForOperation(op);
     if (!url) {
       showToast('Telefone do motorista indisponível para WhatsApp.', 'error');
       return;
     }
+
+    // Abre primeiro para não cair no bloqueio de pop-up do navegador.
     window.open(url, '_blank', 'noopener,noreferrer');
+
+    try {
+      const calledAtMs = await markWhatsAppCalledForOperation(op);
+      if (calledAtMs) {
+        showToast(`Motorista chamado às ${formatWhatsAppCalledAt(calledAtMs)}.`, 'success');
+      }
+    } catch (err) {
+      console.error('Falha ao registrar chamada do WhatsApp:', err);
+      showToast('WhatsApp aberto, mas não consegui gravar o horário da chamada.', 'error');
+    }
   };
 
   const buildOccurrenceSnapshotPayload = (operacao = {}, type = '') => {
@@ -8045,16 +10505,165 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   // ==============================
   // SEGMENTAÇÃO / TIPO (Baldeio, Latas Vazias, OTIF, Aderente, Hidroman, etc.)
   // ==============================
+  const normalizeTipoHeilogText = (value = '') => String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const isGeneratedNoDtIdentifier = (value = '') => {
+    // Quando não existe DT na planilha, o painel gera um código pela data/hora.
+    // Ex.: 20260614150852. Esse número NÃO deve ser tratado como DT real.
+    const raw = String(value ?? '').trim();
+    if (!/^20\d{12}$/.test(raw)) return false;
+
+    const year = Number(raw.slice(0, 4));
+    const month = Number(raw.slice(4, 6));
+    const day = Number(raw.slice(6, 8));
+    const hour = Number(raw.slice(8, 10));
+    const minute = Number(raw.slice(10, 12));
+    const second = Number(raw.slice(12, 14));
+
+    return (
+      year >= 2020 && year <= 2099 &&
+      month >= 1 && month <= 12 &&
+      day >= 1 && day <= 31 &&
+      hour >= 0 && hour <= 23 &&
+      minute >= 0 && minute <= 59 &&
+      second >= 0 && second <= 59
+    );
+  };
+
+  const hasRealDtForTipo = (op = {}) => {
+    const raw = op.dt || op.dts || op.DT || op.numeroDt || op.numeroDT || op.numDt || op.dtNumero || op.printableDt || op.transporte || op.numeroTransporte;
+    const value = String(raw ?? '').trim();
+    if (!value) return false;
+    const normalized = normalizeTipoHeilogText(value);
+    if (['-', '—', 'N/A', 'NA', 'NÃO INFORMADO', 'NAO INFORMADO', 'SEM DT', 'SEM-DT'].includes(normalized)) return false;
+
+    // DT gerada automaticamente por marcação sem planilha/sem DT real.
+    if (isGeneratedNoDtIdentifier(value)) return false;
+
+    return true;
+  };
+
+  const tipoFromTextLabel = (raw = '') => {
+    const text = normalizeTipoHeilogText(raw);
+    if (!text) return '';
+
+    if (text.includes('DROP')) return 'Drop';
+    if (text.includes('HIDROMAN')) return 'Hidroman';
+    if (text.includes('BALDEIO') || text.includes('BALDEI')) return 'Baldeio';
+    if (text.includes('BULK')) return 'Bulk';
+    if (text.includes('INSUMO')) return 'Insumo';
+    if (text.includes('PRODUTO ACABADO')) return 'Produto acabado';
+    if (text.includes('LATA VAZIA') || text.includes('LATAS VAZIAS') || text.includes('LATA VAZ') || text.includes('LATAS VAZ')) return 'Latas vazias';
+    if (text.includes('PALLET VAZIO') || text.includes('PALET VAZIO') || text.includes('PALLETS VAZIOS') || text.includes('PALETES VAZIOS')) return 'Paletes vazios';
+    if (text.includes('VASILHAME')) return 'Vasilhames';
+    if (text.includes('DEVOLUCAO') || text.includes('DEVOL')) return 'Devolução';
+    if (text.includes('CARGA E DESCARGA') || text.includes('CARGA + DESCARGA') || text.includes('CARREGAMENTO E DESCARGA') || text.includes('CARREGAMENTO + DESCARGA')) return 'Carga e descarga';
+    if (text.includes('DESCARG')) return 'Descarga';
+    if (text.includes('CARREG') || /(^|\s)CARGA($|\s)/.test(text)) return 'Carregamento';
+    if (text.includes('VENDAS') || text === 'VENDA') return 'Vendas';
+
+    // Para botões/fluxos novos do Firebase: se vier um nome limpo, mostra ele no Tipo.
+    const blocked = ['NORMAL', 'N A', 'NA', 'N/A', 'MARCACAO', 'MARCAÇÃO', 'MARCADO', 'PATIO', 'PÁTIO', 'EM PATIO', 'EM PÁTIO'];
+    if (blocked.includes(text)) return '';
+
+    const cleaned = String(raw ?? '')
+      .replace(/[_-]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (!cleaned || cleaned.length > 36 || /^\d+$/.test(cleaned)) return '';
+    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1).toLowerCase();
+  };
+
+  const getTipoFirebaseSemDt = (op = {}) => {
+    // Quando não tem DT/planilha, o Tipo vem do fluxo/botão salvo no Firebase.
+    // Ex.: Hidroman, Baldeio, Bulk, Insumo, etc.
+    if (hasRealDtForTipo(op)) return '';
+
+    const candidates = [
+      op.tipoMarcacao,
+      op.tipo_marcacao,
+      op.marcacaoTipo,
+      op.tipoSemDt,
+      op.tipo_sem_dt,
+      op.operacaoSemDt,
+      op.operacao_sem_dt,
+      op.operacaoFirebase,
+      op.operationFirebase,
+      op.operacao,
+      op.operation,
+      op.operationType,
+      op.tipoDaOperacao,
+      op.tipo_da_operacao,
+      op.nomeOperacao,
+      op.nome_operacao,
+      op.servico,
+      op.service,
+      op.tipoServico,
+      op.tipo_servico,
+      op.marcacao,
+      op.marcação,
+      op.botao,
+      op.botão,
+      op.botaoMarcado,
+      op.botao_marcado,
+      op.buttonLabel,
+      op.button_label,
+      op.actionLabel,
+      op.action_label,
+      op.acao,
+      op.ação,
+      op.flowLabel,
+      op.flowKey,
+      op.fluxo,
+      op.categoria,
+      op.classificacaoFluxo,
+      op.classificacao_fluxo,
+      op.tipoFluxo,
+      op.tipo_fluxo,
+      op.tipoOperacao,
+      op.tipo_operacao,
+      op.canalOperacao,
+      op.canal_operacao,
+      op.canal,
+      op.modalidade,
+      op.produto,
+      op.product,
+      op.produtoNome,
+      op.productName
+    ];
+
+    for (const candidate of candidates) {
+      const label = tipoFromTextLabel(candidate);
+      if (label) return label;
+    }
+
+    return '';
+  };
+
   const getTipoHeilogDirect = (op = {}) => {
     const direct =
       op.tipoSnapshot || op.tipo_heilog || op.tipoHeilog || op.statusHeilog || op.status_tipo || op.statusTipo ||
       op.segmentacao || op.segmentação ||
-      op.tipoOperacao || op.tipo_operacao || op.tipo ||
-      op.fluxo || op.categoria || op.classificacao ||
+      op.tipoOperacao || op.tipo_operacao || op.tipoDaOperacao || op.tipo_da_operacao || op.tipo ||
+      op.operacaoSemDt || op.operacao_sem_dt || op.operacaoFirebase || op.operationFirebase ||
+      op.operationType || op.nomeOperacao || op.nome_operacao ||
+      op.servico || op.service || op.tipoServico || op.tipo_servico ||
+      op.marcacao || op.marcação || op.botaoMarcado || op.botao_marcado || op.buttonLabel || op.button_label ||
+      op.flowLabel || op.flowKey || op.fluxo || op.categoria || op.classificacaoFluxo || op.classificacao_fluxo || op.classificacao ||
       op.canalOperacao || op.canal || op.segment ||
       op.perfil || op.cliente;
 
     if (direct !== undefined && direct !== null && String(direct).trim() !== '') return String(direct).trim();
+
+    const firebaseSemDt = getTipoFirebaseSemDt(op);
+    if (firebaseSemDt) return firebaseSemDt;
+
     return '';
   };
 
@@ -8073,15 +10682,20 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     ].filter(Boolean).join(' ').toUpperCase();
     if (dropBlob.includes('DROP') || op.dropHookAlsoUnload === true || Number(op.contabilizarCarga || 0) > 0 || Number(op.contabilizarDescarga || 0) > 0) return 'Drop';
 
-    // 1) Se já veio "gravado" do HEILOG, nunca muda
+    // 1) Operações sem DT: pega o tipo/botão salvo no Firebase.
+    //    Ex.: Hidroman -> Hidroman, Baldeio -> Baldeio.
+    const firebaseSemDt = getTipoFirebaseSemDt(op);
+    if (firebaseSemDt) return firebaseSemDt;
+
+    // 2) Se já veio "gravado" do HEILOG/planilha, nunca muda
     if (op.tipoSnapshot && String(op.tipoSnapshot).trim() !== '') return String(op.tipoSnapshot).trim();
 
-    // 2) Se existir campo direto no documento (vindo do HEILOG), usa esse
+    // 3) Se existir campo direto no documento (vindo do HEILOG/planilha), usa esse
     const direct = getTipoHeilogDirect(op);
     if (String(direct || '').toUpperCase().includes('DROP')) return 'Drop';
     if (direct) return direct;
 
-    // 3) Fallback: tenta extrair de texto (apenas visual; não "grava" isso como oficial)
+    // 4) Fallback: tenta extrair de texto (apenas visual; não "grava" isso como oficial)
     const blob = `${op.xtAdicional || ''} ${op.observacao || ''} ${op.obs || ''} ${op.notas || ''}`.toUpperCase();
     const rules = [
       { k: 'BALDEIO', label: 'Baldeio' },
@@ -8095,6 +10709,12 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     if (hit) return hit.label;
 
     return '';
+  };
+
+  const getTipoOperacaoPainel = (op = {}) => {
+    // Para DT real/planilha: mantém a regra original.
+    // Para código gerado sem DT real: mostra o fluxo/botão salvo no Firebase.
+    return getSegmentacaoLabel(op);
   };
 
   // ✅ Motoristas: merge para consulta pós-encerramento
@@ -9370,14 +11990,17 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const tableHead = document.getElementById('table-head');
 
     const headers = {
-      patio: 'DT,Status,Agenda,Tipo,Tempo no Pátio,Motorista,Transportadora,Placa Cavalo,Placa Carreta,Ações',
-      historico: 'DT,Status Final,Agenda,Tipo,Motorista,Transportadora,Placa Cavalo,Placa Carreta,Marcado Em,Finalizado Em,Ações',
+      patio: 'DT,Operação,Tempo no Pátio,Motorista e Placas,Transportadora,Linha do Tempo,Ações',
+      historico: 'DT,Status / Operação,Motorista e Placas,Transportadora,Horários,Linha do Tempo,Ações',
       ocorrencias: 'Data,DT,Canal,Prioridade,Problema Identificado,Descrição,Cavalo,Carreta,Evidências,Status,Ações'
     };
 
+    const operationsTable = document.getElementById('operations-table');
+    if (operationsTable) operationsTable.dataset.activeTab = activeTab;
+
     tableHead.innerHTML =
       `<tr class="border-b border-gray-700">${
-        headers[activeTab].split(',').map(h => `<th class="p-4 text-sm font-semibold text-gray-400">${h}</th>`).join('')
+        headers[activeTab].split(',').map(h => `<th class="p-3 text-xs font-black text-gray-400">${h}</th>`).join('')
       }</tr>`;
 
     if (!data.length) {
@@ -9433,25 +12056,24 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         </svg>`;
 
       let whatsappButtonHTML;
+      const whatsappCalledMs = getWhatsAppCalledMs(opDataForActions);
+      const whatsappCalledTitle = whatsappCalledMs ? `Motorista já chamado às ${formatWhatsAppCalledAt(whatsappCalledMs)}` : 'WhatsApp';
       if (telefoneDigits && isSapLocked) {
         whatsappButtonHTML =
           `<button type="button" data-action="sap-whatsapp" data-id="${op.id}" title="WhatsApp bloqueado: confirmar desbloqueio no SAP"
-              class="table-action-btn table-action-whatsapp sap-locked">
+              class="table-action-btn table-action-whatsapp sap-locked ${whatsappCalledMs ? 'already-called' : ''}">
             ${whatsappMsgIcon}
           </button>`;
       } else if (telefoneDigits) {
-        const message = `Olá ${motorista}, por favor, dirija-se ao ATO para retirar sua ordem de Carregamento/Descarga ${dt}.`;
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/55${telefoneDigits}?text=${encodedMessage}`;
         whatsappButtonHTML =
-          `<a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer"
-              title="WhatsApp" class="table-action-btn table-action-whatsapp">
-            ${whatsappMsgIcon.replace('pointer-events-none', '')}
-          </a>`;
+          `<button type="button" data-action="whatsapp" data-id="${op.id}" title="${whatsappCalledTitle}"
+              class="table-action-btn table-action-whatsapp ${whatsappCalledMs ? 'already-called' : ''}">
+            ${whatsappMsgIcon}
+          </button>`;
       } else {
         whatsappButtonHTML =
           `<button title="WhatsApp (Telefone indisponível)"
-              class="table-action-btn cursor-not-allowed" disabled>
+              class="table-action-btn table-action-whatsapp cursor-not-allowed" disabled>
             ${whatsappMsgIcon}
           </button>`;
       }
@@ -9539,7 +12161,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           </button>`;
       }
 
-      const actionButtonsHTML = `<td class="p-4 action-cell">${whatsappButtonHTML}${reprintButtonHTML}${specificActions}</td>`;
+      const actionButtonsHTML = `<td class="p-3 action-cell"><div class="action-cell-inner">${whatsappButtonHTML}${reprintButtonHTML}${specificActions}</div></td>`;
 
       let rowCells = '';
       if (activeTab === 'ocorrencias') {
@@ -9561,27 +12183,49 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           <td class="p-4 text-sm">${escapeHtml(op.statusOcorrencia || 'Em andamento')}</td>
           ${actionButtonsHTML}
         `;
+      } else if (activeTab === 'patio') {
+        rowCells = `
+          <td class="p-3 op-dt-cell"><div class="op-dt-main font-mono">${escapeHtml(op.dt || '')}</div></td>
+          <td class="p-3 op-combined-cell">
+            <div class="op-status-wrap">${statusBadge}</div>
+            <div class="op-stack-sub">Agenda: <strong>${escapeHtml(op.agenda || 'N/A')}</strong></div>
+            <div class="op-stack-sub">Tipo: <strong>${escapeHtml(getTipoOperacaoPainel(op) || '—')}</strong></div>
+          </td>
+          <td class="p-3 font-mono text-sm timer-cell op-time-cell" data-registration-time="${op.registrationTime}">${getElapsedTime(op.registrationTime)}</td>
+          <td class="p-3 op-person-cell">
+            <div class="op-driver-name">${escapeHtml(tableMotoristaNome)}</div>
+            <div class="op-plates-inline compact-inline op-plates-text-inline">
+              <span class="op-plate-text op-plate-text-cavalo" style="color:#0f766e !important; background:rgba(15,118,110,0.10) !important; padding:4px 8px !important; border-radius:999px !important;"><strong style="color:#115e59 !important;">Cavalo:</strong> ${escapeHtml(truckPlate)}</span>
+              <span class="op-plates-separator">/</span>
+              <span class="op-plate-text op-plate-text-carreta" style="color:#b45309 !important; background:rgba(180,83,9,0.11) !important; padding:4px 8px !important; border-radius:999px !important;"><strong style="color:#92400e !important;">Carreta:</strong> ${escapeHtml(trailerPlate)}</span>
+            </div>
+          </td>
+          <td class="p-3 op-transport-cell"><div class="op-transport-block">${escapeHtml(op.transportadora || '—')}</div></td>
+          <td class="p-3 timeline-cell">${renderOperationTimeline(opDataForActions, activeTab)}</td>
+          ${actionButtonsHTML}
+        `;
       } else {
         rowCells = `
-          <td class="p-4 font-mono text-sm">${op.dt || ''}</td>
-          <td class="p-4">${statusBadge}</td>
-          <td class="p-4">${op.agenda || 'N/A'}</td>
-          <td class="p-4">${escapeHtml(getSegmentacaoLabel(op) || '—')}</td>
-          ${activeTab === 'patio'
-            ? `<td class="p-4 font-mono text-sm timer-cell" data-registration-time="${op.registrationTime}">
-                 ${getElapsedTime(op.registrationTime)}
-               </td>`
-            : ''
-          }
-          <td class="p-4">${escapeHtml(tableMotoristaNome)}</td>
-          <td class="p-4">${op.transportadora || '—'}</td>
-          <td class="p-4 font-mono text-sm">${truckPlate}</td>
-          <td class="p-4 font-mono text-sm">${trailerPlate}</td>
-          ${activeTab === 'historico'
-            ? `<td class="p-4 text-sm font-mono">${formatTableDateTime(op.registrationTime || op.createdAtMs || op.createdAt || op.timestamp)}</td>
-               <td class="p-4 text-sm">${formatTableDateTime(op.finishedTime)}</td>`
-            : ''
-          }
+          <td class="p-3 op-dt-cell"><div class="op-dt-main font-mono">${escapeHtml(op.dt || '')}</div></td>
+          <td class="p-3 op-combined-cell">
+            <div class="op-status-wrap">${statusBadge}</div>
+            <div class="op-stack-sub">Agenda: <strong>${escapeHtml(op.agenda || 'N/A')}</strong></div>
+            <div class="op-stack-sub">Tipo: <strong>${escapeHtml(getTipoOperacaoPainel(op) || '—')}</strong></div>
+          </td>
+          <td class="p-3 op-person-cell">
+            <div class="op-driver-name">${escapeHtml(tableMotoristaNome)}</div>
+            <div class="op-plates-inline compact-inline op-plates-text-inline">
+              <span class="op-plate-text op-plate-text-cavalo" style="color:#0f766e !important; background:rgba(15,118,110,0.10) !important; padding:4px 8px !important; border-radius:999px !important;"><strong style="color:#115e59 !important;">Cavalo:</strong> ${escapeHtml(truckPlate)}</span>
+              <span class="op-plates-separator">/</span>
+              <span class="op-plate-text op-plate-text-carreta" style="color:#b45309 !important; background:rgba(180,83,9,0.11) !important; padding:4px 8px !important; border-radius:999px !important;"><strong style="color:#92400e !important;">Carreta:</strong> ${escapeHtml(trailerPlate)}</span>
+            </div>
+          </td>
+          <td class="p-3 op-transport-cell"><div class="op-transport-block">${escapeHtml(op.transportadora || '—')}</div></td>
+          <td class="p-3 op-hours-cell">
+            <div><b>Marcado:</b> ${formatTableDateTime(op.registrationTime || op.createdAtMs || op.createdAt || op.timestamp)}</div>
+            <div><b>Finalizado:</b> ${formatTableDateTime(op.finishedTime)}</div>
+          </td>
+          <td class="p-3 timeline-cell">${renderOperationTimeline(opDataForActions, activeTab)}</td>
           ${actionButtonsHTML}
         `;
       }
@@ -11819,6 +14463,11 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         showConfirmModal('Tem certeza que deseja finalizar esta operação?', finalizarOperacao);
         break;
       }
+      case 'whatsapp': {
+        if (requireSapUnlockForOperation(selectedOperacao, () => openWhatsAppForOperation(selectedOperacao))) break;
+        openWhatsAppForOperation(selectedOperacao);
+        break;
+      }
       case 'sap-whatsapp': {
         if (requireSapUnlockForOperation(selectedOperacao, () => openWhatsAppForOperation(selectedOperacao))) break;
         openWhatsAppForOperation(selectedOperacao);
@@ -11867,6 +14516,13 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       <p><strong>Chegada no Pátio:</strong> ${
         selectedOperacao.registrationTime ? new Date(selectedOperacao.registrationTime).toLocaleString('pt-BR') : 'N/A'
       }</p>
+      <p><strong>WhatsApp:</strong> ${
+        getWhatsAppCalledMs(selectedOperacao) ? `Motorista já chamado às ${formatWhatsAppCalledAt(getWhatsAppCalledMs(selectedOperacao))}` : 'Ainda não chamado'
+      }</p>
+      <div class="details-timeline-shell">
+        <div class="details-timeline-title">Linha do Tempo da DT</div>
+        ${renderOperationTimeline(selectedOperacao, 'details')}
+      </div>
     `;
 
     logSection.innerHTML = `
@@ -11888,14 +14544,12 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
     modalActions.innerHTML = '';
     if (telefoneDigits) {
-      const message = `Olá ${selectedOperacao.motorista || selectedOperacao.name || 'Motorista'}, por favor, Dirija-se ao ATO para retirar sua ordem de carregamento/Descarga ${selectedOperacao.dt}.`;
-      const encodedMessage = encodeURIComponent(message);
-      const whatsappUrl = `https://wa.me/55${telefoneDigits}?text=${encodedMessage}`;
       modalActions.innerHTML = `
-        <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer"
+        <button type="button" id="details-whatsapp-btn"
            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2">
           Msg WhatsApp
-        </a>`;
+        </button>`;
+      document.getElementById('details-whatsapp-btn')?.addEventListener('click', () => openWhatsAppForOperation(selectedOperacao));
     }
 
     document.getElementById('details-modal').classList.remove('hidden');
@@ -12354,6 +15008,389 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     min-height: 46px !important;
   }
 }
+
+/* =========================================================
+   PATCH EXTRA — Timeline + ações + visual motorista/placas
+   ========================================================= */
+#operations-table[data-active-tab="patio"] th:nth-child(1),
+#operations-table[data-active-tab="patio"] td:nth-child(1) { width: 9% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(2),
+#operations-table[data-active-tab="patio"] td:nth-child(2) { width: 11% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(3),
+#operations-table[data-active-tab="patio"] td:nth-child(3) { width: 10% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(4),
+#operations-table[data-active-tab="patio"] td:nth-child(4) { width: 26% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(5),
+#operations-table[data-active-tab="patio"] td:nth-child(5) { width: 26% !important; }
+#operations-table[data-active-tab="patio"] th:nth-child(6),
+#operations-table[data-active-tab="patio"] td:nth-child(6) { width: 18% !important; }
+
+#operations-table[data-active-tab="historico"] th:nth-child(1),
+#operations-table[data-active-tab="historico"] td:nth-child(1) { width: 9% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(2),
+#operations-table[data-active-tab="historico"] td:nth-child(2) { width: 12% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(3),
+#operations-table[data-active-tab="historico"] td:nth-child(3) { width: 27% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(4),
+#operations-table[data-active-tab="historico"] td:nth-child(4) { width: 14% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(5),
+#operations-table[data-active-tab="historico"] td:nth-child(5) { width: 22% !important; }
+#operations-table[data-active-tab="historico"] th:nth-child(6),
+#operations-table[data-active-tab="historico"] td:nth-child(6) { width: 16% !important; }
+
+#operations-table[data-active-tab="patio"] td,
+#operations-table[data-active-tab="historico"] td {
+  overflow: hidden !important;
+}
+
+.op-person-cell {
+  min-width: 0 !important;
+}
+.op-person-topline {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+.op-driver-name {
+  color: #123222 !important;
+  font-weight: 900 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.22 !important;
+  letter-spacing: -0.01em !important;
+  flex: 1 1 220px !important;
+}
+.op-transport-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, rgba(29,78,216,0.10), rgba(14,165,233,0.10)) !important;
+  border: 1px solid rgba(37,99,235,0.14) !important;
+  color: #1d4ed8 !important;
+  font-size: 0.72rem !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  white-space: nowrap !important;
+}
+.op-plates-inline {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip,
+#operations-table[data-active-tab="historico"] .op-plate-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 10px !important;
+  border-radius: 14px !important;
+  white-space: nowrap !important;
+  font-size: 0.74rem !important;
+  font-weight: 900 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.65) !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip.cavalo,
+#operations-table[data-active-tab="historico"] .op-plate-chip.cavalo {
+  background: linear-gradient(135deg, rgba(13,148,136,0.10), rgba(16,185,129,0.10)) !important;
+  border: 1px solid rgba(13,148,136,0.18) !important;
+  color: #0f766e !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip.carreta,
+#operations-table[data-active-tab="historico"] .op-plate-chip.carreta {
+  background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(251,191,36,0.10)) !important;
+  border: 1px solid rgba(245,158,11,0.18) !important;
+  color: #b45309 !important;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip .plate-label,
+#operations-table[data-active-tab="historico"] .op-plate-chip .plate-label {
+  font-size: 0.64rem !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  opacity: 0.85;
+}
+#operations-table[data-active-tab="patio"] .op-plate-chip .plate-value,
+#operations-table[data-active-tab="historico"] .op-plate-chip .plate-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+  font-size: 0.76rem !important;
+  letter-spacing: 0.01em !important;
+}
+
+#operations-table[data-active-tab="patio"] .timeline-cell,
+#operations-table[data-active-tab="historico"] .timeline-cell {
+  overflow: hidden !important;
+}
+#operations-table[data-active-tab="patio"] .operation-timeline,
+#operations-table[data-active-tab="historico"] .operation-timeline {
+  max-width: 100% !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-content,
+#operations-table[data-active-tab="historico"] .timeline-content {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  background: #fcfffd !important;
+  border: 1px solid rgba(15,23,42,0.08) !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-topline,
+#operations-table[data-active-tab="historico"] .timeline-topline {
+  gap: 6px !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-time,
+#operations-table[data-active-tab="historico"] .timeline-time {
+  color: #0f172a !important;
+  font-weight: 900 !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-label,
+#operations-table[data-active-tab="historico"] .timeline-label {
+  color: #1f2937 !important;
+  font-weight: 900 !important;
+}
+#operations-table[data-active-tab="patio"] .timeline-desc,
+#operations-table[data-active-tab="historico"] .timeline-desc {
+  color: #475569 !important;
+}
+
+#operations-table[data-active-tab="patio"] .action-cell,
+#operations-table[data-active-tab="historico"] .action-cell {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+#operations-table[data-active-tab="patio"] .action-cell-inner,
+#operations-table[data-active-tab="historico"] .action-cell-inner {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 7px !important;
+  min-width: 150px !important;
+}
+#operations-table[data-active-tab="patio"] .table-action-btn,
+#operations-table[data-active-tab="patio"] a.table-action-btn,
+#operations-table[data-active-tab="historico"] .table-action-btn,
+#operations-table[data-active-tab="historico"] a.table-action-btn {
+  flex: 0 0 auto !important;
+}
+
+@media (max-width: 1440px) {
+  #operations-table[data-active-tab="patio"] th:nth-child(4),
+  #operations-table[data-active-tab="patio"] td:nth-child(4) { width: 24% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(5),
+  #operations-table[data-active-tab="patio"] td:nth-child(5) { width: 24% !important; }
+  #operations-table[data-active-tab="patio"] th:nth-child(6),
+  #operations-table[data-active-tab="patio"] td:nth-child(6) { width: 22% !important; }
+}
+
+@media (max-width: 1180px) {
+  #operations-table[data-active-tab="patio"] .action-cell-inner,
+  #operations-table[data-active-tab="historico"] .action-cell-inner {
+    justify-content: flex-start !important;
+    min-width: 0 !important;
+  }
+  .op-driver-name { flex-basis: 100% !important; }
+}
+
+
+
+/* =========================================================
+   AJUSTE EXTRA — placas mais próximas (Pátio + Histórico)
+   ========================================================= */
+#operations-table[data-active-tab="patio"] .op-plates-inline.compact-inline,
+#operations-table[data-active-tab="historico"] .op-plates-inline.compact-inline,
+#operations-table[data-active-tab="patio"] .op-plates-inline,
+#operations-table[data-active-tab="historico"] .op-plates-inline {
+  justify-content: center !important;
+  gap: 4px !important;
+  column-gap: 4px !important;
+  row-gap: 6px !important;
+  margin-top: 6px !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plate-chip,
+#operations-table[data-active-tab="historico"] .op-plate-chip {
+  gap: 6px !important;
+  padding: 6px 8px !important;
+  margin: 0 !important;
+}
+
+
+
+/* =========================================================
+   AJUSTE EXTRA — placas coladas com separador /
+   ========================================================= */
+#operations-table[data-active-tab="patio"] .op-plates-inline.compact-inline,
+#operations-table[data-active-tab="historico"] .op-plates-inline.compact-inline,
+#operations-table[data-active-tab="patio"] .op-plates-inline,
+#operations-table[data-active-tab="historico"] .op-plates-inline {
+  justify-content: center !important;
+  gap: 0 !important;
+  column-gap: 0 !important;
+  row-gap: 4px !important;
+  margin-top: 6px !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plates-separator,
+#operations-table[data-active-tab="historico"] .op-plates-separator {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 4px !important;
+  color: #64748b !important;
+  font-size: 0.92rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plate-chip,
+#operations-table[data-active-tab="historico"] .op-plate-chip {
+  gap: 6px !important;
+  padding: 6px 8px !important;
+  margin: 0 !important;
+}
+
+
+
+/* =========================================================
+   AJUSTE EXTRA — placas em linha: Cavalo: AAA1234 / Carreta: AAA1234
+   ========================================================= */
+#operations-table[data-active-tab="patio"] .op-plates-inline.op-plates-text-inline,
+#operations-table[data-active-tab="historico"] .op-plates-inline.op-plates-text-inline {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 0 !important;
+  column-gap: 0 !important;
+  row-gap: 4px !important;
+  margin-top: 6px !important;
+  font-size: 0.84rem !important;
+  line-height: 1.2 !important;
+  color: #334155 !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plate-text,
+#operations-table[data-active-tab="historico"] .op-plate-text {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  color: #475569 !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plate-text strong,
+#operations-table[data-active-tab="historico"] .op-plate-text strong {
+  font-size: 0.78rem !important;
+  font-weight: 800 !important;
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+  color: #64748b !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plate-text-cavalo,
+#operations-table[data-active-tab="historico"] .op-plate-text-cavalo {
+  color: #0f766e !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plate-text-carreta,
+#operations-table[data-active-tab="historico"] .op-plate-text-carreta {
+  color: #b45309 !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plates-separator,
+#operations-table[data-active-tab="historico"] .op-plates-separator {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 6px !important;
+  color: #64748b !important;
+  font-size: 0.86rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+
+
+/* =========================================================
+   AJUSTE EXTRA — cores diferentes para Cavalo e Carreta
+   ========================================================= */
+#operations-table[data-active-tab="patio"] .op-plate-text-cavalo,
+#operations-table[data-active-tab="historico"] .op-plate-text-cavalo {
+  color: #0f766e !important;
+  background: rgba(15, 118, 110, 0.08) !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plate-text-cavalo strong,
+#operations-table[data-active-tab="historico"] .op-plate-text-cavalo strong {
+  color: #115e59 !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plate-text-carreta,
+#operations-table[data-active-tab="historico"] .op-plate-text-carreta {
+  color: #b45309 !important;
+  background: rgba(180, 83, 9, 0.08) !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plate-text-carreta strong,
+#operations-table[data-active-tab="historico"] .op-plate-text-carreta strong {
+  color: #92400e !important;
+}
+
+#operations-table[data-active-tab="patio"] .op-plates-separator,
+#operations-table[data-active-tab="historico"] .op-plates-separator {
+  margin: 0 8px !important;
+  color: #64748b !important;
+}
+
+
+
+/* =========================================================
+   AJUSTE FINAL — força cores das placas mesmo com tema global
+   ========================================================= */
+.op-plates-text-inline .op-plate-text-cavalo,
+#main-content .op-plates-text-inline .op-plate-text-cavalo,
+#operations-table .op-plates-text-inline .op-plate-text-cavalo {
+  color: #0f766e !important;
+  background: rgba(15,118,110,0.10) !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+}
+
+.op-plates-text-inline .op-plate-text-cavalo strong,
+#main-content .op-plates-text-inline .op-plate-text-cavalo strong,
+#operations-table .op-plates-text-inline .op-plate-text-cavalo strong {
+  color: #115e59 !important;
+}
+
+.op-plates-text-inline .op-plate-text-carreta,
+#main-content .op-plates-text-inline .op-plate-text-carreta,
+#operations-table .op-plates-text-inline .op-plate-text-carreta {
+  color: #b45309 !important;
+  background: rgba(180,83,9,0.11) !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+}
+
+.op-plates-text-inline .op-plate-text-carreta strong,
+#main-content .op-plates-text-inline .op-plate-text-carreta strong,
+#operations-table .op-plates-text-inline .op-plate-text-carreta strong {
+  color: #92400e !important;
+}
+
 </style>
 </head>
 <body>
@@ -12570,7 +15607,9 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         const op = patioData.find(x => x.id === id);
         if (!op) return;
 
+        const timelineEvent = createTimelineEvent('finish', 'Finalizado', 'Operação finalizada em massa no painel', now);
         const finalizada = prepareDropHistoricoRecord({ ...op, status: 'Finalizado', finishedTime: now });
+        finalizada.linhaDoTempo = appendTimelineEventToRecord(finalizada, timelineEvent);
 
         const historicoRef = doc(db, `artifacts/${appId}/public/data/historico`, id);
         batch.set(historicoRef, finalizada);
@@ -12594,7 +15633,10 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     if (!db || !selectedOperacao) return;
     if (requireSapUnlockForOperation(selectedOperacao, () => showConfirmModal('Tem certeza que deseja finalizar esta operação?', finalizarOperacao))) return;
     try {
-      const finalizada = prepareDropHistoricoRecord({ ...selectedOperacao, status: 'Finalizado', finishedTime: Date.now() });
+      const finishedAt = Date.now();
+      const timelineEvent = createTimelineEvent('finish', 'Finalizado', 'Operação finalizada no painel', finishedAt);
+      const finalizada = prepareDropHistoricoRecord({ ...selectedOperacao, status: 'Finalizado', finishedTime: finishedAt });
+      finalizada.linhaDoTempo = appendTimelineEventToRecord(finalizada, timelineEvent);
       const batch = writeBatch(db);
 
       const historicoRef = doc(db, `artifacts/${appId}/public/data/historico`, selectedOperacao.id);
@@ -12615,7 +15657,10 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   async function cancelarOperacao() {
     if (!db || !selectedOperacao) return;
     try {
-      const cancelada = prepareDropHistoricoRecord({ ...selectedOperacao, status: 'Cancelado', finishedTime: Date.now() });
+      const cancelledAt = Date.now();
+      const timelineEvent = createTimelineEvent('cancel', 'Cancelado', 'Operação cancelada no painel', cancelledAt);
+      const cancelada = prepareDropHistoricoRecord({ ...selectedOperacao, status: 'Cancelado', finishedTime: cancelledAt });
+      cancelada.linhaDoTempo = appendTimelineEventToRecord(cancelada, timelineEvent);
       const batch = writeBatch(db);
 
       const historicoRef = doc(db, `artifacts/${appId}/public/data/historico`, selectedOperacao.id);
@@ -12647,6 +15692,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   try {
     const prioridade = getPriorityStatusLogic(selectedOperacao).statusText;
 
+    const occurrenceAtMs = Date.now();
+
     // 1) grava na aba Ocorrências
     await addDoc(collection(db, `artifacts/${appId}/public/data/ocorrencias`), {
       type: "Abertura Power Apps",
@@ -12654,6 +15701,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       dt: selectedOperacao.dt || '',
       operacaoId: selectedOperacao.id || '',
       timestamp: serverTimestamp(),
+      createdAtMs: occurrenceAtMs,
+      ocorrenciaAbertaAtMs: occurrenceAtMs,
       canal: "Power Apps",
       prioridade,
       statusOcorrencia: "Aberto no Power Apps",
@@ -12663,7 +15712,11 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       ...buildOccurrenceSnapshotPayload(selectedOperacao, "Abertura Power Apps")
     });
 
-    // 2) grava também no log da operação
+    // 2) grava também no log e na linha do tempo da operação
+    await appendTimelineEventToOperationDoc(
+      selectedOperacao,
+      createTimelineEvent('occurrence', 'Ocorrência', 'Power Apps aberto para tratar ocorrência', occurrenceAtMs)
+    );
     await addLogEntry(
       selectedOperacao.id,
       `Usuário abriu ocorrência no Power Apps para a DT ${selectedOperacao.dt}.`,
@@ -12705,12 +15758,15 @@ async function handleAddOccurrence(e) {
     let imageUploadFailed = false;
 
     try {
+      const occurrenceAtMs = Date.now();
       const occurrencePayload = {
         type: occurrenceType,
         description,
         dt: selectedOperacao.dt || '',
         operacaoId: selectedOperacao.id || '',
         timestamp: serverTimestamp(),
+        createdAtMs: occurrenceAtMs,
+        ocorrenciaAbertaAtMs: occurrenceAtMs,
         canal: 'Painel',
         prioridade: getPriorityStatusLogic(selectedOperacao).statusText,
         statusOcorrencia: 'Em andamento',
@@ -12736,6 +15792,11 @@ async function handleAddOccurrence(e) {
           console.error('Erro ao enviar imagens da ocorrência:', imageError);
         }
       }
+
+      await appendTimelineEventToOperationDoc(
+        selectedOperacao,
+        createTimelineEvent('occurrence', 'Ocorrência', `${occurrenceType || 'Ocorrência'}: ${description}`, occurrenceAtMs)
+      );
 
       await addLogEntry(
         selectedOperacao.id,
@@ -12787,10 +15848,13 @@ async function handleAddOccurrence(e) {
       const existingImages = getOccurrenceImages(selectedOperacao);
       const isCancellingOccurrence = isOccurrenceCancelStatus(status);
       let deletedImagesInfo = null;
+      const resolutionAtMs = Date.now();
       const payload = {
         resolucao: resolution,
         statusOcorrencia: status,
-        resolvidoEm: status === 'Concluído' ? serverTimestamp() : null
+        resolvidoEm: status === 'Concluído' ? serverTimestamp() : null,
+        resolutionAtMs: status === 'Concluído' ? resolutionAtMs : null,
+        updatedAtMs: resolutionAtMs
       };
 
       if (isCancellingOccurrence) {
@@ -12825,6 +15889,16 @@ async function handleAddOccurrence(e) {
         );
         debouncedRender();
       }
+
+      await appendTimelineEventToOperationDoc(
+        selectedOperacao,
+        createTimelineEvent(
+          isCancellingOccurrence ? 'cancel' : (status === 'Concluído' ? 'resolution' : 'occurrence'),
+          isCancellingOccurrence ? 'Ocorrência cancelada' : (status === 'Concluído' ? 'Ocorrência resolvida' : 'Ocorrência atualizada'),
+          `Status da ocorrência: ${status}${resolution ? ` - ${resolution}` : ''}`,
+          resolutionAtMs
+        )
+      );
 
       await addLogEntry(
         selectedOperacao.operacaoId,
@@ -17075,7 +20149,7 @@ async function handleAddOccurrence(e) {
       const nn = document.getElementById('driver-new-field-name'); if (nn) nn.value = '';
       const vv = document.getElementById('driver-new-field-value'); if (vv) vv.value = '';
     });
-document.getElementById('clear-date-filter-btn').addEventListener('click', () => {
+document.getElementById('clear-date-filter-btn')?.addEventListener('click', () => {
       document.getElementById('filter-date').valueAsDate = new Date();
       setMultiSelectValues('filter-shift', ['todos']);
       debouncedRender();
