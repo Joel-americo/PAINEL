@@ -5259,6 +5259,11 @@ select.hl-native-multi-hidden {
 .timeline-event.resolution .timeline-dot { background: #6366f1; }
 .timeline-event.finish .timeline-dot { background: #16a34a; }
 .timeline-event.cancel .timeline-dot { background: #e11d48; }
+.timeline-event.manual .timeline-dot { background: #0f766e; }
+.timeline-event.delay .timeline-dot { background: #dc2626; }
+.timeline-event.dock .timeline-dot { background: #2563eb; }
+.timeline-event.release .timeline-dot { background: #7c3aed; }
+.timeline-event.report .timeline-dot { background: #0891b2; }
 .timeline-content {
   min-width: 0;
   padding: 6px 9px;
@@ -5323,6 +5328,70 @@ select.hl-native-multi-hidden {
 }
 .details-timeline-shell .timeline-content {
   background: #ffffff;
+}
+.timeline-details .timeline-desc {
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+.timeline-details .timeline-time,
+.timeline-details .timeline-label {
+  font-size: 0.78rem;
+}
+.details-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.details-info-card {
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 14px;
+}
+.details-info-card strong {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b !important;
+  margin-bottom: 4px;
+}
+.details-info-card span {
+  color: #102018 !important;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.timeline-event-form {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border: 1px solid rgba(0,122,61,0.14);
+}
+.timeline-event-form h4 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 900;
+}
+.timeline-event-form-grid {
+  display: grid;
+  grid-template-columns: 0.8fr 0.9fr 1.3fr;
+  gap: 10px;
+}
+.timeline-event-form textarea {
+  min-height: 86px;
+  resize: vertical;
+}
+.timeline-event-help {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: #64748b !important;
+}
+@media (max-width: 768px) {
+  .details-info-grid,
+  .timeline-event-form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 @media (max-width: 768px) {
   .timeline-cell { min-width: 240px; }
@@ -7443,11 +7512,56 @@ select.hl-native-multi-hidden {
             <option value="8plus">8h+ (>= 8h)</option>
           </select>
 
-          <select id="filter-status"
-                  class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+          <!-- Filtros legados mantidos ocultos para não quebrar exportações/regras internas -->
+          <select id="filter-timeline-status" class="hidden">
+            <option value="todos">Status Linha do Tempo (Todos)</option>
+            <option value="em-marcacao">Carretas em marcação</option>
+            <option value="chamada">Carretas chamadas</option>
+            <option value="nao-chamada">Carretas não chamadas</option>
+            <option value="com-ocorrencia">Com ocorrência</option>
+            <option value="atraso-risco">Atraso / risco</option>
+            <option value="em-doca">Doca / processo</option>
+            <option value="liberada">Liberadas</option>
+            <option value="com-report">Com ponto de report</option>
+            <option value="finalizada">Finalizadas</option>
+            <option value="cancelada">Canceladas</option>
+          </select>
 
-          <select id="filter-transportadora"
+          <select id="filter-operation-type"
                   class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="todos">Tipo Operação (Todos)</option>
+            <option value="Insumo">Insumo</option>
+            <option value="Bulk">Bulk</option>
+            <option value="Baldeio">Baldeio</option>
+            <option value="Drop">Drop</option>
+            <option value="Hidroman">Hidroman</option>
+            <option value="Carga e descarga">Carga e descarga</option>
+            <option value="Carregamento">Carregamento</option>
+            <option value="Descarga">Descarga</option>
+            <option value="Latas vazias">Latas vazias</option>
+            <option value="Paletes vazios">Paletes vazios</option>
+            <option value="Produto acabado">Produto acabado</option>
+          </select>
+
+          <select id="filter-timeline-type"
+                  class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="todos">Tipo Linha do Tempo (Todos)</option>
+            <option value="marking">Marcação</option>
+            <option value="whatsapp">Chamado / Rechamado</option>
+            <option value="manual">Atualização</option>
+            <option value="report">Ponto de report</option>
+            <option value="delay">Atraso / Risco</option>
+            <option value="dock">Doca / Processo</option>
+            <option value="release">Liberação</option>
+            <option value="occurrence">Ocorrência</option>
+            <option value="resolution">Tratativa</option>
+            <option value="finish">Finalização</option>
+            <option value="cancel">Cancelamento</option>
+          </select>
+
+          <select id="filter-status" class="hidden"></select>
+
+          <select id="filter-transportadora" class="hidden">
             <option value="todas">Todas Transportadoras</option>
           </select>
 
@@ -9635,11 +9749,20 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
   const getOccurrenceTimelineEventsForOperation = (op = {}) => {
     const opId = op.id || op.operacaoId || '';
+    const sessionId = op.linhaDoTempoId || op.timelineSessionId || op.marcacaoId || op.activityId || '';
     const dt = String(op.dt || '').trim();
     const list = (ocorrenciasData || []).filter(occ => {
       const occOpId = occ.operacaoId || occ.operationId || '';
+      const occSessionId = occ.linhaDoTempoId || occ.timelineSessionId || occ.marcacaoId || occ.activityId || '';
       const occDt = String(occ.dt || '').trim();
-      return (opId && occOpId && occOpId === opId) || (dt && occDt && occDt === dt);
+
+      // Regra importante: uma nova marcação é uma nova atividade.
+      // Se existir ID da operação, nunca reutiliza ocorrência/evento apenas pela mesma DT.
+      if (opId) return occOpId && occOpId === opId;
+      if (sessionId) return occSessionId && occSessionId === sessionId;
+
+      // Fallback apenas para registros antigos que não têm ID de operação salvo.
+      return dt && occDt && occDt === dt;
     });
 
     const events = [];
@@ -9710,7 +9833,6 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       });
     }
 
-    const seen = new Set();
     return events
       .filter(event => event && (event.ms || event.text || event.label))
       .map((event, index) => ({
@@ -9721,13 +9843,9 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         ms: Number(event.ms || 0),
         _index: index
       }))
-      .sort((a, b) => (a.ms || 0) - (b.ms || 0) || a._index - b._index)
-      .filter(event => {
-        const key = `${event.type}|${event.label}|${event.ms ? Math.floor(event.ms / 60000) : 0}|${event.text.slice(0, 60)}`;
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
+      // Não deduplicar eventos: cada marcação/ação registrada é uma atividade própria,
+      // mesmo quando DT, motorista, placas, horário aproximado ou texto forem iguais.
+      .sort((a, b) => (a.ms || 0) - (b.ms || 0) || a._index - b._index);
   };
 
   const getTimelineIcon = (type = '') => {
@@ -9738,6 +9856,11 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       resolution: '🛠️',
       finish: '✅',
       cancel: '🗑️',
+      manual: '📝',
+      delay: '⏱️',
+      dock: '🏭',
+      release: '🚦',
+      report: '📌',
       info: '•'
     };
     return map[String(type || '').toLowerCase()] || '•';
@@ -9772,6 +9895,136 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       </div>`;
   };
 
+  const TIMELINE_MANUAL_TYPE_LABELS = {
+    manual: 'Atualização',
+    delay: 'Atraso / Risco',
+    dock: 'Doca / Processo',
+    release: 'Liberação',
+    whatsapp: 'Rechamado',
+    occurrence: 'Ocorrência',
+    resolution: 'Tratativa',
+    report: 'Ponto de report'
+  };
+
+  const getTimelineEventTypesForFilter = (op = {}) => {
+    const types = new Set();
+    getOperationTimelineEvents(op).forEach(event => {
+      const type = String(event.type || 'info').toLowerCase();
+      if (type) types.add(type);
+      if (['call', 'rechamado', 'recall'].includes(type)) types.add('whatsapp');
+    });
+    return types;
+  };
+
+  const getTimelineStatusesForFilter = (op = {}) => {
+    const events = getOperationTimelineEvents(op);
+    const types = new Set(events.map(event => String(event.type || '').toLowerCase()).filter(Boolean));
+    const statusText = String(op.status || op.statusFinal || getPriorityStatusLogic(op)?.statusText || '').toLowerCase();
+    const finished = !!(op.finishedTime || op.finalizadoEm) || statusText.includes('finaliz');
+    const canceled = !!(op.cancelledAtMs || op.canceledAtMs) || statusText.includes('cancel');
+    const called = !!getWhatsAppCalledMs(op) || types.has('whatsapp') || types.has('call') || types.has('rechamado') || types.has('recall');
+    const statuses = new Set();
+
+    if (!finished && !canceled && !called) statuses.add('em-marcacao');
+    if (called) statuses.add('chamada');
+    if (!called) statuses.add('nao-chamada');
+    if (types.has('occurrence')) statuses.add('com-ocorrencia');
+    if (types.has('delay') || statusText.includes('atras') || statusText.includes('risco')) statuses.add('atraso-risco');
+    if (types.has('dock') || statusText.includes('doca') || statusText.includes('processo')) statuses.add('em-doca');
+    if (types.has('release') || statusText.includes('liberad')) statuses.add('liberada');
+    if (types.has('report')) statuses.add('com-report');
+    if (finished && !canceled) statuses.add('finalizada');
+    if (canceled) statuses.add('cancelada');
+
+    return statuses;
+  };
+
+  const timelineSetMatchesFilter = (values, set) => {
+    if (areAllFilterValues(values)) return true;
+    const wanted = Array.isArray(values) ? values : [values].filter(Boolean);
+    return wanted.some(value => set.has(String(value || '').toLowerCase()));
+  };
+
+  const matchesTimelineFilters = (op = {}, typeValues = [], statusValues = []) => {
+    const typeMatch = timelineSetMatchesFilter(typeValues, getTimelineEventTypesForFilter(op));
+    const statusMatch = timelineSetMatchesFilter(statusValues, getTimelineStatusesForFilter(op));
+    return typeMatch && statusMatch;
+  };
+
+  const toTimelineInputDateTime = (ms = Date.now()) => {
+    const d = new Date(ms || Date.now());
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 16);
+  };
+
+  const formatTimelineFullTime = (ms) => {
+    if (!ms) return '—';
+    return new Date(ms).toLocaleString('pt-BR');
+  };
+
+  const formatOperationTimelineForReport = (op = {}) => {
+    const events = getOperationTimelineEvents(op);
+    if (!events.length) return 'Sem eventos registrados';
+    return events.map(event => {
+      const desc = event.text ? `: ${event.text}` : '';
+      return `${formatTimelineFullTime(event.ms)} - ${event.label}${desc}`;
+    }).join(' | ');
+  };
+
+  const buildOperationTimelineReport = (op = {}) => {
+    const truckPlate = getTruckPlate(op) || '—';
+    const trailerPlate = getTrailerPlate(op) || '—';
+    const telefoneDigits = getTelefoneFromOperacao(op);
+    const events = getOperationTimelineEvents(op);
+    const header = [
+      `REPORT - LINHA DO TEMPO DT ${op.dt || '—'}`,
+      `Motorista: ${op.motorista || op.name || '—'}`,
+      `CPF: ${op.cpf || '—'}`,
+      `Telefone: ${telefoneDigits || op.telefone || op.phone || '—'}`,
+      `Placa Cavalo: ${truckPlate}`,
+      `Placa Carreta: ${trailerPlate}`,
+      `Transportadora: ${op.transportadora || '—'}`,
+      `Destino: ${op.destino || '—'}`,
+      `Agenda: ${op.agenda || '—'}`,
+      `Tipo: ${getSegmentacaoLabel(op) || getTipoOperacaoPainel(op) || '—'}`,
+      `Chegada no Pátio: ${op.registrationTime ? new Date(op.registrationTime).toLocaleString('pt-BR') : '—'}`,
+      `Status WhatsApp: ${getWhatsAppCalledMs(op) ? `Chamado às ${formatWhatsAppCalledAt(getWhatsAppCalledMs(op))}` : 'Ainda não chamado'}`
+    ];
+    const timelineLines = events.length
+      ? events.map(event => `- ${formatTimelineFullTime(event.ms)} | ${event.label}${event.text ? ` | ${event.text}` : ''}`)
+      : ['- Sem eventos registrados'];
+
+    return `${header.join('\n')}\n\nLINHA DO TEMPO\n${timelineLines.join('\n')}`;
+  };
+
+  const copyTextToClipboard = async (text) => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (_) {}
+    try {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.left = '-9999px';
+      document.body.appendChild(area);
+      area.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(area);
+      return ok;
+    } catch (_) {
+      return false;
+    }
+  };
+
+  const safeTimelineFilename = (value = '') => String(value || 'sem_dt')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9_-]+/g, '_')
+    .replace(/^_+|_+$/g, '') || 'sem_dt';
+
   const appendTimelineEventToRecord = (op = {}, event = {}) => {
     const current = Array.isArray(op.linhaDoTempo) ? op.linhaDoTempo
       : Array.isArray(op.timeline) ? op.timeline
@@ -9783,13 +10036,22 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   const appendTimelineEventToOperationDoc = async (op = {}, event = {}) => {
     if (!db || !event) return false;
     const opId = op.operacaoId || op.id;
-    if (!opId) return false;
+    const sessionId = op.linhaDoTempoId || op.timelineSessionId || op.marcacaoId || op.activityId || '';
+    if (!opId && !sessionId) return false;
+
+    const findByActivity = (list = []) => (list || []).find(item => {
+      if (!item) return false;
+      const itemSessionId = item.linhaDoTempoId || item.timelineSessionId || item.marcacaoId || item.activityId || '';
+      if (opId && item.id === opId) return true;
+      if (sessionId && itemSessionId && itemSessionId === sessionId) return true;
+      return false;
+    });
 
     const sources = [
-      { collectionName: 'patio', item: (patioData || []).find(p => p.id === opId || (p.dt && p.dt === op.dt)) },
-      { collectionName: 'historico', item: (historicoData || []).find(h => h.id === opId || (h.dt && h.dt === op.dt)) }
+      { collectionName: 'patio', item: findByActivity(patioData) },
+      { collectionName: 'historico', item: findByActivity(historicoData) }
     ];
-    const source = sources.find(s => s.item?.id) || (op.id ? { collectionName: activeTab === 'historico' ? 'historico' : 'patio', item: op } : null);
+    const source = sources.find(src => src.item?.id) || (op.id ? { collectionName: activeTab === 'historico' ? 'historico' : 'patio', item: op } : null);
     if (!source?.item?.id) return false;
 
     const linhaDoTempo = appendTimelineEventToRecord(source.item, event);
@@ -9810,11 +10072,19 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
   const findPatioOperationForCall = (op = {}) => {
     const actionOp = getActionSourceOperation(op);
-    return patioData.find(p =>
-      p.id === op.id ||
-      p.id === actionOp.id ||
-      (p.dt && (p.dt === op.dt || p.dt === actionOp.dt))
-    ) || null;
+    const opIds = [op.id, op.operacaoId, actionOp.id, actionOp.operacaoId].filter(Boolean);
+    const sessionIds = [
+      op.linhaDoTempoId, op.timelineSessionId, op.marcacaoId, op.activityId,
+      actionOp.linhaDoTempoId, actionOp.timelineSessionId, actionOp.marcacaoId, actionOp.activityId
+    ].filter(Boolean);
+
+    return patioData.find(p => {
+      if (!p) return false;
+      const pSessionId = p.linhaDoTempoId || p.timelineSessionId || p.marcacaoId || p.activityId || '';
+      if (opIds.includes(p.id)) return true;
+      if (pSessionId && sessionIds.includes(pSessionId)) return true;
+      return false;
+    }) || null;
   };
 
   const markWhatsAppCalledForOperation = async (op = {}) => {
@@ -11894,6 +12164,9 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const dateFilterValue = document.getElementById('filter-date').value;
     const shiftFilterValues = getMultiSelectValues('filter-shift');
     const tempoFilterValues = getMultiSelectValues('filter-tempo-patio');
+    const operationTypeFilterValues = getMultiSelectValues('filter-operation-type');
+    const timelineStatusFilterValues = getMultiSelectValues('filter-timeline-status');
+    const timelineTypeFilterValues = getMultiSelectValues('filter-timeline-type');
 
     let dataSet = [];
 
@@ -11951,7 +12224,9 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         ].filter(Boolean).some(v => norm(v).includes(searchTerm) || compact(v).includes(searchCompact));
         const byStatus = filterValuesMatchText(statusFilterValues, op.statusOcorrencia || '');
         const byTransp = filterValuesMatchExact(transportadoraFilterValues, relatedOp.transportadora || '');
-        return byText && byStatus && byTransp;
+        const byTimeline = matchesTimelineFilters(relatedOp, timelineTypeFilterValues, timelineStatusFilterValues);
+        const byOperationType = filterValuesMatchOperationType(operationTypeFilterValues, relatedOp);
+        return byText && byStatus && byTransp && byTimeline && byOperationType;
       }
 
       const textMatch = matchesSearchOp(op, searchTerm, searchCompact);
@@ -11969,7 +12244,9 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         tempoMatch = tempoFilterValues.includes(getTempoBucket(op.registrationTime));
       }
 
-      return textMatch && statusMatch && transportadoraMatch && tempoMatch;
+      const timelineMatch = matchesTimelineFilters(op, timelineTypeFilterValues, timelineStatusFilterValues);
+      const operationTypeMatch = filterValuesMatchOperationType(operationTypeFilterValues, op);
+      return textMatch && statusMatch && transportadoraMatch && tempoMatch && timelineMatch && operationTypeMatch;
     });
 
     window.__filteredPatioIds = (activeTab === 'patio') ? filteredData.map(x => x.id) : [];
@@ -11978,6 +12255,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     renderKPIs();
     renderContextualChart();
     updateTransportadoraFilter();
+    updateOperationTypeFilterOptions();
   };
 
   const debouncedRender = debounce(render, 80);
@@ -12091,13 +12369,21 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       let specificActions = '';
       if (activeTab === 'patio') {
         specificActions = `
-          <button type="button" data-action="details" data-id="${op.id}" title="Ver Detalhes" class="table-action-btn">
+          <button type="button" data-action="details" data-id="${op.id}" title="Linha do tempo completa" class="table-action-btn">
             <svg class="w-5 h-5 text-sky-400 hover:text-sky-300 pointer-events-none"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+              <path d="M12 3v4"/>
+              <path d="M12 17v4"/>
               <circle cx="12" cy="12" r="3"/>
+              <path d="M5 12H3"/>
+              <path d="M21 12h-2"/>
+              <path d="M7.8 7.8 6.4 6.4"/>
+              <path d="m17.6 17.6-1.4-1.4"/>
+              <path d="m16.2 7.8 1.4-1.4"/>
+              <path d="m6.4 17.6 1.4-1.4"/>
             </svg>
+            <span class="table-action-label">Linha</span>
           </button>
           <button type="button" data-action="occurrence" data-id="${op.id}" title="Ocorrência / Power Apps" class="table-action-btn">
             <svg class="w-5 h-5 text-amber-400 hover:text-amber-300 pointer-events-none"
@@ -12128,6 +12414,16 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         `;
       } else if (activeTab === 'historico') {
         specificActions = `
+          <button type="button" data-action="details" data-id="${op.id}" title="Linha do tempo completa" class="table-action-btn">
+            <svg class="w-5 h-5 pointer-events-none"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v4"/><path d="M12 17v4"/><circle cx="12" cy="12" r="3"/>
+              <path d="M5 12H3"/><path d="M21 12h-2"/><path d="M7.8 7.8 6.4 6.4"/>
+              <path d="m17.6 17.6-1.4-1.4"/><path d="m16.2 7.8 1.4-1.4"/><path d="m6.4 17.6 1.4-1.4"/>
+            </svg>
+            <span class="table-action-label">Linha</span>
+          </button>
           <button type="button" data-action="occurrence" data-id="${op.id}" title="Abrir ocorrência" class="table-action-btn">
             <svg class="w-5 h-5 pointer-events-none"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -12439,10 +12735,10 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
   // ===== HEILOG: filtros com seleção múltipla =====
   const HL_MULTI_FILTER_IDS = [
-    'filter-status',
-    'filter-transportadora',
     'filter-shift',
     'filter-tempo-patio',
+    'filter-operation-type',
+    'filter-timeline-type',
     'drivers-transportadora-filter',
     'baldeios-origin-filter',
     'dashboard-transportadora-filter',
@@ -12697,6 +12993,153 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       `;
     }
     setMultiSelectValues(filterStatusSelect, previousValues);
+  };
+
+  const normalizeOperationFilterText = (value = '') => String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toUpperCase();
+
+  const getOperationFilterLabel = (op = {}) => {
+    const candidates = [
+      getTipoOperacaoPainel(op),
+      getSegmentacaoLabel(op),
+      op.type,
+      op.tipoSnapshot,
+      op.tipo_heilog,
+      op.tipoHeilog,
+      op.tipoOperacao,
+      op.tipo_operacao,
+      op.tipo,
+      op.segmentacao,
+      op.segmentação,
+      op.operacao,
+      op.operation,
+      op.operationType,
+      op.tipoMarcacao,
+      op.tipo_marcacao,
+      op.flowLabel,
+      op.flowKey,
+      op.canal,
+      op.produto,
+      op.product,
+      op.produtoNome,
+      op.productName
+    ];
+
+    for (const candidate of candidates) {
+      const label = tipoFromTextLabel(candidate) || String(candidate ?? '').trim();
+      if (label && !/^\d+$/.test(label)) return label;
+    }
+
+    return 'Sem tipo';
+  };
+
+  const getOperationFilterAliases = (op = {}) => {
+    const raw = [
+      getOperationFilterLabel(op),
+      getTipoOperacaoPainel(op),
+      getSegmentacaoLabel(op),
+      op.type,
+      op.tipoSnapshot,
+      op.tipo_heilog,
+      op.tipoHeilog,
+      op.tipoOperacao,
+      op.tipo_operacao,
+      op.tipo,
+      op.segmentacao,
+      op.segmentação,
+      op.operacao,
+      op.operation,
+      op.operationType,
+      op.tipoMarcacao,
+      op.tipo_marcacao,
+      op.flowLabel,
+      op.flowKey,
+      op.canal,
+      op.produto,
+      op.product,
+      op.produtoNome,
+      op.productName
+    ];
+
+    const aliases = new Set();
+    raw.forEach(value => {
+      if (value === undefined || value === null) return;
+      const text = String(value).trim();
+      if (!text) return;
+      aliases.add(normalizeOperationFilterText(text));
+      const mapped = tipoFromTextLabel(text);
+      if (mapped) aliases.add(normalizeOperationFilterText(mapped));
+    });
+    return aliases;
+  };
+
+  const filterValuesMatchOperationType = (values, op = {}) => {
+    if (areAllFilterValues(values)) return true;
+    const aliases = getOperationFilterAliases(op);
+    return (Array.isArray(values) ? values : [values]).some(value => aliases.has(normalizeOperationFilterText(value)));
+  };
+
+  const updateOperationTypeFilterOptions = () => {
+    const select = document.getElementById('filter-operation-type');
+    if (!select) return;
+
+    const previousValues = getMultiSelectValues(select);
+    const standard = [
+      'Insumo',
+      'Bulk',
+      'Baldeio',
+      'Drop',
+      'Hidroman',
+      'Carga e descarga',
+      'Carregamento',
+      'Descarga',
+      'Latas vazias',
+      'Paletes vazios',
+      'Vasilhames',
+      'Produto acabado',
+      'Devolução',
+      'Vendas',
+      'Sem tipo'
+    ];
+
+    const labels = [];
+    const seen = new Set();
+    const pushLabel = (label) => {
+      const text = String(label || '').trim();
+      if (!text) return;
+      const key = normalizeOperationFilterText(tipoFromTextLabel(text) || text);
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      labels.push(tipoFromTextLabel(text) || text);
+    };
+
+    standard.forEach(pushLabel);
+    [...(patioData || []), ...(historicoData || [])]
+      .map(getOperationFilterLabel)
+      .forEach(pushLabel);
+
+    const currentNormalized = new Set(previousValues.map(normalizeOperationFilterText));
+    select.innerHTML = '';
+
+    const allOption = document.createElement('option');
+    allOption.value = 'todos';
+    allOption.textContent = 'Tipo Operação (Todos)';
+    select.appendChild(allOption);
+
+    labels.forEach(label => {
+      const option = document.createElement('option');
+      option.value = label;
+      option.textContent = label;
+      select.appendChild(option);
+    });
+
+    const validValues = Array.from(select.options || []).map(opt => String(opt.value || ''));
+    const nextValues = validValues.filter(value => currentNormalized.has(normalizeOperationFilterText(value)));
+    setMultiSelectValues(select, nextValues.length ? nextValues : ['todos']);
   };
 
   const updateTransportadoraFilter = () => {
@@ -13270,6 +13713,41 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     try { return new Date(ms).toLocaleString('pt-BR'); } catch (_) { return ''; }
   };
 
+  const reprintGetOriginalMarkingMs = (op = {}) => {
+    const candidates = [
+      op.registrationTime,
+      op.marcadoEm,
+      op.markingTime,
+      op.marcacaoTime,
+      op.marcacaoEm,
+      op.createdAtMs,
+      op.createdAt,
+      op.timestampMs,
+      op.timestamp,
+      op.arrivalTime,
+      op.chegadaPatio,
+      op.chegadaEm,
+      op.dropHook?.registrationTime,
+      op.dropHook?.marcadoEm
+    ];
+    for (const value of candidates) {
+      const ms = getTimelineMs(value);
+      if (ms) return ms;
+    }
+    const markingEvent = getOperationTimelineEvents(op).find(event => String(event.type || '').toLowerCase() === 'marking' && event.ms);
+    return markingEvent?.ms || 0;
+  };
+
+  const reprintFormatDateOnly = (ms, fallbackDate = new Date()) => {
+    const date = ms ? new Date(ms) : fallbackDate;
+    try { return date.toLocaleDateString('pt-BR'); } catch (_) { return fallbackDate.toLocaleDateString('pt-BR'); }
+  };
+
+  const reprintFormatTimeOnly = (ms, fallbackDate = new Date()) => {
+    const date = ms ? new Date(ms) : fallbackDate;
+    try { return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); } catch (_) { return fallbackDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); }
+  };
+
   const reprintNormalizeDigits = (value = '') => String(value || '').replace(/\D/g, '');
   const reprintFormatCpf = (value = '') => {
     const digits = reprintNormalizeDigits(value);
@@ -13731,8 +14209,9 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       const manualPresetType = '';
       const currentMode = '';
       const now = new Date();
-      const printDate = now.toLocaleDateString('pt-BR');
-      const printTime = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      const originalMarkingMs = Number(driverData?.originalMarkingMs || driverData?.registrationTimeMs || 0);
+      const printDate = reprintFormatDateOnly(originalMarkingMs, now);
+      const printTime = reprintFormatTimeOnly(originalMarkingMs, now);
 
       const firstResult = sheetDataArray[0] || {};
       // Na reimpressão, o layout Drop & Hook só pode ser ativado pelo flag já
@@ -14246,9 +14725,12 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const transportadora = reprintSheetPick(op, ['transportadora', 'carrier', 'carrierName', 'motoristaViagem.transportadora', 'dropHook.motoristaViagem.transportadora', 'motoristaManobra.transportadora']) || '';
     const vehicleType = reprintSheetPick(op, ['tipoVeiculo', 'vehicleType', 'vehicle', 'motoristaViagem.vehicleType', 'dropHook.motoristaViagem.vehicleType']) || '';
     const dropAlsoUnload = reprintBool(op.dropHookAlsoUnload ?? op.dropHook?.dropHookAlsoUnload ?? op.contabilizarDescarga ?? op.dropHook?.contabilizarDescarga);
+    const originalMarkingMs = reprintGetOriginalMarkingMs(op);
 
     return {
       isDropHook: isDrop,
+      originalMarkingMs,
+      registrationTimeMs: originalMarkingMs,
       name: isDrop ? (manobraName || tripName) : tripName,
       cpf: isDrop ? (manobraCpf || tripCpf) : tripCpf,
       phone: isDrop ? (telefoneManobra || telefoneViagem) : telefoneViagem,
@@ -14491,7 +14973,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   window.showDetailsModal = () => {
     if (!selectedOperacao) return;
 
-    document.getElementById('details-modal-title').textContent = `Detalhes da DT: ${selectedOperacao.dt}`;
+    document.getElementById('details-modal-title').textContent = `Linha do Tempo Completa — DT: ${selectedOperacao.dt || 'N/A'}`;
 
     const modalContent = document.getElementById('details-modal-content');
     const logSection = document.getElementById('log-section');
@@ -14502,28 +14984,69 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
     const truckPlate = getTruckPlate(selectedOperacao) || '—';
     const trailerPlate = getTrailerPlate(selectedOperacao) || '—';
+    const chegadaPatio = selectedOperacao.registrationTime ? new Date(selectedOperacao.registrationTime).toLocaleString('pt-BR') : 'N/A';
+    const whatsappStatus = getWhatsAppCalledMs(selectedOperacao)
+      ? `Motorista já chamado às ${formatWhatsAppCalledAt(getWhatsAppCalledMs(selectedOperacao))}`
+      : 'Ainda não chamado';
 
     modalContent.innerHTML = `
-      <p><strong>Motorista:</strong> ${selectedOperacao.motorista || selectedOperacao.name || 'N/A'}</p>
-      <p><strong>CPF:</strong> ${selectedOperacao.cpf || 'N/A'}</p>
-      <p><strong>Telefone:</strong> ${telefoneView}</p>
-      <p><strong>Placa Cavalo:</strong> ${truckPlate}</p>
-      <p><strong>Placa Carreta:</strong> ${trailerPlate}</p>
-      <p><strong>Transportadora:</strong> ${selectedOperacao.transportadora || 'N/A'}</p>
-      <p><strong>Destino:</strong> ${selectedOperacao.destino || 'N/A'}</p>
-      <p><strong>Agenda:</strong> ${selectedOperacao.agenda || 'N/A'}</p>
-      <p><strong>Tipo:</strong> ${escapeHtml(getSegmentacaoLabel(selectedOperacao) || '—')}</p>
-      <p><strong>Chegada no Pátio:</strong> ${
-        selectedOperacao.registrationTime ? new Date(selectedOperacao.registrationTime).toLocaleString('pt-BR') : 'N/A'
-      }</p>
-      <p><strong>WhatsApp:</strong> ${
-        getWhatsAppCalledMs(selectedOperacao) ? `Motorista já chamado às ${formatWhatsAppCalledAt(getWhatsAppCalledMs(selectedOperacao))}` : 'Ainda não chamado'
-      }</p>
+      <div class="details-info-grid">
+        <div class="details-info-card"><strong>Motorista</strong><span>${escapeHtml(selectedOperacao.motorista || selectedOperacao.name || 'N/A')}</span></div>
+        <div class="details-info-card"><strong>CPF</strong><span>${escapeHtml(selectedOperacao.cpf || 'N/A')}</span></div>
+        <div class="details-info-card"><strong>Telefone</strong><span>${escapeHtml(telefoneView)}</span></div>
+        <div class="details-info-card"><strong>Transportadora</strong><span>${escapeHtml(selectedOperacao.transportadora || 'N/A')}</span></div>
+        <div class="details-info-card"><strong>Placa Cavalo</strong><span>${escapeHtml(truckPlate)}</span></div>
+        <div class="details-info-card"><strong>Placa Carreta</strong><span>${escapeHtml(trailerPlate)}</span></div>
+        <div class="details-info-card"><strong>Destino</strong><span>${escapeHtml(selectedOperacao.destino || 'N/A')}</span></div>
+        <div class="details-info-card"><strong>Agenda</strong><span>${escapeHtml(selectedOperacao.agenda || 'N/A')}</span></div>
+        <div class="details-info-card"><strong>Tipo</strong><span>${escapeHtml(getSegmentacaoLabel(selectedOperacao) || getTipoOperacaoPainel(selectedOperacao) || '—')}</span></div>
+        <div class="details-info-card"><strong>Chegada no Pátio</strong><span>${escapeHtml(chegadaPatio)}</span></div>
+        <div class="details-info-card"><strong>WhatsApp</strong><span>${escapeHtml(whatsappStatus)}</span></div>
+        <div class="details-info-card"><strong>Status Atual</strong><span>${escapeHtml(selectedOperacao.status || getPriorityStatusLogic(selectedOperacao).statusText || '—')}</span></div>
+      </div>
+
       <div class="details-timeline-shell">
-        <div class="details-timeline-title">Linha do Tempo da DT</div>
+        <div class="details-timeline-title">Linha do tempo para report</div>
         ${renderOperationTimeline(selectedOperacao, 'details')}
       </div>
+
+      <div class="timeline-event-form">
+        <h4>Adicionar evento na linha do tempo</h4>
+        <form id="timeline-event-form" class="space-y-3">
+          <div class="timeline-event-form-grid">
+            <label class="text-sm font-bold text-gray-600">Tipo
+              <select id="timeline-event-type" class="mt-1 w-full">
+                <option value="manual">Atualização</option>
+                <option value="report">Ponto de report</option>
+                <option value="delay">Atraso / Risco</option>
+                <option value="dock">Doca / Processo</option>
+                <option value="release">Liberação</option>
+                <option value="whatsapp">Rechamado</option>
+                <option value="occurrence">Ocorrência</option>
+                <option value="resolution">Tratativa</option>
+              </select>
+            </label>
+            <label class="text-sm font-bold text-gray-600">Data e hora
+              <input id="timeline-event-date" type="datetime-local" class="mt-1 w-full">
+            </label>
+            <label class="text-sm font-bold text-gray-600">Título
+              <input id="timeline-event-title" type="text" maxlength="60" class="mt-1 w-full" placeholder="Ex.: aguardando doca, divergência, liberado">
+            </label>
+          </div>
+          <label class="text-sm font-bold text-gray-600 block">Descrição do evento
+            <textarea id="timeline-event-description" maxlength="500" class="mt-1 w-full" placeholder="Descreva o que aconteceu para usar depois no report..."></textarea>
+          </label>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <p class="timeline-event-help">O evento fica salvo somente nesta atividade/marcação em <strong>linhaDoTempo</strong> e aparece na tabela, histórico, exportação e report.</p>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Adicionar evento</button>
+          </div>
+        </form>
+      </div>
     `;
+
+    const timelineEventDate = document.getElementById('timeline-event-date');
+    if (timelineEventDate) timelineEventDate.value = toTimelineInputDateTime(Date.now());
+    document.getElementById('timeline-event-form')?.addEventListener('submit', handleAddTimelineEvent);
 
     logSection.innerHTML = `
       <h4 class="text-lg font-bold text-white mt-4">Log de Atividades</h4>
@@ -14542,15 +15065,38 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
     renderLog(selectedOperacao.id);
 
-    modalActions.innerHTML = '';
-    if (telefoneDigits) {
-      modalActions.innerHTML = `
+    modalActions.innerHTML = `
+      <button type="button" id="details-copy-report-btn"
+         class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2">
+        Copiar report
+      </button>
+      <button type="button" id="details-download-report-btn"
+         class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2">
+        Baixar TXT
+      </button>
+      ${telefoneDigits ? `
         <button type="button" id="details-whatsapp-btn"
            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2">
           Msg WhatsApp
-        </button>`;
-      document.getElementById('details-whatsapp-btn')?.addEventListener('click', () => openWhatsAppForOperation(selectedOperacao));
-    }
+        </button>` : ''}`;
+
+    document.getElementById('details-whatsapp-btn')?.addEventListener('click', () => openWhatsAppForOperation(selectedOperacao));
+    document.getElementById('details-copy-report-btn')?.addEventListener('click', async () => {
+      const ok = await copyTextToClipboard(buildOperationTimelineReport(selectedOperacao));
+      showToast(ok ? 'Report copiado para a área de transferência.' : 'Não foi possível copiar o report.', ok ? 'success' : 'error');
+    });
+    document.getElementById('details-download-report-btn')?.addEventListener('click', () => {
+      const text = buildOperationTimelineReport(selectedOperacao);
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `linha_do_tempo_DT_${safeTimelineFilename(selectedOperacao.dt)}_${new Date().toISOString().slice(0,10)}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
 
     document.getElementById('details-modal').classList.remove('hidden');
   };
@@ -14722,6 +15268,75 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           Erro ao carregar o log (verifique regras/permissões do Firestore). Veja o console.
         </div>`;
     });
+  }
+
+  async function handleAddTimelineEvent(e) {
+    e.preventDefault();
+    if (!db || !selectedOperacao) return;
+
+    const typeInput = document.getElementById('timeline-event-type');
+    const dateInput = document.getElementById('timeline-event-date');
+    const titleInput = document.getElementById('timeline-event-title');
+    const descriptionInput = document.getElementById('timeline-event-description');
+
+    const type = String(typeInput?.value || 'manual').trim() || 'manual';
+    const defaultLabel = TIMELINE_MANUAL_TYPE_LABELS[type] || 'Atualização';
+    const label = String(titleInput?.value || defaultLabel).trim() || defaultLabel;
+    const description = String(descriptionInput?.value || '').trim();
+    const dateValue = String(dateInput?.value || '').trim();
+    const occurredAtMs = dateValue ? new Date(dateValue).getTime() : Date.now();
+    const safeOccurredAtMs = Number.isFinite(occurredAtMs) ? occurredAtMs : Date.now();
+
+    if (!label && !description) {
+      showToast('Preencha um título ou descrição para adicionar o evento.', 'info');
+      return;
+    }
+
+    const event = createTimelineEvent(
+      type,
+      label,
+      description || label,
+      safeOccurredAtMs,
+      {
+        manual: true,
+        source: 'timeline-modal',
+        createdAtMs: Date.now(),
+        createdAtIso: new Date().toISOString()
+      }
+    );
+
+    const submitBtn = e.target?.querySelector('button[type="submit"]');
+    const originalText = submitBtn?.textContent || 'Adicionar evento';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Salvando...';
+    }
+
+    try {
+      const ok = await appendTimelineEventToOperationDoc(selectedOperacao, event);
+      if (!ok) {
+        showToast('Não foi possível salvar o evento na linha do tempo.', 'error');
+        return;
+      }
+
+      await addLogEntry(
+        selectedOperacao.id,
+        `Evento adicionado na linha do tempo: ${label}${description ? ` - ${description}` : ''}`,
+        true
+      );
+
+      showToast('Evento adicionado na linha do tempo.', 'success');
+      debouncedRender();
+      window.showDetailsModal();
+    } catch (error) {
+      console.error('Erro ao adicionar evento na linha do tempo:', error);
+      showToast('Erro ao adicionar evento. Veja o console.', 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    }
   }
 
   async function handleAddComment(e) {
@@ -15431,6 +16046,9 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const dateFilterValue = document.getElementById('filter-date').value;
     const shiftFilterValues = getMultiSelectValues('filter-shift');
     const tempoFilterValues = getMultiSelectValues('filter-tempo-patio');
+    const operationTypeFilterValues = getMultiSelectValues('filter-operation-type');
+    const timelineStatusFilterValues = getMultiSelectValues('filter-timeline-status');
+    const timelineTypeFilterValues = getMultiSelectValues('filter-timeline-type');
 
     let dataToExport, headers;
 
@@ -15453,7 +16071,9 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         ].filter(Boolean).some(v => norm(v).includes(searchTerm) || compact(v).includes(searchCompact));
         const byStatus = filterValuesMatchText(statusFilterValues, op.statusOcorrencia || '');
         const byTransp = filterValuesMatchExact(transportadoraFilterValues, relatedOp.transportadora || '');
-        return byText && byStatus && byTransp;
+        const byTimeline = matchesTimelineFilters(relatedOp, timelineTypeFilterValues, timelineStatusFilterValues);
+        const byOperationType = filterValuesMatchOperationType(operationTypeFilterValues, relatedOp);
+        return byText && byStatus && byTransp && byTimeline && byOperationType;
       });
       headers = ['Data','DT','Canal','Prioridade','Problema','Descrição','Cavalo','Carreta','Imagens','Status','Resolução','Resolvido Em'];
     } else if (activeTab === 'historico') {
@@ -15486,10 +16106,12 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       dataToExport = filteredHistorico.filter(op => {
         const byText = matchesSearchOp(op, searchTerm, searchCompact);
         const byTransp = filterValuesMatchExact(transportadoraFilterValues, op.transportadora || '');
-        return byText && byTransp;
+        const byTimeline = matchesTimelineFilters(op, timelineTypeFilterValues, timelineStatusFilterValues);
+        const byOperationType = filterValuesMatchOperationType(operationTypeFilterValues, op);
+        return byText && byTransp && byTimeline && byOperationType;
       });
 
-      headers = ['DT','Status Final','Agenda','Tipo','Motorista','Transportadora','Placa Cavalo','Placa Carreta','Finalizado Em','Tempo Total'];
+      headers = ['DT','Status Final','Agenda','Tipo','Motorista','Transportadora','Placa Cavalo','Placa Carreta','Finalizado Em','Tempo Total','Linha do Tempo'];
     } else {
       dataToExport = patioData.filter(op => {
         const { statusText } = getPriorityStatusLogic(op);
@@ -15500,10 +16122,12 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         let tempoMatch = true;
         if (!areAllFilterValues(tempoFilterValues)) tempoMatch = tempoFilterValues.includes(getTempoBucket(op.registrationTime));
 
-        return textMatch && transpMatch && statusMatch && tempoMatch;
+        const timelineMatch = matchesTimelineFilters(op, timelineTypeFilterValues, timelineStatusFilterValues);
+        const operationTypeMatch = filterValuesMatchOperationType(operationTypeFilterValues, op);
+        return textMatch && transpMatch && statusMatch && tempoMatch && timelineMatch && operationTypeMatch;
       });
 
-      headers = ['DT','Status','Agenda','Tipo','Tempo no Pátio','Motorista','Transportadora','Placa Cavalo','Placa Carreta'];
+      headers = ['DT','Status','Agenda','Tipo','Tempo no Pátio','Motorista','Transportadora','Placa Cavalo','Placa Carreta','Linha do Tempo'];
     }
 
     if (activeTab === 'ocorrencias') {
@@ -15549,7 +16173,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
           `"${truckPlate}"`,
           `"${trailerPlate}"`,
           `"${op.finishedTime ? new Date(op.finishedTime).toLocaleString('pt-BR') : 'N/A'}"`,
-          `"${tempoTotal}"`
+          `"${tempoTotal}"`,
+          `"${formatOperationTimelineForReport(op).replace(/"/g, '""')}"`
         ].join(',');
       }
 
@@ -15563,7 +16188,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         `"${op.motorista || op.name || ''}"`,
         `"${op.transportadora || ''}"`,
         `"${truckPlate}"`,
-        `"${trailerPlate}"`
+        `"${trailerPlate}"`,
+        `"${formatOperationTimelineForReport(op).replace(/"/g, '""')}"`
       ].join(',');
     });
 
@@ -19945,7 +20571,7 @@ async function handleAddOccurrence(e) {
 
     // Monta HTML dos modais
     document.getElementById('details-modal').innerHTML = `
-      <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl relative">
+      <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-5xl relative">
         <h3 id="details-modal-title" class="text-xl font-bold text-white mb-4"></h3>
         <button onclick="window.closeDetailsModal()"
                 class="absolute top-4 right-4 text-gray-500 hover:text-white">
@@ -20108,8 +20734,11 @@ async function handleAddOccurrence(e) {
     document.getElementById('occurrenceType')?.addEventListener('change', renderOccurrenceChecklistWarning);
 
     updateStatusFilterOptions('patio');
+    updateOperationTypeFilterOptions();
     initAllMultiFilters();
     setMultiFilterVisible('filter-tempo-patio', true);
+    setMultiFilterVisible('filter-operation-type', true);
+    setMultiFilterVisible('filter-timeline-type', true);
 
     // listeners filtros
     document.getElementById('search-input').addEventListener('input', debouncedRender);
@@ -20118,6 +20747,9 @@ async function handleAddOccurrence(e) {
     document.getElementById('filter-date').addEventListener('change', debouncedRender);
     document.getElementById('filter-shift').addEventListener('change', debouncedRender);
     document.getElementById('filter-tempo-patio').addEventListener('change', debouncedRender);
+    document.getElementById('filter-operation-type')?.addEventListener('change', debouncedRender);
+    document.getElementById('filter-timeline-status')?.addEventListener('change', debouncedRender);
+    document.getElementById('filter-timeline-type')?.addEventListener('change', debouncedRender);
 
     // ✅ listeners da aba Motoristas
     document.getElementById('drivers-search')?.addEventListener('input', () => { driversPage = 1; debouncedRender(); });
@@ -21199,6 +21831,8 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
       setMultiFilterVisible('filter-status', !showHistorico);
 
       setMultiFilterVisible('filter-tempo-patio', activeTab === 'patio');
+      setMultiFilterVisible('filter-operation-type', activeTab === 'patio' || activeTab === 'historico');
+      setMultiFilterVisible('filter-timeline-type', showMainTable);
       document.getElementById('mass-finish-btn').style.display = (activeTab === 'patio') ? 'flex' : 'none';
 
       updateStatusFilterOptions(activeTab);
@@ -21408,6 +22042,8 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
 
     // estado inicial
     setMultiFilterVisible('filter-tempo-patio', true);
+    setMultiFilterVisible('filter-operation-type', true);
+    setMultiFilterVisible('filter-timeline-type', true);
     document.getElementById('mass-finish-btn').style.display = 'flex';
     initPerformanceCardLayout();
     initEwmColumnFilters();
