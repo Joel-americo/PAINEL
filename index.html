@@ -9707,7 +9707,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const date = new Date(ms);
     const today = new Date();
     const sameDay = date.toDateString() === today.toDateString();
-    const time = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const time = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     return sameDay ? time : `${date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} ${time}`;
   };
 
@@ -9717,6 +9717,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     text,
     timestampMs: ms,
     timestampIso: new Date(ms).toISOString(),
+    eventId: extra.eventId || `timeline-${ms}-${Math.random().toString(36).slice(2, 10)}`,
     ...extra
   });
 
@@ -9806,6 +9807,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     }
 
     const storedTimeline = getStoredTimeline(op);
+    const storedTypes = new Set(storedTimeline.map(event => String(event.type || '').toLowerCase()).filter(Boolean));
     const hasStoredWhatsappEvent = storedTimeline.some(event => ['whatsapp', 'call', 'rechamado', 'recall'].includes(String(event.type || '').toLowerCase()) || ['Chamado', 'Rechamado'].includes(String(event.label || '')));
     const firstCalledMs = getWhatsAppFirstCalledMs(op);
     if (firstCalledMs && !hasStoredWhatsappEvent) {
@@ -9824,13 +9826,17 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const finishedMs = getTimelineMs(op.finishedTime || op.finalizadoEm || op.cancelledAtMs || op.canceledAtMs);
     if (finishedMs) {
       const isCanceled = String(op.status || op.statusFinal || '').toLowerCase().includes('cancel');
-      events.push({
-        key: `${isCanceled ? 'cancel' : 'finish'}-${finishedMs}`,
-        type: isCanceled ? 'cancel' : 'finish',
-        label: isCanceled ? 'Cancelado' : 'Finalizado',
-        text: isCanceled ? 'Operação cancelada no painel' : 'Operação finalizada no painel',
-        ms: finishedMs
-      });
+      const finishType = isCanceled ? 'cancel' : 'finish';
+      const hasStoredFinishEvent = storedTypes.has(finishType);
+      if (!hasStoredFinishEvent) {
+        events.push({
+          key: `${finishType}-${finishedMs}`,
+          type: finishType,
+          label: isCanceled ? 'Cancelado' : 'Finalizado',
+          text: isCanceled ? 'Operação cancelada no painel' : 'Operação finalizada no painel',
+          ms: finishedMs
+        });
+      }
     }
 
     return events
@@ -9872,7 +9878,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       return `<span class="timeline-empty">Sem eventos</span>`;
     }
 
-    const limit = mode === 'details' ? 12 : 3;
+    const limit = mode === 'details' ? 20 : 5;
     const visible = mode === 'details' ? events : events.slice(-limit);
     const hiddenCount = Math.max(0, events.length - visible.length);
 
@@ -16654,6 +16660,22 @@ async function handleAddOccurrence(e) {
         return Number.isFinite(ms) ? ms : null;
       }
 
+      // yyyy-mm-dd ou yyyy-mm-dd hh:mm sem timezone: tratar como DATA LOCAL.
+      // Isso evita o erro clássico do input type=date, que quando cai no Date.parse
+      // pode voltar para o dia anterior em fuso -03:00 e obrigar selecionar 1 dia a mais.
+      const mIsoLocal = str.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{1,2}):(\d{2})(?::(\d{2})(?:\.\d{1,3})?)?)?$/);
+      if (mIsoLocal) {
+        const yyyy = parseInt(mIsoLocal[1], 10);
+        const mm = parseInt(mIsoLocal[2], 10) - 1;
+        const dd = parseInt(mIsoLocal[3], 10);
+        const hh = mIsoLocal[4] ? parseInt(mIsoLocal[4], 10) : 0;
+        const mi = mIsoLocal[5] ? parseInt(mIsoLocal[5], 10) : 0;
+        const ss = mIsoLocal[6] ? parseInt(mIsoLocal[6], 10) : 0;
+        const d = new Date(yyyy, mm, dd, hh, mi, ss, 0);
+        const ms = d.getTime();
+        return Number.isFinite(ms) ? ms : null;
+      }
+
       const parsed = Date.parse(str);
       return Number.isFinite(parsed) ? parsed : null;
     }
@@ -16670,6 +16692,28 @@ async function handleAddOccurrence(e) {
     const x = new Date(d);
     x.setHours(0, 0, 0, 0);
     return x;
+  };
+
+  const parseDateInputLocal = (value) => {
+    const str = String(value || '').trim();
+    const m = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return null;
+    const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 0, 0, 0, 0);
+    return Number.isFinite(d.getTime()) ? d : null;
+  };
+
+  const endExclusiveOfLocalDateInput = (value) => {
+    const d = parseDateInputLocal(value);
+    if (!d) return null;
+    d.setDate(d.getDate() + 1);
+    return d.getTime();
+  };
+
+  const dayRangeFromDateInput = (value, fallbackDate = new Date()) => {
+    const d = parseDateInputLocal(value) || startOfDay(fallbackDate);
+    const startMs = startOfDay(d).getTime();
+    const endMs = startMs + 24 * 3600 * 1000;
+    return { date: new Date(startMs), startMs, endMs };
   };
 
   const dayKey = (d) => {
@@ -19774,9 +19818,7 @@ async function handleAddOccurrence(e) {
     const mode = document.getElementById('baldeios-plate-mode')?.value || 'carreta';
     const originFilterValues = getMultiSelectValues('baldeios-origin-filter');
 
-    const baseDate = (dateEl && dateEl.value) ? new Date(dateEl.value) : new Date();
-    const dayStart = startOfDay(baseDate).getTime();
-    const dayEnd = dayStart + 24 * 3600 * 1000;
+    const { date: baseDate, startMs: dayStart, endMs: dayEnd } = dayRangeFromDateInput(dateEl?.value, new Date());
 
     const toMsSmart = (ts, op) => {
       const msDirect = toMs(ts);
@@ -20166,11 +20208,11 @@ async function handleAddOccurrence(e) {
     const searchRaw = (document.getElementById('ritmo-search')?.value || '').trim().toUpperCase();
     const searchCompact = searchRaw.replace(/[^A-Z0-9]/g,'');
 
-    const startDate = (startEl && startEl.value) ? new Date(startEl.value) : null;
-    const endDate = (endEl && endEl.value) ? new Date(endEl.value) : null;
+    const startDate = parseDateInputLocal(startEl?.value);
+    const endDate = parseDateInputLocal(endEl?.value);
 
     const startMs = startDate ? startOfDay(startDate).getTime() : startOfDay(new Date(Date.now() - 30*24*3600*1000)).getTime();
-    const endMs = endDate ? (startOfDay(endDate).getTime() + 24*3600*1000) : (startOfDay(new Date()).getTime() + 24*3600*1000);
+    const endMs = endDate ? endExclusiveOfLocalDateInput(endEl.value) : (startOfDay(new Date()).getTime() + 24*3600*1000);
 
     const cacheKey = `${ritmoDataVersion}|${startMs}|${endMs}|${mode}|${searchCompact}|${onlyBaldeio ? 1 : 0}`;
 
@@ -20324,11 +20366,11 @@ async function handleAddOccurrence(e) {
     const mode = document.getElementById('ritmo-dash-plate-mode')?.value || 'carreta';
     const onlyBaldeio = !!document.getElementById('ritmo-dash-only-baldeio')?.checked;
 
-    const startDate = (startEl && startEl.value) ? new Date(startEl.value) : new Date(Date.now() - 30*24*3600*1000);
-    const endDate = (endEl && endEl.value) ? new Date(endEl.value) : new Date();
+    const startDate = parseDateInputLocal(startEl?.value) || new Date(Date.now() - 30*24*3600*1000);
+    const endDate = parseDateInputLocal(endEl?.value) || new Date();
 
     const startMs = startOfDay(startDate).getTime();
-    const endMs = startOfDay(endDate).getTime() + 24*3600*1000;
+    const endMs = endEl?.value ? endExclusiveOfLocalDateInput(endEl.value) : (startOfDay(endDate).getTime() + 24*3600*1000);
 
     const toEntries = (ops, src) => (ops || []).map(op => {
       const ts = op.registrationTime || op.timestamp || op.createdAt || op.created_at;
