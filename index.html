@@ -6,15 +6,15 @@
   <title>HEILOG - Painel do Analista</title>
 
   <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.tailwindcss.com"></script>
 
   <!-- Chart.js e plugins -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
   <style>
   @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
@@ -7885,6 +7885,132 @@ body.pandora-env-active .header-alert-slot {
   }
 }
 
+
+
+/* =========================================================
+   Patch leveza HEILOG/Pandora — reduz pintura, layout e animações pesadas
+   ========================================================= */
+#table-main-content,
+#performance-content,
+#dashboard-content,
+#drop-dashboard-content,
+#drop-panel-content,
+#motoristas-content,
+#baldeios-content,
+#ritmo-placa-content,
+#controle-dt-content,
+#pandora-content {
+  content-visibility: auto;
+  contain-intrinsic-size: 900px 1200px;
+}
+
+#table-body,
+#pandora-table-body,
+#pandora-db-table-body,
+#pandora-history-list,
+#drivers-table-body,
+#baldeios-table-body,
+#ritmo-table-body,
+#drop-panel-table-body {
+  contain: content;
+}
+
+canvas {
+  contain: strict;
+}
+
+.timer-cell,
+.drop-timer-cell {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ===== Paginação leve das tabelas principais ===== */
+.table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(16,32,24,0.10);
+  box-shadow: 0 8px 20px rgba(15,23,42,0.055);
+}
+.table-pagination.hidden { display: none !important; }
+.table-pagination-info {
+  color: #405247 !important;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+.table-pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.table-pagination-controls label {
+  color: #5f7067 !important;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+.table-pagination-controls select {
+  min-height: 38px !important;
+  padding: 0.35rem 0.65rem !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  color: #102018 !important;
+  -webkit-text-fill-color: #102018 !important;
+  border: 1px solid rgba(16,32,24,0.14) !important;
+}
+.table-page-btn {
+  min-height: 38px;
+  padding: 0.45rem 0.85rem !important;
+  border-radius: 12px !important;
+  background: #07351f !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  font-weight: 850 !important;
+  box-shadow: 0 8px 18px rgba(0, 89, 45, 0.14) !important;
+}
+.table-page-btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  transform: none !important;
+}
+.table-page-current {
+  min-width: 86px;
+  text-align: center;
+  color: #102018 !important;
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+@media (max-width: 640px) {
+  .table-pagination {
+    align-items: stretch;
+  }
+  .table-pagination-info,
+  .table-pagination-controls {
+    width: 100%;
+    justify-content: center;
+  }
+  .table-page-btn {
+    flex: 1 1 120px;
+  }
+}
 </style>
 </head>
 
@@ -8223,6 +8349,24 @@ body.pandora-env-active .header-alert-slot {
           <thead id="table-head"></thead>
           <tbody id="table-body"></tbody>
         </table>
+      </div>
+
+      <div id="table-pagination" class="table-pagination hidden" aria-label="Paginação da tabela">
+        <div class="table-pagination-info">
+          Mostrando <span id="table-pagination-range">0-0</span> de <span id="table-pagination-total">0</span> itens
+        </div>
+        <div class="table-pagination-controls">
+          <label for="table-page-size">Itens por página</label>
+          <select id="table-page-size" aria-label="Itens por página">
+            <option value="25" selected>25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="all">Todos</option>
+          </select>
+          <button type="button" id="table-page-prev" class="table-page-btn">Anterior</button>
+          <span id="table-page-info" class="table-page-current">Página 1 de 1</span>
+          <button type="button" id="table-page-next" class="table-page-btn">Próxima</button>
+        </div>
       </div>
     </main>
     <!-- Performance do turno -->
@@ -8882,6 +9026,10 @@ body.pandora-env-active .header-alert-slot {
               <button id="pandora-new-btn" type="button" class="pandora-btn pandora-btn-blue">+ Nova NF</button>
               <label for="pandora-upload-file" class="pandora-btn pandora-btn-primary cursor-pointer">Upload Banco XML</label>
               <input id="pandora-upload-file" type="file" accept=".xlsx,.xls,.csv" class="hidden">
+              <label for="pandora-zgr-file" class="pandora-btn pandora-btn-warning cursor-pointer">Importar ZGR001</label>
+              <input id="pandora-zgr-file" type="file" accept=".xlsx,.xls,.csv" class="hidden">
+              <label for="pandora-clientes-file" class="pandora-btn pandora-btn-soft cursor-pointer">Importar Clientes</label>
+              <input id="pandora-clientes-file" type="file" accept=".xlsx,.xls,.csv" class="hidden">
               <button id="pandora-export-btn" type="button" class="pandora-btn pandora-btn-light">Exportar CSV</button>
               <button id="pandora-undo-btn" type="button" class="pandora-btn pandora-btn-light">Desfazer última ação</button>
               <span id="pandora-import-status" class="pandora-import-status">Banco XML: aguardando upload</span>
@@ -8892,11 +9040,12 @@ body.pandora-env-active .header-alert-slot {
         <section class="pandora-card pandora-upload-panel">
           <div class="pd-upload-copy">
             <div class="pd-upload-title">Banco de dados XML / Pandora</div>
-            <div class="pd-upload-subtitle">Faça upload da planilha. O Pandora exibirá somente notas de Jacareí e usará a chave de acesso para autopreencher a NF.</div>
+            <div class="pd-upload-subtitle">Faça upload do Banco XML, importe a ZGR001 para validar escrituração e use a Base de Clientes para proteger a área correta pelo código do parceiro.</div>
           </div>
           <div class="pandora-db-meta">
             <span id="pandora-db-count" class="pandora-db-chip">0 registros no banco</span>
             <span id="pandora-db-file" class="pandora-db-chip">Nenhum arquivo carregado</span>
+            <span id="pandora-clientes-base-chip" class="pandora-db-chip">Base Clientes: não importada</span>
             <span id="pandora-site-filter-chip" class="pandora-site-chip">Filtro ativo: Jacareí</span>
             <button id="pandora-open-db-btn" type="button" class="pandora-btn pandora-btn-soft">Ver Banco XML</button>
           </div>
@@ -8926,6 +9075,32 @@ body.pandora-env-active .header-alert-slot {
             <div class="pandora-card">
               <div class="pandora-card-title"><h3>Responsáveis</h3><span class="pandora-muted text-sm">Calculado pela Área responsável</span></div>
               <div id="pandora-area-list" class="pandora-area-list"></div>
+            </div>
+          </div>
+
+          <div class="pandora-card">
+            <div class="pandora-card-title">
+              <div>
+                <h3>Notas paradas por área</h3>
+                <p class="pandora-muted text-sm mt-1">Quantidade de NFs pendentes por aging: 30, 60 e 90 dias.</p>
+              </div>
+              <span class="pandora-muted text-sm">Não considera Escrituradas/Canceladas</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left pandora-aging-area-table">
+                <thead>
+                  <tr>
+                    <th>Área</th>
+                    <th class="text-center">30 a 59 dias</th>
+                    <th class="text-center">60 a 89 dias</th>
+                    <th class="text-center">90+ dias</th>
+                    <th class="text-center">Total parado</th>
+                  </tr>
+                </thead>
+                <tbody id="pandora-aging-area-body">
+                  <tr><td colspan="5" class="text-center pandora-muted py-6">Nenhuma NF pendente acima de 30 dias.</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -8963,7 +9138,7 @@ body.pandora-env-active .header-alert-slot {
               <input id="pd-transportadora" type="hidden" value="">
               <input id="pd-dt" type="hidden" value="">
               <input id="pd-placa" type="hidden" value="">
-              <div class="pandora-field"><label>Responsável</label><input id="pd-responsavel" placeholder="Quem está tratando"></div>
+              <div class="pandora-field"><label>Responsável *</label><input id="pd-responsavel" required aria-required="true" placeholder="Quem está tratando"></div>
               <div class="pandora-field"><label>Motivo do problema</label><input id="pd-problema" placeholder="Quando houver"></div>
             </div>
             <div class="pandora-grid pandora-grid-2">
@@ -9000,22 +9175,41 @@ body.pandora-env-active .header-alert-slot {
               <tbody id="pandora-table-body"></tbody>
             </table>
           </div>
+          <div class="table-pagination pandora-pagination hidden" data-pandora-pagination="painel" aria-label="Paginação do Painel Pandora">
+            <div class="table-pagination-info">
+              Mostrando <span data-pandora-range>0-0</span> de <span data-pandora-total>0</span> itens
+            </div>
+            <div class="table-pagination-controls">
+              <label for="pandora-panel-page-size">Itens por página</label>
+              <select id="pandora-panel-page-size" data-pandora-page-size="painel" aria-label="Itens por página no Painel Pandora">
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="all">Todos</option>
+              </select>
+              <button type="button" data-pandora-page-prev="painel" class="table-page-btn">Anterior</button>
+              <span data-pandora-page-info class="table-page-current">Página 1 de 1</span>
+              <button type="button" data-pandora-page-next="painel" class="table-page-btn">Próxima</button>
+            </div>
+          </div>
         </section>
 
         <section id="pandora-banco-view" data-pandora-section="banco" class="pandora-card pandora-hidden">
           <div class="pandora-card-title">
             <div>
               <h3>Banco XML Pandora</h3>
-              <p class="pandora-muted text-sm mt-1">Somente registros de Jacareí importados da planilha. A busca usa NF, chave, parceiro, centro, CFOP, status e responsável.</p>
+              <p class="pandora-muted text-sm mt-1">Somente registros de Jacareí importados da planilha. A busca usa NF, chave, parceiro, cliente, área, centro, CFOP, status e responsável.</p>
             </div>
             <div class="flex flex-wrap gap-2">
               <label for="pandora-upload-file" class="pandora-btn pandora-btn-primary cursor-pointer">Importar Excel</label>
+              <label for="pandora-zgr-file" class="pandora-btn pandora-btn-warning cursor-pointer">Importar ZGR001</label>
+              <label for="pandora-clientes-file" class="pandora-btn pandora-btn-soft cursor-pointer">Importar Clientes</label>
               <button id="pandora-db-refresh-btn" type="button" class="pandora-btn pandora-btn-soft">Atualizar Banco</button>
             </div>
           </div>
           <div class="pandora-filter-row mb-4">
             <input id="pandora-db-search" placeholder="Buscar no banco XML...">
-            <select id="pandora-db-filter-status"><option value="todos">Todos os status XML</option></select>
+            <select id="pandora-db-filter-status"><option value="todos">Todos os status Pandora</option></select>
             <select id="pandora-db-filter-centro"><option value="todos">Todos os centros</option></select>
           </div>
           <div class="pandora-table-shell">
@@ -9028,6 +9222,23 @@ body.pandora-env-active .header-alert-slot {
               <tbody id="pandora-db-table-body"></tbody>
             </table>
           </div>
+          <div class="table-pagination pandora-pagination hidden" data-pandora-pagination="banco" aria-label="Paginação do Banco XML Pandora">
+            <div class="table-pagination-info">
+              Mostrando <span data-pandora-range>0-0</span> de <span data-pandora-total>0</span> itens
+            </div>
+            <div class="table-pagination-controls">
+              <label for="pandora-db-page-size">Itens por página</label>
+              <select id="pandora-db-page-size" data-pandora-page-size="banco" aria-label="Itens por página no Banco XML Pandora">
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="all">Todos</option>
+              </select>
+              <button type="button" data-pandora-page-prev="banco" class="table-page-btn">Anterior</button>
+              <span data-pandora-page-info class="table-page-current">Página 1 de 1</span>
+              <button type="button" data-pandora-page-next="banco" class="table-page-btn">Próxima</button>
+            </div>
+          </div>
           <div id="pandora-db-limit-hint" class="pandora-muted text-sm mt-3"></div>
         </section>
 
@@ -9039,6 +9250,23 @@ body.pandora-env-active .header-alert-slot {
             </div>
           </div>
           <div id="pandora-history-list" class="pandora-history-list"></div>
+          <div class="table-pagination pandora-pagination hidden" data-pandora-pagination="historico" aria-label="Paginação do Histórico Pandora">
+            <div class="table-pagination-info">
+              Mostrando <span data-pandora-range>0-0</span> de <span data-pandora-total>0</span> itens
+            </div>
+            <div class="table-pagination-controls">
+              <label for="pandora-history-page-size">Itens por página</label>
+              <select id="pandora-history-page-size" data-pandora-page-size="historico" aria-label="Itens por página no Histórico Pandora">
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="all">Todos</option>
+              </select>
+              <button type="button" data-pandora-page-prev="historico" class="table-page-btn">Anterior</button>
+              <span data-pandora-page-info class="table-page-current">Página 1 de 1</span>
+              <button type="button" data-pandora-page-next="historico" class="table-page-btn">Próxima</button>
+            </div>
+          </div>
         </section>
       </div>
     </div>
@@ -9305,15 +9533,42 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   let ocorrenciasData = [];
   let sapUnlocksData = {};
   let activeTab = 'patio';
+  const MAIN_TABLE_PAGINATED_TABS = new Set(['patio', 'historico', 'ocorrencias']);
+  const MAIN_TABLE_PAGE_SIZE_KEY = 'heilog_main_table_page_size_v1';
+  let mainTableCurrentPageByTab = { patio: 1, historico: 1, ocorrencias: 1 };
+  let mainTablePageSize = (() => {
+    try {
+      const saved = localStorage.getItem(MAIN_TABLE_PAGE_SIZE_KEY);
+      if (saved === 'all') return 'all';
+      const n = parseInt(saved || '25', 10);
+      return [25, 50, 100].includes(n) ? n : 25;
+    } catch (_) {
+      return 25;
+    }
+  })();
   let pandoraData = [];
   let pandoraHistoryData = [];
   let pandoraEditId = null;
   let pandoraStatusChart = null;
   let pandoraUndoStack = [];
+  let pandoraClientesBase = [];
   let pandoraUsingLocalFallback = false;
   let pandoraLastView = 'dashboard';
   let pandoraImportMeta = { fileName: '', importedAt: '', total: 0 };
   const PANDORA_DB_TABLE_LIMIT = 350;
+  const PANDORA_PAGINATED_VIEWS = new Set(['painel', 'banco', 'historico']);
+  const PANDORA_TABLE_PAGE_SIZE_KEY = 'heilog_pandora_table_page_size_v1';
+  let pandoraCurrentPageByView = { painel: 1, banco: 1, historico: 1 };
+  let pandoraPageSize = (() => {
+    try {
+      const saved = localStorage.getItem(PANDORA_TABLE_PAGE_SIZE_KEY);
+      if (saved === 'all') return 'all';
+      const n = parseInt(saved || '25', 10);
+      return [25, 50, 100].includes(n) ? n : 25;
+    } catch (_) {
+      return 25;
+    }
+  })();
   let selectedOperacao = null;
   let occurrenceSelectedFiles = [];
   let resolutionSelectedFiles = [];
@@ -9328,6 +9583,36 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   let ritmoDashTopPlatesChart = null;
   let ritmoDashHeatmapChart = null;
   let ritmoDashLastExport = null;
+
+
+  // ==============================
+  // PERFORMANCE / LEVEZA
+  // ==============================
+  const HEILOG_PERF = {
+    renderDebounceMs: 150,
+    pandoraSearchDebounceMs: 180,
+    maxVisibleHistoryItems: 80
+  };
+
+  const runNextFrame = (fn) => {
+    if (typeof requestAnimationFrame === 'function') return requestAnimationFrame(fn);
+    return setTimeout(fn, 16);
+  };
+
+  const scheduleIdle = (fn) => {
+    if (typeof requestIdleCallback === 'function') return requestIdleCallback(fn, { timeout: 1200 });
+    return setTimeout(fn, 250);
+  };
+
+  const applyChartPerfDefaults = () => {
+    if (typeof Chart === 'undefined' || !Chart.defaults) return;
+    Chart.defaults.animation = false;
+    Chart.defaults.transitions = Chart.defaults.transitions || {};
+    Chart.defaults.transitions.active = { animation: { duration: 0 } };
+    Chart.defaults.transitions.resize = { animation: { duration: 0 } };
+  };
+  applyChartPerfDefaults();
+
 
 
   let notifiedVehicles = new Set();
@@ -12980,6 +13265,57 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   }
 
 
+
+  function resetMainTablePagination(tab = activeTab) {
+    if (MAIN_TABLE_PAGINATED_TABS.has(tab)) mainTableCurrentPageByTab[tab] = 1;
+  }
+
+  function resetAllMainTablePagination() {
+    Object.keys(mainTableCurrentPageByTab).forEach(tab => { mainTableCurrentPageByTab[tab] = 1; });
+  }
+
+  function getMainTablePageSize() {
+    return mainTablePageSize === 'all' ? 'all' : (Number(mainTablePageSize) || 25);
+  }
+
+  function setMainTablePageSize(value) {
+    mainTablePageSize = value === 'all' ? 'all' : (Number(value) || 25);
+    if (mainTablePageSize !== 'all' && ![25, 50, 100].includes(mainTablePageSize)) mainTablePageSize = 25;
+    try { localStorage.setItem(MAIN_TABLE_PAGE_SIZE_KEY, String(mainTablePageSize)); } catch (_) {}
+    resetAllMainTablePagination();
+  }
+
+  function renderMainTablePagination(total, currentPage, totalPages, pageSize) {
+    const box = document.getElementById('table-pagination');
+    if (!box) return;
+    const isActive = MAIN_TABLE_PAGINATED_TABS.has(activeTab);
+    if (!isActive || total <= 0) {
+      box.classList.add('hidden');
+      return;
+    }
+
+    const safeTotalPages = Math.max(1, Number(totalPages) || 1);
+    const safePage = Math.min(Math.max(1, Number(currentPage) || 1), safeTotalPages);
+    const sizeSelect = document.getElementById('table-page-size');
+    if (sizeSelect && String(sizeSelect.value) !== String(pageSize)) sizeSelect.value = String(pageSize);
+
+    const start = pageSize === 'all' ? 1 : ((safePage - 1) * Number(pageSize)) + 1;
+    const end = pageSize === 'all' ? total : Math.min(total, safePage * Number(pageSize));
+
+    const rangeEl = document.getElementById('table-pagination-range');
+    const totalEl = document.getElementById('table-pagination-total');
+    const pageInfoEl = document.getElementById('table-page-info');
+    const prevBtn = document.getElementById('table-page-prev');
+    const nextBtn = document.getElementById('table-page-next');
+
+    if (rangeEl) rangeEl.textContent = `${start.toLocaleString('pt-BR')}-${end.toLocaleString('pt-BR')}`;
+    if (totalEl) totalEl.textContent = total.toLocaleString('pt-BR');
+    if (pageInfoEl) pageInfoEl.textContent = `Página ${safePage.toLocaleString('pt-BR')} de ${safeTotalPages.toLocaleString('pt-BR')}`;
+    if (prevBtn) prevBtn.disabled = safePage <= 1 || pageSize === 'all';
+    if (nextBtn) nextBtn.disabled = safePage >= safeTotalPages || pageSize === 'all';
+    box.classList.remove('hidden');
+  }
+
   // ==============================
   // RENDER
   // ==============================
@@ -13096,7 +13432,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     updateOperationTypeFilterOptions();
   };
 
-  const debouncedRender = debounce(render, 80);
+  const debouncedRender = debounce(() => runNextFrame(render), HEILOG_PERF.renderDebounceMs);
 
   // ==============================
   // TABLE
@@ -13125,10 +13461,30 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         `<tr><td colspan="${colspan}" class="text-center p-8 text-gray-400">
           Nenhuma informação encontrada para os filtros selecionados.
         </td></tr>`;
+      renderMainTablePagination(0, 1, 1, getMainTablePageSize());
       return;
     }
 
-    tableBody.innerHTML = data.map(op => {
+    const pageSize = getMainTablePageSize();
+    let pageData = data;
+    let currentPage = Number(mainTableCurrentPageByTab[activeTab] || 1);
+    let totalPages = 1;
+
+    if (MAIN_TABLE_PAGINATED_TABS.has(activeTab) && pageSize !== 'all') {
+      const numericPageSize = Number(pageSize) || 25;
+      totalPages = Math.max(1, Math.ceil(data.length / numericPageSize));
+      currentPage = Math.min(Math.max(1, currentPage), totalPages);
+      mainTableCurrentPageByTab[activeTab] = currentPage;
+      const startIndex = (currentPage - 1) * numericPageSize;
+      pageData = data.slice(startIndex, startIndex + numericPageSize);
+    } else {
+      currentPage = 1;
+      totalPages = 1;
+    }
+
+    renderMainTablePagination(data.length, currentPage, totalPages, pageSize);
+
+    tableBody.innerHTML = pageData.map(op => {
       const { statusText, className } = getPriorityStatusLogic(op);
       const isNew = newlyAdded.has(op.id);
       const pulseClass = isNew ? (className.includes('red') ? 'animate-pulse-red' : 'animate-pulse-yellow') : '';
@@ -13805,6 +14161,9 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
   const updateStatusFilterOptions = (tab) => {
     const filterStatusSelect = document.getElementById('filter-status');
+    if (!filterStatusSelect) return;
+    if (filterStatusSelect.dataset.hlStatusTab === String(tab || '')) return;
+    filterStatusSelect.dataset.hlStatusTab = String(tab || '');
     const previousValues = getMultiSelectValues(filterStatusSelect);
 
     if (tab === 'historico') {
@@ -13960,6 +14319,10 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       .map(getOperationFilterLabel)
       .forEach(pushLabel);
 
+    const signature = labels.map(label => normalizeOperationFilterText(label)).join('|');
+    if (select.dataset.hlOptionsSignature === signature) return;
+    select.dataset.hlOptionsSignature = signature;
+
     const currentNormalized = new Set(previousValues.map(normalizeOperationFilterText));
     select.innerHTML = '';
 
@@ -13986,14 +14349,18 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     if (!select || !dashboardSelect) return;
 
     const allOps = [...patioData, ...historicoData];
-    const transportadoras = [...new Set(allOps.map(op => op.transportadora).filter(Boolean))];
+    const transportadoras = [...new Set(allOps.map(op => op.transportadora).filter(Boolean))].sort();
+    const signature = transportadoras.join('|');
+    if (select.dataset.hlTransportadorasSignature === signature && dashboardSelect.dataset.hlTransportadorasSignature === signature) return;
+    select.dataset.hlTransportadorasSignature = signature;
+    dashboardSelect.dataset.hlTransportadorasSignature = signature;
 
     const cur = getMultiSelectValues(select);
     const curDash = getMultiSelectValues(dashboardSelect);
 
     [select, dashboardSelect].forEach(s => { while (s.options.length > 1) s.remove(1); });
 
-    transportadoras.sort().forEach(t => {
+    transportadoras.forEach(t => {
       const option = document.createElement('option');
       option.value = t;
       option.textContent = t;
@@ -16850,6 +17217,46 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   color: #92400e !important;
 }
 
+
+
+/* Pandora — Dashboard Aging por área */
+.pandora-aging-area-table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  min-width: 720px;
+}
+.pandora-aging-area-table th {
+  padding: 0.85rem 0.9rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b !important;
+  background: #f1f5f9 !important;
+  border-bottom: 1px solid rgba(15,23,42,0.08);
+}
+.pandora-aging-area-table td {
+  padding: 0.85rem 0.9rem;
+  border-bottom: 1px solid rgba(15,23,42,0.07);
+  color: #0f172a !important;
+}
+.pandora-aging-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.35rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-weight: 900;
+  border: 1px solid rgba(15,23,42,0.08);
+}
+.pandora-aging-30 { background: rgba(234, 179, 8, 0.14); color: #854d0e !important; }
+.pandora-aging-60 { background: rgba(249, 115, 22, 0.15); color: #9a3412 !important; }
+.pandora-aging-90 { background: rgba(220, 38, 38, 0.14); color: #991b1b !important; }
+.pandora-aging-total-row td {
+  background: #f8fafc !important;
+  font-weight: 900;
+  color: #102018 !important;
+}
 </style>
 </head>
 <body>
@@ -21517,8 +21924,9 @@ async function handleAddOccurrence(e) {
   const PANDORA_HISTORY_LOCAL_KEY = 'heilog_pandora_history_v1';
   const PANDORA_UNDO_LOCAL_KEY = 'heilog_pandora_undo_v1';
   const PANDORA_IMPORT_META_KEY = 'heilog_pandora_import_meta_v1';
+  const PANDORA_CLIENTE_BASE_LOCAL_KEY = 'heilog_pandora_clientes_base_v1';
 
-  const PANDORA_AREAS = ['Transportes', 'Warehouse', 'Fiscal', 'Customer Service', 'Planejamento', 'Portaria', 'Operação', 'Inbound', 'Outbound'];
+  const PANDORA_AREAS = ['Transportes', 'Warehouse', 'Fiscal', 'Customer Service', 'Planejamento', 'Portaria', 'Operação', 'Inbound', 'Outbound', 'CIM', 'CD', 'INSIDE', 'ATIVOS COMERCIAIS', 'RPM', 'MARKETING', 'QUALIDADE', 'MANUTENÇÃO', 'UTILIDADES', 'PROJETOS', 'PROCESSO', 'SHE'];
   const PANDORA_STATUS = ['Em andamento', 'Aguardando área', 'Aguardando documento', 'Com problema', 'Escriturado', 'Cancelada'];
   const PANDORA_TIPOS = ['Carregamento', 'Descarga', 'Transferência', 'Insumos', 'Baldeio', 'Venda', 'Retorno', 'Outro'];
   // Pandora Jacareí: somente notas dos centros configurados abaixo aparecem no ambiente.
@@ -21551,6 +21959,86 @@ async function handleAddOccurrence(e) {
   };
   const pandoraDefaultArea = (item = {}) => item.area || 'Fiscal';
   const pandoraCentroKey = (value = '') => String(value ?? '').replace(/\D/g, '').replace(/^0+/, '') || String(value ?? '').trim();
+  const pandoraClienteKey = (value = '') => {
+    const digits = pandoraDigits(value).replace(/^0+/, '');
+    return digits || pandoraSheetKey(value);
+  };
+  const pandoraNormalizeAreaCliente = (value = '') => String(value ?? '').trim();
+  const pandoraAreaProtegidaPorCliente = (item = {}) => !!(item.areaClienteProtegida || item.areaOrigem === 'BASE_CLIENTES' || item.clienteArea);
+
+  function pandoraClienteBaseMap() {
+    const map = new Map();
+    (pandoraClientesBase || []).forEach(row => {
+      const key = row.codigoKey || pandoraClienteKey(row.codigo || row.clienteCodigo || '');
+      if (key) map.set(key, row);
+    });
+    return map;
+  }
+
+  function pandoraAreaOptions() {
+    const set = new Set(PANDORA_AREAS.filter(Boolean));
+    (pandoraData || []).forEach(item => {
+      if (item.area) set.add(item.area);
+      if (item.clienteArea) set.add(item.clienteArea);
+    });
+    (pandoraClientesBase || []).forEach(item => { if (item.area) set.add(item.area); });
+    return Array.from(set).filter(Boolean).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  }
+
+  function pandoraApplyClienteBaseToXmlRow(row = {}, existing = {}) {
+    const base = pandoraClienteBaseMap().get(pandoraClienteKey(row.parceiro || existing.parceiro || existing.clienteCodigo || row.clienteCodigo || ''));
+    if (!base || !base.area) return row;
+    return {
+      ...row,
+      area: base.area,
+      fornecedor: row.fornecedor || existing.fornecedor || base.nome || '',
+      clienteCodigo: base.codigo || row.parceiro || existing.parceiro || '',
+      clienteCodigoKey: base.codigoKey || pandoraClienteKey(base.codigo || row.parceiro || ''),
+      clienteNomeBase: base.nome || '',
+      clienteArea: base.area || '',
+      areaOrigem: 'BASE_CLIENTES',
+      areaClienteProtegida: true,
+      clienteBaseArquivo: base.arquivoOrigem || '',
+      clienteBaseUploadRow: base.uploadRow || '',
+      clienteBaseImportedAt: base.importedAt || ''
+    };
+  }
+
+  function pandoraMergeXmlRow(existing, row) {
+    const rowComCliente = pandoraApplyClienteBaseToXmlRow(row, existing || {});
+    if (!existing) return rowComCliente;
+    const protegido = pandoraAreaProtegidaPorCliente(existing) || pandoraAreaProtegidaPorCliente(rowComCliente);
+    const merged = {
+      ...existing,
+      ...rowComCliente,
+      status: existing.status || rowComCliente.status,
+      responsavel: existing.responsavel || rowComCliente.responsavel,
+      tratativa: existing.tratativa || rowComCliente.tratativa,
+      observacao: existing.observacao || rowComCliente.observacao,
+      problema: existing.problema || rowComCliente.problema,
+      _docId: existing._docId || rowComCliente._docId,
+      id: existing.id || rowComCliente.id
+    };
+    if (protegido) {
+      merged.area = rowComCliente.area || existing.area || 'Fiscal';
+      merged.areaOrigem = 'BASE_CLIENTES';
+      merged.areaClienteProtegida = true;
+      merged.clienteCodigo = rowComCliente.clienteCodigo || existing.clienteCodigo || existing.parceiro || rowComCliente.parceiro || '';
+      merged.clienteCodigoKey = rowComCliente.clienteCodigoKey || existing.clienteCodigoKey || pandoraClienteKey(merged.clienteCodigo);
+      merged.clienteNomeBase = rowComCliente.clienteNomeBase || existing.clienteNomeBase || '';
+      merged.clienteArea = rowComCliente.clienteArea || existing.clienteArea || merged.area;
+      merged.clienteBaseArquivo = rowComCliente.clienteBaseArquivo || existing.clienteBaseArquivo || '';
+      merged.clienteBaseUploadRow = rowComCliente.clienteBaseUploadRow || existing.clienteBaseUploadRow || '';
+      merged.clienteBaseImportedAt = rowComCliente.clienteBaseImportedAt || existing.clienteBaseImportedAt || '';
+    }
+    return merged;
+  }
+
+  function pandoraRefreshAreaControls() {
+    const areas = pandoraAreaOptions();
+    pandoraFillSelect('pd-area', areas);
+    pandoraFillSelect('pandora-filter-area', areas, { allLabel: 'Todas as áreas' });
+  }
 
   function pandoraIsJacarei(item = {}) {
     const site = pandoraNorm(item.sitePandora || item.site || item.unidade || item.filial || '');
@@ -21662,6 +22150,91 @@ async function handleAddOccurrence(e) {
     };
   }
 
+  function pandoraHasJ1B3N(value = '') {
+    return pandoraDigits(value).length > 0;
+  }
+
+  function pandoraNormalizeZgr001Row(row = {}, idx = 0, fileName = '') {
+    const chave = String(pandoraValueByHeader(row, [
+      'Chave de Acesso',
+      'Chave acesso',
+      'Chave de acesso NF-e',
+      'CHAVE',
+      'Chave'
+    ]) || '').trim();
+    const j1b3n = String(pandoraValueByHeader(row, [
+      'J1B3N',
+      'J1B3N Nº',
+      'J1B3N N',
+      'Documento J1B3N',
+      'Doc J1B3N',
+      'Nº Documento',
+      'Numero Documento'
+    ]) || '').trim();
+    const normalizedChave = pandoraChaveNorm(chave);
+    return {
+      chave,
+      chaveNorm: normalizedChave,
+      j1b3n,
+      escriturada: pandoraHasJ1B3N(j1b3n),
+      arquivoOrigem: fileName || '',
+      uploadRow: idx + 2
+    };
+  }
+
+  function pandoraZgrStatusText(item = {}) {
+    if (item.zgr001Status) return item.zgr001J1B3N ? `${item.zgr001Status} • ${item.zgr001J1B3N}` : item.zgr001Status;
+    return 'Não importado';
+  }
+
+  function pandoraNormalizeClienteRow(row = {}, idx = 0, fileName = '') {
+    const codigo = String(pandoraValueByHeader(row, [
+      'Código',
+      'Codigo',
+      'Código Cliente',
+      'Codigo Cliente',
+      'Cód Cliente',
+      'Cod Cliente',
+      'Cód. Cliente',
+      'Cod. Cliente',
+      'Parceiro',
+      'Código Parceiro',
+      'Codigo Parceiro',
+      'Cliente'
+    ]) || '').trim();
+    const nome = String(pandoraValueByHeader(row, [
+      'Descrição',
+      'Descricao',
+      'Nome Cliente',
+      'Nome do Cliente',
+      'Cliente',
+      'Nome',
+      'Razão Social',
+      'Razao Social',
+      'Fornecedor',
+      'Fornecedor / Cliente'
+    ]) || '').trim();
+    const area = pandoraNormalizeAreaCliente(pandoraValueByHeader(row, [
+      'Área',
+      'Area',
+      'Área Cliente',
+      'Area Cliente',
+      'Departamento',
+      'Setor'
+    ]) || '');
+    const codigoKey = pandoraClienteKey(codigo);
+    return {
+      codigo,
+      codigoKey,
+      nome,
+      area,
+      arquivoOrigem: fileName || '',
+      uploadRow: idx + 2,
+      importedAt: pandoraNow(),
+      importedAtMs: pandoraMs()
+    };
+  }
+
 
   function pandoraReadJson(key, fallback) {
     try { return JSON.parse(localStorage.getItem(key) || '') || fallback; }
@@ -21677,6 +22250,7 @@ async function handleAddOccurrence(e) {
     pandoraData = pandoraReadJson(PANDORA_LOCAL_KEY, []);
     pandoraHistoryData = pandoraReadJson(PANDORA_HISTORY_LOCAL_KEY, []);
     pandoraUndoStack = pandoraReadJson(PANDORA_UNDO_LOCAL_KEY, []);
+    pandoraClientesBase = pandoraReadJson(PANDORA_CLIENTE_BASE_LOCAL_KEY, []);
   }
 
   function pandoraSaveLocal() {
@@ -21687,6 +22261,7 @@ async function handleAddOccurrence(e) {
     pandoraWriteJson(PANDORA_HISTORY_LOCAL_KEY, pandoraHistoryData);
     pandoraWriteJson(PANDORA_UNDO_LOCAL_KEY, pandoraUndoStack.slice(-20));
     pandoraWriteJson(PANDORA_IMPORT_META_KEY, pandoraImportMeta || {});
+    pandoraWriteJson(PANDORA_CLIENTE_BASE_LOCAL_KEY, pandoraClientesBase || []);
   }
 
   function pandoraFillSelect(id, options, opts = {}) {
@@ -21709,11 +22284,10 @@ async function handleAddOccurrence(e) {
   }
 
   function initPandoraControls() {
-    pandoraFillSelect('pd-area', PANDORA_AREAS);
+    pandoraRefreshAreaControls();
     pandoraFillSelect('pd-status', PANDORA_STATUS);
     pandoraFillSelect('pd-tipo', PANDORA_TIPOS);
     pandoraFillSelect('pandora-filter-status', PANDORA_STATUS, { allLabel: 'Todos os status' });
-    pandoraFillSelect('pandora-filter-area', PANDORA_AREAS, { allLabel: 'Todas as áreas' });
   }
 
   function setPandoraView(view = 'dashboard') {
@@ -21820,10 +22394,26 @@ async function handleAddOccurrence(e) {
     pandoraWriteJson(PANDORA_UNDO_LOCAL_KEY, pandoraUndoStack);
   }
 
+  function pandoraHistoryResponsible(item = {}) {
+    return String(item.responsavel || item.responsavelAlteracao || item.usuarioAlteracao || item.usuario || item.operador || '').trim();
+  }
+
+  function pandoraRequireResponsible(item = {}, message = 'Informe o responsável antes de realizar esta alteração.') {
+    if (pandoraHistoryResponsible(item)) return true;
+    showToast(message, 'info');
+    try {
+      fillPandoraForm(item);
+      setTimeout(() => document.getElementById('pd-responsavel')?.focus(), 80);
+    } catch (_) {}
+    return false;
+  }
+
   async function pandoraAddHistory(action, item = {}, detail = '') {
+    const responsavelHistorico = pandoraHistoryResponsible(item);
     const payload = {
       action,
       detail,
+      responsavel: responsavelHistorico,
       nf: item.nf || '',
       area: item.area || '',
       status: item.status || '',
@@ -21847,6 +22437,11 @@ async function handleAddOccurrence(e) {
     const payload = getPandoraFormPayload();
     if (!payload.chave) return showToast('Informe a chave de acesso.', 'info');
     if (!payload.area) return showToast('Informe a área responsável.', 'info');
+    if (!payload.responsavel) {
+      showToast('Informe o responsável antes de salvar qualquer alteração.', 'info');
+      document.getElementById('pd-responsavel')?.focus();
+      return;
+    }
 
     let existing = pandoraEditId ? pandoraData.find(x => pandoraDocKey(x) === pandoraEditId) : null;
     if (!existing && payload.chaveNorm) {
@@ -21929,6 +22524,7 @@ async function handleAddOccurrence(e) {
   async function pandoraUpdateStatus(id, status) {
     const item = pandoraData.find(x => pandoraDocKey(x) === id);
     if (!item) return showToast('NF não encontrada.', 'error');
+    if (!pandoraRequireResponsible(item, 'Informe o responsável antes de alterar o status da NF.')) return;
     const nowIso = pandoraNow();
     const nowMs = pandoraMs();
     const patch = {
@@ -21966,6 +22562,7 @@ async function handleAddOccurrence(e) {
   async function pandoraDeleteNF(id) {
     const item = pandoraData.find(x => pandoraDocKey(x) === id);
     if (!item) return showToast('NF não encontrada.', 'error');
+    if (!pandoraRequireResponsible(item, 'Informe o responsável antes de excluir a NF.')) return;
     const execute = async () => {
       try {
         if (db && item._docId && !pandoraUsingLocalFallback) await deleteDoc(pandoraDocRef(PANDORA_NF_COLLECTION, item._docId));
@@ -22010,6 +22607,25 @@ async function handleAddOccurrence(e) {
           if (idx >= 0) pandoraData[idx] = action.before;
         }
         await pandoraAddHistory('Desfez alteração', action.before, 'NF restaurada para o estado anterior.');
+      } else if (action.type === 'bulkUpdate' && Array.isArray(action.items)) {
+        const items = action.items.filter(x => x && x.before);
+        if (db && !pandoraUsingLocalFallback) {
+          for (let i = 0; i < items.length; i += 450) {
+            const batch = writeBatch(db);
+            items.slice(i, i + 450).forEach(x => {
+              const docId = x.before._docId || x.before.id || pandoraDocKey(x.before);
+              if (docId) batch.set(pandoraDocRef(PANDORA_NF_COLLECTION, docId), x.before, { merge: true });
+            });
+            await batch.commit();
+          }
+        } else {
+          items.forEach(x => {
+            const id = pandoraDocKey(x.before);
+            const idx = pandoraData.findIndex(row => pandoraDocKey(row) === id);
+            if (idx >= 0) pandoraData[idx] = x.before;
+          });
+        }
+        await pandoraAddHistory(action.label || 'Desfez importação em massa', { nf: '', area: 'Fiscal', status: 'Desfazer', responsavel: 'Sistema / Desfazer' }, `${items.length.toLocaleString('pt-BR')} NFs restauradas para o estado anterior.`);
       } else if (action.type === 'delete' && action.item) {
         const id = pandoraDocKey(action.item) || pandoraLocalId('PDNF');
         if (db && action.item._docId && !pandoraUsingLocalFallback) await setDoc(pandoraDocRef(PANDORA_NF_COLLECTION, action.item._docId), action.item, { merge: true });
@@ -22033,7 +22649,7 @@ async function handleAddOccurrence(e) {
       if (status !== 'todos' && pandoraDefaultStatus(item) !== status) return false;
       if (area !== 'todos' && pandoraDefaultArea(item) !== area) return false;
       if (!term) return true;
-      const hay = pandoraNorm([item.nf, item.serie, item.chave, item.area, item.tipo, pandoraDefaultStatus(item), item.statusXml, item.dataEmissaoXml, item.dataEntradaXml, item.centro, item.parceiro, item.cnpjParceiro, item.cfop, item.valorNf, item.processo, item.evento, item.transportadora, item.fornecedor, item.dt, item.placa, item.responsavel, item.problema, item.tratativa, item.observacao].join(' '));
+      const hay = pandoraNorm([item.nf, item.serie, item.chave, item.area, item.tipo, pandoraDefaultStatus(item), item.statusXml, item.zgr001Status, item.zgr001J1B3N, item.zgr001Arquivo, item.clienteCodigo, item.clienteNomeBase, item.clienteArea, item.dataEmissaoXml, item.dataEntradaXml, item.centro, item.parceiro, item.cnpjParceiro, item.cfop, item.valorNf, item.processo, item.evento, item.transportadora, item.fornecedor, item.dt, item.placa, item.responsavel, item.problema, item.tratativa, item.observacao].join(' '));
       return hay.includes(term);
     }).sort((a, b) => (b.createdAtMs || 0) - (a.createdAtMs || 0));
   }
@@ -22134,6 +22750,77 @@ async function handleAddOccurrence(e) {
     return `${hours}h ${Math.floor((diff % 3600000) / 60000)}min`;
   }
 
+  function resetPandoraPagination(view = pandoraLastView) {
+    if (PANDORA_PAGINATED_VIEWS.has(view)) pandoraCurrentPageByView[view] = 1;
+  }
+
+  function resetAllPandoraPagination() {
+    Object.keys(pandoraCurrentPageByView).forEach(view => { pandoraCurrentPageByView[view] = 1; });
+  }
+
+  function getPandoraPageSize() {
+    return pandoraPageSize === 'all' ? 'all' : (Number(pandoraPageSize) || 25);
+  }
+
+  function setPandoraPageSize(value) {
+    pandoraPageSize = value === 'all' ? 'all' : (Number(value) || 25);
+    if (pandoraPageSize !== 'all' && ![25, 50, 100].includes(pandoraPageSize)) pandoraPageSize = 25;
+    try { localStorage.setItem(PANDORA_TABLE_PAGE_SIZE_KEY, String(pandoraPageSize)); } catch (_) {}
+    resetAllPandoraPagination();
+  }
+
+  function getPandoraPaginatedRows(view, rows = []) {
+    const pageSize = getPandoraPageSize();
+    let currentPage = Number(pandoraCurrentPageByView[view] || 1);
+    let totalPages = 1;
+    let pageRows = rows;
+
+    if (PANDORA_PAGINATED_VIEWS.has(view) && pageSize !== 'all') {
+      const numericPageSize = Number(pageSize) || 25;
+      totalPages = Math.max(1, Math.ceil(rows.length / numericPageSize));
+      currentPage = Math.min(Math.max(1, currentPage), totalPages);
+      pandoraCurrentPageByView[view] = currentPage;
+      const startIndex = (currentPage - 1) * numericPageSize;
+      pageRows = rows.slice(startIndex, startIndex + numericPageSize);
+    } else {
+      currentPage = 1;
+      totalPages = 1;
+    }
+
+    return { rows: pageRows, currentPage, totalPages, pageSize };
+  }
+
+  function renderPandoraPagination(view, total, currentPage = 1, totalPages = 1, pageSize = getPandoraPageSize()) {
+    const box = document.querySelector(`[data-pandora-pagination="${view}"]`);
+    if (!box) return;
+
+    if (!PANDORA_PAGINATED_VIEWS.has(view) || total <= 0) {
+      box.classList.add('hidden');
+      return;
+    }
+
+    const safeTotalPages = Math.max(1, Number(totalPages) || 1);
+    const safePage = Math.min(Math.max(1, Number(currentPage) || 1), safeTotalPages);
+    const start = pageSize === 'all' ? 1 : ((safePage - 1) * Number(pageSize)) + 1;
+    const end = pageSize === 'all' ? total : Math.min(total, safePage * Number(pageSize));
+
+    const sizeSelect = box.querySelector('[data-pandora-page-size]');
+    const rangeEl = box.querySelector('[data-pandora-range]');
+    const totalEl = box.querySelector('[data-pandora-total]');
+    const pageInfoEl = box.querySelector('[data-pandora-page-info]');
+    const prevBtn = box.querySelector('[data-pandora-page-prev]');
+    const nextBtn = box.querySelector('[data-pandora-page-next]');
+
+    if (sizeSelect && String(sizeSelect.value) !== String(pageSize)) sizeSelect.value = String(pageSize);
+    if (rangeEl) rangeEl.textContent = `${start.toLocaleString('pt-BR')}-${end.toLocaleString('pt-BR')}`;
+    if (totalEl) totalEl.textContent = total.toLocaleString('pt-BR');
+    if (pageInfoEl) pageInfoEl.textContent = `Página ${safePage.toLocaleString('pt-BR')} de ${safeTotalPages.toLocaleString('pt-BR')}`;
+    if (prevBtn) prevBtn.disabled = safePage <= 1 || pageSize === 'all';
+    if (nextBtn) nextBtn.disabled = safePage >= safeTotalPages || pageSize === 'all';
+
+    box.classList.remove('hidden');
+  }
+
   function renderPandoraDashboard() {
     const rows = pandoraVisibleRows();
     const statusCounts = pandoraCountBy(rows, 'status');
@@ -22173,6 +22860,49 @@ async function handleAddOccurrence(e) {
       `).join('') : '<div class="pandora-muted">Nenhuma NF de Jacareí cadastrada ainda.</div>';
     }
 
+    const agingAreaBody = document.getElementById('pandora-aging-area-body');
+    if (agingAreaBody) {
+      const agingStats = rows.reduce((acc, item) => {
+        if (!pandoraIsPendente(item)) return acc;
+        const aging = pandoraAgingInfo(item);
+        if (!aging || aging.days === null || aging.days < 30) return acc;
+        const area = pandoraDefaultArea(item) || 'Não informado';
+        if (!acc[area]) acc[area] = { d30: 0, d60: 0, d90: 0, total: 0 };
+        if (aging.days >= 90) acc[area].d90 += 1;
+        else if (aging.days >= 60) acc[area].d60 += 1;
+        else acc[area].d30 += 1;
+        acc[area].total += 1;
+        return acc;
+      }, {});
+      const agingEntries = Object.entries(agingStats).sort((a,b) =>
+        (b[1].total - a[1].total) || (b[1].d90 - a[1].d90) || (b[1].d60 - a[1].d60) || a[0].localeCompare(b[0], 'pt-BR')
+      );
+      if (!agingEntries.length) {
+        agingAreaBody.innerHTML = '<tr><td colspan="5" class="text-center pandora-muted py-6">Nenhuma NF pendente acima de 30 dias.</td></tr>';
+      } else {
+        const totals = agingEntries.reduce((acc, [, info]) => {
+          acc.d30 += info.d30; acc.d60 += info.d60; acc.d90 += info.d90; acc.total += info.total;
+          return acc;
+        }, { d30: 0, d60: 0, d90: 0, total: 0 });
+        agingAreaBody.innerHTML = agingEntries.map(([area, info]) => `
+          <tr>
+            <td class="font-bold">${escapeHtml(area)}</td>
+            <td class="text-center"><span class="pandora-aging-count pandora-aging-30">${info.d30}</span></td>
+            <td class="text-center"><span class="pandora-aging-count pandora-aging-60">${info.d60}</span></td>
+            <td class="text-center"><span class="pandora-aging-count pandora-aging-90">${info.d90}</span></td>
+            <td class="text-center font-black">${info.total}</td>
+          </tr>
+        `).join('') + `
+          <tr class="pandora-aging-total-row">
+            <td>Total geral</td>
+            <td class="text-center">${totals.d30}</td>
+            <td class="text-center">${totals.d60}</td>
+            <td class="text-center">${totals.d90}</td>
+            <td class="text-center">${totals.total}</td>
+          </tr>`;
+      }
+    }
+
     const canvas = document.getElementById('pandora-status-chart');
     if (canvas && typeof Chart !== 'undefined') {
       const labels = PANDORA_STATUS;
@@ -22196,9 +22926,12 @@ async function handleAddOccurrence(e) {
     const rows = pandoraFilteredRows();
     if (!rows.length) {
       tbody.innerHTML = '<tr><td colspan="11" class="text-center pandora-muted py-8">Nenhuma NF de Jacareí encontrada no Pandora.</td></tr>';
+      renderPandoraPagination('painel', 0, 1, 1, getPandoraPageSize());
       return;
     }
-    tbody.innerHTML = rows.map(item => {
+    const page = getPandoraPaginatedRows('painel', rows);
+    renderPandoraPagination('painel', rows.length, page.currentPage, page.totalPages, page.pageSize);
+    tbody.innerHTML = page.rows.map(item => {
       const id = escapeHtml(pandoraDocKey(item));
       return `
         <tr>
@@ -22207,10 +22940,10 @@ async function handleAddOccurrence(e) {
             <div class="text-xs pandora-muted">Série: ${escapeHtml(item.serie || '—')}</div>
             <div class="text-xs pandora-muted">${escapeHtml((item.chave || '').slice(0, 44) || 'Sem chave')}</div>
           </td>
-          <td><span class="${pandoraStatusClass(pandoraDefaultStatus(item))}">${escapeHtml(pandoraDefaultStatus(item))}</span><div class="text-xs pandora-muted mt-1">XML: ${escapeHtml(item.statusXml || '—')}</div></td>
-          <td class="font-bold">${escapeHtml(pandoraDefaultArea(item))}</td>
+          <td><span class="${pandoraStatusClass(pandoraDefaultStatus(item))}">${escapeHtml(pandoraDefaultStatus(item))}</span><div class="text-xs pandora-muted mt-1">XML: ${escapeHtml(item.statusXml || '—')}</div><div class="text-xs pandora-muted mt-1">ZGR001: ${escapeHtml(pandoraZgrStatusText(item))}</div></td>
+          <td class="font-bold">${escapeHtml(pandoraDefaultArea(item))}${pandoraAreaProtegidaPorCliente(item) ? '<div class="text-xs pandora-muted mt-1">Base Clientes protegida</div>' : ''}</td>
           <td><div>${escapeHtml(item.tipo || '—')}</div><div class="text-xs pandora-muted">${escapeHtml(item.processo || item.evento || '')}</div></td>
-          <td>${escapeHtml(item.fornecedor || '—')}<div class="text-xs pandora-muted">Parceiro: ${escapeHtml(item.parceiro || '—')}</div></td>
+          <td>${escapeHtml(item.fornecedor || item.clienteNomeBase || '—')}<div class="text-xs pandora-muted">Parceiro: ${escapeHtml(item.parceiro || item.clienteCodigo || '—')}</div>${item.clienteNomeBase ? `<div class="text-xs pandora-muted">Cliente base: ${escapeHtml(item.clienteNomeBase)}</div>` : ''}</td>
           <td><div class="font-mono font-bold text-teal-700">${escapeHtml(item.centro || '—')}</div><div class="font-mono text-xs text-slate-600">CFOP: ${escapeHtml(item.cfop || '—')}</div></td>
           <td><div class="font-bold">${escapeHtml(item.valorNf || '—')}</div><div class="text-xs pandora-muted">Entrada: ${escapeHtml(item.dataEntradaXml || '—')}</div></td>
           <td>${escapeHtml(item.responsavel || '—')}<div class="text-xs pandora-muted">${escapeHtml(item.tratativa || item.observacao || '')}</div></td>
@@ -22234,8 +22967,10 @@ async function handleAddOccurrence(e) {
     const centroEl = document.getElementById('pandora-db-filter-centro');
     if (statusEl) {
       const keep = statusEl.value || 'todos';
-      const statuses = [...new Set(pandoraVisibleRows().map(x => x.statusXml).filter(Boolean))].sort();
-      statusEl.innerHTML = '<option value="todos">Todos os status XML</option>' + statuses.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+      const baseStatuses = PANDORA_STATUS || [];
+      const extraStatuses = [...new Set(pandoraVisibleRows().map(x => pandoraDefaultStatus(x)).filter(Boolean))].filter(s => !baseStatuses.includes(s)).sort();
+      const statuses = [...baseStatuses, ...extraStatuses];
+      statusEl.innerHTML = '<option value="todos">Todos os status Pandora</option>' + statuses.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
       if (statuses.includes(keep)) statusEl.value = keep;
     }
     if (centroEl) {
@@ -22248,13 +22983,13 @@ async function handleAddOccurrence(e) {
 
   function pandoraDbFilteredRows() {
     const term = pandoraNorm(document.getElementById('pandora-db-search')?.value || '');
-    const statusXml = document.getElementById('pandora-db-filter-status')?.value || 'todos';
+    const statusPandora = document.getElementById('pandora-db-filter-status')?.value || 'todos';
     const centro = document.getElementById('pandora-db-filter-centro')?.value || 'todos';
     return pandoraVisibleRows().filter(item => {
-      if (statusXml !== 'todos' && item.statusXml !== statusXml) return false;
+      if (statusPandora !== 'todos' && pandoraDefaultStatus(item) !== statusPandora) return false;
       if (centro !== 'todos' && item.centro !== centro) return false;
       if (!term) return true;
-      const hay = pandoraNorm([item.dataEmissaoXml, item.statusXml, item.dataEntradaXml, item.centro, item.parceiro, item.fornecedor, item.chave, item.cfop, item.valorNf, item.serie, item.nf, item.responsavel, item.tratativa, item.observacao, item.problema].join(' '));
+      const hay = pandoraNorm([item.dataEmissaoXml, item.statusXml, pandoraDefaultStatus(item), item.zgr001Status, item.zgr001J1B3N, item.zgr001Arquivo, item.clienteCodigo, item.clienteNomeBase, item.clienteArea, item.dataEntradaXml, item.centro, item.parceiro, item.fornecedor, item.chave, item.cfop, item.valorNf, item.serie, item.nf, item.responsavel, item.tratativa, item.observacao, item.problema].join(' '));
       return hay.includes(term);
     }).sort((a,b) => (b.importedAtMs || b.createdAtMs || 0) - (a.importedAtMs || a.createdAtMs || 0));
   }
@@ -22266,13 +23001,15 @@ async function handleAddOccurrence(e) {
     if (!tbody) return;
     const rows = pandoraDbFilteredRows();
     const total = rows.length;
-    const limited = rows.slice(0, PANDORA_DB_TABLE_LIMIT);
-    if (!limited.length) {
+    if (!rows.length) {
       tbody.innerHTML = '<tr><td colspan="11" class="text-center pandora-muted py-8">Nenhum registro de Jacareí importado no Banco XML.</td></tr>';
+      renderPandoraPagination('banco', 0, 1, 1, getPandoraPageSize());
       if (hint) hint.textContent = '';
       return;
     }
-    tbody.innerHTML = limited.map(item => {
+    const page = getPandoraPaginatedRows('banco', rows);
+    renderPandoraPagination('banco', total, page.currentPage, page.totalPages, page.pageSize);
+    tbody.innerHTML = page.rows.map(item => {
       const id = escapeHtml(pandoraDocKey(item));
       return `
         <tr>
@@ -22280,16 +23017,16 @@ async function handleAddOccurrence(e) {
           <td>${escapeHtml(item.statusXml || '—')}</td>
           <td class="font-mono font-bold">${escapeHtml(item.centro || '—')}</td>
           <td><div class="font-mono font-bold">${escapeHtml(item.parceiro || '—')}</div><div class="muted-line">CNPJ: ${escapeHtml(item.cnpjParceiro || '—')}</div></td>
-          <td>${escapeHtml(item.fornecedor || '—')}</td>
+          <td>${escapeHtml(item.fornecedor || item.clienteNomeBase || '—')}${item.clienteNomeBase ? `<div class="muted-line">Cliente base: ${escapeHtml(item.clienteNomeBase)} • Área: ${escapeHtml(item.clienteArea || item.area || '—')}</div>` : ''}</td>
           <td><div class="font-mono text-xs">${escapeHtml(item.chave || '—')}</div><div class="muted-line">NF: ${escapeHtml(item.nf || '—')} • Série: ${escapeHtml(item.serie || '—')}</div></td>
           <td class="font-mono font-bold">${escapeHtml(item.cfop || '—')}</td>
           <td>${escapeHtml(item.valorNf || '—')}</td>
-          <td><span class="${pandoraStatusClass(pandoraDefaultStatus(item))}">${escapeHtml(pandoraDefaultStatus(item))}</span></td>
+          <td><span class="${pandoraStatusClass(pandoraDefaultStatus(item))}">${escapeHtml(pandoraDefaultStatus(item))}</span><div class="muted-line">ZGR001: ${escapeHtml(pandoraZgrStatusText(item))}</div></td>
           <td><div>${escapeHtml(item.responsavel || '—')}</div><div class="muted-line">${escapeHtml(item.tratativa || item.observacao || item.problema || '')}</div></td>
           <td><button type="button" data-pandora-db-edit="${id}" class="pandora-btn pandora-btn-soft pandora-btn-mini">Abrir NF</button></td>
         </tr>`;
     }).join('');
-    if (hint) hint.textContent = total > PANDORA_DB_TABLE_LIMIT ? `Mostrando ${PANDORA_DB_TABLE_LIMIT} de ${total} registros filtrados. Use a busca para refinar.` : `${total} registros exibidos.`;
+    if (hint) hint.textContent = `${total.toLocaleString('pt-BR')} registro${total === 1 ? '' : 's'} filtrado${total === 1 ? '' : 's'} no Banco XML.`;
   }
 
   function updatePandoraImportSummary() {
@@ -22297,8 +23034,10 @@ async function handleAddOccurrence(e) {
     const totalCount = (pandoraData || []).length;
     const countEl = document.getElementById('pandora-db-count');
     const fileEl = document.getElementById('pandora-db-file');
+    const clientesEl = document.getElementById('pandora-clientes-base-chip');
     if (countEl) countEl.textContent = `${count.toLocaleString('pt-BR')} registros Jacareí no banco`;
     if (fileEl) fileEl.textContent = pandoraImportMeta?.fileName ? `Arquivo: ${pandoraImportMeta.fileName}` : 'Nenhum arquivo carregado';
+    if (clientesEl) clientesEl.textContent = (pandoraClientesBase || []).length ? `Base Clientes: ${(pandoraClientesBase || []).length.toLocaleString('pt-BR')} códigos` : 'Base Clientes: não importada';
     const siteEl = document.getElementById('pandora-site-filter-chip');
     if (siteEl) siteEl.textContent = pandoraJacareiLabel();
   }
@@ -22321,19 +23060,23 @@ async function handleAddOccurrence(e) {
       pandoraSetImportStatus(`Importando ${mapped.length.toLocaleString('pt-BR')} registros de Jacareí de ${allMapped.length.toLocaleString('pt-BR')} linhas...`, 'info');
 
       const byKey = new Map((pandoraData || []).map(item => [pandoraChaveNorm(item.chave || item.chaveNorm || pandoraDocKey(item)), item]));
+      const importRows = [];
       mapped.forEach(row => {
         const key = pandoraChaveNorm(row.chave || row.chaveNorm || pandoraDocKey(row));
         const existing = byKey.get(key);
-        byKey.set(key, existing ? { ...row, ...existing, ...row, status: existing.status || row.status, responsavel: existing.responsavel || row.responsavel, tratativa: existing.tratativa || row.tratativa, observacao: existing.observacao || row.observacao, problema: existing.problema || row.problema, _docId: existing._docId || row._docId, id: existing.id || row.id } : row);
+        const merged = pandoraMergeXmlRow(existing, row);
+        byKey.set(key, merged);
+        importRows.push(merged);
       });
       pandoraData = Array.from(byKey.values());
+      pandoraSaveLocal();
       renderPandora();
 
       if (db && !pandoraUsingLocalFallback) {
         let processed = 0;
-        for (let i = 0; i < mapped.length; i += 450) {
+        for (let i = 0; i < importRows.length; i += 450) {
           const batch = writeBatch(db);
-          mapped.slice(i, i + 450).forEach(row => {
+          importRows.slice(i, i + 450).forEach(row => {
             const docId = row.chaveNorm ? `CH_${row.chaveNorm}` : pandoraLocalId('PDNF');
             const importPayload = { ...row, id: docId, _docId: docId };
             delete importPayload.status;
@@ -22344,11 +23087,11 @@ async function handleAddOccurrence(e) {
             batch.set(pandoraDocRef(PANDORA_NF_COLLECTION, docId), importPayload, { merge: true });
           });
           await batch.commit();
-          processed = Math.min(mapped.length, i + 450);
+          processed = Math.min(importRows.length, i + 450);
           pandoraSetImportStatus(`Salvando no Firebase: ${processed.toLocaleString('pt-BR')} / ${mapped.length.toLocaleString('pt-BR')}`, 'info');
           await new Promise(resolve => setTimeout(resolve, 20));
         }
-        await pandoraAddHistory('Importou Banco XML', { nf: '', area: 'Fiscal', status: 'Importação' }, `${mapped.length.toLocaleString('pt-BR')} registros de Jacareí importados do arquivo ${file.name}.`);
+        await pandoraAddHistory('Importou Banco XML', { nf: '', area: 'Fiscal', status: 'Importação', responsavel: 'Sistema / Importação' }, `${mapped.length.toLocaleString('pt-BR')} registros de Jacareí importados do arquivo ${file.name}.`);
         pandoraSetImportStatus(`Banco XML Jacareí importado: ${mapped.length.toLocaleString('pt-BR')} registros`, 'success');
         showToast('Banco XML importado para o Pandora. Exibindo somente Jacareí.', 'success');
       } else {
@@ -22364,6 +23107,232 @@ async function handleAddOccurrence(e) {
       showToast(`Erro ao importar planilha: ${err.message || err}`, 'error');
     } finally {
       const input = document.getElementById('pandora-upload-file');
+      if (input) input.value = '';
+    }
+  }
+
+  async function pandoraImportClientesFile(file) {
+    if (!file) return;
+    if (typeof XLSX === 'undefined') return showToast('Biblioteca XLSX não carregou. Verifique a internet e tente novamente.', 'error');
+    pandoraSetImportStatus('Lendo Base de Clientes...', 'info');
+    try {
+      const buffer = await file.arrayBuffer();
+      const workbook = XLSX.read(buffer, { type: 'array', cellDates: false, raw: true });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const jsonRows = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: true });
+      const parsedRows = jsonRows
+        .map((row, idx) => pandoraNormalizeClienteRow(row, idx, file.name))
+        .filter(row => row.codigoKey && row.area);
+
+      if (!parsedRows.length) throw new Error('A Base de Clientes precisa ter pelo menos as colunas Código e Área.');
+
+      const baseMap = new Map((pandoraClientesBase || []).map(row => [row.codigoKey || pandoraClienteKey(row.codigo || ''), row]));
+      parsedRows.forEach(row => baseMap.set(row.codigoKey, row));
+      pandoraClientesBase = Array.from(baseMap.values());
+      pandoraWriteJson(PANDORA_CLIENTE_BASE_LOCAL_KEY, pandoraClientesBase);
+
+      const clienteMap = pandoraClienteBaseMap();
+      const updates = [];
+      let found = 0;
+      let semMatch = 0;
+      const nowIso = pandoraNow();
+      const nowMs = pandoraMs();
+
+      pandoraData = (pandoraData || []).map(item => {
+        const codigoKey = pandoraClienteKey(item.parceiro || item.clienteCodigo || '');
+        const base = codigoKey ? clienteMap.get(codigoKey) : null;
+        if (!base || !base.area) {
+          semMatch += 1;
+          return item;
+        }
+        found += 1;
+        const before = { ...item };
+        const after = {
+          ...item,
+          area: base.area,
+          fornecedor: item.fornecedor || base.nome || '',
+          clienteCodigo: base.codigo || item.parceiro || '',
+          clienteCodigoKey: base.codigoKey || codigoKey,
+          clienteNomeBase: base.nome || '',
+          clienteArea: base.area || '',
+          areaOrigem: 'BASE_CLIENTES',
+          areaClienteProtegida: true,
+          clienteBaseArquivo: file.name || '',
+          clienteBaseUploadRow: base.uploadRow || '',
+          clienteBaseImportedAt: nowIso,
+          clienteBaseImportedAtMs: nowMs,
+          updatedAt: nowIso,
+          updatedAtMs: nowMs
+        };
+        updates.push({ before, after, docId: after._docId || after.id || pandoraDocKey(after) });
+        return after;
+      });
+
+      if (!found) throw new Error(`Nenhum código da Base de Clientes foi encontrado nas NFs atuais do Pandora. Códigos lidos: ${parsedRows.length.toLocaleString('pt-BR')}.`);
+
+      pandoraSaveLocal();
+      initPandoraControls();
+      renderPandora();
+
+      if (db && !pandoraUsingLocalFallback) {
+        let processed = 0;
+        for (let i = 0; i < updates.length; i += 450) {
+          const batch = writeBatch(db);
+          updates.slice(i, i + 450).forEach(update => {
+            batch.set(pandoraDocRef(PANDORA_NF_COLLECTION, update.docId), {
+              area: update.after.area,
+              fornecedor: update.after.fornecedor || '',
+              clienteCodigo: update.after.clienteCodigo || '',
+              clienteCodigoKey: update.after.clienteCodigoKey || '',
+              clienteNomeBase: update.after.clienteNomeBase || '',
+              clienteArea: update.after.clienteArea || '',
+              areaOrigem: 'BASE_CLIENTES',
+              areaClienteProtegida: true,
+              clienteBaseArquivo: update.after.clienteBaseArquivo || '',
+              clienteBaseUploadRow: update.after.clienteBaseUploadRow || '',
+              clienteBaseImportedAt: update.after.clienteBaseImportedAt || '',
+              clienteBaseImportedAtMs: update.after.clienteBaseImportedAtMs || 0,
+              updatedAt: update.after.updatedAt,
+              updatedAtMs: update.after.updatedAtMs
+            }, { merge: true });
+          });
+          await batch.commit();
+          processed = Math.min(updates.length, i + 450);
+          pandoraSetImportStatus(`Atualizando Base Clientes no Firebase: ${processed.toLocaleString('pt-BR')} / ${updates.length.toLocaleString('pt-BR')}`, 'info');
+          await new Promise(resolve => setTimeout(resolve, 20));
+        }
+      }
+
+      pandoraPushUndo({ type: 'bulkUpdate', label: 'Desfez importação Base Clientes', items: updates.map(({ before, after }) => ({ before, after })) });
+      await pandoraAddHistory(
+        'Importou Base Clientes',
+        { nf: '', area: 'Cliente', status: 'Importação Base Clientes', responsavel: 'Sistema / Importação' },
+        `${found.toLocaleString('pt-BR')} NFs tiveram a área atualizada/protegida pela Base de Clientes. Códigos lidos: ${parsedRows.length.toLocaleString('pt-BR')}. Sem match nas NFs atuais: ${semMatch.toLocaleString('pt-BR')}. Arquivo: ${file.name}.`
+      );
+
+      pandoraSetImportStatus(`Base Clientes importada: ${found.toLocaleString('pt-BR')} NFs atualizadas • ${parsedRows.length.toLocaleString('pt-BR')} códigos lidos`, 'success');
+      showToast('Base de Clientes importada. As áreas atualizadas não serão sobrescritas pelo Banco XML.', 'success');
+      setPandoraView('painel');
+    } catch (err) {
+      console.error('Erro ao importar Base de Clientes Pandora:', err);
+      pandoraSetImportStatus('Erro ao importar Base Clientes', 'error');
+      showToast(`Erro ao importar Base Clientes: ${err.message || err}`, 'error');
+    } finally {
+      const input = document.getElementById('pandora-clientes-file');
+      if (input) input.value = '';
+    }
+  }
+
+  async function pandoraImportZgr001File(file) {
+    if (!file) return;
+    if (typeof XLSX === 'undefined') return showToast('Biblioteca XLSX não carregou. Verifique a internet e tente novamente.', 'error');
+    pandoraSetImportStatus('Lendo ZGR001...', 'info');
+    try {
+      const buffer = await file.arrayBuffer();
+      const workbook = XLSX.read(buffer, { type: 'array', cellDates: false, raw: true });
+      const sheetName = workbook.SheetNames.includes('ZGR001') ? 'ZGR001' : workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const jsonRows = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: true });
+      const parsedRows = jsonRows
+        .map((row, idx) => pandoraNormalizeZgr001Row(row, idx, file.name))
+        .filter(row => row.chaveNorm);
+
+      if (!parsedRows.length) throw new Error('A ZGR001 não possui linhas válidas com Chave de Acesso.');
+
+      const zgrByKey = new Map();
+      parsedRows.forEach(row => zgrByKey.set(row.chaveNorm, row));
+      const zgrRows = Array.from(zgrByKey.values());
+      const nowIso = pandoraNow();
+      const nowMs = pandoraMs();
+
+      const byKey = new Map();
+      (pandoraData || []).forEach(item => {
+        const key = pandoraChaveNorm(item.chave || item.chaveNorm || pandoraDocKey(item));
+        if (key) byKey.set(key, item);
+      });
+
+      const updates = [];
+      let found = 0;
+      let escrituradas = 0;
+      let pendentes = 0;
+      let notFound = 0;
+
+      zgrRows.forEach(row => {
+        const existing = byKey.get(row.chaveNorm);
+        if (!existing) {
+          notFound += 1;
+          return;
+        }
+
+        found += 1;
+        const oldStatus = pandoraDefaultStatus(existing);
+        const isEscriturada = !!row.escriturada;
+        if (isEscriturada) escrituradas += 1;
+        else pendentes += 1;
+
+        let nextStatus = oldStatus || 'Em andamento';
+        if (isEscriturada) nextStatus = 'Escriturado';
+        else if (pandoraIsEscriturado(oldStatus)) nextStatus = 'Em andamento';
+
+        const patch = {
+          status: nextStatus,
+          zgr001J1B3N: row.j1b3n || '',
+          zgr001Status: isEscriturada ? 'Escriturada' : 'Pendente',
+          zgr001Arquivo: file.name || '',
+          zgr001UploadRow: row.uploadRow || '',
+          zgr001ImportedAt: nowIso,
+          zgr001ImportedAtMs: nowMs,
+          updatedAt: nowIso,
+          updatedAtMs: nowMs,
+          encerradoAt: isEscriturada ? nowIso : (pandoraIsEscriturado(oldStatus) ? '' : (existing.encerradoAt || '')),
+          encerradoAtMs: isEscriturada ? nowMs : (pandoraIsEscriturado(oldStatus) ? 0 : (existing.encerradoAtMs || 0))
+        };
+
+        const after = { ...existing, ...patch };
+        byKey.set(row.chaveNorm, after);
+        updates.push({ before: existing, after, patch, docId: existing._docId || existing.id || `CH_${row.chaveNorm}` });
+      });
+
+      if (!found) throw new Error(`Nenhuma chave da ZGR001 foi encontrada no Banco XML carregado no Pandora. Linhas lidas: ${zgrRows.length.toLocaleString('pt-BR')}.`);
+
+      pandoraData = (pandoraData || []).map(item => {
+        const key = pandoraChaveNorm(item.chave || item.chaveNorm || pandoraDocKey(item));
+        return key && byKey.has(key) ? byKey.get(key) : item;
+      });
+      pandoraSaveLocal();
+      renderPandora();
+
+      if (db && !pandoraUsingLocalFallback) {
+        let processed = 0;
+        for (let i = 0; i < updates.length; i += 450) {
+          const batch = writeBatch(db);
+          updates.slice(i, i + 450).forEach(update => {
+            batch.set(pandoraDocRef(PANDORA_NF_COLLECTION, update.docId), update.patch, { merge: true });
+          });
+          await batch.commit();
+          processed = Math.min(updates.length, i + 450);
+          pandoraSetImportStatus(`Atualizando ZGR001 no Firebase: ${processed.toLocaleString('pt-BR')} / ${updates.length.toLocaleString('pt-BR')}`, 'info');
+          await new Promise(resolve => setTimeout(resolve, 20));
+        }
+      }
+
+      pandoraPushUndo({ type: 'bulkUpdate', label: 'Desfez importação ZGR001', items: updates.map(({ before, after }) => ({ before, after })) });
+      await pandoraAddHistory(
+        'Importou ZGR001',
+        { nf: '', area: 'Fiscal', status: 'Importação ZGR001', responsavel: 'Sistema / Importação' },
+        `${found.toLocaleString('pt-BR')} NFs encontradas no Banco XML. Escrituradas: ${escrituradas.toLocaleString('pt-BR')}. Pendentes: ${pendentes.toLocaleString('pt-BR')}. Não encontradas: ${notFound.toLocaleString('pt-BR')}. Arquivo: ${file.name}.`
+      );
+
+      pandoraSetImportStatus(`ZGR001 importada: ${escrituradas.toLocaleString('pt-BR')} escrituradas • ${pendentes.toLocaleString('pt-BR')} pendentes • ${notFound.toLocaleString('pt-BR')} não encontradas`, 'success');
+      showToast('ZGR001 importada e NFs atualizadas pelo J1B3N.', 'success');
+      setPandoraView('painel');
+    } catch (err) {
+      console.error('Erro ao importar ZGR001 Pandora:', err);
+      pandoraSetImportStatus('Erro ao importar ZGR001', 'error');
+      showToast(`Erro ao importar ZGR001: ${err.message || err}`, 'error');
+    } finally {
+      const input = document.getElementById('pandora-zgr-file');
       if (input) input.value = '';
     }
   }
@@ -22389,29 +23358,43 @@ async function handleAddOccurrence(e) {
   function renderPandoraHistory() {
     const list = document.getElementById('pandora-history-list');
     if (!list) return;
-    const rows = (pandoraHistoryData || []).slice().sort((a,b) => (b.createdAtMs || 0) - (a.createdAtMs || 0)).slice(0, 80);
-    list.innerHTML = rows.length ? rows.map(h => `
+    const rows = (pandoraHistoryData || []).slice().sort((a,b) => (b.createdAtMs || 0) - (a.createdAtMs || 0));
+    if (!rows.length) {
+      list.innerHTML = '<div class="pandora-muted">Nenhuma ação registrada ainda.</div>';
+      renderPandoraPagination('historico', 0, 1, 1, getPandoraPageSize());
+      return;
+    }
+    const page = getPandoraPaginatedRows('historico', rows);
+    renderPandoraPagination('historico', rows.length, page.currentPage, page.totalPages, page.pageSize);
+    list.innerHTML = page.rows.map(h => `
       <div class="pandora-history-item">
         <div class="title">${escapeHtml(h.action || 'Ação')} ${h.nf ? `• NF ${escapeHtml(h.nf)}` : ''}</div>
         <div class="meta">${escapeHtml(h.detail || '')}</div>
+        <div class="meta"><strong>Responsável:</strong> ${escapeHtml(h.responsavel || '—')}</div>
         <div class="meta">${h.createdAtMs ? new Date(h.createdAtMs).toLocaleString('pt-BR') : escapeHtml(h.createdAt || '—')} • ${escapeHtml(h.area || 'Sem área')} • ${escapeHtml(h.status || 'Sem status')}</div>
       </div>
-    `).join('') : '<div class="pandora-muted">Nenhuma ação registrada ainda.</div>';
+    `).join('');
   }
 
   function renderPandora() {
-    renderPandoraDashboard();
-    renderPandoraTable();
-    renderPandoraDatabase();
-    renderPandoraHistory();
+    pandoraRefreshAreaControls();
     updatePandoraImportSummary();
+
+    // Renderiza somente a tela interna aberta. Antes o Pandora redesenhava Dashboard,
+    // Painel, Banco XML e Histórico ao mesmo tempo; isso deixava o site pesado.
+    const view = pandoraLastView || 'dashboard';
+    if (view === 'dashboard') renderPandoraDashboard();
+    else if (view === 'painel') renderPandoraTable();
+    else if (view === 'banco') renderPandoraDatabase();
+    else if (view === 'historico') renderPandoraHistory();
+
     const undoBtn = document.getElementById('pandora-undo-btn');
     if (undoBtn) undoBtn.textContent = pandoraUndoStack.length ? `Desfazer última ação (${pandoraUndoStack.length})` : 'Desfazer última ação';
   }
 
   function exportPandoraCsv() {
-    const headers = ['Site','NF','Serie','Chave','Area','Tipo','Status','StatusXML','DataEmissaoXML','Aging','DataEntradaXML','Centro','Parceiro','NomeParceiro','CNPJParceiro','CFOP','ValorNF','Processo','Evento','Transportadora','DT','Placa','Responsavel','Problema','Tratativa','Observacao','CriadoEm','AtualizadoEm'];
-    const rows = pandoraVisibleRows().map(item => [item.sitePandora || PANDORA_SITE_ATIVO, item.nf, item.serie, item.chave, pandoraDefaultArea(item), item.tipo, pandoraDefaultStatus(item), item.statusXml, item.dataEmissaoXml, pandoraAgingInfo(item).label, item.dataEntradaXml, item.centro, item.parceiro, item.fornecedor, item.cnpjParceiro, item.cfop, item.valorNf, item.processo, item.evento, item.transportadora, item.dt, item.placa, item.responsavel, item.problema, item.tratativa, item.observacao, item.createdAt || item.importedAt, item.updatedAt]);
+    const headers = ['Site','NF','Serie','Chave','Area','AreaProtegidaCliente','CodigoClienteBase','NomeClienteBase','AreaClienteBase','Tipo','Status','StatusXML','J1B3N','StatusZGR001','ArquivoZGR001','DataEmissaoXML','Aging','DataEntradaXML','Centro','Parceiro','NomeParceiro','CNPJParceiro','CFOP','ValorNF','Processo','Evento','Transportadora','DT','Placa','Responsavel','Problema','Tratativa','Observacao','CriadoEm','AtualizadoEm'];
+    const rows = pandoraVisibleRows().map(item => [item.sitePandora || PANDORA_SITE_ATIVO, item.nf, item.serie, item.chave, pandoraDefaultArea(item), pandoraAreaProtegidaPorCliente(item) ? 'Sim' : 'Não', item.clienteCodigo || '', item.clienteNomeBase || '', item.clienteArea || '', item.tipo, pandoraDefaultStatus(item), item.statusXml, item.zgr001J1B3N || '', item.zgr001Status || '', item.zgr001Arquivo || '', item.dataEmissaoXml, pandoraAgingInfo(item).label, item.dataEntradaXml, item.centro, item.parceiro, item.fornecedor, item.cnpjParceiro, item.cfop, item.valorNf, item.processo, item.evento, item.transportadora, item.dt, item.placa, item.responsavel, item.problema, item.tratativa, item.observacao, item.createdAt || item.importedAt, item.updatedAt]);
     const csvValue = (v = '') => `"${String(v ?? '').replace(/"/g, '""')}"`;
     const csv = [headers, ...rows].map(line => line.map(csvValue).join(';')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -22463,6 +23446,7 @@ async function handleAddOccurrence(e) {
     initPandoraControls();
     pandoraLoadLocal();
     pandoraImportMeta = pandoraReadJson(PANDORA_IMPORT_META_KEY, pandoraImportMeta || {});
+    pandoraClientesBase = pandoraReadJson(PANDORA_CLIENTE_BASE_LOCAL_KEY, pandoraClientesBase || []);
 
     document.getElementById('pandora-form')?.addEventListener('submit', pandoraSaveNF);
     document.getElementById('pandora-clear-form-btn')?.addEventListener('click', resetPandoraForm);
@@ -22472,6 +23456,8 @@ async function handleAddOccurrence(e) {
     document.getElementById('pandora-undo-btn')?.addEventListener('click', pandoraUndoLastAction);
     document.getElementById('pandora-refresh-btn')?.addEventListener('click', () => { renderPandora(); showToast('Pandora atualizado.', 'success'); });
     document.getElementById('pandora-upload-file')?.addEventListener('change', (ev) => pandoraImportExcelFile(ev.target.files?.[0]));
+    document.getElementById('pandora-zgr-file')?.addEventListener('change', (ev) => pandoraImportZgr001File(ev.target.files?.[0]));
+    document.getElementById('pandora-clientes-file')?.addEventListener('change', (ev) => pandoraImportClientesFile(ev.target.files?.[0]));
     document.getElementById('pandora-open-db-btn')?.addEventListener('click', () => setPandoraView('banco'));
     document.getElementById('pandora-db-refresh-btn')?.addEventListener('click', () => { renderPandoraDatabase(); showToast('Banco XML atualizado.', 'success'); });
     document.getElementById('pd-chave')?.addEventListener('blur', pandoraLookupByChave);
@@ -22484,14 +23470,45 @@ async function handleAddOccurrence(e) {
       btn.addEventListener('click', () => setPandoraView(btn.dataset.pandoraView || 'dashboard'));
     });
 
+    const renderPandoraTableDebounced = debounce(() => runNextFrame(renderPandoraTable), HEILOG_PERF.pandoraSearchDebounceMs);
+    const renderPandoraDatabaseDebounced = debounce(() => runNextFrame(renderPandoraDatabase), HEILOG_PERF.pandoraSearchDebounceMs);
+
     ['pandora-search', 'pandora-filter-status', 'pandora-filter-area'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', renderPandoraTable);
-      document.getElementById(id)?.addEventListener('change', renderPandoraTable);
+      document.getElementById(id)?.addEventListener('input', () => { resetPandoraPagination('painel'); renderPandoraTableDebounced(); });
+      document.getElementById(id)?.addEventListener('change', () => { resetPandoraPagination('painel'); renderPandoraTable(); });
     });
 
     ['pandora-db-search', 'pandora-db-filter-status', 'pandora-db-filter-centro'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', renderPandoraDatabase);
-      document.getElementById(id)?.addEventListener('change', renderPandoraDatabase);
+      document.getElementById(id)?.addEventListener('input', () => { resetPandoraPagination('banco'); renderPandoraDatabaseDebounced(); });
+      document.getElementById(id)?.addEventListener('change', () => { resetPandoraPagination('banco'); renderPandoraDatabase(); });
+    });
+
+    document.querySelectorAll('[data-pandora-page-size]').forEach(select => {
+      select.value = String(pandoraPageSize);
+      select.addEventListener('change', (ev) => {
+        setPandoraPageSize(ev.target.value);
+        renderPandora();
+      });
+    });
+
+    document.querySelectorAll('[data-pandora-page-prev]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.pandoraPagePrev || pandoraLastView;
+        if (!PANDORA_PAGINATED_VIEWS.has(view)) return;
+        pandoraCurrentPageByView[view] = Math.max(1, Number(pandoraCurrentPageByView[view] || 1) - 1);
+        renderPandora();
+        document.getElementById(`pandora-${view}-view`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    document.querySelectorAll('[data-pandora-page-next]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.pandoraPageNext || pandoraLastView;
+        if (!PANDORA_PAGINATED_VIEWS.has(view)) return;
+        pandoraCurrentPageByView[view] = Number(pandoraCurrentPageByView[view] || 1) + 1;
+        renderPandora();
+        document.getElementById(`pandora-${view}-view`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     });
 
     document.getElementById('pandora-table-body')?.addEventListener('click', (ev) => {
@@ -22717,21 +23734,41 @@ async function handleAddOccurrence(e) {
     updateStatusFilterOptions('patio');
     updateOperationTypeFilterOptions();
     initAllMultiFilters();
+    const tablePageSizeSelect = document.getElementById('table-page-size');
+    if (tablePageSizeSelect) tablePageSizeSelect.value = String(mainTablePageSize);
     setMultiFilterVisible('filter-tempo-patio', true);
     setMultiFilterVisible('filter-operation-type', true);
     setMultiFilterVisible('filter-timeline-type', true);
     bindPandoraEvents();
 
     // listeners filtros
-    document.getElementById('search-input').addEventListener('input', debouncedRender);
-    document.getElementById('filter-status').addEventListener('change', debouncedRender);
-    document.getElementById('filter-transportadora').addEventListener('change', debouncedRender);
-    document.getElementById('filter-date').addEventListener('change', debouncedRender);
-    document.getElementById('filter-shift').addEventListener('change', debouncedRender);
-    document.getElementById('filter-tempo-patio').addEventListener('change', debouncedRender);
-    document.getElementById('filter-operation-type')?.addEventListener('change', debouncedRender);
-    document.getElementById('filter-timeline-status')?.addEventListener('change', debouncedRender);
-    document.getElementById('filter-timeline-type')?.addEventListener('change', debouncedRender);
+    const debouncedRenderFirstPage = () => { resetMainTablePagination(); debouncedRender(); };
+    document.getElementById('search-input').addEventListener('input', debouncedRenderFirstPage);
+    document.getElementById('filter-status').addEventListener('change', debouncedRenderFirstPage);
+    document.getElementById('filter-transportadora').addEventListener('change', debouncedRenderFirstPage);
+    document.getElementById('filter-date').addEventListener('change', debouncedRenderFirstPage);
+    document.getElementById('filter-shift').addEventListener('change', debouncedRenderFirstPage);
+    document.getElementById('filter-tempo-patio').addEventListener('change', debouncedRenderFirstPage);
+    document.getElementById('filter-operation-type')?.addEventListener('change', debouncedRenderFirstPage);
+    document.getElementById('filter-timeline-status')?.addEventListener('change', debouncedRenderFirstPage);
+    document.getElementById('filter-timeline-type')?.addEventListener('change', debouncedRenderFirstPage);
+
+    document.getElementById('table-page-size')?.addEventListener('change', (ev) => {
+      setMainTablePageSize(ev.target.value);
+      render();
+    });
+    document.getElementById('table-page-prev')?.addEventListener('click', () => {
+      if (!MAIN_TABLE_PAGINATED_TABS.has(activeTab)) return;
+      mainTableCurrentPageByTab[activeTab] = Math.max(1, Number(mainTableCurrentPageByTab[activeTab] || 1) - 1);
+      render();
+      document.getElementById('table-main-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    document.getElementById('table-page-next')?.addEventListener('click', () => {
+      if (!MAIN_TABLE_PAGINATED_TABS.has(activeTab)) return;
+      mainTableCurrentPageByTab[activeTab] = Number(mainTableCurrentPageByTab[activeTab] || 1) + 1;
+      render();
+      document.getElementById('table-main-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
 
     // ✅ listeners da aba Motoristas
     document.getElementById('drivers-search')?.addEventListener('input', () => { driversPage = 1; debouncedRender(); });
@@ -22766,7 +23803,7 @@ async function handleAddOccurrence(e) {
 document.getElementById('clear-date-filter-btn')?.addEventListener('click', () => {
       document.getElementById('filter-date').valueAsDate = new Date();
       setMultiSelectValues('filter-shift', ['todos']);
-      debouncedRender();
+      debouncedRenderFirstPage();
     });
 
     document.getElementById('dashboard-transportadora-filter').addEventListener('change', renderManagerDashboard);
@@ -23814,6 +24851,7 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
   tab.classList.remove('inactive-tab');
 
       activeTab = tab.id.replace('tab-', '');
+      resetMainTablePagination(activeTab);
       updateEnvironmentHeader();
 
       const showPerformance = activeTab === 'performance';
@@ -23858,9 +24896,10 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
       debouncedRender();
     }));
 
-    // Controle DT local já fica visível mesmo antes do Firestore responder
+    // Controle DT local carregado, mas só renderiza quando a aba for aberta.
+    // Evita montar tabela oculta na primeira carga do site.
     cdtLoadLocal();
-    renderControleDt();
+    if (activeTab === 'controle-dt') renderControleDt();
 
     // auth
     (async () => {
@@ -23967,9 +25006,10 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
           }
         });
 
+        const previousPatioIds = new Set((patioData || []).map(oldOp => oldOp.id));
         newPatioData.forEach(op => {
           const { statusText, isAlert } = getPriorityStatusLogic(op);
-          const isExisting = patioData.some(oldOp => oldOp.id === op.id);
+          const isExisting = previousPatioIds.has(op.id);
 
           if (isAlert && !notifiedVehicles.has(op.id)) {
             playAlertSound();
@@ -24064,8 +25104,10 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
     setMultiFilterVisible('filter-operation-type', true);
     setMultiFilterVisible('filter-timeline-type', true);
     document.getElementById('mass-finish-btn').style.display = 'flex';
-    initPerformanceCardLayout();
-    initEwmColumnFilters();
+    scheduleIdle(() => {
+      initPerformanceCardLayout();
+      initEwmColumnFilters();
+    });
     debouncedRender();
   });
 
