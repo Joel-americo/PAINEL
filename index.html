@@ -5324,6 +5324,274 @@ select.hl-native-multi-hidden {
 
 
 
+/* ============================== */
+/* DASHBOARD BALDEIO + DROP       */
+/* ============================== */
+#dashboard-content .bd-dashboard-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.35rem;
+  border-radius: 26px;
+  background:
+    linear-gradient(135deg, #062014 0%, #0b3420 72%, #0f3f28 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 18px 42px rgba(4, 21, 13, 0.18);
+  overflow: hidden;
+  position: relative;
+}
+#dashboard-content .bd-dashboard-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 88% 8%, rgba(255,255,255,0.16), transparent 34%);
+  pointer-events: none;
+}
+#dashboard-content .bd-dashboard-hero > * { position: relative; z-index: 1; }
+#dashboard-content .bd-dashboard-hero h3 {
+  margin: 0;
+  color: #ffffff !important;
+  font-size: clamp(1.8rem, 2.4vw, 2.8rem);
+  font-weight: 950;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+#dashboard-content .bd-eyebrow {
+  margin: 0 0 .5rem;
+  color: rgba(226, 255, 235, 0.78) !important;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: .72rem;
+  font-weight: 950;
+}
+#dashboard-content .bd-hero-subtitle {
+  max-width: 780px;
+  margin: .55rem 0 0;
+  color: rgba(236, 253, 245, 0.82) !important;
+  font-weight: 650;
+}
+#dashboard-content .bd-hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .65rem;
+  flex-wrap: wrap;
+  max-width: 1000px;
+}
+#dashboard-content .bd-filter-group {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .25rem .25rem .25rem .7rem;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
+}
+#dashboard-content .bd-filter-group span {
+  color: rgba(236, 253, 245, 0.78) !important;
+  font-size: .76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+#dashboard-content .bd-dashboard-hero input,
+#dashboard-content .bd-dashboard-hero select {
+  min-height: 44px;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,0.20) !important;
+  background: rgba(255,255,255,0.12) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-weight: 850;
+  color-scheme: dark !important;
+}
+#dashboard-content .bd-dashboard-hero select option {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+#dashboard-content .bd-dashboard-hero .hl-ms-wrapper .hl-ms-button {
+  min-height: 44px;
+  background: rgba(255,255,255,0.12) !important;
+  border-color: rgba(255,255,255,0.20) !important;
+  color: #ffffff !important;
+  border-radius: 14px !important;
+}
+#dashboard-content .bd-btn {
+  min-height: 44px;
+  border-radius: 14px !important;
+  padding: .65rem 1rem !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-weight: 950 !important;
+  box-shadow: 0 12px 24px rgba(0,0,0,.16) !important;
+}
+#dashboard-content .bd-btn-dark { background: linear-gradient(135deg, #334155, #0f172a) !important; }
+#dashboard-content .bd-btn-green { background: linear-gradient(135deg, #007a3d, #00a94f) !important; }
+#dashboard-content .bd-kpi-grid,
+#dashboard-content .bd-alert-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  #dashboard-content .bd-kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  #dashboard-content .bd-alert-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1280px) {
+  #dashboard-content .bd-kpi-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+}
+#dashboard-content .bd-kpi-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  padding: 1rem;
+  min-height: 126px;
+  background: #ffffff !important;
+  border: 1px solid rgba(16,32,24,.10) !important;
+  box-shadow: 0 14px 34px rgba(15,23,42,.075) !important;
+}
+#dashboard-content .bd-kpi-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 86% 12%, rgba(0,140,69,.10), transparent 34%);
+  pointer-events: none;
+}
+#dashboard-content .bd-kpi-label {
+  position: relative;
+  z-index: 1;
+  font-size: .72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: #64748b !important;
+}
+#dashboard-content .bd-kpi-value {
+  position: relative;
+  z-index: 1;
+  margin-top: .35rem;
+  font-size: clamp(1.7rem, 2.6vw, 3rem);
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -.05em;
+  color: #102018 !important;
+}
+#dashboard-content .bd-kpi-sub {
+  position: relative;
+  z-index: 1;
+  margin-top: .4rem;
+  font-size: .78rem;
+  color: #64748b !important;
+  font-weight: 750;
+}
+#dashboard-content .bd-panel {
+  background: #ffffff !important;
+  border: 1px solid rgba(16, 32, 24, 0.10) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.075) !important;
+}
+#dashboard-content .bd-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .8rem;
+}
+#dashboard-content .bd-panel-head h4 {
+  margin: 0;
+  color: #102018 !important;
+  font-size: 1.15rem;
+  line-height: 1.15;
+  font-weight: 950;
+  letter-spacing: -.03em;
+}
+#dashboard-content .bd-panel-head p {
+  margin: .25rem 0 0;
+  color: #64748b !important;
+  font-size: .86rem;
+  font-weight: 650;
+}
+#dashboard-content .bd-alert-card {
+  border-radius: 20px;
+  padding: 1rem;
+  border: 1px solid rgba(16, 32, 24, 0.10);
+  background: linear-gradient(180deg, #ffffff, #f8fbf9) !important;
+  box-shadow: 0 10px 28px rgba(15,23,42,.06);
+}
+#dashboard-content .bd-alert-card strong {
+  display: block;
+  color: #102018 !important;
+  font-weight: 950;
+  font-size: .94rem;
+}
+#dashboard-content .bd-alert-card span {
+  display: block;
+  margin-top: .35rem;
+  color: #64748b !important;
+  font-size: .84rem;
+  font-weight: 650;
+}
+#dashboard-content .bd-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  padding: .4rem .75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0,122,61,.16);
+  background: #eef7f1;
+  color: #07351f !important;
+  font-size: .78rem;
+  font-weight: 950;
+}
+#dashboard-content .bd-table th {
+  padding: .8rem .7rem;
+  color: #64748b !important;
+  background: #f1f5f9 !important;
+  border-bottom: 1px solid rgba(15,23,42,.08) !important;
+  font-size: .72rem !important;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+#dashboard-content .bd-table td {
+  padding: .9rem .7rem;
+  color: #102018 !important;
+  border-bottom: 1px solid rgba(15,23,42,.06) !important;
+  vertical-align: top;
+  font-size: .9rem;
+}
+#dashboard-content .bd-table .bd-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-weight: 950;
+  color: #0f766e !important;
+}
+#dashboard-content .bd-status-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: .32rem .62rem;
+  background: #eef7f1;
+  color: #07351f !important;
+  border: 1px solid rgba(0,122,61,.16);
+  font-weight: 950;
+  font-size: .75rem;
+  white-space: nowrap;
+}
+@media (max-width: 920px) {
+  #dashboard-content .bd-hero-actions { width: 100%; justify-content: flex-start; }
+  #dashboard-content .bd-dashboard-hero input,
+  #dashboard-content .bd-dashboard-hero select,
+  #dashboard-content .bd-dashboard-hero .hl-ms-wrapper,
+  #dashboard-content .bd-btn { width: 100%; }
+  #dashboard-content .bd-filter-group { width: 100%; }
+  #dashboard-content .bd-filter-group input { flex: 1; }
+}
+
+
 /* ===== Pátio: motorista chamado via WhatsApp ===== */
 .driver-called-badge {
   display: inline-flex;
@@ -9129,7 +9397,7 @@ canvas {
               <div class="pandora-field"><label>Aging</label><input id="pd-aging" readonly placeholder="Calculado pela emissão"></div>
               <input id="pd-data-entrada" type="hidden" value="">
               <div class="pandora-field"><label>Centro</label><input id="pd-centro" placeholder="Centro"></div>
-              <div class="pandora-field"><label>Parceiro</label><input id="pd-parceiro" placeholder="Código"></div>
+              <div class="pandora-field"><label>Parceiro</label><input id="pd-parceiro" list="pd-parceiro-list" placeholder="Código"><datalist id="pd-parceiro-list"></datalist><p id="pd-parceiro-match-hint" class="pandora-muted text-xs mt-1">Digite o código para buscar na Base de Clientes e no histórico.</p></div>
               <div class="pandora-field"><label>Fornecedor / Cliente</label><input id="pd-fornecedor" placeholder="Nome do Parceiro"></div>
               <div class="pandora-field"><label>CNPJ Parceiro</label><input id="pd-cnpj-parceiro" placeholder="CNPJ"></div>
               <div class="pandora-field"><label>CFOP</label><input id="pd-cfop" placeholder="CFOP"></div>
@@ -9275,141 +9543,143 @@ canvas {
 
     <!-- Dashboard gerencial -->
     <div id="dashboard-content" class="hidden">
-      <div class="flex justify-end mb-4">
-        <select id="dashboard-transportadora-filter"
-                class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="todas">Todas Transportadoras</option>
-        </select>
-      </div>
-
-      <!-- ✅ Dashboard Ritmo -->
-      <div id="ritmo-dashboard-section" class="mb-8">
-        <div class="flex flex-wrap items-end justify-between gap-4 mb-4">
-          <div>
-            <h3 class="text-2xl font-bold">Dashboard Ritmo</h3>
-            <p class="text-sm text-gray-400 mt-1">Visão dedicada da Ritmo (totais + baldeio), usando histórico + novos em tempo real.</p>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-3">
-            <div class="flex items-center gap-2">
-              <span class="text-xs text-gray-400">De</span>
-              <input id="ritmo-dash-start" type="date"
-                class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-            </div>
-
-            <div class="flex items-center gap-2">
-              <span class="text-xs text-gray-400">Até</span>
-              <input id="ritmo-dash-end" type="date"
-                class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-            </div>
-
-            <select id="ritmo-dash-plate-mode"
-              class="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="carreta">Placa Carreta</option>
-              <option value="cavalo">Placa Cavalo</option>
-            </select>
-
-            <label class="flex items-center gap-2 text-sm text-gray-300 bg-gray-700/40 border border-gray-600 rounded-lg py-2 px-3">
-              <input id="ritmo-dash-only-baldeio" type="checkbox" class="accent-blue-500">
-              <span>Somente Baldeio</span>
-            </label>
-
-            <button id="ritmo-dash-refresh"
-              class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
-              Atualizar
-            </button>
-
-            <button id="ritmo-dash-export"
-              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
-              Exportar CSV
-            </button>
-          </div>
+      <div class="bd-dashboard-hero mb-6">
+        <div>
+          <p class="bd-eyebrow">Dashboard operacional</p>
+          <h3>Baldeios e Drop &amp; Hook</h3>
+          <p class="bd-hero-subtitle">Visão focada nas operações que mais precisam de acompanhamento: volume, pendências, ciclos, placas e gargalos.</p>
         </div>
-
-        <!-- KPIs -->
-        <div id="ritmo-dash-kpis" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6"></div>
-
-        <!-- Charts -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h4 class="text-xl font-bold mb-4">Marcações por Dia (Ritmo)</h4>
-            <div class="relative h-80">
-              <canvas id="ritmo-dash-daily-chart"></canvas>
-            </div>
+        <div class="bd-hero-actions">
+          <div class="bd-filter-group">
+            <span>De</span>
+            <input id="bd-dash-start" type="date" />
           </div>
-
-          <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h4 class="text-xl font-bold mb-4">Top Placas (mais marcações no período)</h4>
-            <div class="relative h-80">
-              <canvas id="ritmo-dash-top-plates-chart"></canvas>
-            </div>
+          <div class="bd-filter-group">
+            <span>Até</span>
+            <input id="bd-dash-end" type="date" />
           </div>
-
-          <div class="lg:col-span-2 bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h4 class="text-xl font-bold mb-4">Heatmap (últimos 7 dias do período — por hora)</h4>
-            <div class="relative h-96">
-              <canvas id="ritmo-dash-heatmap-chart"></canvas>
-            </div>
-            <p class="text-xs text-gray-400 mt-3">Azul: Ritmo total • Verde: Baldeio (KPIs) • Heatmap usa o conjunto filtrado (total ou somente baldeio).</p>
-          </div>
+          <select id="dashboard-transportadora-filter">
+            <option value="todas">Todas Transportadoras</option>
+          </select>
+          <select id="bd-dash-baldeio-origin">
+            <option value="todos">Todos os baldeios</option>
+            <option value="ritmo">Baldeio Ritmo</option>
+            <option value="jsl">Baldeio JSL</option>
+            <option value="outros">Outros baldeios</option>
+          </select>
+          <select id="bd-dash-plate-mode">
+            <option value="carreta">Placa Carreta</option>
+            <option value="cavalo">Placa Cavalo</option>
+          </select>
+          <button id="bd-dash-refresh" type="button" class="bd-btn bd-btn-dark">Atualizar</button>
+          <button id="bd-dash-export" type="button" class="bd-btn bd-btn-green">Exportar CSV</button>
         </div>
       </div>
 
+      <div id="bd-dash-kpis" class="bd-kpi-grid mb-6"></div>
 
-      <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-        <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
-          <div>
-            <h3 class="text-xl font-bold">Marcações por Tipo de Operação</h3>
-            <p class="text-sm text-gray-400 mt-1">Quantidade de marcações dos últimos 7 dias: baldeio, drop, latas, insumos, bulk, vendas e demais operações.</p>
+      <div id="bd-dash-alerts" class="bd-alert-grid mb-6"></div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+        <div class="bd-panel p-6">
+          <div class="bd-panel-head">
+            <div>
+              <h4>Baldeio x Drop por dia</h4>
+              <p>Volume diário no período selecionado.</p>
+            </div>
           </div>
-          <span id="operation-type-total" class="px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm font-bold">0 marcações</span>
+          <div class="relative h-80">
+            <canvas id="bd-daily-chart"></canvas>
+          </div>
         </div>
 
-        <div id="operation-type-kpis" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6"></div>
+        <div class="bd-panel p-6">
+          <div class="bd-panel-head">
+            <div>
+              <h4>Origem dos Baldeios</h4>
+              <p>Separação entre Ritmo, JSL e outros.</p>
+            </div>
+          </div>
+          <div class="relative h-80">
+            <canvas id="bd-origin-chart"></canvas>
+          </div>
+        </div>
 
-        <div class="relative h-80">
-          <canvas id="operation-type-chart"></canvas>
+        <div class="bd-panel p-6">
+          <div class="bd-panel-head">
+            <div>
+              <h4>Status do Drop</h4>
+              <p>Pendências, concluídos, cancelados e classificações.</p>
+            </div>
+          </div>
+          <div class="relative h-80">
+            <canvas id="bd-drop-status-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="bd-panel p-6">
+          <div class="bd-panel-head">
+            <div>
+              <h4>Top Placas</h4>
+              <p>Placas com mais movimentações de baldeio/drop.</p>
+            </div>
+          </div>
+          <div class="relative h-80">
+            <canvas id="bd-top-plates-chart"></canvas>
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h3 class="text-xl font-bold mb-4">Marcações Diárias (Últimos 7 dias)</h3>
-          <div class="relative h-80">
-            <canvas id="daily-productivity-chart"></canvas>
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div class="bd-panel p-6">
+          <div class="bd-panel-head mb-4">
+            <div>
+              <h4>Baldeios por placa</h4>
+              <p>Quantidade, primeira/última marcação e intervalo entre movimentos.</p>
+            </div>
+            <span id="bd-baldeio-count-pill" class="bd-pill">0 placas</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="bd-table w-full text-left">
+              <thead>
+                <tr>
+                  <th>Origem</th>
+                  <th>Placa</th>
+                  <th>Marcações</th>
+                  <th>Primeiro → último</th>
+                  <th>Intervalos</th>
+                </tr>
+              </thead>
+              <tbody id="bd-baldeio-table-body"></tbody>
+            </table>
           </div>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h3 class="text-xl font-bold mb-4">Evolução do TMP (por marcação — Últimos 7 dias)</h3>
-          <div class="relative h-80">
-            <canvas id="tmp-evolution-chart"></canvas>
+        <div class="bd-panel p-6">
+          <div class="bd-panel-head mb-4">
+            <div>
+              <h4>Drop em foco</h4>
+              <p>Últimos registros e pendências de carga/descarga.</p>
+            </div>
+            <span id="bd-drop-count-pill" class="bd-pill">0 registros</span>
           </div>
-        </div>
-
-        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h3 class="text-xl font-bold mb-4">Ranking de Marcações (Últimos 7 dias)</h3>
-          <div class="relative h-80">
-            <canvas id="volume-ranking-chart"></canvas>
-          </div>
-        </div>
-
-        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h3 class="text-xl font-bold mb-4">Marcações por Turno (Últimos 7 dias)</h3>
-          <div class="relative h-80">
-            <canvas id="shift-comparison-chart"></canvas>
-          </div>
-        </div>
-
-        <div class="lg:col-span-2 bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h3 class="text-xl font-bold mb-4">Heatmap de Marcações (Semana — por hora)</h3>
-          <div class="relative h-96">
-            <canvas id="heatmap-chart"></canvas>
+          <div class="overflow-x-auto">
+            <table class="bd-table w-full text-left">
+              <thead>
+                <tr>
+                  <th>DT</th>
+                  <th>Placa</th>
+                  <th>Motoristas</th>
+                  <th>Status</th>
+                  <th>Carga/Descarga</th>
+                </tr>
+              </thead>
+              <tbody id="bd-drop-table-body"></tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -19414,365 +19684,344 @@ async function handleAddOccurrence(e) {
     });
   }
 
-  // ✅ Dashboard gerencial (mesmo do seu código)
+  // ✅ Dashboard Baldeio + Drop & Hook
+  function getBdDashboardDateInputValue(d) {
+    const x = new Date(d);
+    return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`;
+  }
+
+  function getBdDashboardOpTime(op = {}) {
+    return dropMetricTime(op) || dropOpTime(op) || toMs(op.registrationTime) || toMs(op.createdAtMs) || toMs(op.createdAt) || toMs(op.timestamp) || toMs(op.finishedTime) || 0;
+  }
+
+  function getBdDashboardRange() {
+    const startEl = document.getElementById('bd-dash-start');
+    const endEl = document.getElementById('bd-dash-end');
+    const today = startOfDay(new Date());
+    const startDefault = new Date(today);
+    startDefault.setDate(startDefault.getDate() - 6);
+
+    if (startEl && !startEl.value) startEl.value = getBdDashboardDateInputValue(startDefault);
+    if (endEl && !endEl.value) endEl.value = getBdDashboardDateInputValue(today);
+
+    let startMs = dayRangeFromDateInput(startEl?.value, startDefault).startMs;
+    let endMs = dayRangeFromDateInput(endEl?.value, today).endMs;
+    if (endMs < startMs) [startMs, endMs] = [dayRangeFromDateInput(endEl?.value, today).startMs, dayRangeFromDateInput(startEl?.value, startDefault).endMs];
+    return { startMs, endMs, startValue: getBdDashboardDateInputValue(new Date(startMs)), endValue: getBdDashboardDateInputValue(new Date(endMs - 1)) };
+  }
+
+  function getBdDashboardPlate(op = {}, mode = 'carreta') {
+    return String(plateKey(op, mode) || '').toUpperCase().replace(/[^A-Z0-9]/g, '') || 'SEM PLACA';
+  }
+
+  function bdDashKpi(label, value, sub = '') {
+    return `
+      <div class="bd-kpi-card">
+        <div class="bd-kpi-label">${escapeHtml(label)}</div>
+        <div class="bd-kpi-value">${escapeHtml(value)}</div>
+        ${sub ? `<div class="bd-kpi-sub">${escapeHtml(sub)}</div>` : ''}
+      </div>`;
+  }
+
+  function bdChartOptions({ horizontal = false, stacked = false } = {}) {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: horizontal ? 'y' : 'x',
+      plugins: {
+        legend: { labels: { color: '#334155', font: { weight: '700' } } },
+        tooltip: { callbacks: { label: (c) => ` ${c.dataset.label || ''}: ${c.raw ?? 0}` } }
+      },
+      scales: {
+        x: { stacked, beginAtZero: true, ticks: { color: '#475569', precision: 0 }, grid: { color: 'rgba(15,23,42,0.08)' } },
+        y: { stacked, beginAtZero: true, ticks: { color: '#475569', precision: 0 }, grid: { color: horizontal ? 'transparent' : 'rgba(15,23,42,0.08)' } }
+      }
+    };
+  }
+
+  function exportBaldeioDropDashboardCsv() {
+    if (!window.__bdDashboardReport) renderManagerDashboard();
+    const rep = window.__bdDashboardReport;
+    if (!rep) return;
+
+    const rows = [];
+    (rep.baldeioOps || []).forEach(op => {
+      rows.push([
+        'Baldeio', rep.startValue, rep.endValue,
+        new Date(op._bdMs).toLocaleString('pt-BR'),
+        op.dt || '',
+        getBdDashboardPlate(op, rep.plateMode),
+        getTransportadoraFromOperacao(op) || op.transportadora || '',
+        getBaldeioOrigemLabel(op),
+        '', '', '', ''
+      ]);
+    });
+    (rep.dropOps || []).forEach(op => {
+      rows.push([
+        'Drop & Hook', rep.startValue, rep.endValue,
+        new Date(op._bdMs).toLocaleString('pt-BR'),
+        getDropDt(op) || op.dt || '',
+        getBdDashboardPlate(op, rep.plateMode),
+        getTransportadoraFromOperacao(op) || op.transportadora || '',
+        getDropMainStatusLabel(op),
+        getDropManobra(op),
+        getDropViagem(op),
+        getDropCargaQtd(op),
+        getDropDescargaQtd(op)
+      ]);
+    });
+
+    if (!rows.length) {
+      showToast('Sem dados de Baldeio/Drop para exportar no período.', 'info');
+      return;
+    }
+    downloadDropCsv(`dashboard_baldeio_drop_${rep.startValue}_a_${rep.endValue}.csv`, ['Tipo','De','Até','Data/Hora','DT','Placa','Transportadora','Origem/Status','Motorista Manobra','Motorista Viagem','Carga','Descarga'], rows);
+    showToast('Dashboard Baldeio/Drop exportado.', 'success');
+  }
+
   function renderManagerDashboard() {
-    // (mantido igual ao seu código original; por brevidade aqui, sem alterações)
-    // ----
-    // ATENÇÃO: Esta versão do arquivo mantém o dashboard funcional.
-    // ----
-    // Para manter o arquivo mais leve no sandbox, mantive este bloco como no seu original.
-    // (O conteúdo completo do dashboard já está na sua base.)
     try { updateTransportadoraFilter(); } catch (_) {}
 
+    const range = getBdDashboardRange();
+    const plateMode = document.getElementById('bd-dash-plate-mode')?.value || 'carreta';
+    const originFilter = document.getElementById('bd-dash-baldeio-origin')?.value || 'todos';
     const transpSelect = document.getElementById('dashboard-transportadora-filter');
     const selectedTValues = transpSelect ? getMultiSelectValues(transpSelect) : ['todas'];
 
-    const now = new Date();
-    const start = startOfDay(now);
-    start.setDate(start.getDate() - 6);
-    const end = startOfDay(now);
-    end.setDate(end.getDate() + 1);
+    const rawOps = [
+      ...(patioData || []).map(op => ({ ...op, _bdSrc: 'patio' })),
+      ...(historicoData || []).map(op => ({ ...op, _bdSrc: 'historico' }))
+    ].map((op, idx) => ({ ...op, _bdMs: getBdDashboardOpTime(op), _bdIdx: idx }))
+      .filter(op => op._bdMs && op._bdMs >= range.startMs && op._bdMs < range.endMs)
+      .filter(op => areAllFilterValues(selectedTValues) || filterValuesMatchExact(selectedTValues, getTransportadoraFromOperacao(op) || op.transportadora || ''));
 
-    const baseAll = [...(patioData || []), ...(historicoData || [])]
-      .map(op => ({ ...op, _rt: toMs(op.registrationTime), _ft: toMs(op.finishedTime) }))
-      .filter(op => op._rt && op._rt >= start.getTime() && op._rt < end.getTime());
+    const dedup = new Map();
+    rawOps.forEach(op => {
+      const key = op.id ? `id:${op.id}` : `${op._bdMs}|${op.dt || getDropDt(op) || ''}|${getBdDashboardPlate(op, plateMode)}|${op._bdIdx}`;
+      if (!dedup.has(key) || op._bdSrc === 'patio') dedup.set(key, op);
+    });
+    const ops = Array.from(dedup.values());
 
-    const data = areAllFilterValues(selectedTValues) ? baseAll : baseAll.filter(op => filterValuesMatchExact(selectedTValues, op.transportadora || ''));
+    const baldeioOps = ops
+      .filter(op => isBaldeioOp(op))
+      .filter(op => originFilter === 'todos' || getBaldeioOrigemKey(op) === originFilter);
 
-    const normalizeOperationTypeForDashboard = (op = {}) => {
-      const raw = String(getTipoOperacaoPainel(op) || getSegmentacaoLabel(op) || getTipoHeilogDirect(op) || op.tipo || op.operacao || op.operation || '').trim();
-      const blob = raw
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .toUpperCase();
+    const dropOps = ops
+      .filter(op => isDropHookOperation(op))
+      .filter(op => !isDropRemoved(op));
 
-      if (blob.includes('DROP')) return 'Drop';
-      if (blob.includes('BALDEIO')) return 'Baldeio';
-      if (blob.includes('BULK')) return 'Bulk';
-      if (blob.includes('INSUM')) return 'Insumos';
-      if (blob.includes('VENDA')) return 'Vendas';
-      if (blob.includes('LATA')) return 'Latas vazias';
-      if (blob.includes('PALETE') || blob.includes('PALLET')) return 'Paletes vazios';
-      if (blob.includes('HIDROMAN')) return 'Hidroman';
-      if (blob.includes('DESCARG')) return 'Descarga';
-      if (blob.includes('CARREG')) return 'Carregamento';
-      if (blob.includes('TRANSFER')) return 'Transferência';
-      if (blob.includes('PRODUTO')) return 'Produto acabado';
+    const activeDropOps = dropOps.filter(op => !isDropCanceled(op));
+    const cargasDrop = activeDropOps.reduce((acc, op) => acc + getDropCargaQtd(op), 0);
+    const descargasDrop = activeDropOps.reduce((acc, op) => acc + getDropDescargaQtd(op), 0);
+    const dropPendentes = activeDropOps.filter(op => !isDropCargaDone(op) || (getDropDescargaQtd(op) > 0 && !isDropDescargaDone(op))).length;
 
-      return raw || 'Sem tipo';
+    const dayKeys = [];
+    const dayLabels = [];
+    for (let ms = range.startMs; ms < range.endMs; ms += 24 * 3600 * 1000) {
+      dayKeys.push(dayKey(ms));
+      dayLabels.push(dayLabelPt(ms));
+    }
+    const baldeioDaily = Object.fromEntries(dayKeys.map(k => [k, 0]));
+    const dropDaily = Object.fromEntries(dayKeys.map(k => [k, 0]));
+    baldeioOps.forEach(op => { const k = dayKey(op._bdMs); if (k in baldeioDaily) baldeioDaily[k]++; });
+    activeDropOps.forEach(op => { const k = dayKey(op._bdMs); if (k in dropDaily) dropDaily[k]++; });
+
+    const originCounts = { Ritmo: 0, JSL: 0, Outros: 0 };
+    baldeioOps.forEach(op => {
+      const label = getBaldeioOrigemLabel(op);
+      if (label === 'Ritmo') originCounts.Ritmo++;
+      else if (label === 'JSL') originCounts.JSL++;
+      else originCounts.Outros++;
+    });
+
+    const dropStatusCounts = {};
+    activeDropOps.forEach(op => {
+      const status = getDropMainStatusLabel(op) || 'Aguardando';
+      dropStatusCounts[status] = (dropStatusCounts[status] || 0) + 1;
+    });
+
+    const plateMap = new Map();
+    const addPlate = (op, field) => {
+      const placa = getBdDashboardPlate(op, plateMode);
+      if (!plateMap.has(placa)) plateMap.set(placa, { placa, baldeio: 0, drop: 0, total: 0 });
+      const row = plateMap.get(placa);
+      row[field] += 1;
+      row.total += 1;
     };
+    baldeioOps.forEach(op => addPlate(op, 'baldeio'));
+    activeDropOps.forEach(op => addPlate(op, 'drop'));
+    const topPlates = Array.from(plateMap.values()).sort((a, b) => (b.total - a.total) || a.placa.localeCompare(b.placa, 'pt-BR')).slice(0, 10);
 
-    const preferredOperationTypes = ['Baldeio', 'Drop', 'Latas vazias', 'Insumos', 'Bulk', 'Vendas', 'Paletes vazios', 'Hidroman', 'Carregamento', 'Descarga', 'Transferência', 'Produto acabado', 'Sem tipo'];
-    const operationTypeCounts = {};
-    data.forEach(op => {
-      const tipo = normalizeOperationTypeForDashboard(op);
-      operationTypeCounts[tipo] = (operationTypeCounts[tipo] || 0) + 1;
+    const baldeioGroups = new Map();
+    baldeioOps.forEach(op => {
+      const origemKey = getBaldeioOrigemKey(op);
+      const origem = getBaldeioOrigemLabel(op);
+      const placa = getBdDashboardPlate(op, plateMode);
+      const key = `${origemKey}|${placa}`;
+      if (!baldeioGroups.has(key)) baldeioGroups.set(key, { origem, placa, entries: [] });
+      baldeioGroups.get(key).entries.push(op._bdMs);
     });
+    const baldeioByPlate = Array.from(baldeioGroups.values()).map(row => {
+      row.entries.sort((a, b) => a - b);
+      const intervals = [];
+      for (let i = 1; i < row.entries.length; i++) intervals.push(row.entries[i] - row.entries[i - 1]);
+      return {
+        ...row,
+        count: row.entries.length,
+        first: row.entries[0] || 0,
+        last: row.entries[row.entries.length - 1] || 0,
+        intervalsTxt: intervals.length ? intervals.map(fmtDelta).join(' | ') : '—'
+      };
+    }).sort((a, b) => (b.count - a.count) || (b.last - a.last) || a.placa.localeCompare(b.placa, 'pt-BR'));
 
-    const operationTypeRanking = Object.entries(operationTypeCounts).sort((a, b) => {
-      const ia = preferredOperationTypes.indexOf(a[0]);
-      const ib = preferredOperationTypes.indexOf(b[0]);
-      const sa = ia === -1 ? 999 : ia;
-      const sb = ib === -1 ? 999 : ib;
-      return (sa - sb) || (b[1] - a[1]) || a[0].localeCompare(b[0], 'pt-BR');
+    const dropGroups = new Map();
+    activeDropOps.forEach(op => {
+      const key = dropCyclePlateKey(op) || getBdDashboardPlate(op, plateMode);
+      if (!dropGroups.has(key)) dropGroups.set(key, { key, entries: [] });
+      dropGroups.get(key).entries.push(op._bdMs);
     });
+    const dropCycleRows = Array.from(dropGroups.values()).map(g => {
+      g.entries.sort((a, b) => a - b);
+      const cycles = [];
+      for (let i = 1; i < g.entries.length; i += 2) {
+        const delta = g.entries[i] - g.entries[i - 1];
+        if (Number.isFinite(delta) && delta >= 0) cycles.push(delta);
+      }
+      return { ...g, cycles, aberto: g.entries.length % 2 === 1 };
+    });
+    const dropDurations = dropCycleRows.flatMap(r => r.cycles);
+    const avgDropCycle = dropDurations.length ? dropDurations.reduce((a, b) => a + b, 0) / dropDurations.length : 0;
+    const maxDropCycle = dropDurations.length ? Math.max(...dropDurations) : 0;
+    const dropEmCiclo = dropCycleRows.filter(r => r.aberto).length;
 
-    const operationTypeKpis = document.getElementById('operation-type-kpis');
-    const operationTypeTotal = document.getElementById('operation-type-total');
-    const operationTypeTotalValue = data.length;
-    if (operationTypeTotal) operationTypeTotal.textContent = `${operationTypeTotalValue} marcação(ões)`;
-    if (operationTypeKpis) {
-      const visibleKpis = operationTypeRanking.length ? operationTypeRanking : [['Sem dados', 0]];
-      operationTypeKpis.innerHTML = visibleKpis.map(([tipo, qtd]) => `
-        <div class="rounded-xl border border-gray-200 bg-gray-50 p-4 shadow-sm">
-          <div class="text-xs font-bold uppercase tracking-wide text-gray-500">${escapeHtml(tipo)}</div>
-          <div class="mt-2 text-3xl font-black text-slate-900">${qtd}</div>
-          <div class="mt-1 text-xs text-gray-500">${operationTypeTotalValue ? ((qtd / operationTypeTotalValue) * 100).toFixed(1).replace('.', ',') : '0,0'}% do período</div>
-        </div>
-      `).join('');
+    const kpiRoot = document.getElementById('bd-dash-kpis');
+    if (kpiRoot) {
+      kpiRoot.innerHTML = `
+        ${bdDashKpi('Baldeios', baldeioOps.length, `${baldeioByPlate.length} placa(s)`)}
+        ${bdDashKpi('Drop & Hook', activeDropOps.length, `${cargasDrop} carga(s) / ${descargasDrop} descarga(s)`)}
+        ${bdDashKpi('Drop pendente', dropPendentes, 'carga/descarga em aberto')}
+        ${bdDashKpi('Drop em ciclo', dropEmCiclo, 'aguardando próxima marcação')}
+        ${bdDashKpi('Ciclos fechados', dropDurations.length, 'Drop por placa')}
+        ${bdDashKpi('Tempo médio Drop', avgDropCycle ? fmtDelta(avgDropCycle) : '—', 'ciclo fechado')}
+        ${bdDashKpi('Maior tempo Drop', maxDropCycle ? fmtDelta(maxDropCycle) : '—', 'ciclo fechado')}
+        ${bdDashKpi('Top placa', topPlates[0]?.placa || '—', topPlates[0] ? `${topPlates[0].total} movimentação(ões)` : 'sem dados')}
+      `;
     }
 
-    const operationTypeCanvas = document.getElementById('operation-type-chart');
-    if (operationTypeCanvas) {
-      operationTypeChart = safeDestroyChart(operationTypeChart);
-      operationTypeChart = new Chart(operationTypeCanvas.getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: operationTypeRanking.map(r => r[0]),
-          datasets: [{
-            label: 'Marcações por tipo',
-            data: operationTypeRanking.map(r => r[1]),
-            backgroundColor: 'rgba(0, 140, 69, 0.52)',
-            borderColor: 'rgba(0, 140, 69, 0.95)',
-            borderWidth: 1,
-            borderRadius: 8
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: { callbacks: { label: (c) => ` ${c.raw || 0} marcação(ões)` } }
+    const alertsRoot = document.getElementById('bd-dash-alerts');
+    if (alertsRoot) {
+      const alerts = [];
+      if (dropPendentes) alerts.push({ title: `${dropPendentes} Drop pendente(s)`, text: 'Há carga ou descarga sem conclusão no período filtrado.' });
+      if (dropEmCiclo) alerts.push({ title: `${dropEmCiclo} placa(s) em ciclo Drop`, text: 'Ciclo aberto: precisa de nova marcação para fechar o tempo.' });
+      if (baldeioByPlate[0]) alerts.push({ title: `Maior volume: ${baldeioByPlate[0].placa}`, text: `${baldeioByPlate[0].count} marcação(ões) de baldeio • origem ${baldeioByPlate[0].origem}.` });
+      if (!alerts.length) alerts.push({ title: 'Sem gargalo crítico', text: 'Nenhuma pendência relevante encontrada para Baldeio/Drop no filtro atual.' });
+      alertsRoot.innerHTML = alerts.slice(0, 3).map(a => `<div class="bd-alert-card"><strong>${escapeHtml(a.title)}</strong><span>${escapeHtml(a.text)}</span></div>`).join('');
+    }
+
+    if (typeof Chart !== 'undefined') {
+      const dailyCanvas = document.getElementById('bd-daily-chart');
+      if (dailyCanvas) {
+        dailyProductivityChart = safeDestroyChart(dailyProductivityChart);
+        dailyProductivityChart = new Chart(dailyCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: dayLabels,
+            datasets: [
+              { label: 'Baldeios', data: dayKeys.map(k => baldeioDaily[k] || 0), backgroundColor: 'rgba(0, 140, 69, 0.60)', borderColor: 'rgba(0, 140, 69, 0.95)', borderWidth: 1, borderRadius: 8 },
+              { label: 'Drop & Hook', data: dayKeys.map(k => dropDaily[k] || 0), backgroundColor: 'rgba(37, 99, 235, 0.50)', borderColor: 'rgba(37, 99, 235, 0.95)', borderWidth: 1, borderRadius: 8 }
+            ]
           },
-          scales: {
-            y: { beginAtZero: true, ticks: { color: '#d1d5db', precision: 0 }, grid: { color: 'rgba(255,255,255,0.08)' } },
-            x: { ticks: { color: '#d1d5db', maxRotation: 35, minRotation: 0 }, grid: { display: false } }
-          }
-        }
-      });
-    }
+          options: bdChartOptions()
+        });
+      }
 
-    const days = [];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(start);
-      d.setDate(start.getDate() + i);
-      days.push(d);
-    }
-    const labelsDays = days.map(d => dayLabelPt(d));
-    const keysDays = days.map(d => dayKey(d));
-
-    const dailyCreated = {}, dailyFinal = {}, dailyCanc = {};
-    keysDays.forEach(k => { dailyCreated[k]=0; dailyFinal[k]=0; dailyCanc[k]=0; });
-
-    data.forEach(op => {
-      const k = dayKey(op._rt);
-      if (!(k in dailyCreated)) return;
-
-      dailyCreated[k]++;
-      const st = (op.status || '').toLowerCase();
-      if (st === 'finalizado') dailyFinal[k]++;
-      else if (st === 'cancelado') dailyCanc[k]++;
-    });
-
-    const createdSeries = keysDays.map(k => dailyCreated[k] || 0);
-    const finalSeries = keysDays.map(k => dailyFinal[k] || 0);
-    const cancSeries = keysDays.map(k => dailyCanc[k] || 0);
-
-    const dailyCanvas = document.getElementById('daily-productivity-chart');
-    if (dailyCanvas) {
-      dailyProductivityChart = safeDestroyChart(dailyProductivityChart);
-      dailyProductivityChart = new Chart(dailyCanvas.getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: labelsDays,
-          datasets: [
-            { label: 'Marcações (Criadas)', data: createdSeries, backgroundColor: 'rgba(59,130,246,0.55)', borderColor: 'rgba(59,130,246,0.95)', borderWidth: 1, borderRadius: 6 },
-            { label: 'Finalizadas (dessas marcações)', data: finalSeries, backgroundColor: 'rgba(16,185,129,0.45)', borderColor: 'rgba(16,185,129,0.90)', borderWidth: 1, borderRadius: 6 },
-            { label: 'Canceladas (dessas marcações)', data: cancSeries, backgroundColor: 'rgba(239,68,68,0.40)', borderColor: 'rgba(239,68,68,0.85)', borderWidth: 1, borderRadius: 6 }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { labels: { color: '#d1d5db' } } },
-          scales: {
-            y: { beginAtZero: true, ticks: { color: '#d1d5db', precision: 0 }, grid: { color: 'rgba(255,255,255,0.08)' } },
-            x: { ticks: { color: '#d1d5db' }, grid: { display: false } }
-          }
-        }
-      });
-    }
-
-    const dailyTmpSum = {}, dailyTmpCnt = {};
-    keysDays.forEach(k => { dailyTmpSum[k]=0; dailyTmpCnt[k]=0; });
-
-    data.forEach(op => {
-      const st = (op.status || '').toLowerCase();
-      if (st !== 'finalizado') return;
-      if (!op._rt || !op._ft) return;
-
-      const dur = op._ft - op._rt;
-      if (!Number.isFinite(dur) || dur < 0) return;
-
-      const k = dayKey(op._rt);
-      if (!(k in dailyTmpSum)) return;
-
-      dailyTmpSum[k] += dur;
-      dailyTmpCnt[k] += 1;
-    });
-
-    const tmpHours = keysDays.map(k => {
-      if (!dailyTmpCnt[k]) return null;
-      const avg = dailyTmpSum[k] / dailyTmpCnt[k];
-      return +(avg / 3600000).toFixed(2);
-    });
-
-    const tmpCanvas = document.getElementById('tmp-evolution-chart');
-    if (tmpCanvas) {
-      tmpEvolutionChart = safeDestroyChart(tmpEvolutionChart);
-      tmpEvolutionChart = new Chart(tmpCanvas.getContext('2d'), {
-        type: 'line',
-        data: {
-          labels: labelsDays,
-          datasets: [{
-            label: 'TMP (h) — por marcação',
-            data: tmpHours,
-            borderColor: 'rgba(168,85,247,0.95)',
-            backgroundColor: 'rgba(168,85,247,0.20)',
-            fill: true,
-            tension: 0.35,
-            spanGaps: true,
-            pointRadius: 3
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { labels: { color: '#d1d5db' } },
-            tooltip: { callbacks: { label: (c) => ` ${c.raw ?? '—'} h` } }
+      const originCanvas = document.getElementById('bd-origin-chart');
+      if (originCanvas) {
+        operationTypeChart = safeDestroyChart(operationTypeChart);
+        operationTypeChart = new Chart(originCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: Object.keys(originCounts),
+            datasets: [{ label: 'Baldeios', data: Object.values(originCounts), backgroundColor: 'rgba(16, 185, 129, 0.55)', borderColor: 'rgba(5, 150, 105, 0.95)', borderWidth: 1, borderRadius: 8 }]
           },
-          scales: {
-            y: { beginAtZero: true, ticks: { color: '#d1d5db' }, grid: { color: 'rgba(255,255,255,0.08)' } },
-            x: { ticks: { color: '#d1d5db' }, grid: { display: false } }
-          }
-        }
-      });
-    }
+          options: { ...bdChartOptions(), plugins: { ...bdChartOptions().plugins, legend: { display: false } } }
+        });
+      }
 
-    const byTransportadora = {};
-    data.forEach(op => {
-      const t = op.transportadora || 'Sem transportadora';
-      byTransportadora[t] = (byTransportadora[t] || 0) + 1;
-    });
+      const statusCanvas = document.getElementById('bd-drop-status-chart');
+      if (statusCanvas) {
+        tmpEvolutionChart = safeDestroyChart(tmpEvolutionChart);
+        const entries = Object.entries(dropStatusCounts).sort((a, b) => b[1] - a[1]);
+        tmpEvolutionChart = new Chart(statusCanvas.getContext('2d'), {
+          type: 'bar',
+          data: { labels: entries.map(e => e[0]), datasets: [{ label: 'Drop', data: entries.map(e => e[1]), backgroundColor: 'rgba(14, 165, 233, 0.52)', borderColor: 'rgba(2, 132, 199, 0.95)', borderWidth: 1, borderRadius: 8 }] },
+          options: { ...bdChartOptions({ horizontal: true }), plugins: { ...bdChartOptions({ horizontal: true }).plugins, legend: { display: false } } }
+        });
+      }
 
-    const ranking = Object.entries(byTransportadora).sort((a,b)=>b[1]-a[1]).slice(0, 10);
-    const rankLabels = ranking.map(r=>r[0]);
-    const rankValues = ranking.map(r=>r[1]);
-
-    const volCanvas = document.getElementById('volume-ranking-chart');
-    if (volCanvas) {
-      volumeRankingChart = safeDestroyChart(volumeRankingChart);
-      volumeRankingChart = new Chart(volCanvas.getContext('2d'), {
-        type: 'bar',
-        data: { labels: rankLabels, datasets: [{ label: 'Marcações (7d)', data: rankValues, backgroundColor: 'rgba(245,158,11,0.55)', borderColor: 'rgba(245,158,11,0.95)', borderWidth: 1, borderRadius: 6 }] },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          indexAxis: 'y',
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { beginAtZero: true, ticks: { color: '#d1d5db', precision: 0 }, grid: { color: 'rgba(255,255,255,0.08)' } },
-            y: { ticks: { color: '#d1d5db' }, grid: { display: false } }
-          }
-        }
-      });
-    }
-
-    const shift1 = {}, shift2 = {}, shift3 = {};
-    keysDays.forEach(k => { shift1[k]=0; shift2[k]=0; shift3[k]=0; });
-
-    data.forEach(op => {
-      const k = dayKey(op._rt);
-      if (!(k in shift1)) return;
-
-      const hour = new Date(op._rt).getHours();
-      const sh = getShiftByHour(hour);
-      if (sh === 1) shift1[k]++; else if (sh === 2) shift2[k]++; else shift3[k]++;
-    });
-
-    const sh1Series = keysDays.map(k=>shift1[k]||0);
-    const sh2Series = keysDays.map(k=>shift2[k]||0);
-    const sh3Series = keysDays.map(k=>shift3[k]||0);
-
-    const shiftCanvas = document.getElementById('shift-comparison-chart');
-    if (shiftCanvas) {
+      const topCanvas = document.getElementById('bd-top-plates-chart');
+      if (topCanvas) {
+        volumeRankingChart = safeDestroyChart(volumeRankingChart);
+        volumeRankingChart = new Chart(topCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: topPlates.map(p => p.placa),
+            datasets: [
+              { label: 'Baldeio', data: topPlates.map(p => p.baldeio), backgroundColor: 'rgba(0, 140, 69, 0.56)', borderColor: 'rgba(0, 140, 69, 0.95)', borderWidth: 1, borderRadius: 8 },
+              { label: 'Drop', data: topPlates.map(p => p.drop), backgroundColor: 'rgba(37, 99, 235, 0.50)', borderColor: 'rgba(37, 99, 235, 0.95)', borderWidth: 1, borderRadius: 8 }
+            ]
+          },
+          options: bdChartOptions({ horizontal: true, stacked: true })
+        });
+      }
       shiftComparisonChart = safeDestroyChart(shiftComparisonChart);
-      shiftComparisonChart = new Chart(shiftCanvas.getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: labelsDays,
-          datasets: [
-            { label: '1º Turno (marcações)', data: sh1Series, backgroundColor: 'rgba(59,130,246,0.50)' },
-            { label: '2º Turno (marcações)', data: sh2Series, backgroundColor: 'rgba(16,185,129,0.50)' },
-            { label: '3º Turno (marcações)', data: sh3Series, backgroundColor: 'rgba(168,85,247,0.45)' }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { labels: { color: '#d1d5db' } } },
-          scales: {
-            y: { beginAtZero: true, ticks: { color: '#d1d5db', precision: 0 }, grid: { color: 'rgba(255,255,255,0.08)' } },
-            x: { ticks: { color: '#d1d5db' }, grid: { display: false } }
-          }
-        }
-      });
-    }
-
-    const heatCanvas = document.getElementById('heatmap-chart');
-    if (heatCanvas) {
       heatmapChart = safeDestroyChart(heatmapChart);
-
-      const matrix = Array.from({ length: 7 }, () => Array.from({ length: 24 }, () => 0));
-      data.forEach(op => {
-        const k = dayKey(op._rt);
-        const dayIdx = keysDays.indexOf(k);
-        if (dayIdx === -1) return;
-        const hour = new Date(op._rt).getHours();
-        matrix[dayIdx][hour] += 1;
-      });
-
-      const points = [];
-      for (let y=0;y<7;y++) for (let x=0;x<24;x++) points.push({ x, y, v: matrix[y][x] });
-      const maxV = points.reduce((m,p)=>Math.max(m,p.v),0);
-
-      heatmapChart = new Chart(heatCanvas.getContext('2d'), {
-        type: 'matrix',
-        data: {
-          datasets: [{
-            label: 'Marcações',
-            data: points,
-            backgroundColor: (ctx) => {
-              const v = ctx.raw?.v ?? 0;
-              if (!v) return 'rgba(255,255,255,0.03)';
-              const a = Math.min(0.85, 0.12 + (maxV ? (v / maxV) * 0.75 : 0.2));
-              return `rgba(16, 185, 129, ${a})`;
-            },
-            borderColor: 'rgba(17,24,39,0.35)',
-            borderWidth: 1,
-            width: ({ chart }) => (chart.chartArea || {}).width / 24 - 2,
-            height: ({ chart }) => (chart.chartArea || {}).height / 7 - 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                title: (items) => {
-                  const r = items?.[0]?.raw;
-                  if (!r) return '';
-                  const day = labelsDays[r.y];
-                  const h = String(r.x).padStart(2, '0');
-                  return `${day} — ${h}:00`;
-                },
-                label: (item) => ` ${item.raw?.v ?? 0} marcação(ões)`
-              }
-            }
-          },
-          scales: {
-            x: {
-              type: 'linear',
-              position: 'bottom',
-              min: 0,
-              max: 23,
-              ticks: { stepSize: 1, color: '#d1d5db', callback: (v) => (v % 2 === 0 ? String(v).padStart(2,'0') : '') },
-              grid: { color: 'rgba(255,255,255,0.06)' }
-            },
-            y: {
-              type: 'linear',
-              min: 0,
-              max: 6,
-              ticks: { stepSize: 1, color: '#d1d5db', callback: (v) => labelsDays[v] || '' },
-              grid: { color: 'rgba(255,255,255,0.06)' }
-            }
-          }
-        }
-      });
     }
+
+    const baldeioPill = document.getElementById('bd-baldeio-count-pill');
+    if (baldeioPill) baldeioPill.textContent = `${baldeioByPlate.length} placa(s)`;
+    const baldeioBody = document.getElementById('bd-baldeio-table-body');
+    if (baldeioBody) {
+      baldeioBody.innerHTML = baldeioByPlate.slice(0, 12).map(r => `
+        <tr>
+          <td><span class="bd-status-chip">${escapeHtml(r.origem)}</span></td>
+          <td class="bd-mono">${escapeHtml(r.placa)}</td>
+          <td><strong>${r.count}</strong></td>
+          <td class="bd-mono">${r.first ? `${fmtHHMM(r.first)} → ${fmtHHMM(r.last)}` : '—'}</td>
+          <td class="bd-mono">${escapeHtml(r.intervalsTxt)}</td>
+        </tr>
+      `).join('') || `<tr><td colspan="5" class="text-center text-gray-500 py-6">Sem baldeios no período selecionado.</td></tr>`;
+    }
+
+    const dropPill = document.getElementById('bd-drop-count-pill');
+    if (dropPill) dropPill.textContent = `${activeDropOps.length} registro(s)`;
+    const dropBody = document.getElementById('bd-drop-table-body');
+    if (dropBody) {
+      const sortedDrops = [...activeDropOps].sort((a, b) => b._bdMs - a._bdMs).slice(0, 12);
+      dropBody.innerHTML = sortedDrops.map(op => {
+        const status = getDropMainStatusLabel(op);
+        return `
+          <tr>
+            <td class="bd-mono">${escapeHtml(getDropDt(op) || op.dt || '—')}</td>
+            <td class="bd-mono">${escapeHtml(getBdDashboardPlate(op, plateMode))}</td>
+            <td>
+              <div><strong>Manobra:</strong> ${escapeHtml(getDropManobra(op) || '—')}</div>
+              <div class="text-xs text-gray-500"><strong>Viagem:</strong> ${escapeHtml(getDropViagem(op) || '—')}</div>
+            </td>
+            <td><span class="bd-status-chip">${escapeHtml(status)}</span></td>
+            <td><strong>${getDropCargaQtd(op)}</strong> carga / <strong>${getDropDescargaQtd(op)}</strong> descarga</td>
+          </tr>`;
+      }).join('') || `<tr><td colspan="5" class="text-center text-gray-500 py-6">Sem Drop & Hook no período selecionado.</td></tr>`;
+    }
+
+    window.__bdDashboardReport = {
+      ...range,
+      plateMode,
+      baldeioOps,
+      dropOps: activeDropOps,
+      baldeioByPlate,
+      topPlates
+    };
   }
 
   // ✅ ABA MOTORISTAS: render
@@ -22016,6 +22265,199 @@ async function handleAddOccurrence(e) {
     return map;
   }
 
+  function pandoraParceiroMinimumLikeLength(key = '') {
+    const value = String(key || '').trim();
+    return pandoraDigits(value).length >= 4 || pandoraSheetKey(value).length >= 4;
+  }
+
+  function pandoraParceiroSimilarityScore(inputKey = '', candidateKey = '') {
+    const input = String(inputKey || '').trim();
+    const candidate = String(candidateKey || '').trim();
+    if (!input || !candidate) return 0;
+    if (input === candidate) return 1000 + Math.min(candidate.length, 30);
+    if (!pandoraParceiroMinimumLikeLength(input)) return 0;
+
+    const inputDigits = pandoraDigits(input);
+    const candidateDigits = pandoraDigits(candidate);
+    if (inputDigits && candidateDigits) {
+      if (inputDigits === candidateDigits) return 1000 + Math.min(candidateDigits.length, 30);
+      const maxLen = Math.min(inputDigits.length, candidateDigits.length, 10);
+      for (let len = maxLen; len >= 4; len--) {
+        if (inputDigits.slice(-len) === candidateDigits.slice(-len)) return 820 + len;
+        if (inputDigits.slice(0, len) === candidateDigits.slice(0, len)) return 760 + len;
+      }
+      if (candidateDigits.includes(inputDigits) || inputDigits.includes(candidateDigits)) return 620 + Math.min(inputDigits.length, candidateDigits.length);
+    }
+
+    if (candidate.includes(input) || input.includes(candidate)) return 560 + Math.min(input.length, candidate.length);
+    return 0;
+  }
+
+  function pandoraFindClienteBaseLike(value = '') {
+    const inputKey = pandoraClienteKey(value);
+    if (!inputKey) return null;
+    const exact = pandoraClienteBaseMap().get(inputKey);
+    if (exact) {
+      return { row: exact, score: 1000, matchType: 'exato', source: 'BASE_CLIENTES', matchedCode: exact.codigo || value };
+    }
+
+    let best = null;
+    (pandoraClientesBase || []).forEach(row => {
+      const candidateKey = row.codigoKey || pandoraClienteKey(row.codigo || row.clienteCodigo || '');
+      const score = pandoraParceiroSimilarityScore(inputKey, candidateKey);
+      if (score >= 560 && (!best || score > best.score)) {
+        best = { row, score, matchType: 'parecido', source: 'BASE_CLIENTES', matchedCode: row.codigo || row.clienteCodigo || '' };
+      }
+    });
+    return best;
+  }
+
+  function pandoraFindExistingParceiroLike(value = '') {
+    const inputKey = pandoraClienteKey(value);
+    if (!inputKey) return null;
+    let best = null;
+    (pandoraVisibleRows(pandoraData || []) || []).forEach(row => {
+      const candidateCode = row.parceiro || row.clienteCodigo || '';
+      const candidateKey = row.clienteCodigoKey || pandoraClienteKey(candidateCode);
+      const score = pandoraParceiroSimilarityScore(inputKey, candidateKey);
+      if (score < 560) return;
+      const hasUsefulInfo = !!(row.area || row.responsavel || row.fornecedor || row.clienteNomeBase || row.clienteArea || row.responsavelBase);
+      if (!hasUsefulInfo) return;
+      const recencyBonus = Math.min(Math.floor((row.updatedAtMs || row.importedAtMs || row.createdAtMs || 0) / 100000000000), 9);
+      const finalScore = score + recencyBonus;
+      if (!best || finalScore > best.score) {
+        best = { row, score: finalScore, matchType: score >= 1000 ? 'exato' : 'parecido', source: 'HISTORICO_PANDORA', matchedCode: candidateCode };
+      }
+    });
+    return best;
+  }
+
+  function pandoraResolveParceiroMatch(value = '') {
+    const baseMatch = pandoraFindClienteBaseLike(value);
+    const historyMatch = pandoraFindExistingParceiroLike(value);
+    if (!baseMatch && !historyMatch) return null;
+
+    const base = baseMatch?.row || {};
+    const hist = historyMatch?.row || {};
+    const primary = baseMatch || historyMatch;
+    const codigo = base.codigo || hist.clienteCodigo || hist.parceiro || primary.matchedCode || value;
+    const nome = base.nome || hist.clienteNomeBase || hist.fornecedor || '';
+    const area = base.area || hist.clienteArea || hist.area || '';
+    const responsavel = base.responsavel || hist.responsavel || hist.responsavelBase || '';
+    const origem = [];
+    if (baseMatch) origem.push('Base Clientes');
+    if (historyMatch && (hist.responsavel || hist.area || hist.fornecedor)) origem.push('Histórico Pandora');
+
+    return {
+      codigo,
+      codigoKey: pandoraClienteKey(codigo || value),
+      nome,
+      area,
+      responsavel,
+      matchType: primary.matchType || 'exato',
+      score: Math.max(baseMatch?.score || 0, historyMatch?.score || 0),
+      source: baseMatch ? 'BASE_CLIENTES' : 'HISTORICO_PANDORA',
+      sourceLabel: origem.join(' + ') || (baseMatch ? 'Base Clientes' : 'Histórico Pandora'),
+      hasBase: !!baseMatch,
+      matchedCode: primary.matchedCode || codigo
+    };
+  }
+
+  function pandoraSetParceiroHint(textValue = '', type = 'info') {
+    const hint = document.getElementById('pd-parceiro-match-hint');
+    if (!hint) return;
+    hint.textContent = textValue || 'Digite o código para buscar na Base de Clientes e no histórico.';
+    hint.className = type === 'ok'
+      ? 'text-xs mt-1 font-semibold text-emerald-700'
+      : (type === 'warn' ? 'text-xs mt-1 font-semibold text-amber-700' : 'pandora-muted text-xs mt-1');
+  }
+
+  function pandoraSetFieldIfAllowed(id, value = '', opts = {}) {
+    const el = document.getElementById(id);
+    const next = String(value || '').trim();
+    if (!el || !next) return false;
+    const current = String(el.value || '').trim();
+    const isDefaultArea = id === 'pd-area' && pandoraNorm(current) === 'FISCAL';
+    if (opts.force || !current || isDefaultArea) {
+      el.value = next;
+      try { el.dispatchEvent(new Event('change', { bubbles: true })); } catch (_) {}
+      return true;
+    }
+    return false;
+  }
+
+  function pandoraApplyParceiroMatchToPayload(payload = {}) {
+    const match = pandoraResolveParceiroMatch(payload.parceiro || payload.clienteCodigo || '');
+    if (!match) return payload;
+    return {
+      ...payload,
+      area: payload.area || match.area || '',
+      fornecedor: payload.fornecedor || match.nome || '',
+      responsavel: payload.responsavel || match.responsavel || '',
+      clienteCodigo: match.codigo || payload.parceiro || '',
+      clienteCodigoKey: match.codigoKey || pandoraClienteKey(match.codigo || payload.parceiro || ''),
+      clienteNomeBase: match.nome || payload.fornecedor || '',
+      clienteArea: match.area || payload.area || '',
+      responsavelBase: match.responsavel || '',
+      parceiroMatchOrigem: match.sourceLabel || '',
+      parceiroMatchTipo: match.matchType || '',
+      areaOrigem: match.hasBase && match.area ? 'BASE_CLIENTES' : (payload.areaOrigem || (match.area ? 'HISTORICO_PANDORA' : '')),
+      areaClienteProtegida: !!(payload.areaClienteProtegida || (match.hasBase && match.area))
+    };
+  }
+
+  function pandoraAutocompleteParceiro(opts = {}) {
+    const parceiroEl = document.getElementById('pd-parceiro');
+    if (!parceiroEl) return null;
+    const raw = String(parceiroEl.value || '').trim();
+    parceiroEl.classList.remove('pandora-lookup-ok', 'pandora-lookup-new');
+    if (!raw) {
+      pandoraSetParceiroHint('', 'info');
+      return null;
+    }
+
+    const match = pandoraResolveParceiroMatch(raw);
+    if (!match) {
+      if (pandoraParceiroMinimumLikeLength(pandoraClienteKey(raw))) parceiroEl.classList.add('pandora-lookup-new');
+      pandoraSetParceiroHint('Nenhum parceiro parecido encontrado na Base de Clientes ou no histórico.', 'warn');
+      if (opts.showToast) showToast('Nenhum parceiro parecido encontrado para esse código.', 'info');
+      return null;
+    }
+
+    if (opts.autocorrect && match.codigo && match.matchType !== 'exato') parceiroEl.value = match.codigo;
+    pandoraSetFieldIfAllowed('pd-area', match.area, { force: opts.forceArea });
+    pandoraSetFieldIfAllowed('pd-fornecedor', match.nome, { force: false });
+    pandoraSetFieldIfAllowed('pd-responsavel', match.responsavel, { force: false });
+    parceiroEl.classList.add('pandora-lookup-ok');
+
+    const partes = [];
+    if (match.nome) partes.push(match.nome);
+    if (match.area) partes.push(`Área: ${match.area}`);
+    if (match.responsavel) partes.push(`Responsável: ${match.responsavel}`);
+    pandoraSetParceiroHint(`Parceiro ${match.matchType === 'exato' ? 'encontrado' : 'parecido encontrado'} em ${match.sourceLabel}: ${partes.join(' • ') || match.codigo}`, 'ok');
+    if (opts.showToast) showToast(`Parceiro ${match.matchType === 'exato' ? 'encontrado' : 'parecido encontrado'}: ${partes.join(' • ') || match.codigo}`, 'success');
+    return match;
+  }
+
+  function pandoraFillParceiroDatalist() {
+    const listEl = document.getElementById('pd-parceiro-list');
+    if (!listEl) return;
+    const options = new Map();
+    (pandoraClientesBase || []).forEach(row => {
+      const codigo = String(row.codigo || row.clienteCodigo || '').trim();
+      if (!codigo) return;
+      const label = [row.nome, row.area ? `Área: ${row.area}` : '', row.responsavel ? `Resp.: ${row.responsavel}` : ''].filter(Boolean).join(' • ');
+      options.set(codigo, label);
+    });
+    (pandoraVisibleRows(pandoraData || []) || []).slice(0, 500).forEach(row => {
+      const codigo = String(row.parceiro || row.clienteCodigo || '').trim();
+      if (!codigo || options.has(codigo)) return;
+      const label = [row.fornecedor || row.clienteNomeBase, row.area ? `Área: ${row.area}` : '', row.responsavel ? `Resp.: ${row.responsavel}` : ''].filter(Boolean).join(' • ');
+      options.set(codigo, label);
+    });
+    listEl.innerHTML = Array.from(options.entries()).slice(0, 800).map(([value, label]) => `<option value="${escapeHtml(value)}" label="${escapeHtml(label)}"></option>`).join('');
+  }
+
   function pandoraAreaOptions() {
     const set = new Set(PANDORA_AREAS.filter(Boolean));
     (pandoraData || []).forEach(item => {
@@ -22027,18 +22469,25 @@ async function handleAddOccurrence(e) {
   }
 
   function pandoraApplyClienteBaseToXmlRow(row = {}, existing = {}) {
-    const base = pandoraClienteBaseMap().get(pandoraClienteKey(row.parceiro || existing.parceiro || existing.clienteCodigo || row.clienteCodigo || ''));
+    const parceiroRef = row.parceiro || existing.parceiro || existing.clienteCodigo || row.clienteCodigo || '';
+    const exactBase = pandoraClienteBaseMap().get(pandoraClienteKey(parceiroRef));
+    const likeBase = exactBase ? { row: exactBase, score: 1000, matchType: 'exato', source: 'BASE_CLIENTES' } : pandoraFindClienteBaseLike(parceiroRef);
+    const base = likeBase && likeBase.score >= 820 ? likeBase.row : null;
     if (!base || !base.area) return row;
     return {
       ...row,
       area: base.area,
       fornecedor: row.fornecedor || existing.fornecedor || base.nome || '',
+      responsavel: existing.responsavel || row.responsavel || base.responsavel || '',
+      responsavelBase: base.responsavel || existing.responsavelBase || '',
       clienteCodigo: base.codigo || row.parceiro || existing.parceiro || '',
       clienteCodigoKey: base.codigoKey || pandoraClienteKey(base.codigo || row.parceiro || ''),
       clienteNomeBase: base.nome || '',
       clienteArea: base.area || '',
       areaOrigem: 'BASE_CLIENTES',
       areaClienteProtegida: true,
+      parceiroMatchOrigem: 'Base Clientes',
+      parceiroMatchTipo: likeBase.matchType || 'exato',
       clienteBaseArquivo: base.arquivoOrigem || '',
       clienteBaseUploadRow: base.uploadRow || '',
       clienteBaseImportedAt: base.importedAt || ''
@@ -22270,12 +22719,28 @@ async function handleAddOccurrence(e) {
       'Departamento',
       'Setor'
     ]) || '');
+    const responsavel = String(pandoraValueByHeader(row, [
+      'Responsável',
+      'Responsavel',
+      'Responsável Pandora',
+      'Responsavel Pandora',
+      'Responsável Correto',
+      'Responsavel Correto',
+      'Analista',
+      'Analista Responsável',
+      'Analista Responsavel',
+      'Tratador',
+      'Owner',
+      'Pessoa Responsável',
+      'Pessoa Responsavel'
+    ]) || '').trim();
     const codigoKey = pandoraClienteKey(codigo);
     return {
       codigo,
       codigoKey,
       nome,
       area,
+      responsavel,
       arquivoOrigem: fileName || '',
       uploadRow: idx + 2,
       importedAt: pandoraNow(),
@@ -22333,6 +22798,7 @@ async function handleAddOccurrence(e) {
 
   function initPandoraControls() {
     pandoraRefreshAreaControls();
+    pandoraFillParceiroDatalist();
     pandoraFillSelect('pd-status', PANDORA_STATUS);
     pandoraFillSelect('pd-tipo', PANDORA_TIPOS);
     pandoraFillSelect('pandora-filter-status', PANDORA_STATUS, { allLabel: 'Todos os status' });
@@ -22360,7 +22826,7 @@ async function handleAddOccurrence(e) {
     const dadosChave = pandoraExtractNfeFromChave(chave);
     const nfInput = String(document.getElementById('pd-nf')?.value || '').trim();
     const serieInput = String(document.getElementById('pd-serie')?.value || '').trim();
-    return {
+    const payload = {
       nf: nfInput || dadosChave.nf || '',
       serie: serieInput || dadosChave.serie || '',
       chave,
@@ -22392,6 +22858,7 @@ async function handleAddOccurrence(e) {
       encerradoAt: pandoraIsEscriturado(status) ? nowIso : '',
       encerradoAtMs: pandoraIsEscriturado(status) ? nowMs : 0
     };
+    return pandoraApplyParceiroMatchToPayload(payload);
   }
 
   function resetPandoraForm() {
@@ -22402,6 +22869,8 @@ async function handleAddOccurrence(e) {
     const title = document.getElementById('pandora-form-title'); if (title) title.textContent = 'Cadastrar NF';
     document.getElementById('pandora-cancel-edit-btn')?.classList.add('pandora-hidden');
     document.getElementById('pd-chave')?.classList.remove('pandora-lookup-ok', 'pandora-lookup-new');
+    document.getElementById('pd-parceiro')?.classList.remove('pandora-lookup-ok', 'pandora-lookup-new');
+    pandoraSetParceiroHint('', 'info');
   }
 
   function fillPandoraForm(item = {}) {
@@ -23204,6 +23673,8 @@ async function handleAddOccurrence(e) {
           ...item,
           area: base.area,
           fornecedor: item.fornecedor || base.nome || '',
+          responsavel: item.responsavel || base.responsavel || '',
+          responsavelBase: base.responsavel || item.responsavelBase || '',
           clienteCodigo: base.codigo || item.parceiro || '',
           clienteCodigoKey: base.codigoKey || codigoKey,
           clienteNomeBase: base.nome || '',
@@ -23225,6 +23696,7 @@ async function handleAddOccurrence(e) {
 
       pandoraSaveLocal();
       initPandoraControls();
+      pandoraFillParceiroDatalist();
       renderPandora();
 
       if (db && !pandoraUsingLocalFallback) {
@@ -23235,6 +23707,8 @@ async function handleAddOccurrence(e) {
             batch.set(pandoraDocRef(PANDORA_NF_COLLECTION, update.docId), {
               area: update.after.area,
               fornecedor: update.after.fornecedor || '',
+              responsavel: update.after.responsavel || '',
+              responsavelBase: update.after.responsavelBase || '',
               clienteCodigo: update.after.clienteCodigo || '',
               clienteCodigoKey: update.after.clienteCodigoKey || '',
               clienteNomeBase: update.after.clienteNomeBase || '',
@@ -23469,6 +23943,7 @@ async function handleAddOccurrence(e) {
         pandoraUsingLocalFallback = false;
         pandoraData = snap.docs.map(d => ({ ...d.data(), id: d.id, _docId: d.id }));
         if ((pandoraData || []).length <= 1500) pandoraWriteJson(PANDORA_LOCAL_KEY, pandoraData);
+        pandoraFillParceiroDatalist();
         if (activeTab === 'pandora') renderPandora();
       }, err => {
         console.warn('Pandora usando modo local (NF):', err);
@@ -23500,6 +23975,7 @@ async function handleAddOccurrence(e) {
     pandoraLoadLocal();
     pandoraImportMeta = pandoraReadJson(PANDORA_IMPORT_META_KEY, pandoraImportMeta || {});
     pandoraClientesBase = pandoraReadJson(PANDORA_CLIENTE_BASE_LOCAL_KEY, pandoraClientesBase || []);
+    pandoraFillParceiroDatalist();
 
     document.getElementById('pandora-form')?.addEventListener('submit', pandoraSaveNF);
     document.getElementById('pandora-clear-form-btn')?.addEventListener('click', resetPandoraForm);
@@ -23516,6 +23992,12 @@ async function handleAddOccurrence(e) {
     document.getElementById('pd-chave')?.addEventListener('input', (ev) => pandoraAutofillNfSerieFromChave(ev.target.value || ''));
     document.getElementById('pd-chave')?.addEventListener('blur', pandoraLookupByChave);
     document.getElementById('pd-chave')?.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); pandoraLookupByChave(); } });
+
+    const pandoraParceiroAutofillDebounced = debounce(() => pandoraAutocompleteParceiro({ showToast: false, autocorrect: false }), HEILOG_PERF.pandoraSearchDebounceMs);
+    document.getElementById('pd-parceiro')?.addEventListener('input', () => pandoraParceiroAutofillDebounced());
+    document.getElementById('pd-parceiro')?.addEventListener('blur', () => pandoraAutocompleteParceiro({ showToast: true, autocorrect: true }));
+    document.getElementById('pd-parceiro')?.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); pandoraAutocompleteParceiro({ showToast: true, autocorrect: true }); } });
+
     document.getElementById('pd-data-emissao')?.addEventListener('input', updatePandoraAgingField);
     document.getElementById('pd-data-emissao')?.addEventListener('change', updatePandoraAgingField);
 
@@ -23860,7 +24342,13 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
       debouncedRenderFirstPage();
     });
 
-    document.getElementById('dashboard-transportadora-filter').addEventListener('change', renderManagerDashboard);
+    document.getElementById('dashboard-transportadora-filter')?.addEventListener('change', renderManagerDashboard);
+    document.getElementById('bd-dash-refresh')?.addEventListener('click', renderManagerDashboard);
+    document.getElementById('bd-dash-export')?.addEventListener('click', exportBaldeioDropDashboardCsv);
+    document.getElementById('bd-dash-start')?.addEventListener('change', renderManagerDashboard);
+    document.getElementById('bd-dash-end')?.addEventListener('change', renderManagerDashboard);
+    document.getElementById('bd-dash-baldeio-origin')?.addEventListener('change', renderManagerDashboard);
+    document.getElementById('bd-dash-plate-mode')?.addEventListener('change', renderManagerDashboard);
 
     // ✅ Dashboard Ritmo (filtros)
     const rdS = document.getElementById('ritmo-dash-start');
