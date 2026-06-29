@@ -7620,6 +7620,7 @@ select.hl-native-multi-hidden {
 .pandora-status-cancelada { color: #475569 !important; background: #e2e8f0; border-color: #cbd5e1; }
 .pandora-status-aguardando-area { color: #92400e !important; background: #fef3c7; border-color: #fde68a; }
 .pandora-status-aguardando-documento { color: #6d28d9 !important; background: #ede9fe; border-color: #ddd6fe; }
+.pandora-status-liberacao-de-entrada { color: #0f766e !important; background: #ccfbf1; border-color: #99f6e4; }
 .pandora-form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .pandora-field label { display: block; color: #42554a !important; font-size: .80rem; font-weight: 900; margin-bottom: 6px; letter-spacing: .02em; }
 #pandora-content input,
@@ -9116,8 +9117,8 @@ canvas {
           <form id="pandora-form" class="space-y-4">
             <div class="pandora-form-grid">
               <div class="pandora-field"><label>Chave de acesso *</label><input id="pd-chave" required placeholder="Cole a chave de acesso da NF-e"></div>
-              <div class="pandora-field"><label>Número da NF</label><input id="pd-nf" placeholder="Autopreenche pelo banco"></div>
-              <div class="pandora-field"><label>Série</label><input id="pd-serie" placeholder="Autopreenche pelo banco"></div>
+              <div class="pandora-field"><label>Número da NF</label><input id="pd-nf" placeholder="Autopreenche pela chave/banco"></div>
+              <div class="pandora-field"><label>Série</label><input id="pd-serie" placeholder="Autopreenche pela chave/banco"></div>
               <div class="pandora-field"><label>Área responsável *</label><input id="pd-area" list="pd-area-list" required placeholder="Digite a área responsável"></div>
               <datalist id="pd-area-list"></datalist>
               <!-- Campos ocultos mantidos apenas para compatibilidade com a lógica existente -->
@@ -9126,7 +9127,7 @@ canvas {
               <input id="pd-status-xml" type="hidden" value="">
               <div class="pandora-field"><label>Data Emissão XML</label><input id="pd-data-emissao" placeholder="DD/MM/AAAA"></div>
               <div class="pandora-field"><label>Aging</label><input id="pd-aging" readonly placeholder="Calculado pela emissão"></div>
-              <div class="pandora-field"><label>Data Entrada XML</label><input id="pd-data-entrada" placeholder="DD/MM/AAAA"></div>
+              <input id="pd-data-entrada" type="hidden" value="">
               <div class="pandora-field"><label>Centro</label><input id="pd-centro" placeholder="Centro"></div>
               <div class="pandora-field"><label>Parceiro</label><input id="pd-parceiro" placeholder="Código"></div>
               <div class="pandora-field"><label>Fornecedor / Cliente</label><input id="pd-fornecedor" placeholder="Nome do Parceiro"></div>
@@ -21927,7 +21928,7 @@ async function handleAddOccurrence(e) {
   const PANDORA_CLIENTE_BASE_LOCAL_KEY = 'heilog_pandora_clientes_base_v1';
 
   const PANDORA_AREAS = ['Transportes', 'Warehouse', 'Fiscal', 'Customer Service', 'Planejamento', 'Portaria', 'Operação', 'Inbound', 'Outbound', 'CIM', 'CD', 'INSIDE', 'ATIVOS COMERCIAIS', 'RPM', 'MARKETING', 'QUALIDADE', 'MANUTENÇÃO', 'UTILIDADES', 'PROJETOS', 'PROCESSO', 'SHE'];
-  const PANDORA_STATUS = ['Em andamento', 'Aguardando área', 'Aguardando documento', 'Com problema', 'Escriturado', 'Cancelada'];
+  const PANDORA_STATUS = ['Em andamento', 'Aguardando área', 'Aguardando documento', 'Liberação de entrada', 'Com problema', 'Escriturado', 'Cancelada'];
   const PANDORA_TIPOS = ['Carregamento', 'Descarga', 'Transferência', 'Insumos', 'Baldeio', 'Venda', 'Retorno', 'Outro'];
   // Pandora Jacareí: somente notas dos centros configurados abaixo aparecem no ambiente.
   // Se futuramente o centro de Jacareí mudar, basta ajustar esta lista.
@@ -21944,6 +21945,46 @@ async function handleAddOccurrence(e) {
   const pandoraStatusClass = (status = '') => `pandora-status-pill pandora-status-${pandoraNorm(status).toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`;
   const pandoraDigits = (value = '') => String(value ?? '').replace(/\D/g, '');
   const pandoraChaveNorm = (value = '') => pandoraDigits(value).replace(/^0+/, '') || pandoraDigits(value);
+  function pandoraExtractNfeFromChave(chave = '') {
+    const digits = pandoraDigits(chave);
+    if (digits.length !== 44) return { nf: '', serie: '', modelo: '', anoMes: '' };
+    const serie = digits.slice(22, 25).replace(/^0+/, '') || '0';
+    const nf = digits.slice(25, 34).replace(/^0+/, '') || '0';
+    return {
+      uf: digits.slice(0, 2),
+      anoMes: digits.slice(2, 6),
+      cnpjEmitente: digits.slice(6, 20),
+      modelo: digits.slice(20, 22),
+      serie,
+      nf,
+      tipoEmissao: digits.slice(34, 35),
+      codigoNf: digits.slice(35, 43),
+      digitoVerificador: digits.slice(43, 44)
+    };
+  }
+
+  function pandoraCompleteNfSerieFromChave(item = {}) {
+    const parts = pandoraExtractNfeFromChave(item.chave || item.chaveNorm || '');
+    if (!parts.nf && !parts.serie) return item || {};
+    return {
+      ...item,
+      nf: item.nf || parts.nf || '',
+      serie: item.serie || parts.serie || '',
+      modeloNfe: item.modeloNfe || parts.modelo || '',
+      anoMesNfe: item.anoMesNfe || parts.anoMes || ''
+    };
+  }
+
+  function pandoraAutofillNfSerieFromChave(chave = '', opts = {}) {
+    const parts = pandoraExtractNfeFromChave(chave);
+    if (!parts.nf && !parts.serie) return parts;
+    const overwrite = !!opts.overwrite;
+    const nfEl = document.getElementById('pd-nf');
+    const serieEl = document.getElementById('pd-serie');
+    if (nfEl && (overwrite || !String(nfEl.value || '').trim())) nfEl.value = parts.nf || '';
+    if (serieEl && (overwrite || !String(serieEl.value || '').trim())) serieEl.value = parts.serie || '';
+    return parts;
+  }
   const pandoraSheetKey = (value = '') => pandoraNorm(value).replace(/[^A-Z0-9]/g, '');
   function pandoraNormalizeStatusName(status = '') {
     const raw = String(status || '').trim();
@@ -22006,32 +22047,36 @@ async function handleAddOccurrence(e) {
 
   function pandoraMergeXmlRow(existing, row) {
     const rowComCliente = pandoraApplyClienteBaseToXmlRow(row, existing || {});
-    if (!existing) return rowComCliente;
-    const protegido = pandoraAreaProtegidaPorCliente(existing) || pandoraAreaProtegidaPorCliente(rowComCliente);
+    const rowCompleta = pandoraCompleteNfSerieFromChave(rowComCliente);
+    if (!existing) return rowCompleta;
+    const existingCompleto = pandoraCompleteNfSerieFromChave(existing);
+    const protegido = pandoraAreaProtegidaPorCliente(existingCompleto) || pandoraAreaProtegidaPorCliente(rowCompleta);
     const merged = {
-      ...existing,
-      ...rowComCliente,
-      status: existing.status || rowComCliente.status,
-      responsavel: existing.responsavel || rowComCliente.responsavel,
-      tratativa: existing.tratativa || rowComCliente.tratativa,
-      observacao: existing.observacao || rowComCliente.observacao,
-      problema: existing.problema || rowComCliente.problema,
-      _docId: existing._docId || rowComCliente._docId,
-      id: existing.id || rowComCliente.id
+      ...existingCompleto,
+      ...rowCompleta,
+      nf: rowCompleta.nf || existingCompleto.nf || '',
+      serie: rowCompleta.serie || existingCompleto.serie || '',
+      status: existingCompleto.status || rowCompleta.status,
+      responsavel: existingCompleto.responsavel || rowCompleta.responsavel,
+      tratativa: existingCompleto.tratativa || rowCompleta.tratativa,
+      observacao: existingCompleto.observacao || rowCompleta.observacao,
+      problema: existingCompleto.problema || rowCompleta.problema,
+      _docId: existingCompleto._docId || rowCompleta._docId,
+      id: existingCompleto.id || rowCompleta.id
     };
     if (protegido) {
-      merged.area = rowComCliente.area || existing.area || 'Fiscal';
+      merged.area = rowCompleta.area || existingCompleto.area || 'Fiscal';
       merged.areaOrigem = 'BASE_CLIENTES';
       merged.areaClienteProtegida = true;
-      merged.clienteCodigo = rowComCliente.clienteCodigo || existing.clienteCodigo || existing.parceiro || rowComCliente.parceiro || '';
-      merged.clienteCodigoKey = rowComCliente.clienteCodigoKey || existing.clienteCodigoKey || pandoraClienteKey(merged.clienteCodigo);
-      merged.clienteNomeBase = rowComCliente.clienteNomeBase || existing.clienteNomeBase || '';
-      merged.clienteArea = rowComCliente.clienteArea || existing.clienteArea || merged.area;
-      merged.clienteBaseArquivo = rowComCliente.clienteBaseArquivo || existing.clienteBaseArquivo || '';
-      merged.clienteBaseUploadRow = rowComCliente.clienteBaseUploadRow || existing.clienteBaseUploadRow || '';
-      merged.clienteBaseImportedAt = rowComCliente.clienteBaseImportedAt || existing.clienteBaseImportedAt || '';
+      merged.clienteCodigo = rowCompleta.clienteCodigo || existingCompleto.clienteCodigo || existingCompleto.parceiro || rowCompleta.parceiro || '';
+      merged.clienteCodigoKey = rowCompleta.clienteCodigoKey || existingCompleto.clienteCodigoKey || pandoraClienteKey(merged.clienteCodigo);
+      merged.clienteNomeBase = rowCompleta.clienteNomeBase || existingCompleto.clienteNomeBase || '';
+      merged.clienteArea = rowCompleta.clienteArea || existingCompleto.clienteArea || merged.area;
+      merged.clienteBaseArquivo = rowCompleta.clienteBaseArquivo || existingCompleto.clienteBaseArquivo || '';
+      merged.clienteBaseUploadRow = rowCompleta.clienteBaseUploadRow || existingCompleto.clienteBaseUploadRow || '';
+      merged.clienteBaseImportedAt = rowCompleta.clienteBaseImportedAt || existingCompleto.clienteBaseImportedAt || '';
     }
-    return merged;
+    return pandoraCompleteNfSerieFromChave(merged);
   }
 
   function pandoraRefreshAreaControls() {
@@ -22049,7 +22094,7 @@ async function handleAddOccurrence(e) {
   }
 
   function pandoraVisibleRows(rows = pandoraData || []) {
-    return (rows || []).filter(pandoraIsJacarei);
+    return (rows || []).map(pandoraCompleteNfSerieFromChave).filter(pandoraIsJacarei);
   }
 
   function pandoraJacareiLabel() {
@@ -22085,7 +22130,7 @@ async function handleAddOccurrence(e) {
   }
 
   function pandoraNormalizeUploadedRow(row = {}, idx = 0, fileName = '') {
-    const chave = String(pandoraValueByHeader(row, ['CHAVE', 'Chave de acesso', 'Chave']) || '').trim();
+    const chave = String(pandoraValueByHeader(row, ['CHAVE', 'Chave de acesso', 'Chave de Acesso', 'Chave acesso', 'Chave NF-e', 'Chave NFe', 'Chave']) || '').trim();
     const nf = String(pandoraValueByHeader(row, [
       'NOTA FISCAL',
       'Nota Fiscal',
@@ -22103,6 +22148,9 @@ async function handleAddOccurrence(e) {
       'NF'
     ]) || '').trim();
     const serie = String(pandoraValueByHeader(row, ['Serie', 'Série']) || '').trim();
+    const dadosChave = pandoraExtractNfeFromChave(chave);
+    const nfExtraida = nf || dadosChave.nf || '';
+    const serieExtraida = serie || dadosChave.serie || '';
     const statusXml = String(pandoraValueByHeader(row, ['Status', 'Status XML']) || '').trim();
     const dataEmissaoXml = pandoraExcelDate(pandoraValueByHeader(row, ['Data Emissão XML', 'Data Emissao XML']));
     const dataEntradaXml = pandoraExcelDate(pandoraValueByHeader(row, ['Data Entrada XML']));
@@ -22123,7 +22171,7 @@ async function handleAddOccurrence(e) {
     return {
       id: docId,
       _docId: docId,
-      nf, serie, chave, chaveNorm: normalizedChave,
+      nf: nfExtraida, serie: serieExtraida, chave, chaveNorm: normalizedChave,
       area: 'Fiscal',
       tipo: processoEntrada || descricaoProcesso || processo || 'Recebimento XML',
       statusXml,
@@ -22309,9 +22357,12 @@ async function handleAddOccurrence(e) {
     const nowMs = pandoraMs();
     const status = document.getElementById('pd-status')?.value || 'Em andamento';
     const chave = String(document.getElementById('pd-chave')?.value || '').trim();
+    const dadosChave = pandoraExtractNfeFromChave(chave);
+    const nfInput = String(document.getElementById('pd-nf')?.value || '').trim();
+    const serieInput = String(document.getElementById('pd-serie')?.value || '').trim();
     return {
-      nf: String(document.getElementById('pd-nf')?.value || '').trim(),
-      serie: String(document.getElementById('pd-serie')?.value || '').trim(),
+      nf: nfInput || dadosChave.nf || '',
+      serie: serieInput || dadosChave.serie || '',
       chave,
       chaveNorm: pandoraChaveNorm(chave),
       sitePandora: PANDORA_SITE_ATIVO,
@@ -22354,6 +22405,7 @@ async function handleAddOccurrence(e) {
   }
 
   function fillPandoraForm(item = {}) {
+    item = pandoraCompleteNfSerieFromChave(item);
     pandoraEditId = pandoraDocKey(item);
     setPandoraView('cadastro');
     const values = {
@@ -23343,15 +23395,16 @@ async function handleAddOccurrence(e) {
     const key = pandoraChaveNorm(el.value || '');
     el.classList.remove('pandora-lookup-ok', 'pandora-lookup-new');
     if (!key) return null;
+    pandoraAutofillNfSerieFromChave(el.value || '');
     const item = pandoraVisibleRows().find(x => pandoraChaveNorm(x.chave || x.chaveNorm || '') === key);
     if (item) {
       fillPandoraForm(item);
       document.getElementById('pd-chave')?.classList.add('pandora-lookup-ok');
-      showToast('Chave encontrada no Banco XML de Jacareí. Campos preenchidos automaticamente.', 'success');
+      showToast('Chave encontrada no Banco XML de Jacareí. NF, série e demais campos preenchidos automaticamente.', 'success');
       return item;
     }
     el.classList.add('pandora-lookup-new');
-    showToast('Chave não encontrada em Jacareí. Ao salvar, uma nova linha será criada no Pandora Jacareí.', 'info');
+    showToast('Chave não encontrada em Jacareí. NF e série foram extraídas da chave; ao salvar, uma nova linha será criada.', 'info');
     return null;
   }
 
@@ -23460,6 +23513,7 @@ async function handleAddOccurrence(e) {
     document.getElementById('pandora-clientes-file')?.addEventListener('change', (ev) => pandoraImportClientesFile(ev.target.files?.[0]));
     document.getElementById('pandora-open-db-btn')?.addEventListener('click', () => setPandoraView('banco'));
     document.getElementById('pandora-db-refresh-btn')?.addEventListener('click', () => { renderPandoraDatabase(); showToast('Banco XML atualizado.', 'success'); });
+    document.getElementById('pd-chave')?.addEventListener('input', (ev) => pandoraAutofillNfSerieFromChave(ev.target.value || ''));
     document.getElementById('pd-chave')?.addEventListener('blur', pandoraLookupByChave);
     document.getElementById('pd-chave')?.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); pandoraLookupByChave(); } });
     document.getElementById('pd-data-emissao')?.addEventListener('input', updatePandoraAgingField);
