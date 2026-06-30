@@ -8689,7 +8689,7 @@ canvas {
               <button type="button" class="perf-card-handle" title="Arrastar card">
                 <span class="perf-card-handle-dots">⋮⋮</span>
               </button>
-              <h4 class="text-[1.35rem] font-bold">Totais de Baldeios</h4>
+              <h4 class="text-[1.35rem] font-bold">Total da operação</h4>
             </div>
             <div class="perf-column-toolbar">
               <button type="button" class="perf-column-toggle-btn" data-perf-columns-panel="baldeio">Ajustar colunas</button>
@@ -18339,7 +18339,8 @@ async function handleAddOccurrence(e) {
 
   const PERF_BALDEIO_TOTAL_ROWS = [
     { key: 'baldeios_totais_ritmo', label: 'Baldeios totais - Ritmo' },
-    { key: 'baldeios_totais_jsl', label: 'Baldeios totais - JSL' }
+    { key: 'baldeios_totais_jsl', label: 'Baldeios totais - JSL' },
+    { key: 'vendas_totais', label: 'Vendas totais' }
   ];
 
   const PERF_ALL_SUMMARY_ROWS = [...PERF_MANUAL_ROWS, ...PERF_BALDEIO_TOTAL_ROWS];
@@ -19087,7 +19088,7 @@ async function handleAddOccurrence(e) {
         <table class="w-full text-left text-sm">
           <thead>
             <tr class="bg-green-800 text-white">
-              <th colspan="4" class="p-3 text-center font-bold">Totais de Baldeios</th>
+              <th colspan="4" class="p-3 text-center font-bold">Total da operação</th>
             </tr>
             <tr class="bg-green-700 text-white border-t border-green-900/40">
               <th class="p-2 font-semibold">Tipo</th>
@@ -19560,7 +19561,7 @@ async function handleAddOccurrence(e) {
         ${kpiCardSm('Auto - Vendas', autoVendasTotal, 'resumo automático')}
         ${kpiCardSm('Auto - Baldeio', autoBaldeioTotal, 'resumo automático')}
         ${kpiCardSm('Manual', manualOverallTotal, 'campos manuais')}
-        ${kpiCardSm('Totais baldeio', baldeiosOverallTotal, 'Ritmo + JSL')}
+        ${kpiCardSm('Total operação', baldeiosOverallTotal, 'Baldeios + vendas')}
         ${kpiCardSm('Realizado', perfFormatMetric(realizadoOverallTotal), 'volume por hora')}
         ${kpiCardSm('Hora atual', currentSlotLabel ? currentSlotLabel.split('–')[0] : '—', 'janela em destaque')}
       `;
@@ -19815,6 +19816,21 @@ async function handleAddOccurrence(e) {
     const descargasDrop = activeDropOps.reduce((acc, op) => acc + getDropDescargaQtd(op), 0);
     const dropPendentes = activeDropOps.filter(op => !isDropCargaDone(op) || (getDropDescargaQtd(op) > 0 && !isDropDescargaDone(op))).length;
 
+    // ✅ Meta de Drop: 70% sobre o total de baldeios no período filtrado.
+    // Ex.: 20 baldeios = meta de 14 Drops.
+    const baldeioMetaBaseTotal = baldeioOps.length;
+    const dropMetaPercentual = 70;
+    const dropMetaQtd = Math.ceil(baldeioMetaBaseTotal * (dropMetaPercentual / 100));
+    const dropRealizadoQtd = activeDropOps.length;
+    const dropMetaAtingida = baldeioMetaBaseTotal > 0 && dropRealizadoQtd >= dropMetaQtd;
+    const dropMetaFaltam = Math.max(dropMetaQtd - dropRealizadoQtd, 0);
+    const dropMetaProgresso = baldeioMetaBaseTotal ? Math.round((dropRealizadoQtd / baldeioMetaBaseTotal) * 100) : 0;
+    const dropMetaStatus = !baldeioMetaBaseTotal
+      ? 'Sem baldeios no período'
+      : dropMetaAtingida
+        ? 'Meta atingida'
+        : `Não atingiu • faltam ${dropMetaFaltam}`;
+
     const dayKeys = [];
     const dayLabels = [];
     for (let ms = range.startMs; ms < range.endMs; ms += 24 * 3600 * 1000) {
@@ -19899,6 +19915,7 @@ async function handleAddOccurrence(e) {
       kpiRoot.innerHTML = `
         ${bdDashKpi('Baldeios', baldeioOps.length, `${baldeioByPlate.length} placa(s)`)}
         ${bdDashKpi('Drop & Hook', activeDropOps.length, `${cargasDrop} carga(s) / ${descargasDrop} descarga(s)`)}
+        ${bdDashKpi('Meta Drop 70%', `${dropRealizadoQtd}/${dropMetaQtd}`, baldeioMetaBaseTotal ? `${dropMetaStatus} • ${dropMetaProgresso}% de ${baldeioMetaBaseTotal} baldeio(s)` : 'sem baldeios no período')}
         ${bdDashKpi('Drop pendente', dropPendentes, 'carga/descarga em aberto')}
         ${bdDashKpi('Drop em ciclo', dropEmCiclo, 'aguardando próxima marcação')}
         ${bdDashKpi('Ciclos fechados', dropDurations.length, 'Drop por placa')}
@@ -20019,6 +20036,15 @@ async function handleAddOccurrence(e) {
       plateMode,
       baldeioOps,
       dropOps: activeDropOps,
+      dropMeta: {
+        percentual: dropMetaPercentual,
+        totalBaldeios: baldeioMetaBaseTotal,
+        meta: dropMetaQtd,
+        realizado: dropRealizadoQtd,
+        atingida: dropMetaAtingida,
+        faltam: dropMetaFaltam,
+        progresso: dropMetaProgresso
+      },
       baldeioByPlate,
       topPlates
     };
