@@ -8280,6 +8280,232 @@ canvas {
     flex: 1 1 120px;
   }
 }
+
+
+/* =========================================================
+   AJUSTE JOEL — Dashboard com cards coloridos igual Dash Drop & Hook
+   Aplica gradientes nos KPIs da aba Dashboard sem alterar a lógica.
+   ========================================================= */
+#dashboard-content .bd-kpi-card {
+  color: #ffffff !important;
+  border: 0 !important;
+  box-shadow: 0 16px 34px rgba(4, 21, 13, 0.16) !important;
+}
+
+#dashboard-content .bd-kpi-card::after {
+  background: radial-gradient(circle at 88% 12%, rgba(255,255,255,0.14), transparent 32%) !important;
+}
+
+#dashboard-content .bd-kpi-card,
+#dashboard-content .bd-kpi-card * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+#dashboard-content .bd-kpi-card .bd-kpi-label {
+  opacity: .86 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+#dashboard-content .bd-kpi-card .bd-kpi-value {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+
+#dashboard-content .bd-kpi-card .bd-kpi-sub {
+  color: rgba(255,255,255,0.84) !important;
+  -webkit-text-fill-color: rgba(255,255,255,0.84) !important;
+}
+
+/* Sequência das cores: verde, laranja, azul e roxo, igual visual do Dash Drop & Hook */
+#dashboard-content .bd-kpi-card:nth-child(4n + 1) {
+  background: linear-gradient(135deg, #062014, #0b3420 72%, #0f3f28) !important;
+}
+
+#dashboard-content .bd-kpi-card:nth-child(4n + 2) {
+  background: linear-gradient(135deg, #92400e, #d97706) !important;
+}
+
+#dashboard-content .bd-kpi-card:nth-child(4n + 3) {
+  background: linear-gradient(135deg, #0f3b66, #2563eb) !important;
+}
+
+#dashboard-content .bd-kpi-card:nth-child(4n + 4) {
+  background: linear-gradient(135deg, #4c1d95, #7c3aed) !important;
+}
+
+
+/* Ajuste Joel — Dashboard: Top Placa sem estourar o card */
+#dashboard-content .bd-kpi-card.bd-top-plate-card {
+  grid-column: span 2;
+}
+
+#dashboard-content .bd-kpi-card.bd-top-plate-card .bd-kpi-value {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: clamp(2rem, 2.8vw, 3.15rem) !important;
+  letter-spacing: -0.08em !important;
+}
+
+@media (max-width: 767px) {
+  #dashboard-content .bd-kpi-card.bd-top-plate-card {
+    grid-column: span 1;
+  }
+}
+
+
+
+/* ===== Perf. do Turno: card independente de Meta de Vendas ===== */
+#performance-content #perf-card-vendas-meta {
+  overflow: hidden;
+}
+
+#performance-vendas-meta-card .vendas-meta-shell {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  background: #ffffff !important;
+  border: 1px solid rgba(52, 211, 153, 0.42) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06) !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-shell,
+#performance-vendas-meta-card .vendas-meta-shell *:not(input) {
+  color: #102018 !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-total {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.95rem 1rem;
+  background: #f8fbf9 !important;
+  border-bottom: 1px solid rgba(16, 32, 24, 0.10) !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-label {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #405247 !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-number {
+  margin-top: 0.2rem;
+  font-size: clamp(2rem, 3.2vw, 3.1rem) !important;
+  line-height: 0.95 !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.06em;
+  color: #102018 !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: #eef7f1 !important;
+  border: 1px solid rgba(0, 122, 61, 0.18) !important;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #04723a !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-status.text-orange-700 {
+  background: #fff7ed !important;
+  border-color: rgba(234, 88, 12, 0.22) !important;
+  color: #c2410c !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-status.text-green-700 {
+  background: #ecfdf5 !important;
+  border-color: rgba(5, 150, 105, 0.24) !important;
+  color: #047857 !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-progress-track {
+  height: 0.72rem;
+  overflow: hidden;
+  border-radius: 999px;
+  margin: 0.9rem 1rem 0;
+  background: #e5e7eb !important;
+  border: 1px solid rgba(16, 32, 24, 0.08) !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-progress-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #059669, #22c55e) !important;
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.24);
+  transition: width 0.22s ease, background 0.22s ease;
+}
+
+#performance-vendas-meta-card .vendas-meta-progress-bar.is-pending {
+  background: linear-gradient(90deg, #f59e0b, #fb923c) !important;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.22);
+}
+
+#performance-vendas-meta-card .vendas-meta-progress-bar.is-empty {
+  background: #cbd5e1 !important;
+  box-shadow: none;
+}
+
+#performance-vendas-meta-card .vendas-meta-footnote {
+  margin: 0.55rem 1rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #5f7067 !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  padding: 0.9rem 1rem 1rem;
+  background: #ffffff !important;
+  border-top: 1px solid rgba(16, 32, 24, 0.08) !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-box {
+  display: block;
+  padding: 0.85rem;
+  border-radius: 0.85rem;
+  background: #f8fafc !important;
+  border: 1px solid rgba(16, 32, 24, 0.12) !important;
+}
+
+#performance-vendas-meta-card .vendas-meta-input {
+  width: 100%;
+  margin-top: 0.45rem;
+  min-height: 2.8rem !important;
+  border-radius: 0.8rem !important;
+  text-align: center;
+  font-size: 1.18rem !important;
+  font-weight: 900 !important;
+  color: #102018 !important;
+  -webkit-text-fill-color: #102018 !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(16, 32, 24, 0.16) !important;
+}
+
+@media (max-width: 640px) {
+  #performance-vendas-meta-card .vendas-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
 
@@ -8696,6 +8922,16 @@ canvas {
             </div>
             <div id="perf-columns-panel-baldeio" class="perf-column-panel"></div>
             <div id="performance-baldeio-total-table" class="overflow-x-auto"></div>
+          </div>
+
+          <div id="perf-card-vendas-meta" data-perf-card="vendas-meta" data-default-column="left" data-default-order="4" class="perf-sort-card perf-emphasis-card dark-surface bg-gray-800 p-4 rounded-xl shadow-lg">
+            <div class="perf-card-title-wrap mb-3">
+              <button type="button" class="perf-card-handle" title="Arrastar card">
+                <span class="perf-card-handle-dots">⋮⋮</span>
+              </button>
+              <h4 class="text-[1.35rem] font-bold">Meta de vendas</h4>
+            </div>
+            <div id="performance-vendas-meta-card"></div>
           </div>
         </div>
 
@@ -18466,12 +18702,19 @@ async function handleAddOccurrence(e) {
     return doc(db, `artifacts/${appId}/public/data/performance_turno_manual`, getPerfSharedDocId(start, end, label));
   };
 
+  const isPerfVendasTotaisRow = (rowOrKey = '') => {
+    const key = typeof rowOrKey === 'string' ? rowOrKey : (rowOrKey?.key || '');
+    return key === 'vendas_totais';
+  };
+
   const buildPerfSummaryStateFromRaw = (raw = {}) => {
     const out = {};
     PERF_ALL_SUMMARY_ROWS.forEach(row => {
+      const rowRaw = raw?.[row.key] || {};
       out[row.key] = {
-        vendas: String(raw?.[row.key]?.vendas ?? '0'),
-        baldeio: String(raw?.[row.key]?.baldeio ?? '0')
+        vendas: String(rowRaw.vendas ?? '0'),
+        baldeio: String(rowRaw.baldeio ?? '0'),
+        meta: String(rowRaw.meta ?? (isPerfVendasTotaisRow(row) ? (rowRaw.baldeio ?? '0') : '0'))
       };
     });
     return out;
@@ -18594,7 +18837,7 @@ async function handleAddOccurrence(e) {
   const clearPerfSummaryState = async (start, end, label) => {
     const cleared = {};
     PERF_ALL_SUMMARY_ROWS.forEach(row => {
-      cleared[row.key] = { vendas: '0', baldeio: '0' };
+      cleared[row.key] = { vendas: '0', baldeio: '0', meta: '0' };
     });
 
     perfSharedState.summary = cleared;
@@ -19036,25 +19279,45 @@ async function handleAddOccurrence(e) {
   };
 
   const renderPerfInputRow = (state = {}, row, col1Label = 'Vendas', col2Label = 'Baldeio') => {
-    const vendas = state?.[row.key]?.vendas ?? '0';
-    const baldeio = state?.[row.key]?.baldeio ?? '0';
-    const total = perfToNumber(vendas) + perfToNumber(baldeio);
+    const primaryValue = state?.[row.key]?.vendas ?? '0';
+    const isVendasMeta = isPerfVendasTotaisRow(row);
+    const secondCol = isVendasMeta ? 'meta' : 'baldeio';
+    const secondLabel = isVendasMeta ? 'Meta' : col2Label;
+    const secondValue = isVendasMeta
+      ? (state?.[row.key]?.meta ?? state?.[row.key]?.baldeio ?? '0')
+      : (state?.[row.key]?.baldeio ?? '0');
+    const primaryNumber = perfToNumber(primaryValue);
+    const secondNumber = perfToNumber(secondValue);
+    const total = isVendasMeta ? primaryNumber : (primaryNumber + secondNumber);
+    const metaStatus = isVendasMeta
+      ? (secondNumber <= 0
+          ? 'Meta não definida'
+          : (primaryNumber >= secondNumber ? 'Meta atingida' : `Faltam ${perfFormatMetric(secondNumber - primaryNumber)}`))
+      : '';
+    const totalText = isVendasMeta && secondNumber > 0
+      ? `${perfFormatMetric(primaryNumber)}/${perfFormatMetric(secondNumber)}`
+      : perfFormatMetric(total);
+
     return `
-      <tr class="border-t border-black/20 bg-white/95 text-black" data-manual-row="${row.key}">
+      <tr class="border-t border-black/20 bg-white/95 text-black" data-manual-row="${row.key}" data-vendas-meta-row="${isVendasMeta ? '1' : '0'}">
         <td class="p-2">${row.label}</td>
         <td class="p-2">
-          <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(vendas)}"
+          <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(primaryValue)}"
                  data-perf-manual="1" data-row-key="${row.key}" data-col="vendas"
                  aria-label="${escapeHtml(`${row.label} - ${col1Label}`)}"
                  class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-center font-semibold text-black focus:outline-none focus:ring-2 focus:ring-green-600" />
         </td>
         <td class="p-2">
-          <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(baldeio)}"
-                 data-perf-manual="1" data-row-key="${row.key}" data-col="baldeio"
-                 aria-label="${escapeHtml(`${row.label} - ${col2Label}`)}"
+          ${isVendasMeta ? '<div class="mb-1 text-center text-[10px] font-extrabold uppercase tracking-wide text-emerald-800">Meta</div>' : ''}
+          <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(secondValue)}"
+                 data-perf-manual="1" data-row-key="${row.key}" data-col="${secondCol}"
+                 aria-label="${escapeHtml(`${row.label} - ${secondLabel}`)}"
                  class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-center font-semibold text-black focus:outline-none focus:ring-2 focus:ring-green-600" />
         </td>
-        <td class="p-2 text-center font-bold" data-manual-total>${total}</td>
+        <td class="p-2 text-center font-bold">
+          <div data-manual-total>${escapeHtml(totalText)}</div>
+          ${isVendasMeta ? `<div class="mt-1 text-[10px] font-extrabold uppercase tracking-wide ${primaryNumber >= secondNumber && secondNumber > 0 ? 'text-green-700' : 'text-orange-700'}" data-vendas-meta-status>${escapeHtml(metaStatus)}</div>` : ''}
+        </td>
       </tr>
     `;
   };
@@ -19083,6 +19346,7 @@ async function handleAddOccurrence(e) {
   };
 
   const renderPerfBaldeioTotalsHtml = (state = {}) => {
+    const operationRows = PERF_BALDEIO_TOTAL_ROWS.filter(row => !isPerfVendasTotaisRow(row));
     return `
       <div class="overflow-hidden rounded-lg border border-gray-700">
         <table class="w-full text-left text-sm">
@@ -19098,19 +19362,98 @@ async function handleAddOccurrence(e) {
             </tr>
           </thead>
           <tbody>
-            ${PERF_BALDEIO_TOTAL_ROWS.map(row => renderPerfInputRow(state, row, 'Carregamento', 'Descarga')).join('')}
+            ${operationRows.map(row => renderPerfInputRow(state, row, 'Carregamento', 'Descarga')).join('')}
           </tbody>
         </table>
       </div>
     `;
   };
 
+  const renderPerfVendasMetaCardHtml = (state = {}) => {
+    const row = PERF_BALDEIO_TOTAL_ROWS.find(item => isPerfVendasTotaisRow(item)) || { key: 'vendas_totais', label: 'Vendas totais' };
+    const realizedValue = state?.[row.key]?.vendas ?? '0';
+    const metaValue = state?.[row.key]?.meta ?? state?.[row.key]?.baldeio ?? '0';
+    const realized = perfToNumber(realizedValue);
+    const meta = perfToNumber(metaValue);
+    const percent = meta > 0 ? Math.min(100, Math.max(0, (realized / meta) * 100)) : 0;
+    const status = meta <= 0
+      ? 'Meta não definida'
+      : (realized >= meta ? 'Meta atingida' : `Faltam ${perfFormatMetric(meta - realized)}`);
+    const footnote = meta > 0
+      ? `${perfFormatMetric(percent)}% da meta`
+      : 'Defina a meta do turno';
+    const metaOk = meta > 0 && realized >= meta;
+    const metaPending = meta > 0 && realized < meta;
+    const statusClass = metaOk ? 'text-green-700' : 'text-orange-700';
+    const progressClass = meta <= 0 ? 'is-empty' : (metaPending ? 'is-pending' : '');
+
+    return `
+      <div class="vendas-meta-shell" data-manual-row="${row.key}" data-vendas-meta-row="1">
+        <div class="vendas-meta-total">
+          <div>
+            <div class="vendas-meta-label">Realizado / Meta</div>
+            <div class="vendas-meta-number" data-manual-total>${escapeHtml(meta > 0 ? `${perfFormatMetric(realized)}/${perfFormatMetric(meta)}` : perfFormatMetric(realized))}</div>
+          </div>
+          <div class="vendas-meta-status ${statusClass}" data-vendas-meta-status>${escapeHtml(status)}</div>
+        </div>
+
+        <div class="vendas-meta-progress-track" aria-hidden="true">
+          <div class="vendas-meta-progress-bar ${progressClass}" data-vendas-meta-progress style="width: ${percent}%"></div>
+        </div>
+        <div class="vendas-meta-footnote" data-vendas-meta-percent>${escapeHtml(footnote)}</div>
+
+        <div class="vendas-meta-grid">
+          <label class="vendas-meta-box">
+            <span class="vendas-meta-label">Vendas totais</span>
+            <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(realizedValue)}"
+                   data-perf-manual="1" data-row-key="${row.key}" data-col="vendas"
+                   aria-label="Vendas totais - realizado"
+                   class="vendas-meta-input" />
+          </label>
+          <label class="vendas-meta-box">
+            <span class="vendas-meta-label">Meta</span>
+            <input type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(metaValue)}"
+                   data-perf-manual="1" data-row-key="${row.key}" data-col="meta"
+                   aria-label="Vendas totais - meta"
+                   class="vendas-meta-input" />
+          </label>
+        </div>
+      </div>
+    `;
+  };
+
   const updatePerfManualTotalsFromDOM = () => {
     document.querySelectorAll('[data-manual-row]').forEach(row => {
-      const vendas = perfToNumber(row.querySelector('input[data-col="vendas"]')?.value || 0);
-      const baldeio = perfToNumber(row.querySelector('input[data-col="baldeio"]')?.value || 0);
+      const rowKey = row.getAttribute('data-manual-row') || '';
+      const isVendasMeta = row.getAttribute('data-vendas-meta-row') === '1' || isPerfVendasTotaisRow(rowKey);
+      const primary = perfToNumber(row.querySelector('input[data-col="vendas"]')?.value || 0);
+      const secondaryCol = isVendasMeta ? 'meta' : 'baldeio';
+      const secondary = perfToNumber(row.querySelector(`input[data-col="${secondaryCol}"]`)?.value || 0);
       const totalCell = row.querySelector('[data-manual-total]');
-      if (totalCell) totalCell.textContent = String(vendas + baldeio);
+      const statusCell = row.querySelector('[data-vendas-meta-status]');
+
+      if (isVendasMeta) {
+        const percent = secondary > 0 ? Math.min(100, Math.max(0, (primary / secondary) * 100)) : 0;
+        const progressBar = row.querySelector('[data-vendas-meta-progress]');
+        const percentLabel = row.querySelector('[data-vendas-meta-percent]');
+        if (totalCell) totalCell.textContent = secondary > 0 ? `${perfFormatMetric(primary)}/${perfFormatMetric(secondary)}` : perfFormatMetric(primary);
+        if (statusCell) {
+          statusCell.textContent = secondary <= 0
+            ? 'Meta não definida'
+            : (primary >= secondary ? 'Meta atingida' : `Faltam ${perfFormatMetric(secondary - primary)}`);
+          statusCell.classList.toggle('text-green-700', primary >= secondary && secondary > 0);
+          statusCell.classList.toggle('text-orange-700', !(primary >= secondary && secondary > 0));
+        }
+        if (progressBar) {
+          progressBar.style.width = `${percent}%`;
+          progressBar.classList.toggle('is-empty', secondary <= 0);
+          progressBar.classList.toggle('is-pending', secondary > 0 && primary < secondary);
+        }
+        if (percentLabel) percentLabel.textContent = secondary > 0 ? `${perfFormatMetric(percent)}% da meta` : 'Defina a meta do turno';
+        return;
+      }
+
+      if (totalCell) totalCell.textContent = perfFormatMetric(primary + secondary);
     });
   };
 
@@ -19454,6 +19797,7 @@ async function handleAddOccurrence(e) {
     const horaHoraTable = document.getElementById('hora-hora-table');
     const manualTable = document.getElementById('performance-manual-table');
     const baldeioTotalTable = document.getElementById('performance-baldeio-total-table');
+    const vendasMetaCard = document.getElementById('performance-vendas-meta-card');
     const hourlyManualTitle = document.getElementById('performance-hourly-manual-title');
     const hourlyManualTable = document.getElementById('performance-hourly-manual-table');
     const quickSummarySubtitle = document.getElementById('performance-quick-summary-subtitle');
@@ -19552,7 +19896,8 @@ async function handleAddOccurrence(e) {
     }, 0);
     const baldeiosOverallTotal = PERF_BALDEIO_TOTAL_ROWS.reduce((sum, row) => {
       const item = manualState?.[row.key] || {};
-      return sum + perfToNumber(item.vendas) + perfToNumber(item.baldeio);
+      const secondValue = isPerfVendasTotaisRow(row) ? 0 : perfToNumber(item.baldeio);
+      return sum + perfToNumber(item.vendas) + secondValue;
     }, 0);
     const realizadoOverallTotal = slotLabels.reduce((sum, slot) => sum + Math.max(perfToNumber(hourlyState?.[slot]?.realizado), 0), 0);
 
@@ -19581,6 +19926,11 @@ async function handleAddOccurrence(e) {
 
     if (baldeioTotalTable) {
       baldeioTotalTable.innerHTML = renderPerfBaldeioTotalsHtml(manualState);
+      updatePerfManualTotalsFromDOM();
+    }
+
+    if (vendasMetaCard) {
+      vendasMetaCard.innerHTML = renderPerfVendasMetaCardHtml(manualState);
       updatePerfManualTotalsFromDOM();
     }
 
@@ -19715,11 +20065,12 @@ async function handleAddOccurrence(e) {
     return String(plateKey(op, mode) || '').toUpperCase().replace(/[^A-Z0-9]/g, '') || 'SEM PLACA';
   }
 
-  function bdDashKpi(label, value, sub = '') {
+  function bdDashKpi(label, value, sub = '', extraClass = '') {
+    const className = `bd-kpi-card ${extraClass || ''}`.trim();
     return `
-      <div class="bd-kpi-card">
+      <div class="${className}">
         <div class="bd-kpi-label">${escapeHtml(label)}</div>
-        <div class="bd-kpi-value">${escapeHtml(value)}</div>
+        <div class="bd-kpi-value" title="${escapeHtml(value)}">${escapeHtml(value)}</div>
         ${sub ? `<div class="bd-kpi-sub">${escapeHtml(sub)}</div>` : ''}
       </div>`;
   }
@@ -19917,11 +20268,9 @@ async function handleAddOccurrence(e) {
         ${bdDashKpi('Drop & Hook', activeDropOps.length, `${cargasDrop} carga(s) / ${descargasDrop} descarga(s)`)}
         ${bdDashKpi('Meta Drop 70%', `${dropRealizadoQtd}/${dropMetaQtd}`, baldeioMetaBaseTotal ? `${dropMetaStatus} • ${dropMetaProgresso}% de ${baldeioMetaBaseTotal} baldeio(s)` : 'sem baldeios no período')}
         ${bdDashKpi('Drop pendente', dropPendentes, 'carga/descarga em aberto')}
-        ${bdDashKpi('Drop em ciclo', dropEmCiclo, 'aguardando próxima marcação')}
-        ${bdDashKpi('Ciclos fechados', dropDurations.length, 'Drop por placa')}
-        ${bdDashKpi('Tempo médio Drop', avgDropCycle ? fmtDelta(avgDropCycle) : '—', 'ciclo fechado')}
-        ${bdDashKpi('Maior tempo Drop', maxDropCycle ? fmtDelta(maxDropCycle) : '—', 'ciclo fechado')}
-        ${bdDashKpi('Top placa', topPlates[0]?.placa || '—', topPlates[0] ? `${topPlates[0].total} movimentação(ões)` : 'sem dados')}
+        ${bdDashKpi('Tempo médio Drop', avgDropCycle ? fmtDelta(avgDropCycle) : '—', 'tempo fechado')}
+        ${bdDashKpi('Maior tempo Drop', maxDropCycle ? fmtDelta(maxDropCycle) : '—', 'tempo fechado')}
+        ${bdDashKpi('Top placa', topPlates[0]?.placa || '—', topPlates[0] ? `${topPlates[0].total} movimentação(ões)` : 'sem dados', 'bd-top-plate-card')}
       `;
     }
 
