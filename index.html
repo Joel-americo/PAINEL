@@ -2202,6 +2202,7 @@ body.perf-report-mode #performance-content .performance-hourly-chart-wrap .relat
 #occurrence-modal > div,
 #resolution-modal > div,
 #confirm-modal > div,
+#drop-incident-modal > div,
 #driver-edit-modal > div {
   background: #ffffff !important;
   color: #0f172a !important;
@@ -2214,6 +2215,7 @@ body.perf-report-mode #performance-content .performance-hourly-chart-wrap .relat
 #occurrence-modal h3,
 #resolution-modal h3,
 #confirm-modal h3,
+#drop-incident-modal h3,
 #driver-edit-modal h3, #driver-edit-modal h4 {
   color: #0f172a !important;
   letter-spacing: -0.02em;
@@ -2248,7 +2250,9 @@ body.perf-report-mode #performance-content .performance-hourly-chart-wrap .relat
 #driver-edit-modal .text-gray-400,
 #driver-edit-modal .text-gray-500,
 #confirm-modal .text-gray-300,
-#confirm-modal .text-gray-400 {
+#confirm-modal .text-gray-400,
+#drop-incident-modal .text-gray-300,
+#drop-incident-modal .text-gray-400 {
   color: #64748b !important;
 }
 
@@ -5096,6 +5100,15 @@ select.hl-native-multi-hidden {
 .drop-action-btn.obs { background: linear-gradient(135deg, #1d4ed8, #3b82f6) !important; }
 .drop-action-btn.cancelar { background: linear-gradient(135deg, #991b1b, #ef4444) !important; }
 .drop-action-btn.excluir { background: linear-gradient(135deg, #111827, #374151) !important; }
+.drop-action-btn.concluir { background: linear-gradient(135deg, #166534, #22c55e) !important; }
+.drop-action-btn.ocorrencia { background: linear-gradient(135deg, #7c2d12, #fb923c) !important; }
+.drop-kpi-card.drop-amber { background: linear-gradient(135deg, #7c2d12, #ea580c) !important; }
+.drop-kpi-card .drop-kpi-sub { margin-top: .45rem; font-size: .82rem; font-weight: 800; opacity: .88; }
+.drop-time-stack { display: flex; flex-direction: column; gap: .45rem; }
+.drop-time-line { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .55rem; }
+.drop-time-label { font-size: .72rem; font-weight: 950; text-transform: uppercase; letter-spacing: .04em; color: #64748b !important; -webkit-text-fill-color: #64748b !important; }
+.drop-wait-cell { color: #ea580c !important; -webkit-text-fill-color: #ea580c !important; font-weight: 950 !important; letter-spacing: .02em; }
+.drop-wait-line { padding-top: .35rem; border-top: 1px dashed rgba(234, 88, 12, .22); }
 
 .drop-table th,
 .drop-table td { white-space: nowrap; }
@@ -7913,6 +7926,23 @@ select.hl-native-multi-hidden {
 .pandora-table tbody tr:hover { background: rgba(0,122,61,.045) !important; }
 .pandora-filter-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .pandora-filter-row > * { min-width: 190px; }
+.pandora-date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 190px;
+}
+.pandora-date-field label {
+  color: #42554a !important;
+  font-size: .74rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+.pandora-date-field input[type="date"] {
+  min-width: 100%;
+}
 .pandora-muted { color: var(--pd-muted) !important; }
 .pandora-area-list { display: grid; gap: 8px; max-height: 310px; overflow-y: auto; padding-right: 4px; }
 .pandora-area-row { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(120px, 2fr) auto; gap: 10px; align-items: center; }
@@ -9552,7 +9582,7 @@ canvas {
             <span id="pandora-db-file" class="pandora-db-chip">Nenhum arquivo carregado</span>
             <span id="pandora-clientes-base-chip" class="pandora-db-chip">Base Clientes: não importada</span>
             <span id="pandora-site-filter-chip" class="pandora-site-chip">Filtro ativo: Jacareí</span>
-            <button id="pandora-open-db-btn" type="button" class="pandora-btn pandora-btn-soft">Ver Banco XML</button>
+            <button id="pandora-open-db-btn" type="button" class="pandora-btn pandora-btn-soft">Consultar Banco XML</button>
           </div>
         </section>
 
@@ -9565,6 +9595,16 @@ canvas {
         </div>
 
         <section id="pandora-dashboard-view" data-pandora-section="dashboard" class="pandora-grid">
+          <div class="pandora-card">
+            <div class="pandora-card-title">
+              <div>
+                <h3>Resumo do Pandora</h3>
+                <p id="pandora-summary-status" class="pandora-muted text-sm mt-1">Dashboard alimentado por resumo consolidado. Os detalhes ficam disponíveis pela consulta da chave de acesso.</p>
+              </div>
+              <button id="pandora-rebuild-summary-btn" type="button" class="pandora-btn pandora-btn-primary">Atualizar resumo</button>
+            </div>
+          </div>
+
           <div class="pandora-grid pandora-grid-4">
             <div class="pandora-card pandora-kpi"><div class="label">Total de NFs</div><div id="pd-kpi-total" class="value">0</div><div class="hint">Registros no Pandora</div></div>
             <div class="pandora-card pandora-kpi"><div class="label">Em andamento</div><div id="pd-kpi-andamento" class="value">0</div><div class="hint">Pendentes de conclusão</div></div>
@@ -9661,7 +9701,7 @@ canvas {
           <div class="pandora-card-title">
             <div>
               <h3>Painel de NF</h3>
-              <p class="pandora-muted text-sm mt-1">Filtre, edite, encerre, coloque problema ou cancele uma nota.</p>
+              <p class="pandora-muted text-sm mt-1">Mostra automaticamente pendências acima de 30 dias. Use o filtro de data para carregar períodos menores quando não tiver a chave.</p>
             </div>
             <button id="pandora-refresh-btn" type="button" class="pandora-btn pandora-btn-soft">Atualizar</button>
           </div>
@@ -9669,6 +9709,16 @@ canvas {
             <input id="pandora-search" placeholder="Buscar NF, chave, área, parceiro, centro...">
             <select id="pandora-filter-status"></select>
             <select id="pandora-filter-area"></select>
+            <div class="pandora-date-field">
+              <label for="pandora-date-start">Data inicial</label>
+              <input id="pandora-date-start" type="date" title="Data de emissão inicial" aria-label="Data de emissão inicial">
+            </div>
+            <div class="pandora-date-field">
+              <label for="pandora-date-end">Data final</label>
+              <input id="pandora-date-end" type="date" title="Data de emissão final" aria-label="Data de emissão final">
+            </div>
+            <button id="pandora-date-search-btn" type="button" class="pandora-btn pandora-btn-primary">Buscar por data</button>
+            <button id="pandora-date-clear-btn" type="button" class="pandora-btn pandora-btn-soft">Limpar data</button>
           </div>
           <div class="pandora-table-shell">
             <table class="pandora-table">
@@ -9703,19 +9753,30 @@ canvas {
           <div class="pandora-card-title">
             <div>
               <h3>Banco XML Pandora</h3>
-              <p class="pandora-muted text-sm mt-1">Somente registros de Jacareí importados da planilha. A busca usa NF, chave, parceiro, cliente, área, centro, CFOP, status e responsável.</p>
+              <p class="pandora-muted text-sm mt-1">Somente registros de Jacareí. Por padrão mostra pendências acima de 30 dias; use o filtro de data para carregar períodos específicos sem buscar pela chave. O botão Normalizar datas prepara a base antiga para filtros mais rápidos.</p>
             </div>
             <div class="flex flex-wrap gap-2">
               <label for="pandora-upload-file" class="pandora-btn pandora-btn-primary cursor-pointer">Importar Excel</label>
               <label for="pandora-zgr-file" class="pandora-btn pandora-btn-warning cursor-pointer">Importar ZGR001</label>
               <label for="pandora-clientes-file" class="pandora-btn pandora-btn-soft cursor-pointer">Importar Clientes</label>
-              <button id="pandora-db-refresh-btn" type="button" class="pandora-btn pandora-btn-soft">Atualizar Banco</button>
+              <button id="pandora-normalize-dates-btn" type="button" class="pandora-btn pandora-btn-soft">Normalizar datas</button>
+              <button id="pandora-db-refresh-btn" type="button" class="pandora-btn pandora-btn-soft">Carregar Banco Completo</button>
             </div>
           </div>
           <div class="pandora-filter-row mb-4">
             <input id="pandora-db-search" placeholder="Buscar no banco XML...">
             <select id="pandora-db-filter-status"><option value="todos">Todos os status Pandora</option></select>
             <select id="pandora-db-filter-centro"><option value="todos">Todos os centros</option></select>
+            <div class="pandora-date-field">
+              <label for="pandora-db-date-start">Data inicial</label>
+              <input id="pandora-db-date-start" type="date" title="Data de emissão inicial" aria-label="Data de emissão inicial no Banco XML">
+            </div>
+            <div class="pandora-date-field">
+              <label for="pandora-db-date-end">Data final</label>
+              <input id="pandora-db-date-end" type="date" title="Data de emissão final" aria-label="Data de emissão final no Banco XML">
+            </div>
+            <button id="pandora-db-date-search-btn" type="button" class="pandora-btn pandora-btn-primary">Buscar por data</button>
+            <button id="pandora-db-date-clear-btn" type="button" class="pandora-btn pandora-btn-soft">Limpar data</button>
           </div>
           <div class="pandora-table-shell">
             <table class="pandora-table pandora-table-db">
@@ -9808,9 +9869,12 @@ canvas {
             <option value="cavalo">Placa Cavalo</option>
           </select>
           <button id="bd-dash-refresh" type="button" class="bd-btn bd-btn-dark">Atualizar</button>
+          <button id="bd-dash-rebuild-summary" type="button" class="bd-btn bd-btn-dark">Atualizar resumo</button>
           <button id="bd-dash-export" type="button" class="bd-btn bd-btn-green">Exportar CSV</button>
         </div>
       </div>
+
+      <div id="bd-dash-summary-status" class="bd-panel mb-6 p-4 text-sm text-slate-700">Resumo diário aguardando leitura.</div>
 
       <div id="bd-dash-kpis" class="bd-kpi-grid mb-6"></div>
 
@@ -9856,8 +9920,8 @@ canvas {
         <div class="bd-panel p-6">
           <div class="bd-panel-head">
             <div>
-              <h4>Top Placas</h4>
-              <p>Placas com mais movimentações de baldeio/drop.</p>
+              <h4>Carretas aguardando atrelar</h4>
+              <p>Tempo de espera das carretas carregadas até atrelar.</p>
             </div>
           </div>
           <div class="relative h-80">
@@ -9990,6 +10054,45 @@ canvas {
   </div>
 </div>
 
+
+
+<!-- ✅ Modal: Ocorrência de Atrelagem Drop -->
+<div id="drop-incident-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-center modal-backdrop hidden">
+  <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl relative">
+    <h3 class="text-xl font-bold text-white mb-1">Ocorrência da carreta carregada</h3>
+    <p id="drop-incident-subtitle" class="text-sm text-gray-400 mb-4">Informe o que aconteceu enquanto a carreta aguardava atrelar.</p>
+
+    <form id="drop-incident-form" class="space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <label class="text-sm font-bold text-gray-300">Motivo
+          <select id="drop-incident-motivo" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="Aguardando cavalo">Aguardando cavalo</option>
+            <option value="Aguardando motorista">Aguardando motorista</option>
+            <option value="Aguardando liberação">Aguardando liberação</option>
+            <option value="Problema mecânico">Problema mecânico</option>
+            <option value="Divergência operacional">Divergência operacional</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </label>
+        <label class="text-sm font-bold text-gray-300">Responsável / Área
+          <input id="drop-incident-responsavel" type="text" placeholder="Ex.: Transportes, Manobra, Portaria..."
+                 class="mt-1 w-full bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </label>
+      </div>
+
+      <label class="text-sm font-bold text-gray-300 block">O que aconteceu com a carreta?
+        <textarea id="drop-incident-observacao" rows="4" placeholder="Descreva o ocorrido..."
+                  class="mt-1 w-full bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+      </label>
+
+      <div class="flex justify-end gap-3 pt-3 border-t border-gray-700">
+        <button id="drop-incident-cancel" type="button" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancelar</button>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Salvar ocorrência</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
   import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -10006,7 +10109,9 @@ canvas {
     setDoc,
     writeBatch,
     getDocs,
+    getDoc,
     query,
+    where,
     orderBy,
     limit
   } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -10066,6 +10171,36 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   const PANDORA_PAGINATED_VIEWS = new Set(['painel', 'banco', 'historico']);
   const PANDORA_TABLE_PAGE_SIZE_KEY = 'heilog_pandora_table_page_size_v1';
   let pandoraCurrentPageByView = { painel: 1, banco: 1, historico: 1 };
+  let pandoraSnapshotsAttached = false;
+  let pandoraSnapshotsLoading = false;
+  let pandoraFirstLoadDone = false;
+  let pandoraHistoryFirstLoadDone = false;
+  let pandoraSnapshotUnsubs = [];
+  let pandoraFullDatabaseLoaded = false;
+  let pandoraDashboardSummary = null;
+  let pandoraDashboardSummaryUnsub = null;
+  let pandoraDashboardSummaryLoading = false;
+  let pandoraDateFilter = { active: false, startDate: '', endDate: '', startMs: 0, endMs: 0 };
+  const PANDORA_DATE_FILTER_LIMIT = 700;
+  const PANDORA_DASHBOARD_SUMMARY_COLLECTION = 'pandora_resumo_dashboard';
+  const PANDORA_DASHBOARD_SUMMARY_DOC = 'jacarei';
+  const PANDORA_OPEN_STATUSES_LIVE = ['Em andamento', 'Aguardando área', 'Aguardando documento', 'Liberação de entrada', 'Com problema'];
+  const PANDORA_LIVE_RECENT_LIMIT = 500;
+  const PANDORA_HISTORY_LIVE_LIMIT = 200;
+  let firebaseHistoryAttached = false;
+  let firebaseHistoryUnsubs = [];
+  let firebaseHistoryParts = new Map();
+  let firebaseHistoryActiveKey = '';
+  let bdDashboardSummaryAttached = false;
+  let bdDashboardSummaryUnsub = null;
+  let bdDashboardSummaryData = [];
+  let bdDashboardSummaryActiveKey = '';
+  let bdDashboardSummaryBuildInProgress = false;
+  const BD_DASHBOARD_SUMMARY_COLLECTION = 'dashboard_resumos_diarios';
+  let firebaseOccurrencesAttached = false;
+  let firebasePatioAttached = false;
+  let firebaseSapAttached = false;
+  let firebaseDriversAttached = { drivers: false, motoristas: false };
   let pandoraPageSize = (() => {
     try {
       const saved = localStorage.getItem(PANDORA_TABLE_PAGE_SIZE_KEY);
@@ -12938,6 +13073,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
   const getDropMainStatusLabel = (op = {}) => {
     if (isDropCanceled(op)) return 'Cancelado';
+    if (isDropAguardandoAtrelar(op)) return 'Carregado aguardando atrelar';
+    if (isDropAtrelagemConcluida(op)) return 'Atrelagem concluída';
     const carga = isDropCargaDone(op);
     const temDescarga = getDropDescargaQtd(op) > 0;
     const descarga = !temDescarga || isDropDescargaDone(op);
@@ -12958,6 +13095,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       <div class="flex flex-wrap gap-1.5">
         <span class="drop-status-pill ${isDropCargaDone(op) ? dropStatusClass('Carregado') : dropStatusClass('Aguardando')}">Carga: ${isDropCargaDone(op) ? 'Carregado' : 'Pendente'}</span>
         ${hasDescarga ? `<span class="drop-status-pill ${isDropDescargaDone(op) ? dropStatusClass('Vazio') : dropStatusClass('Aguardando')}">Descarga: ${isDropDescargaDone(op) ? 'Vazio' : 'Pendente'}</span>` : ''}
+        ${isDropAguardandoAtrelar(op) ? `<span class="drop-status-pill bg-orange-100 text-orange-900 border-orange-200">Aguardando atrelar</span>` : ''}
+        ${isDropAtrelagemConcluida(op) ? `<span class="drop-status-pill bg-green-100 text-green-800 border-green-200">Atrelagem concluída</span>` : ''}
         ${cls ? `<span class="drop-status-pill ${dropStatusClass(cls)}">${escapeHtml(cls)}</span>` : ''}
       </div>
     `;
@@ -13095,14 +13234,21 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     if (!isExplicitDrop) return Date.now();
 
     const candidates = [
-      op.dropPainelUpdatedAtMs,
-      op.dropPainelUpdatedAt,
-      op.dropPanelUpdatedAtMs,
-      op.dropPanelUpdatedAt,
+      op.dropCarregamentoFinalizadoAtMs,
+      op.dropCarregamentoFinalizadoAt,
+      op.dropAtrelagemInicioAtMs,
+      op.dropAtrelagemInicioAt,
+      op.dropAguardandoAtrelarInicioAtMs,
+      op.dropAguardandoAtrelarInicioAt,
+      op.inicioEsperaAtrelarMs,
       op.dropDescargaConcluidaAtMs,
       op.dropDescargaConcluidaAt,
       op.dropCargaConcluidaAtMs,
       op.dropCargaConcluidaAt,
+      op.dropPainelUpdatedAtMs,
+      op.dropPainelUpdatedAt,
+      op.dropPanelUpdatedAtMs,
+      op.dropPanelUpdatedAt,
       op.finishedTime
     ];
 
@@ -13170,6 +13316,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
 
   const dropStatusClass = (status = '') => {
     const s = dropText(status).toUpperCase();
+    if (s.includes('AGUARDANDO ATRELAR') || s.includes('ATRELAGEM')) return 'bg-orange-100 text-orange-900 border-orange-200';
     if (s.includes('CARREG')) return 'bg-green-100 text-green-800 border-green-200';
     if (s === 'DROP') return 'bg-teal-100 text-teal-800 border-teal-200';
     if (s.includes('NÃO') || s.includes('NAO')) return 'bg-yellow-100 text-yellow-900 border-yellow-200';
@@ -13178,6 +13325,80 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     return 'bg-emerald-50 text-emerald-900 border-emerald-200';
   };
 
+
+
+  const isDropAtrelagemConcluida = (op = {}) => {
+    if (op.dropAtrelagemConcluida === true || op.dropAtrelagemFinalizada === true) return true;
+    const raw = [op.dropAtrelagemStatus, op.dropPainelStatus, op.dropPanelStatus, op.dropPainelClassificacao, op.dropPanelClassificacao]
+      .filter(Boolean).join(' ');
+    const norm = dropNormStatus(raw);
+    return norm.includes('ATRELAGEM_CONCLUIDA') || norm.includes('ATRELADO') || norm.includes('ATRELAGEM FINALIZADA');
+  };
+
+  const isDropAguardandoAtrelar = (op = {}) => {
+    if (!op || isDropCanceled(op) || isDropRemoved(op) || isDropAtrelagemConcluida(op)) return false;
+    const raw = [op.dropAguardandoAtrelar, op.dropAtrelagemStatus, op.dropPainelStatus, op.dropPanelStatus, op.dropPainelClassificacao, op.dropPanelClassificacao]
+      .filter(v => v !== undefined && v !== null).join(' ');
+    const norm = dropNormStatus(raw);
+    return op.dropAguardandoAtrelar === true ||
+      norm.includes('AGUARDANDO_ATRELAR') ||
+      norm.includes('AGUARDANDO ATRELAR') ||
+      norm.includes('AGUARDANDO ATRELAGEM') ||
+      norm.includes('CARREGADO AGUARDANDO');
+  };
+
+  const getDropWaitingStartTime = (op = {}) => {
+    const candidates = [
+      op.dropAtrelagemInicioAtMs,
+      op.dropAguardandoAtrelarInicioAtMs,
+      op.inicioEsperaAtrelarMs,
+      op.dropCarregamentoFinalizadoAtMs,
+      op.dropCargaConcluidaAtMs,
+      op.dropPainelUpdatedAtMs,
+      op.dropAtrelagemInicioAt,
+      op.dropAguardandoAtrelarInicioAt,
+      op.dropCargaConcluidaAt,
+      op.dropPainelUpdatedAt
+    ];
+    for (const c of candidates) {
+      const ms = dropPanelToMs(c);
+      if (ms) return ms;
+    }
+    return 0;
+  };
+
+  const getDropWaitingEndTime = (op = {}) => {
+    const start = getDropWaitingStartTime(op);
+    if (!start) return 0;
+    if (isDropAguardandoAtrelar(op)) return Date.now();
+    const candidates = [op.dropAtrelagemFimAtMs, op.fimEsperaAtrelarMs, op.dropAtrelagemConcluidaAtMs, op.dropAtrelagemFimAt, op.dropAtrelagemConcluidaAt];
+    for (const c of candidates) {
+      const ms = dropPanelToMs(c);
+      if (ms) return ms;
+    }
+    return Date.now();
+  };
+
+  const getDropWaitingElapsedDisplay = (op = {}) => {
+    const start = getDropWaitingStartTime(op);
+    if (!start) return '00:00:00';
+    const end = getDropWaitingEndTime(op);
+    return formatMilliseconds(Math.max(0, end - start));
+  };
+
+  const isDropLoadingTimerClosed = (op = {}) => {
+    const clsNorm = dropNormStatus(getDropClassificacao(op));
+    const painelClsNorm = dropNormStatus(op.dropPainelClassificacao || op.dropPanelClassificacao || '');
+    const painelStatusNorm = dropNormStatus(op.dropPainelStatus || op.dropPanelStatus || '');
+    return clsNorm === 'DROP' ||
+      painelClsNorm === 'DROP' ||
+      painelClsNorm === 'DROP_CONCLUIDO' ||
+      painelClsNorm.includes('AGUARDANDO_ATRELAR') ||
+      painelClsNorm.includes('ATRELAGEM_CONCLUIDA') ||
+      painelStatusNorm === 'DROP' ||
+      isDropAguardandoAtrelar(op) ||
+      isDropAtrelagemConcluida(op);
+  };
 
   const dropFmtHHMM = (ms) => {
     if (!Number.isFinite(ms) || ms <= 0) return '—';
@@ -13350,6 +13571,14 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     const descargasDia = activeDrops.reduce((acc, op) => acc + getDropDescargaQtd(op), 0);
     const cargasAndamento = activeDrops.reduce((acc, op) => acc + (!isDropCanceled(op) && !isDropCargaDone(op) ? getDropCargaQtd(op) : 0), 0);
     const descargasAndamento = activeDrops.reduce((acc, op) => acc + (!isDropCanceled(op) && !isDropDescargaDone(op) ? getDropDescargaQtd(op) : 0), 0);
+    const aguardandoAtrelarRows = activeDrops.filter(isDropAguardandoAtrelar);
+    const aguardandoAtrelar = aguardandoAtrelarRows.length;
+    const temposAguardandoAtrelar = aguardandoAtrelarRows
+      .map(op => Math.max(0, Date.now() - (getDropWaitingStartTime(op) || Date.now())))
+      .filter(v => Number.isFinite(v) && v >= 0);
+    const tempoMedioAguardandoAtrelar = temposAguardandoAtrelar.length
+      ? temposAguardandoAtrelar.reduce((a, b) => a + b, 0) / temposAguardandoAtrelar.length
+      : 0;
 
     kpiRoot.innerHTML = `
       <div class="drop-kpi-card">
@@ -13367,6 +13596,11 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       <div class="drop-kpi-card drop-purple">
         <div class="drop-kpi-label">Descargas em andamento</div>
         <div class="drop-kpi-value">${descargasAndamento}</div>
+      </div>
+      <div class="drop-kpi-card drop-amber">
+        <div class="drop-kpi-label">Carretas carregadas aguardando atrelar</div>
+        <div class="drop-kpi-value">${aguardandoAtrelar}</div>
+        <div class="drop-kpi-sub">Tempo médio: ${tempoMedioAguardandoAtrelar ? dropFmtDelta(tempoMedioAguardandoAtrelar) : '—'}</div>
       </div>
     `;
 
@@ -13413,6 +13647,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
   const isDropResolvedForPanel = (op = {}) => {
     if (!op || !op.id) return false;
     if (isDropRemoved(op) || isDropCanceled(op)) return true;
+    if (isDropAguardandoAtrelar(op)) return false;
+    if (isDropAtrelagemConcluida(op)) return true;
 
     const main = dropNormStatus(getDropMainStatusLabel(op));
     const cls = dropNormStatus(getDropClassificacao(op));
@@ -13520,24 +13756,42 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       const id = escapeHtml(op.id || '');
       const status = getDropMainStatusLabel(op);
       const obs = dropText(op.dropPainelObservacao || op.dropPanelObservation || '');
+      const incidentesAtrelagem = Array.isArray(op.dropAtrelagemOcorrencias) ? op.dropAtrelagemOcorrencias : [];
+      const ultimoIncidente = incidentesAtrelagem[incidentesAtrelagem.length - 1] || op.dropAtrelagemUltimaOcorrencia || null;
+      const waitingStart = getDropWaitingStartTime(op);
+      const waitingEnd = getDropWaitingEndTime(op);
+      const loadingEndAttr = isDropLoadingTimerClosed(op) ? getDropTimerEndTime(op) : 0;
+      const waitingAtrelar = isDropAguardandoAtrelar(op);
+      const atrelagemFinal = isDropAtrelagemConcluida(op);
+      const waitingHtml = waitingAtrelar
+        ? `<div class="drop-time-line drop-wait-line"><span class="drop-time-label">Aguardando atrelar</span><span class="drop-wait-cell" data-drop-wait-start-time="${waitingStart}" data-drop-wait-end-time="0">${escapeHtml(getDropWaitingElapsedDisplay(op))}</span></div>`
+        : (atrelagemFinal ? `<div class="drop-time-line drop-wait-line"><span class="drop-time-label">Espera até atrelar</span><span class="drop-wait-cell" data-drop-wait-start-time="${waitingStart}" data-drop-wait-end-time="${waitingEnd}">${escapeHtml(getDropWaitingElapsedDisplay(op))}</span></div>` : '');
+      const incidentHtml = ultimoIncidente
+        ? `<div class="mt-2 text-xs"><strong>Última ocorrência:</strong> ${escapeHtml(ultimoIncidente.motivo || 'Ocorrência')} ${ultimoIncidente.observacao ? `— ${escapeHtml(ultimoIncidente.observacao)}` : ''}</div>`
+        : '';
       return `
         <tr class="border-b border-gray-700 hover:bg-gray-700/50">
           <td class="p-4 font-mono text-sm">${escapeHtml(getDropDt(op) || '')}</td>
           <td class="p-4 text-sm font-mono">${escapeHtml(formatDropArrivalTime(op))}</td>
-          <td class="p-4 font-mono text-sm drop-timer-cell" data-drop-start-time="${getDropArrivalTime(op)}" data-drop-end-time="${getDropTimerEndTime(op)}">
-            ${escapeHtml(getDropElapsedDisplay(op))}
+          <td class="p-4 font-mono text-sm">
+            <div class="drop-time-stack">
+              <div class="drop-time-line"><span class="drop-time-label">Carregamento</span><span class="drop-timer-cell" data-drop-start-time="${getDropArrivalTime(op)}" data-drop-end-time="${loadingEndAttr}">${escapeHtml(getDropElapsedDisplay(op))}</span></div>
+              ${waitingHtml}
+            </div>
           </td>
           <td class="p-4">${escapeHtml(getDropManobra(op))}</td>
           <td class="p-4">${escapeHtml(getDropViagem(op))}</td>
           <td class="p-4 font-mono text-sm">${escapeHtml(getTruckPlate(op) || '—')}</td>
           <td class="p-4 font-mono text-sm">${escapeHtml(getTrailerPlate(op) || '—')}</td>
           <td class="p-4">${buildDropStatusPills(op)}</td>
-          <td class="p-4 drop-observacao text-sm text-gray-500">${obs ? escapeHtml(obs) : '—'}</td>
+          <td class="p-4 drop-observacao text-sm text-gray-500">${obs ? escapeHtml(obs) : '—'}${incidentHtml}</td>
           <td class="p-4">
             <div class="drop-action-wrap">
               <button type="button" class="drop-action-btn vazio" title="Concluir descarga como vazio" data-drop-action="status" data-id="${id}" data-status="Vazio">Vazio</button>
               <button type="button" class="drop-action-btn carregado" title="Concluir carga como carregado" data-drop-action="status" data-id="${id}" data-status="Carregado">Carregado</button>
-              <button type="button" class="drop-action-btn drop" title="Classificar como Drop e concluir carga/descarga" data-drop-action="status" data-id="${id}" data-status="Drop">Drop</button>
+              ${(!waitingAtrelar && !atrelagemFinal) ? `<button type="button" class="drop-action-btn drop" title="Fecha o carregamento e inicia a espera da carreta carregada para atrelar" data-drop-action="status" data-id="${id}" data-status="Drop">Drop</button>` : ''}
+              ${waitingAtrelar ? `<button type="button" class="drop-action-btn concluir" title="Concluir espera da carreta carregada para atrelar" data-drop-action="concluir-atrelagem" data-id="${id}">Concluir</button>` : ''}
+              <button type="button" class="drop-action-btn ocorrencia" title="Registrar o que aconteceu com a carreta" data-drop-action="ocorrencia-atrelagem" data-id="${id}">Ocorrência</button>
               <button type="button" class="drop-action-btn nao-drop" title="Classificar como Não Drop" data-drop-action="status" data-id="${id}" data-status="Não Drop">Não Drop</button>
               <button type="button" class="drop-action-btn obs" data-drop-action="obs" data-id="${id}">Observação</button>
               <button type="button" class="drop-action-btn cancelar" title="Cancelar o controle Drop & Hook sem excluir a DT do pátio" data-drop-action="status" data-id="${id}" data-status="Cancelado">Cancelar</button>
@@ -13569,6 +13823,8 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         getDropCargaQtd(op),
         getDropDescargaQtd(op),
         op.dropPainelObservacao || op.dropPanelObservation || '',
+        isDropAguardandoAtrelar(op) ? 'Sim' : 'Não',
+        getDropWaitingStartTime(op) ? getDropWaitingElapsedDisplay(op) : '',
         cycle.count || 0,
         (cycle.horarios || []).join(' | '),
         (cycle.cycles || []).length || 0,
@@ -13576,7 +13832,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         cycle.statusCiclo || ''
       ];
     });
-    downloadDropCsv(`dash_drop_hook_${selectedDate || 'periodo'}.csv`, ['Dia','DT','Motorista Manobra','Motorista Viagem','Placa Cavalo','Placa Carreta','Status','Carga','Descarga','Observação','Marcações da Placa','Horários','Ciclos Fechados','Tempo dos Ciclos','Status do Ciclo'], csvRows);
+    downloadDropCsv(`dash_drop_hook_${selectedDate || 'periodo'}.csv`, ['Dia','DT','Motorista Manobra','Motorista Viagem','Placa Cavalo','Placa Carreta','Status','Carga','Descarga','Observação','Aguardando Atrelar','Tempo Aguardando Atrelar','Marcações da Placa','Horários','Ciclos Fechados','Tempo dos Ciclos','Status do Ciclo'], csvRows);
     showToast('Dash Drop & Hook exportado.', 'success');
   }
 
@@ -13596,9 +13852,11 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       getTruckPlate(op) || '',
       getTrailerPlate(op) || '',
       getDropMainStatusLabel(op),
-      op.dropPainelObservacao || op.dropPanelObservation || ''
+      op.dropPainelObservacao || op.dropPanelObservation || '',
+      isDropAguardandoAtrelar(op) ? 'Sim' : 'Não',
+      getDropWaitingStartTime(op) ? getDropWaitingElapsedDisplay(op) : ''
     ]);
-    downloadDropCsv(`painel_drop_hook_${selectedDate || 'periodo'}.csv`, ['Dia','DT','Chegada','Tempo no Processo','Motorista Manobra','Motorista Viagem','Placa Cavalo','Placa Carreta','Status Painel','Observação'], csvRows);
+    downloadDropCsv(`painel_drop_hook_${selectedDate || 'periodo'}.csv`, ['Dia','DT','Chegada','Tempo no Processo','Motorista Manobra','Motorista Viagem','Placa Cavalo','Placa Carreta','Status Painel','Observação','Aguardando Atrelar','Tempo Aguardando Atrelar'], csvRows);
     showToast('Painel Drop & Hook exportado.', 'success');
   }
 
@@ -13653,7 +13911,7 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
       });
       logText = 'Painel Drop & Hook: descarga concluída como Vazio.';
     } else if (cleanStatus === 'Drop') {
-      // DROP: classifica como Drop e conclui as duas etapas no painel.
+      // DROP: fecha o tempo de carregamento e inicia a nova etapa "carregado aguardando atrelar".
       Object.assign(patch, {
         dropClassificacao: 'Drop',
         dropCargaStatus: 'Carregado',
@@ -13664,10 +13922,20 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         dropDescargaConcluida: true,
         dropDescargaConcluidaAt: serverTimestamp(),
         dropDescargaConcluidaAtMs: nowMs,
-        dropPainelStatus: 'Concluído',
-        dropPainelClassificacao: 'DROP_CONCLUIDO'
+        dropCarregamentoFinalizadoAt: serverTimestamp(),
+        dropCarregamentoFinalizadoAtMs: nowMs,
+        dropAguardandoAtrelar: true,
+        dropAtrelagemConcluida: false,
+        dropAtrelagemStatus: 'Aguardando atrelar',
+        dropAtrelagemInicioAt: serverTimestamp(),
+        dropAtrelagemInicioAtMs: nowMs,
+        dropAguardandoAtrelarInicioAt: serverTimestamp(),
+        dropAguardandoAtrelarInicioAtMs: nowMs,
+        inicioEsperaAtrelarMs: nowMs,
+        dropPainelStatus: 'Carregado aguardando atrelar',
+        dropPainelClassificacao: 'AGUARDANDO_ATRELAR'
       });
-      logText = 'Painel Drop & Hook: classificado como Drop e carga/descarga concluídas.';
+      logText = 'Painel Drop & Hook: Drop realizado, carregamento fechado e iniciada espera da carreta carregada para atrelar.';
     } else if (cleanStatus === 'Não Drop') {
       // Não Drop: apenas classifica; não conclui carga/descarga.
       Object.assign(patch, {
@@ -13693,6 +13961,95 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
     await persistDropPatch(id, patch, nowMs);
     await addLogEntry(id, logText);
     showToast(`Drop & Hook atualizado: ${cleanStatus}`, 'success');
+    renderDropPanel();
+    renderDropDashboard();
+  }
+
+
+  async function concludeDropAtrelagem(id) {
+    if (!db || !id) return;
+    const { op } = getDropOpSource(id);
+    const nowMs = Date.now();
+    const startMs = getDropWaitingStartTime(op || {}) || nowMs;
+    const tempoMs = Math.max(0, nowMs - startMs);
+    const patch = {
+      dropAguardandoAtrelar: false,
+      dropAtrelagemConcluida: true,
+      dropAtrelagemStatus: 'Concluída',
+      dropAtrelagemFimAt: serverTimestamp(),
+      dropAtrelagemFimAtMs: nowMs,
+      dropAtrelagemConcluidaAt: serverTimestamp(),
+      dropAtrelagemConcluidaAtMs: nowMs,
+      fimEsperaAtrelarMs: nowMs,
+      tempoEsperaAtrelarMs: tempoMs,
+      dropTempoAguardandoAtrelarMs: tempoMs,
+      dropPainelStatus: 'Atrelagem concluída',
+      dropPainelClassificacao: 'ATRELAGEM_CONCLUIDA',
+      dropPainelUpdatedAt: serverTimestamp(),
+      dropPainelUpdatedAtMs: nowMs
+    };
+    await persistDropPatch(id, patch, nowMs);
+    await addLogEntry(id, `Painel Drop & Hook: atrelagem concluída. Tempo aguardando carregado: ${formatMilliseconds(tempoMs)}.`, true);
+    showToast('Espera da carreta carregada concluída.', 'success');
+    renderDropPanel();
+    renderDropDashboard();
+  }
+
+  let selectedDropIncidentId = '';
+
+  function openDropAtrelagemIncidentModal(id) {
+    selectedDropIncidentId = id || '';
+    const { op } = getDropOpSource(selectedDropIncidentId);
+    const subtitle = document.getElementById('drop-incident-subtitle');
+    if (subtitle) {
+      subtitle.textContent = `DT ${getDropDt(op || {}) || '—'} • Cavalo ${getTruckPlate(op || {}) || '—'} • Carreta ${getTrailerPlate(op || {}) || '—'}`;
+    }
+    const motivo = document.getElementById('drop-incident-motivo');
+    const responsavel = document.getElementById('drop-incident-responsavel');
+    const observacao = document.getElementById('drop-incident-observacao');
+    if (motivo) motivo.value = 'Aguardando cavalo';
+    if (responsavel) responsavel.value = '';
+    if (observacao) observacao.value = '';
+    document.getElementById('drop-incident-modal')?.classList.remove('hidden');
+  }
+
+  function closeDropAtrelagemIncidentModal() {
+    selectedDropIncidentId = '';
+    document.getElementById('drop-incident-modal')?.classList.add('hidden');
+  }
+
+  async function handleDropAtrelagemIncidentSubmit(ev) {
+    ev.preventDefault();
+    if (!db || !selectedDropIncidentId) return;
+    const { op } = getDropOpSource(selectedDropIncidentId);
+    const motivo = dropText(document.getElementById('drop-incident-motivo')?.value || 'Outro');
+    const responsavel = dropText(document.getElementById('drop-incident-responsavel')?.value || '');
+    const observacao = dropText(document.getElementById('drop-incident-observacao')?.value || '');
+    if (!motivo && !observacao) {
+      showToast('Informe o motivo ou uma observação.', 'info');
+      return;
+    }
+    const nowMs = Date.now();
+    const evento = {
+      motivo: motivo || 'Ocorrência',
+      responsavel,
+      observacao,
+      criadoEmMs: nowMs,
+      criadoEm: new Date(nowMs).toISOString(),
+      statusNoMomento: getDropMainStatusLabel(op || {}),
+      tempoAguardandoAtrelarMs: getDropWaitingStartTime(op || {}) ? Math.max(0, nowMs - getDropWaitingStartTime(op || {})) : null
+    };
+    const anteriores = Array.isArray(op?.dropAtrelagemOcorrencias) ? op.dropAtrelagemOcorrencias : [];
+    const patch = {
+      dropAtrelagemOcorrencias: [...anteriores, evento].slice(-30),
+      dropAtrelagemUltimaOcorrencia: evento,
+      dropPainelUpdatedAt: serverTimestamp(),
+      dropPainelUpdatedAtMs: nowMs
+    };
+    await persistDropPatch(selectedDropIncidentId, patch, nowMs);
+    await addLogEntry(selectedDropIncidentId, `Painel Drop & Hook: ocorrência na espera para atrelar — ${motivo}${responsavel ? ` / ${responsavel}` : ''}${observacao ? ` — ${observacao}` : ''}.`, true);
+    showToast('Ocorrência de atrelagem registrada.', 'success');
+    closeDropAtrelagemIncidentModal();
     renderDropPanel();
     renderDropDashboard();
   }
@@ -13745,6 +14102,21 @@ const POWERAPPS_OCCURRENCE_URL = "https://apps.powerapps.com/play/e/ddc30d71-5a6
         console.error('Falha ao salvar observação Drop & Hook:', err);
         showToast('Erro ao salvar observação.', 'error');
       });
+      return;
+    }
+
+    if (action === 'concluir-atrelagem') {
+      showConfirmModal('Concluir a espera da carreta carregada para atrelar?', () => {
+        concludeDropAtrelagem(id).catch(err => {
+          console.error('Falha ao concluir atrelagem Drop & Hook:', err);
+          showToast('Erro ao concluir atrelagem.', 'error');
+        });
+      });
+      return;
+    }
+
+    if (action === 'ocorrencia-atrelagem') {
+      openDropAtrelagemIncidentModal(id);
       return;
     }
 
@@ -20260,6 +20632,13 @@ async function handleAddOccurrence(e) {
     const avgDropCycle = dropDurations.length ? dropDurations.reduce((a, b) => a + b, 0) / dropDurations.length : 0;
     const maxDropCycle = dropDurations.length ? Math.max(...dropDurations) : 0;
     const dropEmCiclo = dropCycleRows.filter(r => r.aberto).length;
+    const aguardandoAtrelarRows = activeDropOps.filter(op => typeof isDropAguardandoAtrelar === 'function' && isDropAguardandoAtrelar(op));
+    const aguardandoAtrelar = aguardandoAtrelarRows.length;
+    const aguardandoAtrelarTempos = aguardandoAtrelarRows
+      .map(op => (typeof getDropWaitingStartTime === 'function' ? getDropWaitingStartTime(op) : 0))
+      .filter(Boolean)
+      .map(start => Math.max(0, Date.now() - start));
+    const avgAguardandoAtrelar = aguardandoAtrelarTempos.length ? aguardandoAtrelarTempos.reduce((a, b) => a + b, 0) / aguardandoAtrelarTempos.length : 0;
 
     const kpiRoot = document.getElementById('bd-dash-kpis');
     if (kpiRoot) {
@@ -20270,7 +20649,8 @@ async function handleAddOccurrence(e) {
         ${bdDashKpi('Drop pendente', dropPendentes, 'carga/descarga em aberto')}
         ${bdDashKpi('Tempo médio Drop', avgDropCycle ? fmtDelta(avgDropCycle) : '—', 'tempo fechado')}
         ${bdDashKpi('Maior tempo Drop', maxDropCycle ? fmtDelta(maxDropCycle) : '—', 'tempo fechado')}
-        ${bdDashKpi('Top placa', topPlates[0]?.placa || '—', topPlates[0] ? `${topPlates[0].total} movimentação(ões)` : 'sem dados', 'bd-top-plate-card')}
+        ${bdDashKpi('Carretas carregadas', aguardandoAtrelar || 0, 'aguardando atrelar')}
+        ${bdDashKpi('Tempo médio aguardando', avgAguardandoAtrelar ? fmtDelta(avgAguardandoAtrelar) : '—', 'carregado até atrelar')}
       `;
     }
 
@@ -20398,6 +20778,634 @@ async function handleAddOccurrence(e) {
       topPlates
     };
   }
+
+  // ============================================================
+  // ✅ Dashboard Baldeio/Drop — Resumo diário no Firebase
+  // Objetivo: a aba Dashboard passa a ler documentos diários leves
+  // em vez de depender sempre do histórico completo/limitado.
+  // ============================================================
+  function bdSummaryCollectionRef() {
+    return collection(db, `artifacts/${appId}/public/data/${BD_DASHBOARD_SUMMARY_COLLECTION}`);
+  }
+
+  function bdSummaryDayKeys(range) {
+    const keys = [];
+    const start = startOfDay(new Date(range.startMs)).getTime();
+    const end = startOfDay(new Date(range.endMs - 1)).getTime() + 24 * 3600 * 1000;
+    for (let ms = start; ms < end; ms += 24 * 3600 * 1000) keys.push(dayKey(ms));
+    return keys;
+  }
+
+  function bdLitePlate(op = {}, plateMode = 'carreta') {
+    return String(plateMode === 'cavalo' ? (op.plateCavalo || op.placaCavalo || '') : (op.plateCarreta || op.placaCarreta || ''))
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '') || 'SEM PLACA';
+  }
+
+  function bdGetDropWaitingMs(op = {}) {
+    const stored = Number(op.dropWaitingMs || op.tempoEsperaAtrelarMs || op.dropTempoAguardandoAtrelarMs || 0);
+    const start = Number(op.dropWaitingStartMs || op.dropAguardandoAtrelarInicioAtMs || op.inicioEsperaAtrelarMs || 0);
+    const end = Number(op.dropWaitingEndMs || op.fimEsperaAtrelarMs || op.dropAtrelagemFimAtMs || 0);
+    if (op.dropAguardandoAtrelar && start) return Math.max(0, Date.now() - start);
+    if (start && end) return Math.max(0, end - start);
+    return Number.isFinite(stored) && stored > 0 ? stored : 0;
+  }
+
+  function bdSafeNumber(v, fallback = 0) {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function bdSanitizeLiteOp(op = {}) {
+    return {
+      id: String(op.id || ''),
+      src: String(op.src || op._bdSrc || ''),
+      ms: bdSafeNumber(op.ms || op._bdMs, 0),
+      dt: String(op.dt || ''),
+      plateCarreta: String(op.plateCarreta || '').toUpperCase().replace(/[^A-Z0-9]/g, '') || 'SEM PLACA',
+      plateCavalo: String(op.plateCavalo || '').toUpperCase().replace(/[^A-Z0-9]/g, '') || 'SEM PLACA',
+      transportadora: String(op.transportadora || ''),
+      isBaldeio: !!op.isBaldeio,
+      isDrop: !!op.isDrop,
+      baldeioOrigemKey: String(op.baldeioOrigemKey || ''),
+      baldeioOrigemLabel: String(op.baldeioOrigemLabel || ''),
+      dropStatus: String(op.dropStatus || ''),
+      dropManobra: String(op.dropManobra || ''),
+      dropViagem: String(op.dropViagem || ''),
+      dropCarga: bdSafeNumber(op.dropCarga, 0),
+      dropDescarga: bdSafeNumber(op.dropDescarga, 0),
+      dropCanceled: !!op.dropCanceled,
+      dropCargaDone: !!op.dropCargaDone,
+      dropDescargaDone: !!op.dropDescargaDone,
+      dropCycleKey: String(op.dropCycleKey || ''),
+      dropAguardandoAtrelar: !!op.dropAguardandoAtrelar,
+      dropWaitingStartMs: bdSafeNumber(op.dropWaitingStartMs || op.dropAguardandoAtrelarInicioAtMs || op.inicioEsperaAtrelarMs, 0),
+      dropWaitingEndMs: bdSafeNumber(op.dropWaitingEndMs || op.fimEsperaAtrelarMs || op.dropAtrelagemFimAtMs, 0),
+      dropWaitingMs: bdSafeNumber(op.dropWaitingMs || op.tempoEsperaAtrelarMs || op.dropTempoAguardandoAtrelarMs, 0)
+    };
+  }
+
+  function bdLiteFromRawOp(op = {}, idx = 0, src = 'historico') {
+    try {
+      const ms = getBdDashboardOpTime(op);
+      if (!ms) return null;
+
+      const baldeio = typeof isBaldeioOp === 'function' ? isBaldeioOp(op) : false;
+      const drop = typeof isDropHookOperation === 'function' ? isDropHookOperation(op) : false;
+      const dropRemoved = drop && typeof isDropRemoved === 'function' ? isDropRemoved(op) : false;
+      if (!baldeio && (!drop || dropRemoved)) return null;
+
+      const plateCarreta = getBdDashboardPlate(op, 'carreta');
+      const plateCavalo = getBdDashboardPlate(op, 'cavalo');
+      const isDrop = !!drop && !dropRemoved;
+      const isBal = !!baldeio;
+
+      return bdSanitizeLiteOp({
+        id: String(op.id || op.docId || ''),
+        src,
+        ms,
+        dt: String((isDrop ? (getDropDt(op) || op.dt) : op.dt) || ''),
+        plateCarreta,
+        plateCavalo,
+        transportadora: String((typeof getTransportadoraFromOperacao === 'function' ? getTransportadoraFromOperacao(op) : '') || op.transportadora || ''),
+        isBaldeio: isBal,
+        isDrop,
+        baldeioOrigemKey: isBal && typeof getBaldeioOrigemKey === 'function' ? getBaldeioOrigemKey(op) : '',
+        baldeioOrigemLabel: isBal && typeof getBaldeioOrigemLabel === 'function' ? getBaldeioOrigemLabel(op) : '',
+        dropStatus: isDrop && typeof getDropMainStatusLabel === 'function' ? (getDropMainStatusLabel(op) || 'Aguardando') : '',
+        dropManobra: isDrop && typeof getDropManobra === 'function' ? (getDropManobra(op) || '') : '',
+        dropViagem: isDrop && typeof getDropViagem === 'function' ? (getDropViagem(op) || '') : '',
+        dropCarga: isDrop && typeof getDropCargaQtd === 'function' ? getDropCargaQtd(op) : 0,
+        dropDescarga: isDrop && typeof getDropDescargaQtd === 'function' ? getDropDescargaQtd(op) : 0,
+        dropCanceled: isDrop && typeof isDropCanceled === 'function' ? isDropCanceled(op) : false,
+        dropCargaDone: isDrop && typeof isDropCargaDone === 'function' ? isDropCargaDone(op) : false,
+        dropDescargaDone: isDrop && typeof isDropDescargaDone === 'function' ? isDropDescargaDone(op) : false,
+        dropCycleKey: isDrop && typeof dropCyclePlateKey === 'function' ? (dropCyclePlateKey(op) || plateCarreta || plateCavalo || '') : '',
+        dropAguardandoAtrelar: isDrop && typeof isDropAguardandoAtrelar === 'function' ? isDropAguardandoAtrelar(op) : false,
+        dropWaitingStartMs: isDrop && typeof getDropWaitingStartTime === 'function' ? getDropWaitingStartTime(op) : 0,
+        dropWaitingEndMs: isDrop && typeof getDropWaitingEndTime === 'function' ? (isDropAguardandoAtrelar(op) ? 0 : getDropWaitingEndTime(op)) : 0,
+        dropWaitingMs: isDrop && typeof getDropWaitingStartTime === 'function' ? Math.max(0, ((typeof isDropAguardandoAtrelar === 'function' && isDropAguardandoAtrelar(op)) ? Date.now() : (typeof getDropWaitingEndTime === 'function' ? getDropWaitingEndTime(op) : Date.now())) - getDropWaitingStartTime(op)) : 0
+      });
+    } catch (err) {
+      console.warn('Falha ao normalizar operação do Dashboard:', err, op);
+      return null;
+    }
+  }
+
+  function bdDedupeLiteOps(list = []) {
+    const priority = { patio: 3, historico: 2, summary: 1, resumo: 1 };
+    const map = new Map();
+    (list || []).forEach((raw, idx) => {
+      const op = bdSanitizeLiteOp(raw || {});
+      if (!op.ms) return;
+      const key = op.id ? `id:${op.id}` : `${op.ms}|${op.dt}|${op.plateCarreta}|${op.plateCavalo}|${idx}`;
+      const cur = map.get(key);
+      if (!cur || (priority[op.src] || 0) >= (priority[cur.src] || 0)) map.set(key, op);
+    });
+    return Array.from(map.values()).sort((a, b) => b.ms - a.ms);
+  }
+
+  function bdLiteOpsFromCurrentMemory() {
+    return bdDedupeLiteOps([
+      ...(patioData || []).map((op, idx) => bdLiteFromRawOp(op, idx, 'patio')).filter(Boolean),
+      ...(historicoData || []).map((op, idx) => bdLiteFromRawOp(op, idx, 'historico')).filter(Boolean)
+    ]);
+  }
+
+  function bdLiteOpsFromSummaries(range) {
+    const keys = new Set(bdSummaryDayKeys(range));
+    const list = [];
+    (bdDashboardSummaryData || []).forEach(day => {
+      if (!keys.has(day.dayKey)) return;
+      (day.opsLite || []).forEach(op => list.push({ ...op, src: 'summary' }));
+    });
+
+    // Mantém o dia atual vivo: Pátio entra por cima do resumo e evita sumir operação em andamento.
+    (patioData || []).forEach((op, idx) => {
+      const lite = bdLiteFromRawOp(op, idx, 'patio');
+      if (lite && lite.ms >= range.startMs && lite.ms < range.endMs) list.push(lite);
+    });
+
+    return bdDedupeLiteOps(list);
+  }
+
+  function bdBuildReportFromLiteOps(liteOps = [], range, plateMode = 'carreta', originFilter = 'todos', selectedTValues = ['todas'], sourceLabel = 'memória') {
+    const filtered = bdDedupeLiteOps(liteOps)
+      .filter(op => op.ms && op.ms >= range.startMs && op.ms < range.endMs)
+      .filter(op => areAllFilterValues(selectedTValues) || filterValuesMatchExact(selectedTValues, op.transportadora || ''));
+
+    const baldeioOps = filtered
+      .filter(op => op.isBaldeio)
+      .filter(op => originFilter === 'todos' || op.baldeioOrigemKey === originFilter);
+
+    const dropOps = filtered.filter(op => op.isDrop);
+    const activeDropOps = dropOps.filter(op => !op.dropCanceled);
+    const cargasDrop = activeDropOps.reduce((acc, op) => acc + bdSafeNumber(op.dropCarga, 0), 0);
+    const descargasDrop = activeDropOps.reduce((acc, op) => acc + bdSafeNumber(op.dropDescarga, 0), 0);
+    const dropPendentes = activeDropOps.filter(op => !op.dropCargaDone || (bdSafeNumber(op.dropDescarga, 0) > 0 && !op.dropDescargaDone)).length;
+
+    const baldeioMetaBaseTotal = baldeioOps.length;
+    const dropMetaPercentual = 70;
+    const dropMetaQtd = Math.ceil(baldeioMetaBaseTotal * (dropMetaPercentual / 100));
+    const dropRealizadoQtd = activeDropOps.length;
+    const dropMetaAtingida = baldeioMetaBaseTotal > 0 && dropRealizadoQtd >= dropMetaQtd;
+    const dropMetaFaltam = Math.max(dropMetaQtd - dropRealizadoQtd, 0);
+    const dropMetaProgresso = baldeioMetaBaseTotal ? Math.round((dropRealizadoQtd / baldeioMetaBaseTotal) * 100) : 0;
+    const dropMetaStatus = !baldeioMetaBaseTotal
+      ? 'Sem baldeios no período'
+      : dropMetaAtingida
+        ? 'Meta atingida'
+        : `Não atingiu • faltam ${dropMetaFaltam}`;
+
+    const dayKeys = [];
+    const dayLabels = [];
+    for (let ms = range.startMs; ms < range.endMs; ms += 24 * 3600 * 1000) {
+      dayKeys.push(dayKey(ms));
+      dayLabels.push(dayLabelPt(ms));
+    }
+    const baldeioDaily = Object.fromEntries(dayKeys.map(k => [k, 0]));
+    const dropDaily = Object.fromEntries(dayKeys.map(k => [k, 0]));
+    baldeioOps.forEach(op => { const k = dayKey(op.ms); if (k in baldeioDaily) baldeioDaily[k]++; });
+    activeDropOps.forEach(op => { const k = dayKey(op.ms); if (k in dropDaily) dropDaily[k]++; });
+
+    const originCounts = { Ritmo: 0, JSL: 0, Outros: 0 };
+    baldeioOps.forEach(op => {
+      const label = op.baldeioOrigemLabel || 'Outros';
+      if (label === 'Ritmo') originCounts.Ritmo++;
+      else if (label === 'JSL') originCounts.JSL++;
+      else originCounts.Outros++;
+    });
+
+    const dropStatusCounts = {};
+    activeDropOps.forEach(op => {
+      const status = op.dropStatus || 'Aguardando';
+      dropStatusCounts[status] = (dropStatusCounts[status] || 0) + 1;
+    });
+
+    const plateMap = new Map();
+    const addPlate = (op, field) => {
+      const placa = bdLitePlate(op, plateMode);
+      if (!plateMap.has(placa)) plateMap.set(placa, { placa, baldeio: 0, drop: 0, total: 0 });
+      const row = plateMap.get(placa);
+      row[field] += 1;
+      row.total += 1;
+    };
+    baldeioOps.forEach(op => addPlate(op, 'baldeio'));
+    activeDropOps.forEach(op => addPlate(op, 'drop'));
+    const topPlates = Array.from(plateMap.values()).sort((a, b) => (b.total - a.total) || a.placa.localeCompare(b.placa, 'pt-BR')).slice(0, 10);
+
+    const baldeioGroups = new Map();
+    baldeioOps.forEach(op => {
+      const origemKey = op.baldeioOrigemKey || 'outros';
+      const origem = op.baldeioOrigemLabel || 'Outros';
+      const placa = bdLitePlate(op, plateMode);
+      const key = `${origemKey}|${placa}`;
+      if (!baldeioGroups.has(key)) baldeioGroups.set(key, { origem, placa, entries: [] });
+      baldeioGroups.get(key).entries.push(op.ms);
+    });
+    const baldeioByPlate = Array.from(baldeioGroups.values()).map(row => {
+      row.entries.sort((a, b) => a - b);
+      const intervals = [];
+      for (let i = 1; i < row.entries.length; i++) intervals.push(row.entries[i] - row.entries[i - 1]);
+      return {
+        ...row,
+        count: row.entries.length,
+        first: row.entries[0] || 0,
+        last: row.entries[row.entries.length - 1] || 0,
+        intervalsTxt: intervals.length ? intervals.map(fmtDelta).join(' | ') : '—'
+      };
+    }).sort((a, b) => (b.count - a.count) || (b.last - a.last) || a.placa.localeCompare(b.placa, 'pt-BR'));
+
+    const dropGroups = new Map();
+    activeDropOps.forEach(op => {
+      const key = op.dropCycleKey || bdLitePlate(op, plateMode);
+      if (!dropGroups.has(key)) dropGroups.set(key, { key, entries: [] });
+      dropGroups.get(key).entries.push(op.ms);
+    });
+    const dropCycleRows = Array.from(dropGroups.values()).map(g => {
+      g.entries.sort((a, b) => a - b);
+      const cycles = [];
+      for (let i = 1; i < g.entries.length; i += 2) {
+        const delta = g.entries[i] - g.entries[i - 1];
+        if (Number.isFinite(delta) && delta >= 0) cycles.push(delta);
+      }
+      return { ...g, cycles, aberto: g.entries.length % 2 === 1 };
+    });
+    const dropDurations = dropCycleRows.flatMap(r => r.cycles);
+    const avgDropCycle = dropDurations.length ? dropDurations.reduce((a, b) => a + b, 0) / dropDurations.length : 0;
+    const maxDropCycle = dropDurations.length ? Math.max(...dropDurations) : 0;
+    const dropEmCiclo = dropCycleRows.filter(r => r.aberto).length;
+
+    const aguardandoAtrelarRows = activeDropOps
+      .filter(op => op.dropAguardandoAtrelar)
+      .map(op => ({
+        ...op,
+        placa: bdLitePlate(op, plateMode),
+        waitingMs: bdGetDropWaitingMs(op)
+      }))
+      .sort((a, b) => (b.waitingMs - a.waitingMs) || String(a.placa).localeCompare(String(b.placa), 'pt-BR'));
+    const aguardandoAtrelarTempos = aguardandoAtrelarRows.map(r => r.waitingMs).filter(ms => Number.isFinite(ms) && ms >= 0);
+    const aguardandoAtrelarQtd = aguardandoAtrelarRows.length;
+    const avgAguardandoAtrelar = aguardandoAtrelarTempos.length ? aguardandoAtrelarTempos.reduce((a, b) => a + b, 0) / aguardandoAtrelarTempos.length : 0;
+    const maxAguardandoAtrelar = aguardandoAtrelarTempos.length ? Math.max(...aguardandoAtrelarTempos) : 0;
+
+    return {
+      ...range,
+      sourceLabel,
+      plateMode,
+      selectedTValues,
+      originFilter,
+      dayKeys,
+      dayLabels,
+      baldeioDaily,
+      dropDaily,
+      baldeioOps,
+      dropOps: activeDropOps,
+      cargasDrop,
+      descargasDrop,
+      dropPendentes,
+      dropEmCiclo,
+      aguardandoAtrelarQtd,
+      avgAguardandoAtrelar,
+      maxAguardandoAtrelar,
+      aguardandoAtrelarRows,
+      avgDropCycle,
+      maxDropCycle,
+      originCounts,
+      dropStatusCounts,
+      baldeioByPlate,
+      topPlates,
+      dropMeta: {
+        percentual: dropMetaPercentual,
+        totalBaldeios: baldeioMetaBaseTotal,
+        meta: dropMetaQtd,
+        realizado: dropRealizadoQtd,
+        atingida: dropMetaAtingida,
+        faltam: dropMetaFaltam,
+        progresso: dropMetaProgresso,
+        status: dropMetaStatus
+      }
+    };
+  }
+
+  function bdSetSummaryStatus(text, type = 'info') {
+    const el = document.getElementById('bd-dash-summary-status');
+    if (!el) return;
+    const palette = {
+      ok: 'background:#ecfdf5;border-color:#bbf7d0;color:#065f46;',
+      warn: 'background:#fffbeb;border-color:#fde68a;color:#92400e;',
+      error: 'background:#fef2f2;border-color:#fecaca;color:#991b1b;',
+      info: 'background:#eff6ff;border-color:#bfdbfe;color:#1e3a8a;'
+    };
+    el.setAttribute('style', `${palette[type] || palette.info} border-width:1px; border-style:solid;`);
+    el.textContent = text;
+  }
+
+  function bdRenderReport(rep) {
+    const kpiRoot = document.getElementById('bd-dash-kpis');
+    if (kpiRoot) {
+      const dm = rep.dropMeta || {};
+      kpiRoot.innerHTML = `
+        ${bdDashKpi('Baldeios', rep.baldeioOps.length, `${rep.baldeioByPlate.length} placa(s)`)}
+        ${bdDashKpi('Drop & Hook', rep.dropOps.length, `${rep.cargasDrop} carga(s) / ${rep.descargasDrop} descarga(s)`)}
+        ${bdDashKpi('Meta Drop 70%', `${dm.realizado || 0}/${dm.meta || 0}`, dm.totalBaldeios ? `${dm.status} • ${dm.progresso}% de ${dm.totalBaldeios} baldeio(s)` : 'sem baldeios no período')}
+        ${bdDashKpi('Drop pendente', rep.dropPendentes, 'carga/descarga em aberto')}
+        ${bdDashKpi('Tempo médio Drop', rep.avgDropCycle ? fmtDelta(rep.avgDropCycle) : '—', 'tempo fechado')}
+        ${bdDashKpi('Maior tempo Drop', rep.maxDropCycle ? fmtDelta(rep.maxDropCycle) : '—', 'tempo fechado')}
+        ${bdDashKpi('Carretas carregadas', rep.aguardandoAtrelarQtd || 0, 'aguardando atrelar')}
+        ${bdDashKpi('Tempo médio aguardando', rep.avgAguardandoAtrelar ? fmtDelta(rep.avgAguardandoAtrelar) : '—', 'carregado até atrelar')}
+      `;
+    }
+
+    const alertsRoot = document.getElementById('bd-dash-alerts');
+    if (alertsRoot) {
+      const alerts = [];
+      if (rep.dropPendentes) alerts.push({ title: `${rep.dropPendentes} Drop pendente(s)`, text: 'Há carga ou descarga sem conclusão no período filtrado.' });
+      if (rep.dropEmCiclo) alerts.push({ title: `${rep.dropEmCiclo} placa(s) em ciclo Drop`, text: 'Ciclo aberto: precisa de nova marcação para fechar o tempo.' });
+      if (rep.aguardandoAtrelarQtd) alerts.push({ title: `${rep.aguardandoAtrelarQtd} carreta(s) carregada(s)`, text: `Aguardando atrelar • tempo médio ${rep.avgAguardandoAtrelar ? fmtDelta(rep.avgAguardandoAtrelar) : '—'}.` });
+      if (!rep.aguardandoAtrelarQtd && rep.baldeioByPlate[0]) alerts.push({ title: `Maior volume: ${rep.baldeioByPlate[0].placa}`, text: `${rep.baldeioByPlate[0].count} marcação(ões) de baldeio • origem ${rep.baldeioByPlate[0].origem}.` });
+      if (!alerts.length) alerts.push({ title: 'Sem gargalo crítico', text: 'Nenhuma pendência relevante encontrada para Baldeio/Drop no filtro atual.' });
+      alertsRoot.innerHTML = alerts.slice(0, 3).map(a => `<div class="bd-alert-card"><strong>${escapeHtml(a.title)}</strong><span>${escapeHtml(a.text)}</span></div>`).join('');
+    }
+
+    if (typeof Chart !== 'undefined') {
+      const dailyCanvas = document.getElementById('bd-daily-chart');
+      if (dailyCanvas) {
+        dailyProductivityChart = safeDestroyChart(dailyProductivityChart);
+        dailyProductivityChart = new Chart(dailyCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: rep.dayLabels,
+            datasets: [
+              { label: 'Baldeios', data: rep.dayKeys.map(k => rep.baldeioDaily[k] || 0), backgroundColor: 'rgba(0, 140, 69, 0.60)', borderColor: 'rgba(0, 140, 69, 0.95)', borderWidth: 1, borderRadius: 8 },
+              { label: 'Drop & Hook', data: rep.dayKeys.map(k => rep.dropDaily[k] || 0), backgroundColor: 'rgba(37, 99, 235, 0.50)', borderColor: 'rgba(37, 99, 235, 0.95)', borderWidth: 1, borderRadius: 8 }
+            ]
+          },
+          options: bdChartOptions()
+        });
+      }
+
+      const originCanvas = document.getElementById('bd-origin-chart');
+      if (originCanvas) {
+        operationTypeChart = safeDestroyChart(operationTypeChart);
+        operationTypeChart = new Chart(originCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: Object.keys(rep.originCounts),
+            datasets: [{ label: 'Baldeios', data: Object.values(rep.originCounts), backgroundColor: 'rgba(16, 185, 129, 0.55)', borderColor: 'rgba(5, 150, 105, 0.95)', borderWidth: 1, borderRadius: 8 }]
+          },
+          options: { ...bdChartOptions(), plugins: { ...bdChartOptions().plugins, legend: { display: false } } }
+        });
+      }
+
+      const statusCanvas = document.getElementById('bd-drop-status-chart');
+      if (statusCanvas) {
+        tmpEvolutionChart = safeDestroyChart(tmpEvolutionChart);
+        const entries = Object.entries(rep.dropStatusCounts).sort((a, b) => b[1] - a[1]);
+        tmpEvolutionChart = new Chart(statusCanvas.getContext('2d'), {
+          type: 'bar',
+          data: { labels: entries.map(e => e[0]), datasets: [{ label: 'Drop', data: entries.map(e => e[1]), backgroundColor: 'rgba(14, 165, 233, 0.52)', borderColor: 'rgba(2, 132, 199, 0.95)', borderWidth: 1, borderRadius: 8 }] },
+          options: { ...bdChartOptions({ horizontal: true }), plugins: { ...bdChartOptions({ horizontal: true }).plugins, legend: { display: false } } }
+        });
+      }
+
+      const topCanvas = document.getElementById('bd-top-plates-chart');
+      if (topCanvas) {
+        volumeRankingChart = safeDestroyChart(volumeRankingChart);
+        const waitingRows = (rep.aguardandoAtrelarRows || []).slice(0, 10);
+        volumeRankingChart = new Chart(topCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: waitingRows.map(r => r.placa || 'SEM PLACA'),
+            datasets: [
+              { label: 'Minutos aguardando', data: waitingRows.map(r => Math.round((r.waitingMs || 0) / 60000)), backgroundColor: 'rgba(249, 115, 22, 0.55)', borderColor: 'rgba(194, 65, 12, 0.95)', borderWidth: 1, borderRadius: 8 }
+            ]
+          },
+          options: { ...bdChartOptions({ horizontal: true }), plugins: { ...bdChartOptions({ horizontal: true }).plugins, legend: { display: false } } }
+        });
+      }
+      shiftComparisonChart = safeDestroyChart(shiftComparisonChart);
+      heatmapChart = safeDestroyChart(heatmapChart);
+    }
+
+    const baldeioPill = document.getElementById('bd-baldeio-count-pill');
+    if (baldeioPill) baldeioPill.textContent = `${rep.baldeioByPlate.length} placa(s)`;
+    const baldeioBody = document.getElementById('bd-baldeio-table-body');
+    if (baldeioBody) {
+      baldeioBody.innerHTML = rep.baldeioByPlate.slice(0, 12).map(r => `
+        <tr>
+          <td><span class="bd-status-chip">${escapeHtml(r.origem)}</span></td>
+          <td class="bd-mono">${escapeHtml(r.placa)}</td>
+          <td><strong>${r.count}</strong></td>
+          <td class="bd-mono">${r.first ? `${fmtHHMM(r.first)} → ${fmtHHMM(r.last)}` : '—'}</td>
+          <td class="bd-mono">${escapeHtml(r.intervalsTxt)}</td>
+        </tr>
+      `).join('') || `<tr><td colspan="5" class="text-center text-gray-500 py-6">Sem baldeios no período selecionado.</td></tr>`;
+    }
+
+    const dropPill = document.getElementById('bd-drop-count-pill');
+    if (dropPill) dropPill.textContent = `${rep.dropOps.length} registro(s)`;
+    const dropBody = document.getElementById('bd-drop-table-body');
+    if (dropBody) {
+      const sortedDrops = [...rep.dropOps].sort((a, b) => b.ms - a.ms).slice(0, 12);
+      dropBody.innerHTML = sortedDrops.map(op => `
+        <tr>
+          <td class="bd-mono">${escapeHtml(op.dt || '—')}</td>
+          <td class="bd-mono">${escapeHtml(bdLitePlate(op, rep.plateMode))}</td>
+          <td>
+            <div><strong>Manobra:</strong> ${escapeHtml(op.dropManobra || '—')}</div>
+            <div class="text-xs text-gray-500"><strong>Viagem:</strong> ${escapeHtml(op.dropViagem || '—')}</div>
+          </td>
+          <td><span class="bd-status-chip">${escapeHtml(op.dropStatus || 'Aguardando')}</span></td>
+          <td><strong>${bdSafeNumber(op.dropCarga, 0)}</strong> carga / <strong>${bdSafeNumber(op.dropDescarga, 0)}</strong> descarga</td>
+        </tr>`).join('') || `<tr><td colspan="5" class="text-center text-gray-500 py-6">Sem Drop & Hook no período selecionado.</td></tr>`;
+    }
+
+    window.__bdDashboardReport = rep;
+  }
+
+  function bdBuildDailySummaryDoc(dayKeyValue, dayStartMs, allLiteOps = []) {
+    const dayEndMs = dayStartMs + 24 * 3600 * 1000;
+    const opsLite = bdDedupeLiteOps(allLiteOps)
+      .filter(op => op.ms >= dayStartMs && op.ms < dayEndMs)
+      .map(bdSanitizeLiteOp)
+      .slice(0, 1500);
+
+    return {
+      schemaVersion: 1,
+      dayKey: dayKeyValue,
+      dayMs: dayStartMs,
+      updatedAtMs: Date.now(),
+      updatedAt: serverTimestamp(),
+      totalOps: opsLite.length,
+      truncated: opsLite.length >= 1500,
+      opsLite
+    };
+  }
+
+  async function rebuildBdDashboardDailySummaries() {
+    if (!db || bdDashboardSummaryBuildInProgress) return;
+    const range = getBdDashboardRange();
+    const btn = document.getElementById('bd-dash-rebuild-summary');
+    bdDashboardSummaryBuildInProgress = true;
+    if (btn) { btn.disabled = true; btn.textContent = 'Gerando...'; }
+    bdSetSummaryStatus('Gerando resumo diário: lendo histórico apenas para consolidar o período selecionado...', 'info');
+
+    try {
+      const baseRef = collection(db, `artifacts/${appId}/public/data/historico`);
+      const fields = ['registrationTime', 'finishedTime', 'createdAtMs', 'dropPainelUpdatedAtMs', 'dropPanelUpdatedAtMs'];
+      const docsMap = new Map();
+      const perQueryLimit = Math.max(800, Math.min(3500, bdSummaryDayKeys(range).length * 700));
+
+      for (const field of fields) {
+        try {
+          const snap = await getDocs(query(
+            baseRef,
+            where(field, '>=', range.startMs),
+            where(field, '<', range.endMs),
+            orderBy(field, 'desc'),
+            limit(perQueryLimit)
+          ));
+          snap.docs.forEach(d => docsMap.set(d.id, { ...d.data(), id: d.id }));
+        } catch (err) {
+          console.warn(`Resumo diário: falha na consulta por ${field}.`, err);
+        }
+      }
+
+      const allLite = bdDedupeLiteOps([
+        ...Array.from(docsMap.values()).map((op, idx) => bdLiteFromRawOp(op, idx, 'historico')).filter(Boolean),
+        ...(patioData || []).map((op, idx) => bdLiteFromRawOp(op, idx, 'patio')).filter(Boolean)
+      ]);
+
+      const batch = writeBatch(db);
+      const dayKeys = bdSummaryDayKeys(range);
+      dayKeys.forEach(k => {
+        const startMs = dayRangeFromDateInput(k, new Date()).startMs;
+        const ref = doc(db, `artifacts/${appId}/public/data/${BD_DASHBOARD_SUMMARY_COLLECTION}`, k);
+        batch.set(ref, bdBuildDailySummaryDoc(k, startMs, allLite), { merge: false });
+      });
+      await batch.commit();
+
+      bdSetSummaryStatus(`Resumo diário atualizado: ${dayKeys.length} dia(s) consolidado(s). O Dashboard agora lê ${dayKeys.length} documento(s), não o histórico.`, 'ok');
+      showToast('Resumo diário do Dashboard gerado com sucesso.', 'success');
+      attachBdDashboardSummarySnapshot(range, true);
+    } catch (err) {
+      console.error('Falha ao gerar resumo diário:', err);
+      bdSetSummaryStatus('Não foi possível gerar o resumo diário. Verifique permissões/índices do Firebase.', 'error');
+      showToast('Falha ao gerar resumo diário.', 'error');
+    } finally {
+      bdDashboardSummaryBuildInProgress = false;
+      if (btn) { btn.disabled = false; btn.textContent = 'Atualizar resumo'; }
+    }
+  }
+
+  function attachBdDashboardSummarySnapshot(range = getBdDashboardRange(), force = false) {
+    if (!db) return;
+    const key = `${range.startValue}:${range.endValue}`;
+    if (!force && bdDashboardSummaryAttached && bdDashboardSummaryActiveKey === key) return;
+
+    try { if (typeof bdDashboardSummaryUnsub === 'function') bdDashboardSummaryUnsub(); } catch (_) {}
+    bdDashboardSummaryAttached = true;
+    bdDashboardSummaryActiveKey = key;
+    bdDashboardSummaryData = [];
+
+    const qSummary = query(
+      bdSummaryCollectionRef(),
+      where('dayMs', '>=', range.startMs),
+      where('dayMs', '<', range.endMs),
+      orderBy('dayMs', 'asc'),
+      limit(Math.min(120, Math.max(1, bdSummaryDayKeys(range).length + 2)))
+    );
+
+    bdDashboardSummaryUnsub = onSnapshot(qSummary, snap => {
+      bdDashboardSummaryData = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+      if (activeTab === 'dashboard') renderManagerDashboard();
+    }, err => {
+      console.warn('Dashboard: falha ao ler resumo diário.', err);
+      bdDashboardSummaryData = [];
+      if (activeTab === 'dashboard') {
+        bdSetSummaryStatus('Resumo diário não pôde ser lido. O painel usará somente dados já carregados nesta sessão.', 'warn');
+        renderManagerDashboard();
+      }
+    });
+  }
+
+  // ✅ Exportação usando o relatório normalizado/resumido
+  exportBaldeioDropDashboardCsv = function() {
+    if (!window.__bdDashboardReport) renderManagerDashboard();
+    const rep = window.__bdDashboardReport;
+    if (!rep) return;
+
+    const rows = [];
+    (rep.baldeioOps || []).forEach(op => {
+      rows.push([
+        'Baldeio', rep.startValue, rep.endValue,
+        new Date(op.ms).toLocaleString('pt-BR'),
+        op.dt || '',
+        bdLitePlate(op, rep.plateMode),
+        op.transportadora || '',
+        op.baldeioOrigemLabel || '',
+        '', '', '', ''
+      ]);
+    });
+    (rep.dropOps || []).forEach(op => {
+      rows.push([
+        'Drop & Hook', rep.startValue, rep.endValue,
+        new Date(op.ms).toLocaleString('pt-BR'),
+        op.dt || '',
+        bdLitePlate(op, rep.plateMode),
+        op.transportadora || '',
+        op.dropStatus || '',
+        op.dropManobra || '',
+        op.dropViagem || '',
+        bdSafeNumber(op.dropCarga, 0),
+        bdSafeNumber(op.dropDescarga, 0)
+      ]);
+    });
+
+    if (!rows.length) {
+      showToast('Sem dados de Baldeio/Drop para exportar no período.', 'info');
+      return;
+    }
+    downloadDropCsv(`dashboard_baldeio_drop_${rep.startValue}_a_${rep.endValue}.csv`, ['Tipo','De','Até','Data/Hora','DT','Placa','Transportadora','Origem/Status','Motorista Manobra','Motorista Viagem','Carga','Descarga'], rows);
+    showToast('Dashboard Baldeio/Drop exportado.', 'success');
+  };
+
+  // ✅ Render principal usando resumo diário quando disponível
+  renderManagerDashboard = function() {
+    try { updateTransportadoraFilter(); } catch (_) {}
+
+    const range = getBdDashboardRange();
+    const plateMode = document.getElementById('bd-dash-plate-mode')?.value || 'carreta';
+    const originFilter = document.getElementById('bd-dash-baldeio-origin')?.value || 'todos';
+    const transpSelect = document.getElementById('dashboard-transportadora-filter');
+    const selectedTValues = transpSelect ? getMultiSelectValues(transpSelect) : ['todas'];
+
+    try { attachBdDashboardSummarySnapshot(range); } catch (_) {}
+
+    const expectedKeys = bdSummaryDayKeys(range);
+    const summaryKeys = new Set((bdDashboardSummaryData || []).map(d => d.dayKey || d.id));
+    const missingKeys = expectedKeys.filter(k => !summaryKeys.has(k));
+    const summaryReady = expectedKeys.length > 0 && missingKeys.length === 0;
+
+    let liteOps;
+    let sourceLabel;
+    if (summaryReady) {
+      liteOps = bdLiteOpsFromSummaries(range);
+      sourceLabel = 'resumo diário';
+      bdSetSummaryStatus(`Resumo diário ativo: ${expectedKeys.length} documento(s) lido(s) para o período ${range.startValue} a ${range.endValue}.`, 'ok');
+    } else {
+      // Não força leitura do histórico. Usa apenas o que já estiver em memória e orienta gerar o resumo.
+      liteOps = bdLiteOpsFromCurrentMemory();
+      sourceLabel = 'dados já carregados';
+      const missingTxt = missingKeys.length ? `${missingKeys.length} dia(s) sem resumo` : 'resumo ainda carregando';
+      bdSetSummaryStatus(`${missingTxt}. Clique em “Gerar resumo” para consolidar o período e reduzir leituras futuras do Firebase. Enquanto isso, o Dashboard usa somente dados já carregados nesta sessão.`, 'warn');
+    }
+
+    const rep = bdBuildReportFromLiteOps(liteOps, range, plateMode, originFilter, selectedTValues, sourceLabel);
+    bdRenderReport(rep);
+  };
+
 
   // ✅ ABA MOTORISTAS: render
   function renderDriversTab() {
@@ -22543,13 +23551,21 @@ async function handleAddOccurrence(e) {
   // ==============================
   // AMBIENTE PANDORA — CONTROLE DE NF
   // ==============================
+  // Coleção antiga mantida como legado para migração/consulta.
   const PANDORA_NF_COLLECTION = 'pandora_nfs';
+  // Nova separação para reduzir leituras: operação ativa x arquivo.
+  const PANDORA_ACTIVE_COLLECTION = 'pandora_ativo';
+  const PANDORA_ARCHIVE_COLLECTION = 'pandora_arquivo';
   const PANDORA_HISTORY_COLLECTION = 'pandora_historico';
   const PANDORA_LOCAL_KEY = 'heilog_pandora_nfs_v1';
   const PANDORA_HISTORY_LOCAL_KEY = 'heilog_pandora_history_v1';
   const PANDORA_UNDO_LOCAL_KEY = 'heilog_pandora_undo_v1';
   const PANDORA_IMPORT_META_KEY = 'heilog_pandora_import_meta_v1';
   const PANDORA_CLIENTE_BASE_LOCAL_KEY = 'heilog_pandora_clientes_base_v1';
+  // Visibilidade operacional: nas listas do Pandora, mostrar automaticamente apenas NFs pendentes acima de 30 dias.
+  // As demais continuam consultáveis pela chave de acesso, sem precisar carregar o banco inteiro.
+  const PANDORA_VISIBLE_MIN_AGE_DAYS = 30;
+  const PANDORA_OLD_NFS_LIVE_LIMIT = 500;
 
   const PANDORA_AREAS = ['Transportes', 'Warehouse', 'Fiscal', 'Customer Service', 'Planejamento', 'Portaria', 'Operação', 'Inbound', 'Outbound', 'CIM', 'CD', 'INSIDE', 'ATIVOS COMERCIAIS', 'RPM', 'MARKETING', 'QUALIDADE', 'MANUTENÇÃO', 'UTILIDADES', 'PROJETOS', 'PROCESSO', 'SHE'];
   const PANDORA_STATUS = ['Em andamento', 'Aguardando área', 'Aguardando documento', 'Liberação de entrada', 'Com problema', 'Escriturado', 'Cancelada'];
@@ -22618,10 +23634,172 @@ async function handleAddOccurrence(e) {
   }
   const pandoraDefaultStatus = (item = {}) => pandoraNormalizeStatusName(item.status || 'Em andamento');
   const pandoraIsEscriturado = (status = '') => pandoraNormalizeStatusName(status) === 'Escriturado';
+  const pandoraIsArquivado = (status = '') => {
+    const normalized = pandoraNormalizeStatusName(status);
+    // NF finalizada no Pandora = status Escriturado. Cancelada também sai da operação ativa.
+    return normalized === 'Escriturado' || normalized === 'Cancelada';
+  };
   const pandoraIsPendente = (item = {}) => {
     const status = pandoraDefaultStatus(item);
-    return status !== 'Escriturado' && status !== 'Cancelada';
+    return !pandoraIsArquivado(status);
   };
+  const pandoraCollectionNameForItem = (item = {}) => pandoraIsArquivado(item.status) ? PANDORA_ARCHIVE_COLLECTION : PANDORA_ACTIVE_COLLECTION;
+  const pandoraOperationalCollections = () => [PANDORA_ACTIVE_COLLECTION, PANDORA_ARCHIVE_COLLECTION, PANDORA_NF_COLLECTION];
+  const pandoraCollectionLabel = (name = '') => {
+    if (name === PANDORA_ACTIVE_COLLECTION) return 'ativo';
+    if (name === PANDORA_ARCHIVE_COLLECTION) return 'arquivo';
+    if (name === PANDORA_NF_COLLECTION) return 'legado';
+    return name || 'desconhecido';
+  };
+
+  function pandoraWithSource(item = {}, collectionName = '') {
+    return { ...(item || {}), _sourceCollection: collectionName || item._sourceCollection || '' };
+  }
+
+  function pandoraDedupRows(rows = []) {
+    const map = new Map();
+    (rows || []).forEach(raw => {
+      if (!raw) return;
+      const item = pandoraCompleteNfSerieFromChave(raw);
+      const key = pandoraDocKey(item) || (item.chaveNorm ? `CH_${item.chaveNorm}` : '') || pandoraChaveNorm(item.chave || '');
+      if (!key) return;
+      const current = map.get(key);
+      const currentScore = current ? (current.updatedAtMs || current.importedAtMs || current.createdAtMs || 0) : -1;
+      const nextScore = item.updatedAtMs || item.importedAtMs || item.createdAtMs || 0;
+      if (!current || nextScore >= currentScore) map.set(key, item);
+    });
+    return Array.from(map.values());
+  }
+
+  async function pandoraGetDocFromCollection(collectionName, docId) {
+    if (!db || !docId || pandoraUsingLocalFallback) return null;
+    const snap = await getDoc(pandoraDocRef(collectionName, docId));
+    if (!snap.exists()) return null;
+    return pandoraWithSource(pandoraCompleteNfSerieFromChave({ ...snap.data(), id: snap.id, _docId: snap.id }), collectionName);
+  }
+
+  async function pandoraGetByDocIdFromFirestore(docId = '') {
+    if (!db || !docId || pandoraUsingLocalFallback) return null;
+    for (const collectionName of pandoraOperationalCollections()) {
+      const item = await pandoraGetDocFromCollection(collectionName, docId);
+      if (item) return item;
+    }
+    return null;
+  }
+
+  async function pandoraGetAllOperationalRowsFromFirestore() {
+    if (!db || pandoraUsingLocalFallback) return [];
+    const allRows = [];
+    for (const collectionName of pandoraOperationalCollections()) {
+      try {
+        const snap = await getDocs(pandoraCollection(collectionName));
+        snap.docs.forEach(d => allRows.push(pandoraWithSource({ ...d.data(), id: d.id, _docId: d.id }, collectionName)));
+      } catch (err) {
+        console.warn(`Pandora não conseguiu ler a coleção ${collectionName}:`, err);
+      }
+    }
+    return pandoraDedupRows(allRows);
+  }
+
+  async function pandoraSaveItemRouted(item = {}, opts = {}) {
+    if (!db || pandoraUsingLocalFallback) return null;
+    const docId = item._docId || item.id || (item.chaveNorm ? `CH_${item.chaveNorm}` : pandoraLocalId('PDNF'));
+    const targetCollection = pandoraCollectionNameForItem(item);
+    const payload = pandoraEnsureIndexFields({ ...(item || {}), id: docId, _docId: docId });
+    delete payload._sourceCollection;
+    await setDoc(pandoraDocRef(targetCollection, docId), payload, { merge: opts.merge !== false });
+    // Remove duplicidade nas outras coleções, inclusive legado.
+    await Promise.all(pandoraOperationalCollections()
+      .filter(name => name !== targetCollection)
+      .map(async (name) => {
+        try { await deleteDoc(pandoraDocRef(name, docId)); } catch (_) {}
+      }));
+    return pandoraWithSource({ ...payload, id: docId, _docId: docId }, targetCollection);
+  }
+
+  async function pandoraPatchItemRouted(existing = {}, patch = {}) {
+    if (!db || !existing || pandoraUsingLocalFallback) return null;
+    const docId = existing._docId || existing.id || (existing.chaveNorm ? `CH_${existing.chaveNorm}` : '');
+    if (!docId) return null;
+    const after = pandoraEnsureIndexFields({ ...existing, ...patch, id: docId, _docId: docId });
+    const targetCollection = pandoraCollectionNameForItem(after);
+    const currentCollection = existing._sourceCollection || '';
+    if (currentCollection && currentCollection === targetCollection && currentCollection !== PANDORA_NF_COLLECTION) {
+      await updateDoc(pandoraDocRef(targetCollection, docId), patch);
+      return pandoraWithSource(after, targetCollection);
+    }
+    return await pandoraSaveItemRouted(after, { merge: true });
+  }
+
+  async function pandoraDeleteItemEverywhere(item = {}) {
+    if (!db || pandoraUsingLocalFallback) return;
+    const docId = item._docId || item.id || (item.chaveNorm ? `CH_${item.chaveNorm}` : '');
+    if (!docId) return;
+    await Promise.all(pandoraOperationalCollections().map(async (name) => {
+      try { await deleteDoc(pandoraDocRef(name, docId)); } catch (_) {}
+    }));
+  }
+
+  function pandoraBatchRouteSet(batch, docId = '', payload = {}, statusSource = {}, opts = {}) {
+    const sourceForRoute = pandoraEnsureIndexFields({ ...(statusSource || {}), ...(payload || {}) });
+    const targetCollection = pandoraCollectionNameForItem(sourceForRoute);
+    const indexedPayload = { ...(payload || {}) };
+    if (sourceForRoute.emissaoMs && !indexedPayload.emissaoMs) {
+      indexedPayload.emissaoMs = sourceForRoute.emissaoMs;
+      indexedPayload.emissaoDiaRef = sourceForRoute.emissaoDiaRef || '';
+    }
+    if (sourceForRoute.sitePandora && !indexedPayload.sitePandora) indexedPayload.sitePandora = sourceForRoute.sitePandora;
+    batch.set(pandoraDocRef(targetCollection, docId), indexedPayload, { merge: opts.merge !== false });
+    pandoraOperationalCollections().filter(name => name !== targetCollection).forEach(name => {
+      batch.delete(pandoraDocRef(name, docId));
+    });
+    return targetCollection;
+  }
+
+  function pandoraMergeLoadedRows(rows = []) {
+    const map = new Map();
+    (pandoraData || []).forEach(item => {
+      const key = pandoraDocKey(item) || (item.chaveNorm ? `CH_${item.chaveNorm}` : '') || pandoraChaveNorm(item.chave || '');
+      if (key) map.set(key, item);
+    });
+    (rows || []).forEach(raw => {
+      if (!raw) return;
+      const item = pandoraCompleteNfSerieFromChave(raw);
+      const key = pandoraDocKey(item) || (item.chaveNorm ? `CH_${item.chaveNorm}` : '') || pandoraChaveNorm(item.chave || '');
+      if (!key) return;
+      map.set(key, { ...(map.get(key) || {}), ...item });
+    });
+    pandoraData = Array.from(map.values()).sort((a, b) => (b.updatedAtMs || b.importedAtMs || b.createdAtMs || 0) - (a.updatedAtMs || a.importedAtMs || a.createdAtMs || 0));
+    if ((pandoraData || []).length <= 1500) pandoraWriteJson(PANDORA_LOCAL_KEY, pandoraData);
+    pandoraFillParceiroDatalist();
+    if (activeTab === 'pandora') renderPandora();
+  }
+
+  function pandoraUpsertLocalItem(item = {}) {
+    if (!item) return;
+    const key = pandoraDocKey(item) || (item.chaveNorm ? `CH_${item.chaveNorm}` : '') || pandoraChaveNorm(item.chave || '');
+    if (!key) return;
+    const idx = (pandoraData || []).findIndex(x => (pandoraDocKey(x) || (x.chaveNorm ? `CH_${x.chaveNorm}` : '') || pandoraChaveNorm(x.chave || '')) === key);
+    if (idx >= 0) pandoraData[idx] = { ...pandoraData[idx], ...item };
+    else pandoraData.unshift(item);
+    if ((pandoraData || []).length <= 1500) pandoraWriteJson(PANDORA_LOCAL_KEY, pandoraData);
+    pandoraFillParceiroDatalist();
+    if (activeTab === 'pandora') renderPandora();
+  }
+
+  async function pandoraGetByChaveFromFirestore(chaveNorm = '') {
+    const key = pandoraChaveNorm(chaveNorm || '');
+    if (!db || !key || pandoraUsingLocalFallback) return null;
+    try {
+      const item = await pandoraGetByDocIdFromFirestore(`CH_${key}`);
+      if (!item) return null;
+      pandoraUpsertLocalItem(item);
+      return item;
+    } catch (err) {
+      console.warn('Pandora não conseguiu buscar a chave direto no Firebase:', err);
+      return null;
+    }
+  }
   const pandoraDefaultArea = (item = {}) => item.area || 'Fiscal';
   const pandoraCentroKey = (value = '') => String(value ?? '').replace(/\D/g, '').replace(/^0+/, '') || String(value ?? '').trim();
   const pandoraClienteKey = (value = '') => {
@@ -22921,8 +24099,370 @@ async function handleAddOccurrence(e) {
     return (rows || []).map(pandoraCompleteNfSerieFromChave).filter(pandoraIsJacarei);
   }
 
+  function pandoraIsOldPendingVisible(item = {}) {
+    const completed = pandoraCompleteNfSerieFromChave(item || {});
+    if (!pandoraIsJacarei(completed)) return false;
+    if (!pandoraIsPendente(completed)) return false;
+    const aging = pandoraAgingInfo(completed);
+    return aging && aging.days !== null && aging.days > PANDORA_VISIBLE_MIN_AGE_DAYS;
+  }
+
+  function pandoraOldPendingVisibleRows(rows = pandoraData || []) {
+    return (rows || []).map(pandoraCompleteNfSerieFromChave).filter(pandoraIsOldPendingVisible);
+  }
+
+  function pandoraOldPendingLabel() {
+    return `Exibição automática: NFs pendentes acima de ${PANDORA_VISIBLE_MIN_AGE_DAYS} dias. Demais NFs somente pela chave de acesso.`;
+  }
+
+  function pandoraDateFilterLabel() {
+    if (!pandoraDateFilter?.active) return pandoraOldPendingLabel();
+    const start = pandoraDateFilter.startDate ? pandoraDateFilter.startDate.split('-').reverse().join('/') : 'início';
+    const end = pandoraDateFilter.endDate ? pandoraDateFilter.endDate.split('-').reverse().join('/') : 'fim';
+    return `Filtro de emissão ativo: ${start} até ${end}. Mostrando NFs pendentes do período carregado.`;
+  }
+
+  function pandoraInputDateStartMs(value = '') {
+    const m = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return 0;
+    const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 0, 0, 0, 0);
+    return Number.isNaN(d.getTime()) ? 0 : d.getTime();
+  }
+
+  function pandoraInputDateEndMs(value = '') {
+    const start = pandoraInputDateStartMs(value);
+    return start ? start + 86399999 : 0;
+  }
+
+  function pandoraSetDateInputs(startDate = '', endDate = '') {
+    ['pandora-date-start', 'pandora-db-date-start'].forEach(id => { const el = document.getElementById(id); if (el) el.value = startDate || ''; });
+    ['pandora-date-end', 'pandora-db-date-end'].forEach(id => { const el = document.getElementById(id); if (el) el.value = endDate || ''; });
+  }
+
+  function pandoraCurrentListRows(rows = pandoraData || []) {
+    const base = (rows || [])
+      .map(pandoraCompleteNfSerieFromChave)
+      .filter(pandoraIsJacarei)
+      .filter(pandoraIsPendente);
+
+    if (pandoraDateFilter?.active) {
+      const startMs = Number(pandoraDateFilter.startMs || 0);
+      const endMs = Number(pandoraDateFilter.endMs || 0);
+      return base.filter(item => {
+        const emissaoMs = Number(item.emissaoMs || 0) || pandoraDateStartMs(item.dataEmissaoXml || item.dataEmissao || item.emissao || '');
+        return !!emissaoMs && (!startMs || emissaoMs >= startMs) && (!endMs || emissaoMs <= endMs);
+      });
+    }
+
+    return base.filter(pandoraIsOldPendingVisible);
+  }
+
+  async function pandoraLoadDateRangeFromFirestore(startMs = 0, endMs = 0) {
+    if (!startMs || !endMs) return [];
+    if (!db || pandoraUsingLocalFallback) return pandoraCurrentListRows();
+
+    const allRows = [];
+    // Busca por período somente nas coleções que podem conter operação pendente.
+    // O arquivo de Escriturado continua consultável pela chave de acesso.
+    const dateCollections = [PANDORA_ACTIVE_COLLECTION, PANDORA_NF_COLLECTION];
+    for (const collectionName of dateCollections) {
+      try {
+        const snap = await getDocs(query(
+          pandoraCollection(collectionName),
+          where('emissaoMs', '>=', startMs),
+          where('emissaoMs', '<=', endMs),
+          orderBy('emissaoMs', 'desc'),
+          limit(PANDORA_DATE_FILTER_LIMIT)
+        ));
+        snap.docs.forEach(d => allRows.push(pandoraWithSource({ ...d.data(), id: d.id, _docId: d.id }, collectionName)));
+      } catch (err) {
+        console.warn(`Pandora não conseguiu buscar por data na coleção ${collectionName}:`, err);
+      }
+    }
+
+    const rows = pandoraDedupRows(allRows);
+    pandoraMergeLoadedRows(rows);
+    updatePandoraImportSummary();
+    return rows;
+  }
+
+  async function pandoraApplyDateFilter(source = 'painel') {
+    const startId = source === 'banco' ? 'pandora-db-date-start' : 'pandora-date-start';
+    const endId = source === 'banco' ? 'pandora-db-date-end' : 'pandora-date-end';
+    const startDate = document.getElementById(startId)?.value || '';
+    const endDate = document.getElementById(endId)?.value || startDate;
+    const startMs = pandoraInputDateStartMs(startDate);
+    const endMs = pandoraInputDateEndMs(endDate);
+
+    if (!startMs || !endMs) {
+      showToast('Informe a data inicial e final para buscar as NFs do período.', 'info');
+      return;
+    }
+    if (startMs > endMs) {
+      showToast('A data inicial não pode ser maior que a data final.', 'error');
+      return;
+    }
+
+    pandoraDateFilter = { active: true, startDate, endDate, startMs, endMs };
+    pandoraSetDateInputs(startDate, endDate);
+    resetPandoraPagination('painel');
+    resetPandoraPagination('banco');
+
+    try {
+      showToast('Buscando NFs do período selecionado...', 'info');
+      const loaded = await pandoraLoadDateRangeFromFirestore(startMs, endMs);
+      renderPandora();
+      showToast(`${loaded.length.toLocaleString('pt-BR')} NF${loaded.length === 1 ? '' : 's'} carregada${loaded.length === 1 ? '' : 's'} no período.`, 'success');
+    } catch (err) {
+      console.error('Erro ao filtrar Pandora por data:', err);
+      renderPandora();
+      showToast('Não foi possível carregar o período selecionado.', 'error');
+    }
+  }
+
+  function pandoraClearDateFilter() {
+    pandoraDateFilter = { active: false, startDate: '', endDate: '', startMs: 0, endMs: 0 };
+    pandoraSetDateInputs('', '');
+    resetPandoraPagination('painel');
+    resetPandoraPagination('banco');
+    renderPandora();
+    showToast('Filtro de data removido. Voltou para NFs pendentes acima de 30 dias.', 'success');
+  }
+
   function pandoraJacareiLabel() {
     return `Filtro ativo: ${PANDORA_SITE_ATIVO} (${PANDORA_JACAREI_CENTROS.join(' / ')})`;
+  }
+
+  function pandoraSummaryRef() {
+    return pandoraDocRef(PANDORA_DASHBOARD_SUMMARY_COLLECTION, PANDORA_DASHBOARD_SUMMARY_DOC);
+  }
+
+  function pandoraEmptyDashboardSummary(source = 'Vazio') {
+    return {
+      site: PANDORA_SITE_ATIVO,
+      centros: [...PANDORA_JACAREI_CENTROS],
+      totalNfs: 0,
+      valorPendenteTotal: 0,
+      statusCounts: {},
+      areaStats: {},
+      agingStats: {},
+      source,
+      updatedAt: '',
+      updatedAtMs: 0
+    };
+  }
+
+  function pandoraNormalizeDashboardSummary(raw = {}) {
+    return {
+      ...pandoraEmptyDashboardSummary(raw.source || 'Resumo'),
+      ...(raw || {}),
+      totalNfs: Math.max(0, Number(raw.totalNfs || 0)),
+      valorPendenteTotal: Math.max(0, Number(raw.valorPendenteTotal || 0)),
+      statusCounts: raw.statusCounts && typeof raw.statusCounts === 'object' ? raw.statusCounts : {},
+      areaStats: raw.areaStats && typeof raw.areaStats === 'object' ? raw.areaStats : {},
+      agingStats: raw.agingStats && typeof raw.agingStats === 'object' ? raw.agingStats : {}
+    };
+  }
+
+  function pandoraSummaryCleanNumber(value = 0) {
+    const num = Number(value || 0);
+    return Number.isFinite(num) ? Math.max(0, Math.round(num * 100) / 100) : 0;
+  }
+
+  function pandoraSummaryAgingBucket(item = {}) {
+    const aging = pandoraAgingInfo(item);
+    if (!aging || aging.days === null || aging.days < 30) return '';
+    if (aging.days >= 90) return 'd90';
+    if (aging.days >= 60) return 'd60';
+    return 'd30';
+  }
+
+  function pandoraSummaryItemMetrics(item = {}) {
+    const completed = pandoraCompleteNfSerieFromChave(item || {});
+    if (!pandoraIsJacarei(completed)) return null;
+    const status = pandoraDefaultStatus(completed) || 'Em andamento';
+    const area = pandoraDefaultArea(completed) || 'Não informado';
+    const pending = pandoraIsPendente(completed);
+    return {
+      status,
+      area,
+      pending,
+      valorPendente: pending ? pandoraParseMoney(completed.valorNf) : 0,
+      agingBucket: pending ? pandoraSummaryAgingBucket(completed) : ''
+    };
+  }
+
+  function pandoraApplyItemToSummary(summaryInput = {}, item = {}, direction = 1) {
+    const metrics = pandoraSummaryItemMetrics(item);
+    const summary = pandoraNormalizeDashboardSummary(summaryInput);
+    if (!metrics) return summary;
+    const dir = direction >= 0 ? 1 : -1;
+
+    summary.totalNfs = Math.max(0, Number(summary.totalNfs || 0) + dir);
+    summary.statusCounts[metrics.status] = Math.max(0, Number(summary.statusCounts[metrics.status] || 0) + dir);
+    if (summary.statusCounts[metrics.status] === 0) delete summary.statusCounts[metrics.status];
+
+    if (!summary.areaStats[metrics.area]) summary.areaStats[metrics.area] = { total: 0, pendente: 0, valorPendente: 0 };
+    const areaInfo = summary.areaStats[metrics.area];
+    areaInfo.total = Math.max(0, Number(areaInfo.total || 0) + dir);
+    if (metrics.pending) {
+      areaInfo.pendente = Math.max(0, Number(areaInfo.pendente || 0) + dir);
+      areaInfo.valorPendente = pandoraSummaryCleanNumber(Number(areaInfo.valorPendente || 0) + (dir * Number(metrics.valorPendente || 0)));
+      summary.valorPendenteTotal = pandoraSummaryCleanNumber(Number(summary.valorPendenteTotal || 0) + (dir * Number(metrics.valorPendente || 0)));
+    }
+    if (areaInfo.total === 0 && areaInfo.pendente === 0) delete summary.areaStats[metrics.area];
+
+    if (metrics.pending && metrics.agingBucket) {
+      if (!summary.agingStats[metrics.area]) summary.agingStats[metrics.area] = { d30: 0, d60: 0, d90: 0, total: 0 };
+      const agingInfo = summary.agingStats[metrics.area];
+      agingInfo[metrics.agingBucket] = Math.max(0, Number(agingInfo[metrics.agingBucket] || 0) + dir);
+      agingInfo.total = Math.max(0, Number(agingInfo.total || 0) + dir);
+      if (agingInfo.total === 0) delete summary.agingStats[metrics.area];
+    }
+
+    return summary;
+  }
+
+  function pandoraBuildDashboardSummaryFromRows(rows = [], source = 'Reconstrução') {
+    let summary = pandoraEmptyDashboardSummary(source);
+    (rows || []).forEach(item => { summary = pandoraApplyItemToSummary(summary, item, 1); });
+    summary.updatedAt = pandoraNow();
+    summary.updatedAtMs = pandoraMs();
+    return pandoraNormalizeDashboardSummary(summary);
+  }
+
+  async function pandoraSaveDashboardSummary(summaryInput = {}, source = 'Atualização') {
+    const summary = pandoraNormalizeDashboardSummary({ ...summaryInput, source, updatedAt: pandoraNow(), updatedAtMs: pandoraMs() });
+    pandoraDashboardSummary = summary;
+    if (db && !pandoraUsingLocalFallback) {
+      await setDoc(pandoraSummaryRef(), summary, { merge: false });
+    }
+    if (activeTab === 'pandora' && pandoraLastView === 'dashboard') renderPandoraDashboard();
+    return summary;
+  }
+
+  async function pandoraAdjustDashboardSummaryDelta(beforeItem = null, afterItem = null, source = 'Alteração de NF') {
+    if (!db || pandoraUsingLocalFallback) return;
+    try {
+      let summary = pandoraDashboardSummary;
+      if (!summary) {
+        const snap = await getDoc(pandoraSummaryRef());
+        if (!snap.exists()) return;
+        summary = pandoraNormalizeDashboardSummary(snap.data());
+      }
+      if (beforeItem) summary = pandoraApplyItemToSummary(summary, beforeItem, -1);
+      if (afterItem) summary = pandoraApplyItemToSummary(summary, afterItem, 1);
+      await pandoraSaveDashboardSummary(summary, source);
+    } catch (err) {
+      console.warn('Pandora não conseguiu atualizar o resumo do dashboard:', err);
+    }
+  }
+
+  async function rebuildPandoraDashboardSummary() {
+    if (!db || pandoraUsingLocalFallback) {
+      await pandoraSaveDashboardSummary(pandoraBuildDashboardSummaryFromRows(pandoraVisibleRows(), 'Cache local'), 'Cache local');
+      showToast('Resumo Pandora atualizado com os dados carregados no navegador.', 'success');
+      return;
+    }
+    if (pandoraDashboardSummaryLoading) return;
+    pandoraDashboardSummaryLoading = true;
+    const btn = document.getElementById('pandora-rebuild-summary-btn');
+    const statusEl = document.getElementById('pandora-summary-status');
+    try {
+      if (btn) { btn.disabled = true; btn.textContent = 'Atualizando...'; }
+      if (statusEl) statusEl.textContent = 'Lendo o Banco XML uma vez para reconstruir o resumo consolidado do Pandora.';
+      showToast('Atualizando resumo do Pandora. Essa leitura completa acontece apenas quando você solicita.', 'info');
+      const rows = await pandoraGetAllOperationalRowsFromFirestore();
+      const summary = pandoraBuildDashboardSummaryFromRows(rows, 'Reconstrução manual');
+      await pandoraSaveDashboardSummary(summary, 'Reconstrução manual');
+      showToast(`Resumo Pandora atualizado: ${Number(summary.totalNfs || 0).toLocaleString('pt-BR')} NFs consolidadas.`, 'success');
+    } catch (err) {
+      console.error('Erro ao atualizar resumo do Pandora:', err);
+      showToast('Não foi possível atualizar o resumo do Pandora.', 'error');
+    } finally {
+      pandoraDashboardSummaryLoading = false;
+      if (btn) { btn.disabled = false; btn.textContent = 'Atualizar resumo'; }
+    }
+  }
+
+  function renderPandoraDashboardSummary(summaryInput = {}) {
+    const summary = pandoraNormalizeDashboardSummary(summaryInput);
+    const statusCounts = summary.statusCounts || {};
+    const andamento = (statusCounts['Em andamento'] || 0) + (statusCounts['Aguardando área'] || 0) + (statusCounts['Aguardando documento'] || 0);
+
+    pandoraSetText('pd-kpi-total', Number(summary.totalNfs || 0).toLocaleString('pt-BR'));
+    pandoraSetText('pd-kpi-andamento', Number(andamento || 0).toLocaleString('pt-BR'));
+    pandoraSetText('pd-kpi-escriturada', Number(statusCounts['Escriturado'] || 0).toLocaleString('pt-BR'));
+    pandoraSetText('pd-kpi-problema', pandoraFormatMoney(summary.valorPendenteTotal || 0));
+
+    const statusEl = document.getElementById('pandora-summary-status');
+    if (statusEl) {
+      const when = summary.updatedAtMs ? new Date(summary.updatedAtMs).toLocaleString('pt-BR') : 'ainda não atualizado';
+      statusEl.textContent = `Resumo consolidado de ${PANDORA_SITE_ATIVO}. Última atualização: ${when}. Detalhes de NF são consultados pela chave de acesso.`;
+    }
+
+    const areaList = document.getElementById('pandora-area-list');
+    if (areaList) {
+      const entries = Object.entries(summary.areaStats || {}).sort((a,b) => (Number(b[1].pendente || 0) - Number(a[1].pendente || 0)) || (Number(b[1].total || 0) - Number(a[1].total || 0)));
+      const max = Math.max(1, ...entries.map(([,v]) => Number(v.total || 0)));
+      areaList.innerHTML = entries.length ? entries.map(([area, info]) => `
+        <div class="pandora-area-row" style="grid-template-columns:minmax(150px,1.2fr) minmax(160px,2fr) minmax(110px,.8fr);">
+          <div class="font-bold" title="${escapeHtml(area)}">${escapeHtml(area)}</div>
+          <div>
+            <div class="pandora-area-bar"><span style="width:${Math.max(6, (Number(info.total || 0) / max) * 100)}%"></span></div>
+            <div class="text-xs pandora-muted mt-1">Pendentes: <b>${Number(info.pendente || 0).toLocaleString('pt-BR')}</b> • Valor pendente: <b>${escapeHtml(pandoraFormatMoney(info.valorPendente || 0))}</b></div>
+          </div>
+          <div class="font-black text-right">${Number(info.pendente || 0).toLocaleString('pt-BR')}/${Number(info.total || 0).toLocaleString('pt-BR')}</div>
+        </div>
+      `).join('') : '<div class="pandora-muted">Resumo ainda não gerado. Clique em Atualizar resumo.</div>';
+    }
+
+    const agingAreaBody = document.getElementById('pandora-aging-area-body');
+    if (agingAreaBody) {
+      const agingEntries = Object.entries(summary.agingStats || {}).sort((a,b) =>
+        (Number(b[1].total || 0) - Number(a[1].total || 0)) || (Number(b[1].d90 || 0) - Number(a[1].d90 || 0)) || (Number(b[1].d60 || 0) - Number(a[1].d60 || 0)) || a[0].localeCompare(b[0], 'pt-BR')
+      );
+      if (!agingEntries.length) {
+        agingAreaBody.innerHTML = '<tr><td colspan="5" class="text-center pandora-muted py-6">Nenhuma NF pendente acima de 30 dias no resumo.</td></tr>';
+      } else {
+        const totals = agingEntries.reduce((acc, [, info]) => {
+          acc.d30 += Number(info.d30 || 0); acc.d60 += Number(info.d60 || 0); acc.d90 += Number(info.d90 || 0); acc.total += Number(info.total || 0);
+          return acc;
+        }, { d30: 0, d60: 0, d90: 0, total: 0 });
+        agingAreaBody.innerHTML = agingEntries.map(([area, info]) => `
+          <tr>
+            <td class="font-bold">${escapeHtml(area)}</td>
+            <td class="text-center"><span class="pandora-aging-count pandora-aging-30">${Number(info.d30 || 0).toLocaleString('pt-BR')}</span></td>
+            <td class="text-center"><span class="pandora-aging-count pandora-aging-60">${Number(info.d60 || 0).toLocaleString('pt-BR')}</span></td>
+            <td class="text-center"><span class="pandora-aging-count pandora-aging-90">${Number(info.d90 || 0).toLocaleString('pt-BR')}</span></td>
+            <td class="text-center font-black">${Number(info.total || 0).toLocaleString('pt-BR')}</td>
+          </tr>
+        `).join('') + `
+          <tr class="pandora-aging-total-row">
+            <td>Total geral</td>
+            <td class="text-center">${totals.d30.toLocaleString('pt-BR')}</td>
+            <td class="text-center">${totals.d60.toLocaleString('pt-BR')}</td>
+            <td class="text-center">${totals.d90.toLocaleString('pt-BR')}</td>
+            <td class="text-center">${totals.total.toLocaleString('pt-BR')}</td>
+          </tr>`;
+      }
+    }
+
+    const canvas = document.getElementById('pandora-status-chart');
+    if (canvas && typeof Chart !== 'undefined') {
+      const labels = PANDORA_STATUS;
+      const data = labels.map(label => Number(statusCounts[label] || 0));
+      if (pandoraStatusChart) pandoraStatusChart.destroy();
+      pandoraStatusChart = new Chart(canvas, {
+        type: 'doughnut',
+        data: { labels, datasets: [{ data }] },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
   }
 
   function pandoraSetImportStatus(textValue, type = 'info') {
@@ -23001,6 +24541,12 @@ async function handleAddOccurrence(e) {
       statusXml,
       dataEmissaoXml,
       dataEntradaXml,
+      emissaoMs: pandoraDateStartMs(dataEmissaoXml),
+      emissaoDiaRef: dataEmissaoXml ? isoDate(pandoraDateStartMs(dataEmissaoXml)) : '',
+      emissaoMesRef: dataEmissaoXml ? isoDate(pandoraDateStartMs(dataEmissaoXml)).slice(0, 7) : '',
+      entradaMs: pandoraDateStartMs(dataEntradaXml),
+      entradaDiaRef: dataEntradaXml ? isoDate(pandoraDateStartMs(dataEntradaXml)) : '',
+      entradaMesRef: dataEntradaXml ? isoDate(pandoraDateStartMs(dataEntradaXml)).slice(0, 7) : '',
       centro,
       parceiro,
       fornecedor,
@@ -23213,6 +24759,8 @@ async function handleAddOccurrence(e) {
       statusXml: String(document.getElementById('pd-status-xml')?.value || '').trim(),
       dataEmissaoXml: String(document.getElementById('pd-data-emissao')?.value || '').trim(),
       dataEntradaXml: String(document.getElementById('pd-data-entrada')?.value || '').trim(),
+      emissaoMs: pandoraDateStartMs(String(document.getElementById('pd-data-emissao')?.value || '').trim()),
+      entradaMs: pandoraDateStartMs(String(document.getElementById('pd-data-entrada')?.value || '').trim()),
       centro: String(document.getElementById('pd-centro')?.value || '').trim(),
       parceiro: String(document.getElementById('pd-parceiro')?.value || '').trim(),
       fornecedor: String(document.getElementById('pd-fornecedor')?.value || '').trim(),
@@ -23342,6 +24890,7 @@ async function handleAddOccurrence(e) {
     let existing = pandoraEditId ? pandoraData.find(x => pandoraDocKey(x) === pandoraEditId) : null;
     if (!existing && payload.chaveNorm) {
       existing = pandoraData.find(x => pandoraChaveNorm(x.chave || x.chaveNorm || '') === payload.chaveNorm);
+      if (!existing) existing = await pandoraGetByChaveFromFirestore(payload.chaveNorm);
       if (existing) pandoraEditId = pandoraDocKey(existing);
     }
 
@@ -23349,7 +24898,8 @@ async function handleAddOccurrence(e) {
       const patch = { ...payload };
       try {
         if (db && existing._docId && !pandoraUsingLocalFallback) {
-          await updateDoc(pandoraDocRef(PANDORA_NF_COLLECTION, existing._docId), patch);
+          const savedRouted = await pandoraPatchItemRouted(existing, patch);
+          pandoraUpsertLocalItem(savedRouted || { ...existing, ...patch, id: existing._docId, _docId: existing._docId });
         } else {
           const idx = pandoraData.findIndex(x => pandoraDocKey(x) === pandoraEditId);
           if (idx >= 0) pandoraData[idx] = { ...pandoraData[idx], ...patch };
@@ -23357,6 +24907,7 @@ async function handleAddOccurrence(e) {
           renderPandora();
         }
         pandoraPushUndo({ type: 'update', before: existing, after: { ...existing, ...patch } });
+        await pandoraAdjustDashboardSummaryDelta(existing, { ...existing, ...patch, id: existing._docId || existing.id, _docId: existing._docId || existing.id }, 'Edição de NF');
         await pandoraAddHistory('Editou NF', { ...existing, ...patch }, 'Informações da nota atualizadas.');
         showToast('NF atualizada no Pandora.', 'success');
         resetPandoraForm();
@@ -23387,8 +24938,8 @@ async function handleAddOccurrence(e) {
       let savedItem;
       const docId = payload.chaveNorm ? `CH_${payload.chaveNorm}` : pandoraLocalId('PDNF');
       if (db && !pandoraUsingLocalFallback) {
-        await setDoc(pandoraDocRef(PANDORA_NF_COLLECTION, docId), newPayload, { merge: true });
-        savedItem = { ...newPayload, id: docId, _docId: docId };
+        savedItem = await pandoraSaveItemRouted({ ...newPayload, id: docId, _docId: docId }, { merge: true });
+        pandoraUpsertLocalItem(savedItem);
       } else {
         const localId = docId;
         savedItem = { ...newPayload, id: localId, _docId: localId, localOnly: true };
@@ -23397,6 +24948,7 @@ async function handleAddOccurrence(e) {
         renderPandora();
       }
       pandoraPushUndo({ type: 'create', item: savedItem });
+      await pandoraAdjustDashboardSummaryDelta(null, savedItem, 'Cadastro de NF');
       await pandoraAddHistory('Cadastrou NF', savedItem, 'Nota fiscal criada no Pandora.');
       showToast('NF cadastrada no Pandora.', 'success');
       resetPandoraForm();
@@ -23432,7 +24984,8 @@ async function handleAddOccurrence(e) {
     };
     try {
       if (db && item._docId && !pandoraUsingLocalFallback) {
-        await updateDoc(pandoraDocRef(PANDORA_NF_COLLECTION, item._docId), patch);
+        const savedRouted = await pandoraPatchItemRouted(item, patch);
+        pandoraUpsertLocalItem(savedRouted || { ...item, ...patch, id: item._docId, _docId: item._docId });
       } else {
         const idx = pandoraData.findIndex(x => pandoraDocKey(x) === id);
         if (idx >= 0) pandoraData[idx] = { ...pandoraData[idx], ...patch };
@@ -23440,6 +24993,7 @@ async function handleAddOccurrence(e) {
         renderPandora();
       }
       pandoraPushUndo({ type: 'update', before: item, after: { ...item, ...patch } });
+      await pandoraAdjustDashboardSummaryDelta(item, { ...item, ...patch, id: item._docId || item.id, _docId: item._docId || item.id }, 'Alteração de status');
       await pandoraAddHistory(`Alterou status para ${status}`, { ...item, ...patch }, `Status anterior: ${item.status || '—'}.`);
       showToast(`NF marcada como ${status}.`, 'success');
     } catch (err) {
@@ -23461,13 +25015,18 @@ async function handleAddOccurrence(e) {
     if (!pandoraRequireResponsible(item, 'Informe o responsável antes de excluir a NF.')) return;
     const execute = async () => {
       try {
-        if (db && item._docId && !pandoraUsingLocalFallback) await deleteDoc(pandoraDocRef(PANDORA_NF_COLLECTION, item._docId));
-        else {
+        if (db && item._docId && !pandoraUsingLocalFallback) {
+          await pandoraDeleteItemEverywhere(item);
+          pandoraData = pandoraData.filter(x => pandoraDocKey(x) !== id);
+          pandoraSaveLocal();
+          renderPandora();
+        } else {
           pandoraData = pandoraData.filter(x => pandoraDocKey(x) !== id);
           pandoraSaveLocal();
           renderPandora();
         }
         pandoraPushUndo({ type: 'delete', item });
+        await pandoraAdjustDashboardSummaryDelta(item, null, 'Exclusão de NF');
         await pandoraAddHistory('Excluiu NF', item, 'Registro removido do Pandora.');
         showToast('NF excluída do Pandora.', 'success');
       } catch (err) {
@@ -23492,25 +25051,27 @@ async function handleAddOccurrence(e) {
     try {
       if (action.type === 'create' && action.item) {
         const id = pandoraDocKey(action.item);
-        if (db && action.item._docId && !pandoraUsingLocalFallback) await deleteDoc(pandoraDocRef(PANDORA_NF_COLLECTION, action.item._docId));
+        if (db && action.item._docId && !pandoraUsingLocalFallback) await pandoraDeleteItemEverywhere(action.item);
         else pandoraData = pandoraData.filter(x => pandoraDocKey(x) !== id);
+        await pandoraAdjustDashboardSummaryDelta(action.item, null, 'Desfazer cadastro');
         await pandoraAddHistory('Desfez cadastro', action.item, 'Cadastro da NF removido pelo desfazer.');
       } else if (action.type === 'update' && action.before) {
         const id = pandoraDocKey(action.before);
-        if (db && action.before._docId && !pandoraUsingLocalFallback) await setDoc(pandoraDocRef(PANDORA_NF_COLLECTION, action.before._docId), action.before, { merge: true });
+        if (db && action.before._docId && !pandoraUsingLocalFallback) await pandoraSaveItemRouted(action.before, { merge: true });
         else {
           const idx = pandoraData.findIndex(x => pandoraDocKey(x) === id);
           if (idx >= 0) pandoraData[idx] = action.before;
         }
+        await pandoraAdjustDashboardSummaryDelta(action.after || null, action.before, 'Desfazer alteração');
         await pandoraAddHistory('Desfez alteração', action.before, 'NF restaurada para o estado anterior.');
       } else if (action.type === 'bulkUpdate' && Array.isArray(action.items)) {
         const items = action.items.filter(x => x && x.before);
         if (db && !pandoraUsingLocalFallback) {
-          for (let i = 0; i < items.length; i += 450) {
+          for (let i = 0; i < items.length; i += 140) {
             const batch = writeBatch(db);
-            items.slice(i, i + 450).forEach(x => {
+            items.slice(i, i + 140).forEach(x => {
               const docId = x.before._docId || x.before.id || pandoraDocKey(x.before);
-              if (docId) batch.set(pandoraDocRef(PANDORA_NF_COLLECTION, docId), x.before, { merge: true });
+              if (docId) pandoraBatchRouteSet(batch, docId, x.before, x.before, { merge: true });
             });
             await batch.commit();
           }
@@ -23524,8 +25085,9 @@ async function handleAddOccurrence(e) {
         await pandoraAddHistory(action.label || 'Desfez importação em massa', { nf: '', area: 'Fiscal', status: 'Desfazer', responsavel: 'Sistema / Desfazer' }, `${items.length.toLocaleString('pt-BR')} NFs restauradas para o estado anterior.`);
       } else if (action.type === 'delete' && action.item) {
         const id = pandoraDocKey(action.item) || pandoraLocalId('PDNF');
-        if (db && action.item._docId && !pandoraUsingLocalFallback) await setDoc(pandoraDocRef(PANDORA_NF_COLLECTION, action.item._docId), action.item, { merge: true });
+        if (db && action.item._docId && !pandoraUsingLocalFallback) await pandoraSaveItemRouted(action.item, { merge: true });
         else pandoraData.unshift({ ...action.item, id, _docId: id });
+        await pandoraAdjustDashboardSummaryDelta(null, { ...action.item, id, _docId: action.item._docId || id }, 'Desfazer exclusão');
         await pandoraAddHistory('Desfez exclusão', action.item, 'Registro restaurado pelo desfazer.');
       }
       pandoraSaveLocal();
@@ -23541,7 +25103,7 @@ async function handleAddOccurrence(e) {
     const term = pandoraNorm(document.getElementById('pandora-search')?.value || '');
     const status = document.getElementById('pandora-filter-status')?.value || 'todos';
     const area = document.getElementById('pandora-filter-area')?.value || 'todos';
-    return pandoraVisibleRows().filter(item => {
+    return pandoraCurrentListRows().filter(item => {
       if (status !== 'todos' && pandoraDefaultStatus(item) !== status) return false;
       if (area !== 'todos' && pandoraDefaultArea(item) !== area) return false;
       if (!term) return true;
@@ -23597,6 +25159,37 @@ async function handleAddOccurrence(e) {
 
     const parsed = new Date(raw);
     return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+
+  function pandoraDateStartMs(value = '') {
+    const date = pandoraParseXmlDate(value);
+    if (!date) return 0;
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  }
+
+  function pandoraEnsureIndexFields(item = {}) {
+    const emissaoMs = Number(item.emissaoMs || 0) || pandoraDateStartMs(item.dataEmissaoXml || item.dataEmissao || item.emissao || '');
+    const entradaMs = Number(item.entradaMs || 0) || pandoraDateStartMs(item.dataEntradaXml || item.dataEntrada || item.entrada || '');
+    const emissaoDiaRef = emissaoMs ? isoDate(emissaoMs) : (item.emissaoDiaRef || item.diaRef || '');
+    const entradaDiaRef = entradaMs ? isoDate(entradaMs) : (item.entradaDiaRef || '');
+    return {
+      ...(item || {}),
+      emissaoMs,
+      entradaMs,
+      emissaoDiaRef,
+      entradaDiaRef,
+      emissaoMesRef: emissaoDiaRef ? emissaoDiaRef.slice(0, 7) : (item.emissaoMesRef || item.mesRef || ''),
+      entradaMesRef: entradaDiaRef ? entradaDiaRef.slice(0, 7) : (item.entradaMesRef || ''),
+      diaRef: emissaoDiaRef || item.diaRef || '',
+      mesRef: (emissaoDiaRef ? emissaoDiaRef.slice(0, 7) : (item.mesRef || '')),
+      sitePandora: item.sitePandora || (pandoraIsJacarei(item) ? PANDORA_SITE_ATIVO : 'Outro')
+    };
+  }
+
+  function pandoraOldCutoffMs() {
+    const today = new Date();
+    const startToday = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+    return startToday - (PANDORA_VISIBLE_MIN_AGE_DAYS * 86400000);
   }
 
   function pandoraAgingInfo(item = {}) {
@@ -23718,6 +25311,12 @@ async function handleAddOccurrence(e) {
   }
 
   function renderPandoraDashboard() {
+    if (pandoraDashboardSummary) {
+      renderPandoraDashboardSummary(pandoraDashboardSummary);
+      return;
+    }
+    const statusEl = document.getElementById('pandora-summary-status');
+    if (statusEl) statusEl.textContent = 'Resumo consolidado ainda não encontrado. Clique em Atualizar resumo para gerar a visão completa do Dashboard.';
     const rows = pandoraVisibleRows();
     const statusCounts = pandoraCountBy(rows, 'status');
     const areaStats = rows.reduce((acc, item) => {
@@ -23821,7 +25420,10 @@ async function handleAddOccurrence(e) {
     if (!tbody) return;
     const rows = pandoraFilteredRows();
     if (!rows.length) {
-      tbody.innerHTML = '<tr><td colspan="11" class="text-center pandora-muted py-8">Nenhuma NF de Jacareí encontrada no Pandora.</td></tr>';
+      const emptyMessage = pandoraDateFilter?.active
+        ? 'Nenhuma NF pendente encontrada no período selecionado.'
+        : 'Nenhuma NF pendente acima de 30 dias encontrada no Pandora. Use o filtro de data para carregar NFs com menos de 30 dias sem precisar da chave.';
+      tbody.innerHTML = `<tr><td colspan="11" class="text-center pandora-muted py-8">${escapeHtml(emptyMessage)}</td></tr>`;
       renderPandoraPagination('painel', 0, 1, 1, getPandoraPageSize());
       return;
     }
@@ -23864,14 +25466,14 @@ async function handleAddOccurrence(e) {
     if (statusEl) {
       const keep = statusEl.value || 'todos';
       const baseStatuses = PANDORA_STATUS || [];
-      const extraStatuses = [...new Set(pandoraVisibleRows().map(x => pandoraDefaultStatus(x)).filter(Boolean))].filter(s => !baseStatuses.includes(s)).sort();
+      const extraStatuses = [...new Set(pandoraCurrentListRows().map(x => pandoraDefaultStatus(x)).filter(Boolean))].filter(s => !baseStatuses.includes(s)).sort();
       const statuses = [...baseStatuses, ...extraStatuses];
       statusEl.innerHTML = '<option value="todos">Todos os status Pandora</option>' + statuses.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
       if (statuses.includes(keep)) statusEl.value = keep;
     }
     if (centroEl) {
       const keep = centroEl.value || 'todos';
-      const centros = [...new Set(pandoraVisibleRows().map(x => x.centro).filter(Boolean))].sort();
+      const centros = [...new Set(pandoraCurrentListRows().map(x => x.centro).filter(Boolean))].sort();
       centroEl.innerHTML = '<option value="todos">Todos os centros</option>' + centros.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
       if (centros.includes(keep)) centroEl.value = keep;
     }
@@ -23881,7 +25483,7 @@ async function handleAddOccurrence(e) {
     const term = pandoraNorm(document.getElementById('pandora-db-search')?.value || '');
     const statusPandora = document.getElementById('pandora-db-filter-status')?.value || 'todos';
     const centro = document.getElementById('pandora-db-filter-centro')?.value || 'todos';
-    return pandoraVisibleRows().filter(item => {
+    return pandoraCurrentListRows().filter(item => {
       if (statusPandora !== 'todos' && pandoraDefaultStatus(item) !== statusPandora) return false;
       if (centro !== 'todos' && item.centro !== centro) return false;
       if (!term) return true;
@@ -23898,9 +25500,9 @@ async function handleAddOccurrence(e) {
     const rows = pandoraDbFilteredRows();
     const total = rows.length;
     if (!rows.length) {
-      tbody.innerHTML = '<tr><td colspan="11" class="text-center pandora-muted py-8">Nenhum registro de Jacareí importado no Banco XML.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="11" class="text-center pandora-muted py-8">Nenhuma NF encontrada para a exibição atual do Banco XML.</td></tr>';
       renderPandoraPagination('banco', 0, 1, 1, getPandoraPageSize());
-      if (hint) hint.textContent = '';
+      if (hint) hint.textContent = pandoraFullDatabaseLoaded ? '' : 'Use o filtro de data para carregar NFs com menos de 30 dias sem precisar da chave de acesso.';
       return;
     }
     const page = getPandoraPaginatedRows('banco', rows);
@@ -23922,7 +25524,12 @@ async function handleAddOccurrence(e) {
           <td><button type="button" data-pandora-db-edit="${id}" class="pandora-btn pandora-btn-soft pandora-btn-mini">Abrir NF</button></td>
         </tr>`;
     }).join('');
-    if (hint) hint.textContent = `${total.toLocaleString('pt-BR')} registro${total === 1 ? '' : 's'} filtrado${total === 1 ? '' : 's'} no Banco XML.`;
+    if (hint) {
+      const modo = pandoraFullDatabaseLoaded
+        ? 'Banco XML completo carregado nesta sessão.'
+        : 'Mostrando NFs pendentes carregadas pela regra atual. Use o filtro de data para carregar períodos específicos sem ler o banco inteiro.';
+      hint.textContent = `${total.toLocaleString('pt-BR')} registro${total === 1 ? '' : 's'} filtrado${total === 1 ? '' : 's'} no Banco XML. ${pandoraDateFilterLabel()} ${modo}`;
+    }
   }
 
   function updatePandoraImportSummary() {
@@ -23931,7 +25538,12 @@ async function handleAddOccurrence(e) {
     const countEl = document.getElementById('pandora-db-count');
     const fileEl = document.getElementById('pandora-db-file');
     const clientesEl = document.getElementById('pandora-clientes-base-chip');
-    if (countEl) countEl.textContent = `${count.toLocaleString('pt-BR')} registros Jacareí no banco`;
+    if (countEl) {
+      const summaryTotal = pandoraDashboardSummary ? Number(pandoraDashboardSummary.totalNfs || 0) : 0;
+      countEl.textContent = summaryTotal
+        ? `${summaryTotal.toLocaleString('pt-BR')} NFs no resumo Jacareí`
+        : `${count.toLocaleString('pt-BR')} registros Jacareí carregados`;
+    }
     if (fileEl) fileEl.textContent = pandoraImportMeta?.fileName ? `Arquivo: ${pandoraImportMeta.fileName}` : 'Nenhum arquivo carregado';
     if (clientesEl) clientesEl.textContent = (pandoraClientesBase || []).length ? `Base Clientes: ${(pandoraClientesBase || []).length.toLocaleString('pt-BR')} códigos` : 'Base Clientes: não importada';
     const siteEl = document.getElementById('pandora-site-filter-chip');
@@ -23970,27 +25582,27 @@ async function handleAddOccurrence(e) {
 
       if (db && !pandoraUsingLocalFallback) {
         let processed = 0;
-        for (let i = 0; i < importRows.length; i += 450) {
+        for (let i = 0; i < importRows.length; i += 140) {
           const batch = writeBatch(db);
-          importRows.slice(i, i + 450).forEach(row => {
+          importRows.slice(i, i + 140).forEach(row => {
             const docId = row.chaveNorm ? `CH_${row.chaveNorm}` : pandoraLocalId('PDNF');
             const importPayload = { ...row, id: docId, _docId: docId };
-            delete importPayload.status;
-            delete importPayload.responsavel;
-            delete importPayload.tratativa;
-            delete importPayload.observacao;
-            delete importPayload.problema;
-            batch.set(pandoraDocRef(PANDORA_NF_COLLECTION, docId), importPayload, { merge: true });
+            ['status', 'responsavel', 'tratativa', 'observacao', 'problema'].forEach(field => {
+              if (!row[field]) delete importPayload[field];
+            });
+            pandoraBatchRouteSet(batch, docId, importPayload, row, { merge: true });
           });
           await batch.commit();
-          processed = Math.min(importRows.length, i + 450);
+          processed = Math.min(importRows.length, i + 140);
           pandoraSetImportStatus(`Salvando no Firebase: ${processed.toLocaleString('pt-BR')} / ${mapped.length.toLocaleString('pt-BR')}`, 'info');
           await new Promise(resolve => setTimeout(resolve, 20));
         }
+        await pandoraSaveDashboardSummary(pandoraBuildDashboardSummaryFromRows(pandoraData, 'Upload Banco XML'), 'Upload Banco XML');
         await pandoraAddHistory('Importou Banco XML', { nf: '', area: 'Fiscal', status: 'Importação', responsavel: 'Sistema / Importação' }, `${mapped.length.toLocaleString('pt-BR')} registros de Jacareí importados do arquivo ${file.name}.`);
         pandoraSetImportStatus(`Banco XML Jacareí importado: ${mapped.length.toLocaleString('pt-BR')} registros`, 'success');
         showToast('Banco XML importado para o Pandora. Exibindo somente Jacareí.', 'success');
       } else {
+        pandoraDashboardSummary = pandoraBuildDashboardSummaryFromRows(pandoraData, 'Upload Banco XML local');
         pandoraSetImportStatus(`Banco XML Jacareí carregado em memória: ${mapped.length.toLocaleString('pt-BR')} registros`, 'success');
         showToast('Banco XML de Jacareí carregado em memória. Firebase não está gravando agora.', 'info');
       }
@@ -24076,10 +25688,10 @@ async function handleAddOccurrence(e) {
 
       if (db && !pandoraUsingLocalFallback) {
         let processed = 0;
-        for (let i = 0; i < updates.length; i += 450) {
+        for (let i = 0; i < updates.length; i += 140) {
           const batch = writeBatch(db);
-          updates.slice(i, i + 450).forEach(update => {
-            batch.set(pandoraDocRef(PANDORA_NF_COLLECTION, update.docId), {
+          updates.slice(i, i + 140).forEach(update => {
+            pandoraBatchRouteSet(batch, update.docId, {
               area: update.after.area,
               fornecedor: update.after.fornecedor || '',
               responsavel: update.after.responsavel || '',
@@ -24096,10 +25708,10 @@ async function handleAddOccurrence(e) {
               clienteBaseImportedAtMs: update.after.clienteBaseImportedAtMs || 0,
               updatedAt: update.after.updatedAt,
               updatedAtMs: update.after.updatedAtMs
-            }, { merge: true });
+            }, update.after, { merge: true });
           });
           await batch.commit();
-          processed = Math.min(updates.length, i + 450);
+          processed = Math.min(updates.length, i + 140);
           pandoraSetImportStatus(`Atualizando Base Clientes no Firebase: ${processed.toLocaleString('pt-BR')} / ${updates.length.toLocaleString('pt-BR')}`, 'info');
           await new Promise(resolve => setTimeout(resolve, 20));
         }
@@ -24206,18 +25818,22 @@ async function handleAddOccurrence(e) {
 
       if (db && !pandoraUsingLocalFallback) {
         let processed = 0;
-        for (let i = 0; i < updates.length; i += 450) {
+        for (let i = 0; i < updates.length; i += 140) {
           const batch = writeBatch(db);
-          updates.slice(i, i + 450).forEach(update => {
-            batch.set(pandoraDocRef(PANDORA_NF_COLLECTION, update.docId), update.patch, { merge: true });
+          updates.slice(i, i + 140).forEach(update => {
+            // Quando a ZGR001 marcar Escriturado, salva o documento completo no arquivo antes de remover do ativo.
+            pandoraBatchRouteSet(batch, update.docId, update.after, update.after, { merge: true });
           });
           await batch.commit();
-          processed = Math.min(updates.length, i + 450);
+          processed = Math.min(updates.length, i + 140);
           pandoraSetImportStatus(`Atualizando ZGR001 no Firebase: ${processed.toLocaleString('pt-BR')} / ${updates.length.toLocaleString('pt-BR')}`, 'info');
           await new Promise(resolve => setTimeout(resolve, 20));
         }
       }
 
+      if (db && !pandoraUsingLocalFallback && pandoraDashboardSummary) {
+        await pandoraSaveDashboardSummary(pandoraBuildDashboardSummaryFromRows(pandoraData, 'Importação ZGR001'), 'Importação ZGR001');
+      }
       pandoraPushUndo({ type: 'bulkUpdate', label: 'Desfez importação ZGR001', items: updates.map(({ before, after }) => ({ before, after })) });
       await pandoraAddHistory(
         'Importou ZGR001',
@@ -24238,15 +25854,16 @@ async function handleAddOccurrence(e) {
     }
   }
 
-  function pandoraLookupByChave() {
+  async function pandoraLookupByChave() {
     const el = document.getElementById('pd-chave');
     if (!el) return null;
     const key = pandoraChaveNorm(el.value || '');
     el.classList.remove('pandora-lookup-ok', 'pandora-lookup-new');
     if (!key) return null;
     pandoraAutofillNfSerieFromChave(el.value || '');
-    const item = pandoraVisibleRows().find(x => pandoraChaveNorm(x.chave || x.chaveNorm || '') === key);
-    if (item) {
+    let item = pandoraVisibleRows().find(x => pandoraChaveNorm(x.chave || x.chaveNorm || '') === key);
+    if (!item) item = await pandoraGetByChaveFromFirestore(key);
+    if (item && pandoraIsJacarei(item)) {
       fillPandoraForm(item);
       document.getElementById('pd-chave')?.classList.add('pandora-lookup-ok');
       showToast('Chave encontrada no Banco XML de Jacareí. NF, série e demais campos preenchidos automaticamente.', 'success');
@@ -24296,7 +25913,7 @@ async function handleAddOccurrence(e) {
 
   function exportPandoraCsv() {
     const headers = ['Site','NF','Serie','Chave','Area','AreaProtegidaCliente','CodigoClienteBase','NomeClienteBase','AreaClienteBase','Tipo','Status','StatusXML','J1B3N','StatusZGR001','ArquivoZGR001','DataEmissaoXML','Aging','DataEntradaXML','Centro','Parceiro','NomeParceiro','CNPJParceiro','CFOP','ValorNF','Processo','Evento','Transportadora','DT','Placa','Responsavel','Problema','Tratativa','Observacao','CriadoEm','AtualizadoEm'];
-    const rows = pandoraVisibleRows().map(item => [item.sitePandora || PANDORA_SITE_ATIVO, item.nf, item.serie, item.chave, pandoraDefaultArea(item), pandoraAreaProtegidaPorCliente(item) ? 'Sim' : 'Não', item.clienteCodigo || '', item.clienteNomeBase || '', item.clienteArea || '', item.tipo, pandoraDefaultStatus(item), item.statusXml, item.zgr001J1B3N || '', item.zgr001Status || '', item.zgr001Arquivo || '', item.dataEmissaoXml, pandoraAgingInfo(item).label, item.dataEntradaXml, item.centro, item.parceiro, item.fornecedor, item.cnpjParceiro, item.cfop, item.valorNf, item.processo, item.evento, item.transportadora, item.dt, item.placa, item.responsavel, item.problema, item.tratativa, item.observacao, item.createdAt || item.importedAt, item.updatedAt]);
+    const rows = pandoraCurrentListRows().map(item => [item.sitePandora || PANDORA_SITE_ATIVO, item.nf, item.serie, item.chave, pandoraDefaultArea(item), pandoraAreaProtegidaPorCliente(item) ? 'Sim' : 'Não', item.clienteCodigo || '', item.clienteNomeBase || '', item.clienteArea || '', item.tipo, pandoraDefaultStatus(item), item.statusXml, item.zgr001J1B3N || '', item.zgr001Status || '', item.zgr001Arquivo || '', item.dataEmissaoXml, pandoraAgingInfo(item).label, item.dataEntradaXml, item.centro, item.parceiro, item.fornecedor, item.cnpjParceiro, item.cfop, item.valorNf, item.processo, item.evento, item.transportadora, item.dt, item.placa, item.responsavel, item.problema, item.tratativa, item.observacao, item.createdAt || item.importedAt, item.updatedAt]);
     const csvValue = (v = '') => `"${String(v ?? '').replace(/"/g, '""')}"`;
     const csv = [headers, ...rows].map(line => line.map(csvValue).join(';')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -24312,36 +25929,220 @@ async function handleAddOccurrence(e) {
   }
 
   function attachPandoraSnapshots() {
-    if (!db) return;
-    try {
-      onSnapshot(pandoraCollection(PANDORA_NF_COLLECTION), snap => {
-        pandoraUsingLocalFallback = false;
-        pandoraData = snap.docs.map(d => ({ ...d.data(), id: d.id, _docId: d.id }));
-        if ((pandoraData || []).length <= 1500) pandoraWriteJson(PANDORA_LOCAL_KEY, pandoraData);
-        pandoraFillParceiroDatalist();
-        if (activeTab === 'pandora') renderPandora();
-      }, err => {
-        console.warn('Pandora usando modo local (NF):', err);
+    if (!db || pandoraSnapshotsAttached || pandoraSnapshotsLoading) return;
+    pandoraSnapshotsLoading = true;
+    pandoraSnapshotUnsubs.forEach(unsub => { try { unsub?.(); } catch (_) {} });
+    pandoraSnapshotUnsubs = [];
+
+    const handleRows = (snap, sourceLabel = 'Pandora') => {
+      pandoraUsingLocalFallback = false;
+      pandoraSnapshotsLoading = false;
+      pandoraFirstLoadDone = true;
+      const rows = snap.docs.map(d => ({ ...d.data(), id: d.id, _docId: d.id }));
+      pandoraMergeLoadedRows(rows);
+      updatePandoraImportSummary();
+    };
+
+    const handleError = (label) => (err) => {
+      console.warn(`Pandora usando modo local ou consulta reduzida falhou (${label}):`, err);
+      pandoraSnapshotsLoading = false;
+      if (!(pandoraData || []).length) {
         pandoraUsingLocalFallback = true;
         pandoraLoadLocal();
         renderPandora();
-      });
+      }
+    };
 
-      onSnapshot(pandoraCollection(PANDORA_HISTORY_COLLECTION), snap => {
-        pandoraHistoryData = snap.docs.map(d => ({ ...d.data(), id: d.id, _docId: d.id }))
-          .sort((a,b) => (b.createdAtMs || 0) - (a.createdAtMs || 0));
-        pandoraWriteJson(PANDORA_HISTORY_LOCAL_KEY, pandoraHistoryData);
-        if (activeTab === 'pandora') renderPandoraHistory();
-      }, err => {
-        console.warn('Pandora usando modo local (Histórico):', err);
-        pandoraHistoryData = pandoraReadJson(PANDORA_HISTORY_LOCAL_KEY, []);
-        renderPandoraHistory();
-      });
+    try {
+      pandoraSnapshotsAttached = true;
+
+      if (pandoraDashboardSummaryUnsub) {
+        try { pandoraDashboardSummaryUnsub(); } catch (_) {}
+        pandoraDashboardSummaryUnsub = null;
+      }
+      pandoraDashboardSummaryUnsub = onSnapshot(
+        pandoraSummaryRef(),
+        snap => {
+          pandoraDashboardSummary = snap.exists() ? pandoraNormalizeDashboardSummary(snap.data()) : null;
+          if (activeTab === 'pandora' && pandoraLastView === 'dashboard') renderPandoraDashboard();
+        },
+        err => console.warn('Pandora não conseguiu ouvir o resumo do dashboard:', err)
+      );
+      pandoraSnapshotUnsubs.push(pandoraDashboardSummaryUnsub);
+      pandoraSnapshotsLoading = false;
+      pandoraFirstLoadDone = true;
+
+      // Lista operacional leve: carrega em tempo real somente NFs ativas/pendentes acima de 30 dias.
+      // O restante continua fora da listagem e é consultado direto pela chave de acesso.
+      pandoraSnapshotUnsubs.push(onSnapshot(
+        query(
+          pandoraCollection(PANDORA_ACTIVE_COLLECTION),
+          where('emissaoMs', '<=', pandoraOldCutoffMs()),
+          orderBy('emissaoMs', 'desc'),
+          limit(PANDORA_OLD_NFS_LIVE_LIMIT)
+        ),
+        snap => {
+          const rows = snap.docs.map(d => ({ ...d.data(), id: d.id, _docId: d.id, _sourceCollection: PANDORA_ACTIVE_COLLECTION }));
+          pandoraMergeLoadedRows(rows);
+          updatePandoraImportSummary();
+        },
+        err => console.warn('Pandora não conseguiu ouvir NFs acima de 30 dias:', err)
+      ));
+
+      // Histórico limitado: apenas as ações mais recentes do Pandora.
+      pandoraSnapshotUnsubs.push(onSnapshot(
+        query(pandoraCollection(PANDORA_HISTORY_COLLECTION), orderBy('createdAtMs', 'desc'), limit(PANDORA_HISTORY_LIVE_LIMIT)),
+        snap => {
+          pandoraHistoryFirstLoadDone = true;
+          pandoraHistoryData = snap.docs.map(d => ({ ...d.data(), id: d.id, _docId: d.id }))
+            .sort((a,b) => (b.createdAtMs || 0) - (a.createdAtMs || 0));
+          pandoraWriteJson(PANDORA_HISTORY_LOCAL_KEY, pandoraHistoryData);
+          if (activeTab === 'pandora') renderPandoraHistory();
+        },
+        err => {
+          console.warn('Pandora usando modo local (Histórico limitado):', err);
+          pandoraHistoryData = pandoraReadJson(PANDORA_HISTORY_LOCAL_KEY, []).slice(0, PANDORA_HISTORY_LIVE_LIMIT);
+          renderPandoraHistory();
+        }
+      ));
     } catch (err) {
-      console.warn('Não foi possível iniciar snapshots do Pandora:', err);
+      console.warn('Não foi possível iniciar snapshots leves do Pandora:', err);
+      pandoraSnapshotsAttached = false;
+      pandoraSnapshotsLoading = false;
       pandoraUsingLocalFallback = true;
       pandoraLoadLocal();
       renderPandora();
+    }
+  }
+
+  async function normalizePandoraBaseDates() {
+    if (!db || pandoraUsingLocalFallback) {
+      showToast('Firebase indisponível. Não foi possível normalizar a base agora.', 'error');
+      return;
+    }
+
+    const btn = document.getElementById('pandora-normalize-dates-btn');
+    const hint = document.getElementById('pandora-db-limit-hint');
+    const originalText = btn?.textContent || 'Normalizar datas';
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Normalizando...';
+    }
+    if (hint) hint.textContent = 'Normalizando campos de data da base Pandora. Essa leitura acontece somente quando você aciona o botão.';
+
+    try {
+      showToast('Lendo a base Pandora para normalizar datas...', 'info');
+      const rows = await pandoraGetAllOperationalRowsFromFirestore();
+      const uniqueRows = pandoraDedupRows(rows || []);
+      const total = uniqueRows.length;
+      if (!total) {
+        showToast('Nenhuma NF encontrada para normalizar.', 'info');
+        if (hint) hint.textContent = 'Nenhum registro encontrado para normalização.';
+        return;
+      }
+
+      const nowIso = pandoraNow();
+      const nowMs = pandoraMs();
+      const chunkSize = 145; // cada NF gera set + deletes de coleções antigas; fica abaixo do limite do batch.
+      let processed = 0;
+      let semEmissao = 0;
+      let arquivadas = 0;
+      let ativas = 0;
+
+      for (let i = 0; i < uniqueRows.length; i += chunkSize) {
+        const chunk = uniqueRows.slice(i, i + chunkSize);
+        const batch = writeBatch(db);
+        let batchHasWrites = false;
+
+        chunk.forEach(raw => {
+          const docId = raw._docId || raw.id || (raw.chaveNorm ? `CH_${raw.chaveNorm}` : '') || (pandoraChaveNorm(raw.chave || '') ? `CH_${pandoraChaveNorm(raw.chave || '')}` : '');
+          if (!docId) return;
+
+          const indexed = pandoraEnsureIndexFields({
+            ...raw,
+            id: docId,
+            _docId: docId,
+            status: pandoraDefaultStatus(raw),
+            chaveNorm: raw.chaveNorm || pandoraChaveNorm(raw.chave || ''),
+            normalizedAt: nowIso,
+            normalizedAtMs: nowMs,
+            indexVersion: 2
+          });
+
+          if (!indexed.emissaoMs) semEmissao += 1;
+          if (pandoraIsArquivado(indexed.status)) arquivadas += 1;
+          else ativas += 1;
+
+          const payload = { ...indexed };
+          delete payload._sourceCollection;
+          pandoraBatchRouteSet(batch, docId, payload, indexed, { merge: true });
+          batchHasWrites = true;
+          processed += 1;
+        });
+
+        if (batchHasWrites) await batch.commit();
+        if (hint) hint.textContent = `Normalizando Pandora: ${Math.min(processed, total).toLocaleString('pt-BR')} de ${total.toLocaleString('pt-BR')} NFs processadas...`;
+      }
+
+      const normalizedRows = uniqueRows.map(item => pandoraEnsureIndexFields({
+        ...item,
+        status: pandoraDefaultStatus(item),
+        normalizedAt: nowIso,
+        normalizedAtMs: nowMs,
+        indexVersion: 2
+      }));
+      pandoraData = pandoraDedupRows(normalizedRows)
+        .sort((a, b) => (b.updatedAtMs || b.importedAtMs || b.createdAtMs || 0) - (a.updatedAtMs || a.importedAtMs || a.createdAtMs || 0));
+      if ((pandoraData || []).length <= 4000) pandoraWriteJson(PANDORA_LOCAL_KEY, pandoraData);
+      pandoraFillParceiroDatalist();
+
+      try {
+        await pandoraSaveDashboardSummary(pandoraBuildDashboardSummaryFromRows(pandoraData, 'Base normalizada'), 'Base normalizada');
+      } catch (summaryErr) {
+        console.warn('Não foi possível atualizar o resumo do Pandora após normalização:', summaryErr);
+      }
+
+      renderPandora();
+      updatePandoraImportSummary();
+      const msg = `Base Pandora normalizada: ${processed.toLocaleString('pt-BR')} NF${processed === 1 ? '' : 's'} | Ativas: ${ativas.toLocaleString('pt-BR')} | Arquivo: ${arquivadas.toLocaleString('pt-BR')} | Sem emissão: ${semEmissao.toLocaleString('pt-BR')}.`;
+      if (hint) hint.textContent = msg;
+      showToast(msg, 'success');
+    } catch (err) {
+      console.error('Erro ao normalizar base Pandora:', err);
+      if (hint) hint.textContent = 'Falha ao normalizar a base Pandora. Confira o console para detalhes.';
+      showToast('Não foi possível normalizar a base Pandora.', 'error');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    }
+  }
+
+  async function pandoraLoadFullDatabaseOnce() {
+    if (!db || pandoraUsingLocalFallback) {
+      pandoraLoadLocal();
+      renderPandora();
+      showToast('Banco XML carregado do cache local.', 'info');
+      return;
+    }
+    try {
+      const hint = document.getElementById('pandora-db-limit-hint');
+      if (hint) hint.textContent = 'Carregando Banco XML completo uma vez. Isso pode gerar mais leituras no Firebase.';
+      showToast('Carregando Banco XML completo uma vez...', 'info');
+      pandoraData = (await pandoraGetAllOperationalRowsFromFirestore())
+        .map(pandoraCompleteNfSerieFromChave)
+        .sort((a, b) => (b.updatedAtMs || b.importedAtMs || b.createdAtMs || 0) - (a.updatedAtMs || a.importedAtMs || a.createdAtMs || 0));
+      pandoraFullDatabaseLoaded = true;
+      if ((pandoraData || []).length <= 4000) pandoraWriteJson(PANDORA_LOCAL_KEY, pandoraData);
+      pandoraFillParceiroDatalist();
+      await pandoraSaveDashboardSummary(pandoraBuildDashboardSummaryFromRows(pandoraData, 'Banco completo carregado'), 'Banco completo carregado');
+      renderPandora();
+      updatePandoraImportSummary();
+      showToast(`Banco XML completo carregado: ${(pandoraData || []).length.toLocaleString('pt-BR')} registros.`, 'success');
+    } catch (err) {
+      console.error('Erro ao carregar Banco XML completo:', err);
+      showToast('Não foi possível carregar o Banco XML completo.', 'error');
     }
   }
 
@@ -24363,7 +26164,15 @@ async function handleAddOccurrence(e) {
     document.getElementById('pandora-zgr-file')?.addEventListener('change', (ev) => pandoraImportZgr001File(ev.target.files?.[0]));
     document.getElementById('pandora-clientes-file')?.addEventListener('change', (ev) => pandoraImportClientesFile(ev.target.files?.[0]));
     document.getElementById('pandora-open-db-btn')?.addEventListener('click', () => setPandoraView('banco'));
-    document.getElementById('pandora-db-refresh-btn')?.addEventListener('click', () => { renderPandoraDatabase(); showToast('Banco XML atualizado.', 'success'); });
+    document.getElementById('pandora-normalize-dates-btn')?.addEventListener('click', () => {
+      showConfirmModal('Normalizar a base Pandora agora? Isso faz uma leitura única das NFs, grava campos de data otimizados e organiza Ativo/Arquivo sem duplicar registros.', normalizePandoraBaseDates);
+    });
+    document.getElementById('pandora-db-refresh-btn')?.addEventListener('click', () => {
+      showConfirmModal('Carregar o Banco XML completo agora? Isso faz uma leitura única de todos os registros do Pandora no Firebase.', pandoraLoadFullDatabaseOnce);
+    });
+    document.getElementById('pandora-rebuild-summary-btn')?.addEventListener('click', () => {
+      showConfirmModal('Atualizar o resumo do Dashboard Pandora agora? Isso faz uma leitura única do Banco XML para consolidar os totais.', rebuildPandoraDashboardSummary);
+    });
     document.getElementById('pd-chave')?.addEventListener('input', (ev) => pandoraAutofillNfSerieFromChave(ev.target.value || ''));
     document.getElementById('pd-chave')?.addEventListener('blur', pandoraLookupByChave);
     document.getElementById('pd-chave')?.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); pandoraLookupByChave(); } });
@@ -24392,6 +26201,19 @@ async function handleAddOccurrence(e) {
     ['pandora-db-search', 'pandora-db-filter-status', 'pandora-db-filter-centro'].forEach(id => {
       document.getElementById(id)?.addEventListener('input', () => { resetPandoraPagination('banco'); renderPandoraDatabaseDebounced(); });
       document.getElementById(id)?.addEventListener('change', () => { resetPandoraPagination('banco'); renderPandoraDatabase(); });
+    });
+
+    document.getElementById('pandora-date-search-btn')?.addEventListener('click', () => pandoraApplyDateFilter('painel'));
+    document.getElementById('pandora-date-clear-btn')?.addEventListener('click', pandoraClearDateFilter);
+    document.getElementById('pandora-db-date-search-btn')?.addEventListener('click', () => pandoraApplyDateFilter('banco'));
+    document.getElementById('pandora-db-date-clear-btn')?.addEventListener('click', pandoraClearDateFilter);
+    ['pandora-date-start', 'pandora-date-end', 'pandora-db-date-start', 'pandora-db-date-end'].forEach(id => {
+      document.getElementById(id)?.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter') {
+          ev.preventDefault();
+          pandoraApplyDateFilter(id.startsWith('pandora-db') ? 'banco' : 'painel');
+        }
+      });
     });
 
     document.querySelectorAll('[data-pandora-page-size]').forEach(select => {
@@ -24657,8 +26479,16 @@ async function handleAddOccurrence(e) {
     document.getElementById('search-input').addEventListener('input', debouncedRenderFirstPage);
     document.getElementById('filter-status').addEventListener('change', debouncedRenderFirstPage);
     document.getElementById('filter-transportadora').addEventListener('change', debouncedRenderFirstPage);
-    document.getElementById('filter-date').addEventListener('change', debouncedRenderFirstPage);
-    document.getElementById('filter-shift').addEventListener('change', debouncedRenderFirstPage);
+    document.getElementById('filter-date').addEventListener('change', () => {
+      resetMainTablePagination('historico');
+      if (activeTab === 'historico') window.__refreshHistoricoSnapshotForActiveTab?.();
+      debouncedRenderFirstPage();
+    });
+    document.getElementById('filter-shift').addEventListener('change', () => {
+      resetMainTablePagination('historico');
+      if (activeTab === 'historico') window.__refreshHistoricoSnapshotForActiveTab?.();
+      debouncedRenderFirstPage();
+    });
     document.getElementById('filter-tempo-patio').addEventListener('change', debouncedRenderFirstPage);
     document.getElementById('filter-operation-type')?.addEventListener('change', debouncedRenderFirstPage);
     document.getElementById('filter-timeline-status')?.addEventListener('change', debouncedRenderFirstPage);
@@ -24666,6 +26496,7 @@ async function handleAddOccurrence(e) {
 
     document.getElementById('table-page-size')?.addEventListener('change', (ev) => {
       setMainTablePageSize(ev.target.value);
+      if (activeTab === 'historico') window.__refreshHistoricoSnapshotForActiveTab?.();
       render();
     });
     document.getElementById('table-page-prev')?.addEventListener('click', () => {
@@ -24677,6 +26508,7 @@ async function handleAddOccurrence(e) {
     document.getElementById('table-page-next')?.addEventListener('click', () => {
       if (!MAIN_TABLE_PAGINATED_TABS.has(activeTab)) return;
       mainTableCurrentPageByTab[activeTab] = Number(mainTableCurrentPageByTab[activeTab] || 1) + 1;
+      if (activeTab === 'historico') window.__refreshHistoricoSnapshotForActiveTab?.();
       render();
       document.getElementById('table-main-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
@@ -24714,14 +26546,16 @@ async function handleAddOccurrence(e) {
 document.getElementById('clear-date-filter-btn')?.addEventListener('click', () => {
       document.getElementById('filter-date').valueAsDate = new Date();
       setMultiSelectValues('filter-shift', ['todos']);
+      if (activeTab === 'historico') window.__refreshHistoricoSnapshotForActiveTab?.();
       debouncedRenderFirstPage();
     });
 
     document.getElementById('dashboard-transportadora-filter')?.addEventListener('change', renderManagerDashboard);
-    document.getElementById('bd-dash-refresh')?.addEventListener('click', renderManagerDashboard);
+    document.getElementById('bd-dash-refresh')?.addEventListener('click', () => { window.__refreshHistoricoSnapshotForActiveTab?.(); renderManagerDashboard(); });
+    document.getElementById('bd-dash-rebuild-summary')?.addEventListener('click', rebuildBdDashboardDailySummaries);
     document.getElementById('bd-dash-export')?.addEventListener('click', exportBaldeioDropDashboardCsv);
-    document.getElementById('bd-dash-start')?.addEventListener('change', renderManagerDashboard);
-    document.getElementById('bd-dash-end')?.addEventListener('change', renderManagerDashboard);
+    document.getElementById('bd-dash-start')?.addEventListener('change', () => { if (activeTab === 'dashboard') window.__refreshHistoricoSnapshotForActiveTab?.(); renderManagerDashboard(); });
+    document.getElementById('bd-dash-end')?.addEventListener('change', () => { if (activeTab === 'dashboard') window.__refreshHistoricoSnapshotForActiveTab?.(); renderManagerDashboard(); });
     document.getElementById('bd-dash-baldeio-origin')?.addEventListener('change', renderManagerDashboard);
     document.getElementById('bd-dash-plate-mode')?.addEventListener('change', renderManagerDashboard);
 
@@ -25588,7 +27422,7 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
     // ✅ Baldeios (filtros)
     const bd = document.getElementById('baldeios-date');
     if (bd) bd.valueAsDate = new Date();
-    document.getElementById('baldeios-date')?.addEventListener('change', renderBaldeiosRitmo);
+    document.getElementById('baldeios-date')?.addEventListener('change', () => { if (activeTab === 'baldeios') window.__refreshHistoricoSnapshotForActiveTab?.(); renderBaldeiosRitmo(); });
     document.getElementById('baldeios-search')?.addEventListener('input', debounce(renderBaldeiosRitmo, 120));
     document.getElementById('baldeios-plate-mode')?.addEventListener('change', renderBaldeiosRitmo);
     document.getElementById('baldeios-origin-filter')?.addEventListener('change', renderBaldeiosRitmo);
@@ -25605,9 +27439,9 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
 
     const runRitmo = () => renderRitmoPlacaControl(true);
 
-    document.getElementById('ritmo-refresh-btn')?.addEventListener('click', runRitmo);
-    document.getElementById('ritmo-start')?.addEventListener('change', runRitmo);
-    document.getElementById('ritmo-end')?.addEventListener('change', runRitmo);
+    document.getElementById('ritmo-refresh-btn')?.addEventListener('click', () => { if (activeTab === 'ritmo') window.__refreshHistoricoSnapshotForActiveTab?.(); runRitmo(); });
+    document.getElementById('ritmo-start')?.addEventListener('change', () => { if (activeTab === 'ritmo') window.__refreshHistoricoSnapshotForActiveTab?.(); runRitmo(); });
+    document.getElementById('ritmo-end')?.addEventListener('change', () => { if (activeTab === 'ritmo') window.__refreshHistoricoSnapshotForActiveTab?.(); runRitmo(); });
     document.getElementById('ritmo-plate-mode')?.addEventListener('change', runRitmo);
     document.getElementById('ritmo-only-baldeio')?.addEventListener('change', runRitmo);
     document.getElementById('ritmo-search')?.addEventListener('input', debounce(runRitmo, 150));
@@ -25676,9 +27510,19 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
     document.getElementById('resolution-form').addEventListener('submit', handleUpdateResolution);
     document.getElementById('table-body').addEventListener('click', handleTableClick);
     document.getElementById('drop-panel-table-body')?.addEventListener('click', handleDropPanelClick);
+    document.getElementById('drop-incident-form')?.addEventListener('submit', (ev) => {
+      handleDropAtrelagemIncidentSubmit(ev).catch(err => {
+        console.error('Falha ao salvar ocorrência de atrelagem:', err);
+        showToast('Erro ao salvar ocorrência de atrelagem.', 'error');
+      });
+    });
+    document.getElementById('drop-incident-cancel')?.addEventListener('click', closeDropAtrelagemIncidentModal);
+    document.getElementById('drop-incident-modal')?.addEventListener('click', (ev) => {
+      if (ev.target?.id === 'drop-incident-modal') closeDropAtrelagemIncidentModal();
+    });
     document.getElementById('drop-panel-search')?.addEventListener('input', debouncedRender);
-    document.getElementById('drop-panel-date')?.addEventListener('change', renderDropPanel);
-    document.getElementById('drop-panel-today')?.addEventListener('click', () => { const el = document.getElementById('drop-panel-date'); if (el) el.value = dropTodayInputValue(); renderDropPanel(); });
+    document.getElementById('drop-panel-date')?.addEventListener('change', () => { if (activeTab === 'drop-panel') window.__refreshHistoricoSnapshotForActiveTab?.(); renderDropPanel(); });
+    document.getElementById('drop-panel-today')?.addEventListener('click', () => { const el = document.getElementById('drop-panel-date'); if (el) el.value = dropTodayInputValue(); if (activeTab === 'drop-panel') window.__refreshHistoricoSnapshotForActiveTab?.(); renderDropPanel(); });
     document.getElementById('drop-panel-export')?.addEventListener('click', exportDropPanelCsv);
 
     document.getElementById('drop-panel-toggle-resolved')?.addEventListener('click', () => {
@@ -25695,11 +27539,11 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
       });
     });
 
-    document.getElementById('drop-panel-refresh')?.addEventListener('click', () => { renderDropPanel(); showToast('Painel Drop & Hook atualizado.', 'success'); });
-    document.getElementById('drop-dash-date')?.addEventListener('change', renderDropDashboard);
-    document.getElementById('drop-dash-today')?.addEventListener('click', () => { const el = document.getElementById('drop-dash-date'); if (el) el.value = dropTodayInputValue(); renderDropDashboard(); });
+    document.getElementById('drop-panel-refresh')?.addEventListener('click', () => { if (activeTab === 'drop-panel') window.__refreshHistoricoSnapshotForActiveTab?.(); renderDropPanel(); showToast('Painel Drop & Hook atualizado.', 'success'); });
+    document.getElementById('drop-dash-date')?.addEventListener('change', () => { if (activeTab === 'drop-dashboard') window.__refreshHistoricoSnapshotForActiveTab?.(); renderDropDashboard(); });
+    document.getElementById('drop-dash-today')?.addEventListener('click', () => { const el = document.getElementById('drop-dash-date'); if (el) el.value = dropTodayInputValue(); if (activeTab === 'drop-dashboard') window.__refreshHistoricoSnapshotForActiveTab?.(); renderDropDashboard(); });
     document.getElementById('drop-dash-export')?.addEventListener('click', exportDropDashboardCsv);
-    document.getElementById('drop-dash-refresh')?.addEventListener('click', () => { renderDropDashboard(); showToast('Dash Drop & Hook atualizado.', 'success'); });
+    document.getElementById('drop-dash-refresh')?.addEventListener('click', () => { if (activeTab === 'drop-dashboard') window.__refreshHistoricoSnapshotForActiveTab?.(); renderDropDashboard(); showToast('Dash Drop & Hook atualizado.', 'success'); });
 
     document.getElementById('confirm-modal-cancel').addEventListener('click', () => {
       document.getElementById('confirm-modal').classList.add('hidden');
@@ -25768,6 +27612,9 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
   tab.classList.remove('inactive-tab');
 
       activeTab = tab.id.replace('tab-', '');
+      if (typeof window.__ensureFirebaseDataForTab === 'function') {
+        window.__ensureFirebaseDataForTab(activeTab);
+      }
       resetMainTablePagination(activeTab);
       updateEnvironmentHeader();
 
@@ -25837,6 +27684,8 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
       if (!user) return;
 
       const attachDriverSnapshot = (collectionName) => {
+        if (firebaseDriversAttached[collectionName]) return;
+        firebaseDriversAttached[collectionName] = true;
         const ref = collection(db, `artifacts/${appId}/public/data/${collectionName}`);
         onSnapshot(ref, snap => {
           // ✅ alimenta lista para a aba Motoristas
@@ -25881,104 +27730,556 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
           });
 
           window.__driversLoaded = Object.keys(driverIndex.byCpf).length;
+          if (activeTab === 'motoristas' || activeTab === 'patio' || activeTab === 'dashboard' || activeTab === 'drop-dashboard' || activeTab === 'drop-panel') {
+            debouncedRender();
+          }
+        });
+      };
+
+      const attachPatioSnapshot = () => {
+        if (firebasePatioAttached) return;
+        firebasePatioAttached = true;
+        onSnapshot(collection(db, `artifacts/${appId}/public/data/patio`), snap => {
+          const newPatioData = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+          newlyAdded.clear();
+
+          // ✅ Congela e grava o TIPO/SEGMENTAÇÃO que vier do HEILOG (não muda com o tempo)
+          // Regra: se o documento já veio com um campo direto (segmentacao/tipo/etc), gravamos em tipoSnapshot só uma vez.
+          newPatioData.forEach((op) => {
+            try {
+              if (!op || !op.id) return;
+
+              // Se já tem tipoSnapshot, só marca e segue
+              if (op.tipoSnapshot && String(op.tipoSnapshot).trim() !== '') {
+                tipoSnapshotMem.add(op.id);
+                return;
+              }
+
+              // Evita repetir update
+              if (tipoSnapshotMem.has(op.id)) return;
+
+              // Só grava o tipo que já veio em campo direto do documento (HEILOG)
+              const directTipo = getTipoHeilogDirect(op);
+              if (!directTipo) return;
+
+              tipoSnapshotMem.add(op.id);
+              const ref = doc(db, `artifacts/${appId}/public/data/patio`, op.id);
+              updateDoc(ref, { tipoSnapshot: directTipo }).catch((err) => {
+                console.warn("Falha ao gravar tipoSnapshot:", err);
+              });
+            } catch (err) {
+              console.warn("Falha ao processar tipoSnapshot:", err);
+            }
+          });
+
+          const previousPatioIds = new Set((patioData || []).map(oldOp => oldOp.id));
+          newPatioData.forEach(op => {
+            const { statusText, isAlert } = getPriorityStatusLogic(op);
+            const isExisting = previousPatioIds.has(op.id);
+
+            if (isAlert && !notifiedVehicles.has(op.id)) {
+              playAlertSound();
+              showBrowserNotification(`Alerta de Prioridade: ${op.dt}`, `Veículo entrou em status de ${statusText}`, `alert-${op.id}`);
+              notifiedVehicles.add(op.id);
+            }
+
+            if (!isExisting) {
+              newlyAdded.add(op.id);
+              setTimeout(() => {
+                newlyAdded.delete(op.id);
+                debouncedRender();
+              }, 5000);
+            }
+          });
+
+          patioData = newPatioData;
+          ritmoDataVersion += 1;
+          checkSystemAlerts();
+          runPredictiveAnalysis();
           debouncedRender();
         });
       };
 
-      attachDriverSnapshot('drivers');
-      attachDriverSnapshot('motoristas');
-      attachControleDtSnapshots();
-      attachPandoraSnapshots();
+      const getInputDayRange = (inputId, fallbackDate = new Date()) => {
+        const el = document.getElementById(inputId);
+        return dayRangeFromDateInput(el?.value, fallbackDate);
+      };
 
-      onSnapshot(collection(db, `artifacts/${appId}/public/data/patio`), snap => {
-        const newPatioData = snap.docs.map(d => ({ ...d.data(), id: d.id }));
-        newlyAdded.clear();
+      const getMainTableHistoryLimit = () => {
+        if (mainTablePageSize === 'all') return 700;
+        const pageSize = Number(mainTablePageSize || 25);
+        const page = Number(mainTableCurrentPageByTab?.historico || 1);
+        return Math.max(150, Math.min(900, pageSize * Math.max(page + 2, 4)));
+      };
 
-        // ✅ Congela e grava o TIPO/SEGMENTAÇÃO que vier do HEILOG (não muda com o tempo)
-        // Regra: se o documento já veio com um campo direto (segmentacao/tipo/etc), gravamos em tipoSnapshot só uma vez.
-        newPatioData.forEach((op) => {
-          try {
-            if (!op || !op.id) return;
+      const buildHistoricoQueryPlan = (tabName = activeTab) => {
+        const today = new Date();
+        let startMs;
+        let endMs;
+        let fields = ['registrationTime', 'finishedTime'];
+        let lim = 700;
+        let label = tabName || 'geral';
 
-            // Se já tem tipoSnapshot, só marca e segue
-            if (op.tipoSnapshot && String(op.tipoSnapshot).trim() !== '') {
-              tipoSnapshotMem.add(op.id);
-              return;
-            }
+        if (tabName === 'historico') {
+          const r = getInputDayRange('filter-date', today);
+          startMs = r.startMs;
+          endMs = r.endMs;
+          fields = ['finishedTime', 'registrationTime'];
+          lim = getMainTableHistoryLimit();
+          label = `historico:${document.getElementById('filter-date')?.value || ''}:${document.getElementById('filter-shift')?.value || ''}:${lim}`;
+        } else if (tabName === 'dashboard') {
+          const r = getBdDashboardRange();
+          startMs = r.startMs;
+          endMs = r.endMs;
+          fields = ['registrationTime', 'finishedTime', 'createdAtMs', 'dropPainelUpdatedAtMs', 'dropPanelUpdatedAtMs'];
+          lim = 1300;
+          label = `dashboard:${r.startValue}:${r.endValue}`;
+        } else if (tabName === 'drop-dashboard') {
+          const r = getInputDayRange('drop-dash-date', today);
+          startMs = r.startMs;
+          endMs = r.endMs;
+          fields = ['registrationTime', 'finishedTime', 'createdAtMs', 'dropPainelUpdatedAtMs', 'dropPanelUpdatedAtMs'];
+          lim = 900;
+          label = `drop-dashboard:${document.getElementById('drop-dash-date')?.value || ''}`;
+        } else if (tabName === 'drop-panel') {
+          const r = getInputDayRange('drop-panel-date', today);
+          startMs = r.startMs;
+          endMs = r.endMs;
+          fields = ['registrationTime', 'finishedTime', 'createdAtMs', 'dropPainelUpdatedAtMs', 'dropPanelUpdatedAtMs'];
+          lim = 900;
+          label = `drop-panel:${document.getElementById('drop-panel-date')?.value || ''}`;
+        } else if (tabName === 'baldeios') {
+          const r = getInputDayRange('baldeios-date', today);
+          startMs = r.startMs;
+          endMs = r.endMs;
+          fields = ['registrationTime', 'finishedTime', 'createdAtMs'];
+          lim = 1000;
+          label = `baldeios:${document.getElementById('baldeios-date')?.value || ''}`;
+        } else if (tabName === 'ritmo') {
+          const startEl = document.getElementById('ritmo-start');
+          const endEl = document.getElementById('ritmo-end');
+          const defaultStart = new Date(); defaultStart.setDate(defaultStart.getDate() - 180);
+          const startR = dayRangeFromDateInput(startEl?.value, defaultStart);
+          const endR = dayRangeFromDateInput(endEl?.value, today);
+          startMs = Math.min(startR.startMs, endR.startMs);
+          endMs = Math.max(startR.endMs, endR.endMs);
+          fields = ['registrationTime', 'finishedTime', 'createdAtMs'];
+          lim = 1600;
+          label = `ritmo:${startEl?.value || ''}:${endEl?.value || ''}`;
+        } else if (tabName === 'performance') {
+          const shift = getShiftInfo(new Date());
+          startMs = shift.start.getTime();
+          endMs = shift.end.getTime();
+          fields = ['registrationTime', 'finishedTime'];
+          lim = 900;
+          label = `performance:${shift.label}:${startMs}:${endMs}`;
+        } else if (tabName === 'motoristas') {
+          const start = startOfDay(today);
+          start.setDate(start.getDate() - 30);
+          startMs = start.getTime();
+          endMs = startOfDay(today).getTime() + 24 * 3600 * 1000;
+          fields = ['registrationTime', 'finishedTime'];
+          lim = 1200;
+          label = `motoristas:30d:${startMs}:${endMs}`;
+        } else {
+          const r = dayRangeFromDateInput('', today);
+          startMs = r.startMs;
+          endMs = r.endMs;
+          fields = ['finishedTime', 'registrationTime'];
+          lim = 500;
+          label = `geral:${tabName}:${startMs}:${endMs}`;
+        }
 
-            // Evita repetir update
-            if (tipoSnapshotMem.has(op.id)) return;
+        if (!Number.isFinite(startMs) || !Number.isFinite(endMs) || endMs <= startMs) {
+          const r = dayRangeFromDateInput('', today);
+          startMs = r.startMs;
+          endMs = r.endMs;
+        }
 
-            // Só grava o tipo que já veio em campo direto do documento (HEILOG)
-            const directTipo = getTipoHeilogDirect(op);
-            if (!directTipo) return;
+        const uniqueFields = [...new Set(fields.filter(Boolean))];
+        return {
+          key: `${label}|${startMs}|${endMs}|${uniqueFields.join(',')}|${lim}`,
+          startMs,
+          endMs,
+          fields: uniqueFields,
+          limit: lim,
+          fallbackLimit: Math.min(300, lim)
+        };
+      };
 
-            tipoSnapshotMem.add(op.id);
-            const ref = doc(db, `artifacts/${appId}/public/data/patio`, op.id);
-            updateDoc(ref, { tipoSnapshot: directTipo }).catch((err) => {
-              console.warn("Falha ao gravar tipoSnapshot:", err);
-            });
-          } catch (err) {
-            console.warn("Falha ao processar tipoSnapshot:", err);
-          }
+      const historicoSortMs = (op = {}) => (
+        toMs(op.finishedTime) ||
+        toMs(op.registrationTime) ||
+        toMs(op.createdAtMs) ||
+        toMs(op.createdAt) ||
+        toMs(op.timestamp) ||
+        0
+      );
+
+      const applyHistoricoSnapshotParts = () => {
+        const combined = new Map();
+        firebaseHistoryParts.forEach(part => {
+          part.forEach((value, key) => combined.set(key, value));
         });
-
-        const previousPatioIds = new Set((patioData || []).map(oldOp => oldOp.id));
-        newPatioData.forEach(op => {
-          const { statusText, isAlert } = getPriorityStatusLogic(op);
-          const isExisting = previousPatioIds.has(op.id);
-
-          if (isAlert && !notifiedVehicles.has(op.id)) {
-            playAlertSound();
-            showBrowserNotification(`Alerta de Prioridade: ${op.dt}`, `Veículo entrou em status de ${statusText}`, `alert-${op.id}`);
-            notifiedVehicles.add(op.id);
-          }
-
-          if (!isExisting) {
-            newlyAdded.add(op.id);
-            setTimeout(() => {
-              newlyAdded.delete(op.id);
-              debouncedRender();
-            }, 5000);
-          }
-        });
-
-        patioData = newPatioData;
-        ritmoDataVersion += 1;
-        checkSystemAlerts();
-        runPredictiveAnalysis();
-        debouncedRender();
-      });
-
-      onSnapshot(collection(db, `artifacts/${appId}/public/data/historico`), snap => {
-        historicoData = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+        historicoData = Array.from(combined.values())
+          .sort((a, b) => historicoSortMs(b) - historicoSortMs(a));
         ritmoDataVersion += 1;
         rebuildDriverStatsCache();
         debouncedRender();
-      });
+      };
 
-      onSnapshot(collection(db, `artifacts/${appId}/public/data/ocorrencias`), snap => {
-        ocorrenciasData = getVisibleOccurrences(snap.docs.map(d => ({ ...d.data(), id: d.id })))
-          .sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-        checkSystemAlerts();
-        debouncedRender();
-      });
-
-      onSnapshot(collection(db, `artifacts/${appId}/public/data/sap_desbloqueios`), snap => {
-        const remote = {};
-        snap.docs.forEach(d => {
-          const data = d.data() || {};
-          const plate = normalizePlate(data.trailerPlate || d.id || '');
-          if (plate && data.unlocked === true) remote[plate] = { ...data, trailerPlate: plate, unlocked: true };
+      const detachHistoricoSnapshot = (clearData = false) => {
+        firebaseHistoryUnsubs.forEach(unsub => {
+          try { if (typeof unsub === 'function') unsub(); } catch (_) {}
         });
-        sapUnlocksData = { ...getSapUnlockLocalMap(), ...remote };
-        checkSystemAlerts();
-        debouncedRender();
-      }, err => {
-        console.warn('Não foi possível ler sap_desbloqueios. Usando desbloqueios locais.', err);
-        sapUnlocksData = getSapUnlockLocalMap();
-        debouncedRender();
-      });
+        firebaseHistoryUnsubs = [];
+        firebaseHistoryParts = new Map();
+        firebaseHistoryAttached = false;
+        firebaseHistoryActiveKey = '';
+        if (clearData) {
+          historicoData = [];
+          ritmoDataVersion += 1;
+          rebuildDriverStatsCache();
+          debouncedRender();
+        }
+      };
+
+      const attachHistoricoSnapshot = (tabName = activeTab) => {
+        const plan = buildHistoricoQueryPlan(tabName);
+        if (firebaseHistoryAttached && firebaseHistoryActiveKey === plan.key) return;
+
+        detachHistoricoSnapshot(false);
+        firebaseHistoryAttached = true;
+        firebaseHistoryActiveKey = plan.key;
+        firebaseHistoryParts = new Map();
+
+        const baseRef = collection(db, `artifacts/${appId}/public/data/historico`);
+        const attachPart = (partKey, qRef) => {
+          try {
+            const unsub = onSnapshot(qRef, snap => {
+              const part = new Map();
+              snap.docs.forEach(d => part.set(d.id, { ...d.data(), id: d.id }));
+              firebaseHistoryParts.set(partKey, part);
+              applyHistoricoSnapshotParts();
+            }, err => {
+              console.warn(`Histórico: falha na leitura otimizada (${partKey}).`, err);
+              firebaseHistoryParts.set(partKey, new Map());
+              applyHistoricoSnapshotParts();
+            });
+            firebaseHistoryUnsubs.push(unsub);
+          } catch (err) {
+            console.warn(`Histórico: erro ao anexar consulta ${partKey}.`, err);
+          }
+        };
+
+        plan.fields.forEach(field => {
+          attachPart(`range:${field}`, query(
+            baseRef,
+            where(field, '>=', plan.startMs),
+            where(field, '<', plan.endMs),
+            orderBy(field, 'desc'),
+            limit(plan.limit)
+          ));
+        });
+
+        // Rede de segurança limitada: evita tela vazia em documentos antigos que não tenham registrationTime/createdAtMs.
+        // Continua limitado, portanto não volta a ler o histórico inteiro.
+        attachPart('fallback:finishedTime:latest', query(
+          baseRef,
+          orderBy('finishedTime', 'desc'),
+          limit(plan.fallbackLimit)
+        ));
+      };
+
+      const attachOcorrenciasSnapshot = () => {
+        if (firebaseOccurrencesAttached) return;
+        firebaseOccurrencesAttached = true;
+        const qOcc = query(
+          collection(db, `artifacts/${appId}/public/data/ocorrencias`),
+          orderBy('timestamp', 'desc'),
+          limit(300)
+        );
+        onSnapshot(qOcc, snap => {
+          ocorrenciasData = getVisibleOccurrences(snap.docs.map(d => ({ ...d.data(), id: d.id })))
+            .sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+          checkSystemAlerts();
+          debouncedRender();
+        }, err => {
+          console.warn('Ocorrências: falha na leitura limitada.', err);
+        });
+      };
+
+      const attachSapUnlockSnapshot = () => {
+        if (firebaseSapAttached) return;
+        firebaseSapAttached = true;
+        onSnapshot(collection(db, `artifacts/${appId}/public/data/sap_desbloqueios`), snap => {
+          const remote = {};
+          snap.docs.forEach(d => {
+            const data = d.data() || {};
+            const plate = normalizePlate(data.trailerPlate || d.id || '');
+            if (plate && data.unlocked === true) remote[plate] = { ...data, trailerPlate: plate, unlocked: true };
+          });
+          sapUnlocksData = { ...getSapUnlockLocalMap(), ...remote };
+          checkSystemAlerts();
+          debouncedRender();
+        }, err => {
+          console.warn('Não foi possível ler sap_desbloqueios. Usando desbloqueios locais.', err);
+          sapUnlocksData = getSapUnlockLocalMap();
+          debouncedRender();
+        });
+      };
+
+      window.__ensureFirebaseDataForTab = (tabName = activeTab) => {
+        // Abas sempre críticas ficam em tempo real.
+        attachPatioSnapshot();
+        attachSapUnlockSnapshot();
+
+        // Mantido em tempo real para não quebrar preenchimento de placas/cadastro de motoristas.
+        attachDriverSnapshot('drivers');
+        attachDriverSnapshot('motoristas');
+
+        // Dashboard gerencial usa resumo diário leve por padrão.
+        // O histórico só é lido no Dashboard quando o usuário clica em "Atualizar resumo".
+        if (tabName === 'dashboard') {
+          attachBdDashboardSummarySnapshot(getBdDashboardRange());
+        }
+
+        // Histórico é carregado somente quando alguma tela realmente usa esses dados.
+        if (['historico', 'drop-dashboard', 'drop-panel', 'performance', 'baldeios', 'ritmo', 'motoristas'].includes(tabName)) {
+          attachHistoricoSnapshot(tabName);
+        }
+
+        // Ocorrências só entram em tempo real quando a aba é aberta.
+        if (tabName === 'ocorrencias') {
+          attachOcorrenciasSnapshot();
+        }
+
+        // Módulos pesados ficam sob demanda.
+        if (tabName === 'controle-dt') {
+          attachControleDtSnapshots();
+        }
+        if (tabName === 'pandora') {
+          attachPandoraSnapshots();
+        }
+      };
+
+      window.__refreshHistoricoSnapshotForActiveTab = () => {
+        if (typeof window.__ensureFirebaseDataForTab === 'function') {
+          window.__ensureFirebaseDataForTab(activeTab);
+        }
+      };
+
+      // ============================================================
+      // ✅ Dashboard: tempo real somente do DIA ATUAL + filtro para passado
+      // Padrão: ao abrir o Dashboard, os cards ficam em tempo real lendo
+      // apenas o histórico de hoje + pátio. Para datas passadas, usa o
+      // resumo diário e só recalcula quando clicar em Atualizar resumo.
+      // ============================================================
+      const bdDashboardOriginalAttachSummarySnapshot = attachBdDashboardSummarySnapshot;
+      const bdDashboardOriginalGetRange = getBdDashboardRange;
+      let bdDashboardTodayLiveUnsubs = [];
+      let bdDashboardTodayLiveParts = new Map();
+      let bdDashboardTodayLiveActiveKey = '';
+      let bdDashboardTodayLiveData = [];
+
+      function bdTodayDashboardRange() {
+        const today = startOfDay(new Date());
+        return {
+          startMs: today.getTime(),
+          endMs: today.getTime() + 24 * 3600 * 1000,
+          startValue: getBdDashboardDateInputValue(today),
+          endValue: getBdDashboardDateInputValue(today)
+        };
+      }
+
+      function bdIsDashboardTodayRange(range = getBdDashboardRange()) {
+        const todayRange = bdTodayDashboardRange();
+        return Number(range.startMs) === Number(todayRange.startMs) && Number(range.endMs) === Number(todayRange.endMs);
+      }
+
+      getBdDashboardRange = function() {
+        const startEl = document.getElementById('bd-dash-start');
+        const endEl = document.getElementById('bd-dash-end');
+        const todayRange = bdTodayDashboardRange();
+
+        // Antes vinha 7 dias por padrão. Agora o Dashboard abre somente o dia atual.
+        if (startEl && !startEl.value) startEl.value = todayRange.startValue;
+        if (endEl && !endEl.value) endEl.value = todayRange.endValue;
+
+        const startFallback = new Date(todayRange.startMs);
+        const endFallback = new Date(todayRange.endMs - 1);
+        let startMs = dayRangeFromDateInput(startEl?.value, startFallback).startMs;
+        let endMs = dayRangeFromDateInput(endEl?.value, endFallback).endMs;
+
+        if (endMs < startMs) {
+          const a = dayRangeFromDateInput(endEl?.value, endFallback);
+          const b = dayRangeFromDateInput(startEl?.value, startFallback);
+          startMs = a.startMs;
+          endMs = b.endMs;
+        }
+
+        return {
+          startMs,
+          endMs,
+          startValue: getBdDashboardDateInputValue(new Date(startMs)),
+          endValue: getBdDashboardDateInputValue(new Date(endMs - 1))
+        };
+      };
+
+      function bdDetachDashboardTodayLive(clearData = false) {
+        bdDashboardTodayLiveUnsubs.forEach(unsub => {
+          try { if (typeof unsub === 'function') unsub(); } catch (_) {}
+        });
+        bdDashboardTodayLiveUnsubs = [];
+        bdDashboardTodayLiveParts = new Map();
+        bdDashboardTodayLiveActiveKey = '';
+        if (clearData) bdDashboardTodayLiveData = [];
+      }
+
+      function bdApplyDashboardTodayLiveParts() {
+        const combined = new Map();
+        bdDashboardTodayLiveParts.forEach(part => {
+          part.forEach((value, key) => combined.set(key, value));
+        });
+        bdDashboardTodayLiveData = Array.from(combined.values())
+          .sort((a, b) => bdSafeNumber(b.ms, 0) - bdSafeNumber(a.ms, 0));
+        if (activeTab === 'dashboard') renderManagerDashboard();
+      }
+
+      function attachBdDashboardTodayLiveSnapshot(range = getBdDashboardRange(), force = false) {
+        if (!db) return;
+        if (!bdIsDashboardTodayRange(range)) {
+          bdDetachDashboardTodayLive(true);
+          return;
+        }
+
+        const key = `today-live:${range.startMs}:${range.endMs}`;
+        if (!force && bdDashboardTodayLiveActiveKey === key && bdDashboardTodayLiveUnsubs.length) return;
+
+        bdDetachDashboardTodayLive(false);
+        bdDashboardTodayLiveActiveKey = key;
+        bdDashboardTodayLiveParts = new Map();
+
+        // Evita manter listener do resumo diário aberto quando o Dashboard está no dia atual.
+        try { if (typeof bdDashboardSummaryUnsub === 'function') bdDashboardSummaryUnsub(); } catch (_) {}
+        bdDashboardSummaryUnsub = null;
+        bdDashboardSummaryAttached = false;
+        bdDashboardSummaryActiveKey = '';
+        bdDashboardSummaryData = [];
+
+        const baseRef = collection(db, `artifacts/${appId}/public/data/historico`);
+        const fields = ['registrationTime', 'finishedTime', 'createdAtMs', 'dropPainelUpdatedAtMs', 'dropPanelUpdatedAtMs'];
+        const liveLimit = 1200;
+
+        const attachPart = (partKey, qRef) => {
+          try {
+            const unsub = onSnapshot(qRef, snap => {
+              const part = new Map();
+              snap.docs.forEach(d => {
+                const lite = bdLiteFromRawOp({ ...d.data(), id: d.id }, 0, 'historico');
+                if (lite && lite.ms >= range.startMs && lite.ms < range.endMs) part.set(d.id, lite);
+              });
+              bdDashboardTodayLiveParts.set(partKey, part);
+              bdApplyDashboardTodayLiveParts();
+            }, err => {
+              console.warn(`Dashboard tempo real: falha na leitura de hoje (${partKey}).`, err);
+              bdDashboardTodayLiveParts.set(partKey, new Map());
+              bdApplyDashboardTodayLiveParts();
+            });
+            bdDashboardTodayLiveUnsubs.push(unsub);
+          } catch (err) {
+            console.warn(`Dashboard tempo real: erro ao anexar consulta ${partKey}.`, err);
+          }
+        };
+
+        fields.forEach(field => {
+          attachPart(`today:${field}`, query(
+            baseRef,
+            where(field, '>=', range.startMs),
+            where(field, '<', range.endMs),
+            orderBy(field, 'desc'),
+            limit(liveLimit)
+          ));
+        });
+
+        // Rede de segurança pequena para documentos antigos sem campos numéricos corretos.
+        // Continua limitada e não lê a coleção inteira.
+        attachPart('today:fallback:finishedTime', query(
+          baseRef,
+          orderBy('finishedTime', 'desc'),
+          limit(250)
+        ));
+      }
+
+      attachBdDashboardSummarySnapshot = function(range = getBdDashboardRange(), force = false) {
+        if (bdIsDashboardTodayRange(range)) {
+          attachBdDashboardTodayLiveSnapshot(range, force);
+          return;
+        }
+        bdDetachDashboardTodayLive(true);
+        return bdDashboardOriginalAttachSummarySnapshot(range, force);
+      };
+
+      function bdLiteOpsFromDashboardTodayLive(range = getBdDashboardRange()) {
+        return bdDedupeLiteOps([
+          ...(bdDashboardTodayLiveData || []),
+          ...(patioData || []).map((op, idx) => bdLiteFromRawOp(op, idx, 'patio')).filter(Boolean)
+        ]).filter(op => op.ms >= range.startMs && op.ms < range.endMs);
+      }
+
+      renderManagerDashboard = function() {
+        try { updateTransportadoraFilter(); } catch (_) {}
+
+        const range = getBdDashboardRange();
+        const plateMode = document.getElementById('bd-dash-plate-mode')?.value || 'carreta';
+        const originFilter = document.getElementById('bd-dash-baldeio-origin')?.value || 'todos';
+        const transpSelect = document.getElementById('dashboard-transportadora-filter');
+        const selectedTValues = transpSelect ? getMultiSelectValues(transpSelect) : ['todas'];
+        const isTodayLive = bdIsDashboardTodayRange(range);
+
+        let liteOps;
+        let sourceLabel;
+
+        if (isTodayLive) {
+          attachBdDashboardTodayLiveSnapshot(range);
+          liteOps = bdLiteOpsFromDashboardTodayLive(range);
+          sourceLabel = 'tempo real do dia';
+          bdSetSummaryStatus(`Tempo real ativo: Dashboard lendo somente o dia atual (${range.startValue}) + pátio em tempo real. Para ver datas passadas, altere o filtro De/Até e clique em Atualizar.`,'ok');
+        } else {
+          attachBdDashboardSummarySnapshot(range);
+          const expectedKeys = bdSummaryDayKeys(range);
+          const summaryKeys = new Set((bdDashboardSummaryData || []).map(d => d.dayKey || d.id));
+          const missingKeys = expectedKeys.filter(k => !summaryKeys.has(k));
+          const summaryReady = expectedKeys.length > 0 && missingKeys.length === 0;
+
+          if (summaryReady) {
+            liteOps = bdLiteOpsFromSummaries(range);
+            sourceLabel = 'resumo diário';
+            bdSetSummaryStatus(`Filtro passado ativo: ${expectedKeys.length} resumo(s) diário(s) lido(s) para ${range.startValue} a ${range.endValue}.`, 'ok');
+          } else {
+            liteOps = [];
+            sourceLabel = 'resumo pendente';
+            const missingTxt = missingKeys.length ? `${missingKeys.length} dia(s) sem resumo` : 'resumo ainda carregando';
+            bdSetSummaryStatus(`${missingTxt}. Clique em “Atualizar resumo” para consolidar esse período. O Dashboard não vai puxar o histórico inteiro automaticamente.`, 'warn');
+          }
+        }
+
+        const rep = bdBuildReportFromLiteOps(liteOps, range, plateMode, originFilter, selectedTValues, sourceLabel);
+        bdRenderReport(rep);
+      };
+
+      const bdDashboardOriginalEnsureFirebaseDataForTab = window.__ensureFirebaseDataForTab;
+      window.__ensureFirebaseDataForTab = (tabName = activeTab) => {
+        if (typeof bdDashboardOriginalEnsureFirebaseDataForTab === 'function') {
+          bdDashboardOriginalEnsureFirebaseDataForTab(tabName);
+        }
+        if (tabName === 'dashboard') {
+          const range = getBdDashboardRange();
+          if (bdIsDashboardTodayRange(range)) attachBdDashboardTodayLiveSnapshot(range);
+        }
+      };
+
+      window.__ensureFirebaseDataForTab(activeTab);
     });
 
     if (timerIntervalId) clearInterval(timerIntervalId);
@@ -25994,6 +28295,16 @@ document.getElementById('clear-date-filter-btn')?.addEventListener('click', () =
         document.querySelectorAll('.drop-timer-cell').forEach(cell => {
           const start = parseInt(cell.getAttribute('data-drop-start-time') || '0', 10);
           const endAttr = parseInt(cell.getAttribute('data-drop-end-time') || '0', 10);
+          if (!start) {
+            cell.textContent = '00:00:00';
+            return;
+          }
+          const end = endAttr && endAttr > 0 ? endAttr : Date.now();
+          cell.textContent = formatMilliseconds(Math.max(0, end - start));
+        });
+        document.querySelectorAll('.drop-wait-cell').forEach(cell => {
+          const start = parseInt(cell.getAttribute('data-drop-wait-start-time') || '0', 10);
+          const endAttr = parseInt(cell.getAttribute('data-drop-wait-end-time') || '0', 10);
           if (!start) {
             cell.textContent = '00:00:00';
             return;
